@@ -3,6 +3,7 @@ package com.ih2home.utils.common;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2home.utils.common.enums.ExpireTime;
+import com.ih2home.utils.common.utils.JsonMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;

@@ -1,4 +1,4 @@
-package com.ih2home.utils.common;
+package com.ih2home.utils.common.utils;
 
 import java.io.IOException;
 import java.util.TimeZone;
