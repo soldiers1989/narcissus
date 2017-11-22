@@ -3,6 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
+
 	<settings>
 		<!-- 使全局的映射器启用或禁用缓存。 -->        
         <setting name="cacheEnabled" value="true"/>        
@@ -27,4 +28,9 @@
         <!-- 设置但JDBC类型为空时,某些驱动程序 要指定值,default:OTHER，插入空值时不需要指定类型 -->        
         <setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
+    <plugins>
+        <plugin interceptor="com.ih2home.hardware_server.server.interceptor.OffsetLimitInterceptor">
+            <property name="dialectClass" value="com.ih2home.utils.common.dbUtils.MySQLDialect" />
+        </plugin>
+    </plugins>
 </configuration>	

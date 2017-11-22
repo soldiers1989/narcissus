@@ -1,5 +1,6 @@
 package com.ih2home.hardware_server.server.config;
 
+import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  *
@@ -61,4 +63,5 @@ public class MyBatisConfig implements TransactionManagementConfigurer{
 	public PlatformTransactionManager annotationDrivenTransactionManager() {
 		return new DataSourceTransactionManager(dataSource);
 	}
+
 }
