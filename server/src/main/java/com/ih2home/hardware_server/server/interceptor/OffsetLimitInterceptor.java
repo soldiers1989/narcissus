@@ -3,11 +3,7 @@ package com.ih2home.hardware_server.server.interceptor;
 import java.util.Properties;
 
 import com.ih2home.utils.common.Dialect;
-<<<<<<< HEAD
 import com.ih2home.utils.common.dbUtils.PropertiesHelper;
-=======
-import com.ih2home.utils.common.PropertiesHelper;
->>>>>>> origin/master
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
