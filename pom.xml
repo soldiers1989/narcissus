@@ -51,12 +51,11 @@
 			<version>1.2.0</version>
 		</dependency>
 
-
-		<!--mybatis分页插件-->
+		<!-- MyBatis 通用 Mapper -->
 		<dependency>
-			<groupId>com.github.pagehelper</groupId>
-			<artifactId>pagehelper</artifactId>
-			<version>4.1.6</version>
+			<groupId>tk.mybatis</groupId>
+			<artifactId>mapper-spring-boot-starter</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 		<!--mysql -->
@@ -135,12 +134,6 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.9</version>
 		</dependency>
 
 		<dependency>

@@ -27,7 +27,7 @@ public class JudgeUtil {
 	/**
 	 * 判断字符串是否是数字形式
 	 * 
-	 * @param String
+	 * @param str
 	 * @return
 	 */
 	public static boolean isNumber(final String str) {
