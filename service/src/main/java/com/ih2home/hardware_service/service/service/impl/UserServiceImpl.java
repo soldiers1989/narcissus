@@ -1,14 +1,13 @@
 package com.ih2home.hardware_service.service.service.impl;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.ih2home.common.utils.ConstUtils;
 import com.ih2home.hardware_service.service.dao.UserMapper;
 import com.ih2home.hardware_service.service.model.User;
 import com.ih2home.hardware_service.service.service.UserService;
-import com.ih2home.utils.common.ConstUtils;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  *

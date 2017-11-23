@@ -30,7 +30,7 @@
 	</settings>
     <plugins>
         <plugin interceptor="com.ih2home.hardware_server.server.interceptor.OffsetLimitInterceptor">
-            <property name="dialectClass" value="com.ih2home.utils.common.dbUtils.MySQLDialect" />
+            <property name="dialectClass" value="com.ih2home.common.dbUtils.MySQLDialect" />
         </plugin>
     </plugins>
 </configuration>	

@@ -1,6 +1,5 @@
 package com.ih2home.hardware_server.server.config;
 
-import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
