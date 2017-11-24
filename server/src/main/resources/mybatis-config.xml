@@ -29,7 +29,7 @@
         <setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
     <plugins>
-        <plugin interceptor="com.ih2home.hardware_server.server.interceptor.OffsetLimitInterceptor">
+        <plugin interceptor="com.ih2home.common.interceptor.OffsetLimitInterceptor">
             <property name="dialectClass" value="com.ih2home.common.dbUtils.MySQLDialect" />
         </plugin>
     </plugins>
