@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BaseController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 从请求中获取数据字符串
