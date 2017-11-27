@@ -1,8 +1,9 @@
 package com.ih2ome.common.utils;
 
 import com.ih2ome.common.Secret.DesUtils;
-import com.ih2home.common.utils.RandomUtil;
 import org.apache.commons.codec.digest.DigestUtils;
+
+import java.util.UUID;
 
 /**
  * <br>
@@ -48,6 +49,10 @@ public class ConstUtils {
      */
     public static String getResponseRandomStr(){
         return RandomUtil.generateString(16);
+    }
+
+    public static String getUUID(){
+        return UUID.randomUUID().toString();
     }
 
 }

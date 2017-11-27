@@ -145,9 +145,9 @@
 
 		<!-- ih2ome  -->
 		<dependency>
-			<groupId>com.ih2home</groupId>
-			<artifactId>ih2home_common</artifactId>
-			<version>0.0.1</version>
+			<groupId>com.ih2ome</groupId>
+			<artifactId>ih2ome_common</artifactId>
+			<version>0.0.2</version>
 		</dependency>
 
 
