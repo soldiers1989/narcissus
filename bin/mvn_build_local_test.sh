@@ -1,6 +1,6 @@
 cd /app/git/module/lotus
-git fetch
+git pull
 mvn clean install
 cd /app/git/server/narcissus
-git fetch
+git pull
 mvn clean package
