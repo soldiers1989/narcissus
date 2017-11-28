@@ -57,12 +57,48 @@ public class PowerBeeAmmeter implements IAmmeter {
     }
 
     @Override
-    public void updatePayMod(String devId, PAY_MOD payMod) {
+    public void updatePayMod(String devId, PAY_MOD payMod) throws AmmeterException {
+        Log.info("付费模式更改");
+        Log.info("电表id"+devId+"/n付费模式"+payMod.getName());
+        String uri = BASE_URL+"/device/ammeter/paymode/"+devId+"/"+payMod.getCode();
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doPutUrl(url,null);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
 
     }
 
     @Override
-    public void setElectricityPrice(String devId, Double value) {
+    public void setElectricityPrice(String devId, Double value) throws AmmeterException {
+        Log.info("修改电表单价");
+        Log.info("电表id"+devId+"/n电表单价"+value);
+        String uri = BASE_URL+"/device/ammeter/price/"+devId+"/"+value;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doPutUrl(url,null);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
 
     }
 

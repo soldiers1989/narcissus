@@ -1,6 +1,6 @@
 package com.ih2ome.hardware_server.server.controller.account;
 
-import com.ih2home.common.api.vo.request.ApiRequestVO;
+import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import org.springframework.web.bind.annotation.*;
 

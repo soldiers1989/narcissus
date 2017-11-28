@@ -17,4 +17,11 @@ public enum PAY_MOD {
         this.code = code;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getCode() {
+        return code;
+    }
 }

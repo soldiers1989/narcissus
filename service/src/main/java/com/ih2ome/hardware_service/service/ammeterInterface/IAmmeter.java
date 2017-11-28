@@ -24,14 +24,14 @@ public interface IAmmeter {
      * @param devId
      * @param payMod
      */
-    void updatePayMod(String devId, PAY_MOD payMod);
+    void updatePayMod(String devId, PAY_MOD payMod) throws AmmeterException;
 
     /**
      * 设置电表单价
      * @param devId
      * @param value
      */
-    void setElectricityPrice(String devId,Double value);
+    void setElectricityPrice(String devId,Double value) throws AmmeterException;
 
     /**
      * 获取单个电表最新数据

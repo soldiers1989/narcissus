@@ -9,6 +9,9 @@ import com.ih2ome.common.api.vo.response.HeaderResponseDataVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 
 /**
  * <br>
@@ -79,6 +82,79 @@ public class BaseController {
         String responseVoStr = JSONObject.toJSONString(apiResponseVO);
         return responseVoStr;
 
+    }
+
+    /**
+     * 渲染输出数据
+     *
+     * @param content
+     *            输出内容字符串
+     * @param contentType
+     *            内容类型
+     * @param response
+     *            响应对象
+     */
+    private void render(String content, String contentType, HttpServletResponse response) {
+        try {
+            HttpServletResponse localHttpServletResponse = response;
+            if (localHttpServletResponse != null) {
+                localHttpServletResponse.setHeader("Pragma", "No-cache");
+                localHttpServletResponse.setHeader("Cache-Control", "no-cache");
+                localHttpServletResponse.setDateHeader("Expires", 0L);
+                localHttpServletResponse.setContentType(contentType);
+                localHttpServletResponse.getWriter().write(content);
+            }
+        } catch (IOException e) {
+            Log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 渲染输出Text文本
+     *
+     * @param content
+     *            输出内容字符串
+     * @param response
+     *            响应对象
+     */
+    protected void renderText(String content, HttpServletResponse response) {
+        render(content, "text/plain; charset=UTF-8", response);
+    }
+
+    /**
+     * 渲染输出JSON文本
+     *
+     * @param content
+     *            输出内容字符串
+     * @param response
+     *            响应对象
+     */
+    protected void renderJson(String content, HttpServletResponse response) {
+        render(content, "application/json; charset=UTF-8", response);
+    }
+
+    /**
+     * 渲染输出HTML文本
+     *
+     * @param content
+     *            输出内容字符串
+     * @param response
+     *            响应对象
+     */
+    protected void renderHtml(String content, HttpServletResponse response) {
+        render(content, "text/html; charset=UTF-8", response);
+    }
+
+    /**
+     * 渲染输出Xml文本
+     *
+     * @param content
+     *            输出内容字符串
+     * @param response
+     *            响应对象
+     */
+    protected void renderXml(String content, HttpServletResponse response) {
+        render(content, "text/xml; charset=UTF-8", response);
     }
 
 

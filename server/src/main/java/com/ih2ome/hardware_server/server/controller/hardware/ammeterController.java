@@ -1,6 +1,6 @@
 package com.ih2ome.hardware_server.server.controller.hardware;
 
-import com.ih2home.common.api.vo.request.ApiRequestVO;
+import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +27,8 @@ public class ammeterController extends BaseController {
      */
     @RequestMapping(value="/concentratedList/{apiRequestVO}",method = RequestMethod.GET,produces = {"application/json"})
     public String concentratedList(@PathVariable String apiRequestVO){
+        ApiRequestVO apiRequestVOObjct = (ApiRequestVO)getDataObject(apiRequestVO,ApiRequestVO.class);
+
         return "";
     }
 
