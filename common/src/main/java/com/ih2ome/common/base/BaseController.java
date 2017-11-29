@@ -6,6 +6,7 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.api.vo.response.ApiResponseVO;
 import com.ih2ome.common.api.vo.response.DataResponseBodyVO;
 import com.ih2ome.common.api.vo.response.HeaderResponseDataVO;
+import com.ih2ome.common.utils.MyConstUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,37 +25,28 @@ public class BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
+    private static final String DEFAULT_SALT="h2ome";
+
     /**
-     * 从请求中获取数据字符串
+     * 从请求中获取数据Json对象
      * @param requestVoStrCode
      * @return
      */
-    public static String getDataStr(String requestVoStrCode){
+    public static JSONObject getData(String requestVoStrCode){
         ApiRequestVO apiRequestVO = JSONObject.parseObject(requestVoStrCode,ApiRequestVO.class);
         return apiRequestVO.getDataRequestBodyVO().getDt();
     }
 
-    /**
-     * 从请求中获取数据对象
-     * @param requestVoStrCode
-     * @param clazz
-     * @return
-     */
-    public static Object getDataObject(String requestVoStrCode,Class clazz){
-        String objectStr = getDataStr(requestVoStrCode);
-        return JSONObject.parseObject(objectStr,clazz);
-    }
 
     /**
      * 构建成功响应数据
      * @param data
      * @param reqTime
      * @param eds
-     * @param salt
      * @return
      */
-    public static String structureSuccessResponseVO(String data,String reqTime,String eds,String salt){
-        return randerMsg(ApiErrorCodeEnum.Service_yewu_ok,data,reqTime,eds,salt);
+    public static String structureSuccessResponseVO(JSONObject data,String reqTime,String eds){
+        return randerMsg(ApiErrorCodeEnum.Service_yewu_ok,data,reqTime,eds);
     }
 
     /**
@@ -63,19 +55,18 @@ public class BaseController {
      * @param data
      * @param reqTime
      * @param eds
-     * @param salt
      * @return
      */
-    public static String randerMsg(ApiErrorCodeEnum apiErrorCodeEnum, String data,String reqTime,String eds,String salt){
+    public static String randerMsg(ApiErrorCodeEnum apiErrorCodeEnum, JSONObject data,String reqTime,String eds){
         ApiResponseVO apiResponseVO = new ApiResponseVO();
         HeaderResponseDataVO headerDataVO = new HeaderResponseDataVO();
         DataResponseBodyVO dataBodyVO = new DataResponseBodyVO();
-        String rnd = com.ih2ome.common.utils.ConstUtils.getResponseRandomStr();
+        String rnd = MyConstUtils.getResponseRandomStr();
         headerDataVO.setRnd(rnd);
         headerDataVO.setCrt(reqTime);
         headerDataVO.setEds(eds);
         headerDataVO.setRtc(apiErrorCodeEnum.getCode()+"");
-        headerDataVO.setToken(com.ih2ome.common.utils.ConstUtils.md5(rnd+reqTime+apiErrorCodeEnum.getCode()+salt+data));
+        headerDataVO.setToken(MyConstUtils.md5(rnd+reqTime+apiErrorCodeEnum.getCode()+DEFAULT_SALT+data));
         dataBodyVO.setDt(data);
         apiResponseVO.setDataResponseBodyVO(dataBodyVO);
         apiResponseVO.setHeaderResponseDataVO(headerDataVO);

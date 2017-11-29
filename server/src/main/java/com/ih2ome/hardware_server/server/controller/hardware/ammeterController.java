@@ -1,10 +1,19 @@
 package com.ih2ome.hardware_server.server.controller.hardware;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
+import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
+import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -20,16 +29,24 @@ public class ammeterController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    private AmmeterManagerService ammeterManagerService;
+
     /**
      * 集中式房源list
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/concentratedList/{apiRequestVO}",method = RequestMethod.GET,produces = {"application/json"})
-    public String concentratedList(@PathVariable String apiRequestVO){
-        ApiRequestVO apiRequestVOObjct = (ApiRequestVO)getDataObject(apiRequestVO,ApiRequestVO.class);
-
-        return "";
+    @RequestMapping(value="/concentratedList",method = RequestMethod.POST,produces = {"application/json"})
+    public String concentratedList(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findConcentratAmmeter(ammeterMannagerVo);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(ammeterMannagerVoList));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("ammeterMannagerVoList",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
     }
 
     /**
