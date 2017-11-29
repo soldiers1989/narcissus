@@ -4,3 +4,4 @@
 cd /app/git/server/narcissus
 git pull
 mvn clean package
+
