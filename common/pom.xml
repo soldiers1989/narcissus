@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.ih2ome.hardware</groupId>
-	<artifactId>hardware-server</artifactId>
+	<groupId>com.narcissus.utils</groupId>
+	<artifactId>narcissus_common</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>server</name>
+	<name>narcissus_common</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -25,17 +25,8 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.ih2ome.hardware</groupId>
-			<artifactId>hardware-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-        <dependency>
-            <groupId>com.narcissus.utils</groupId>
-            <artifactId>narcissus_common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
+
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -46,5 +37,5 @@
 		</plugins>
 	</build>
 
-</project>
 
+</project>
