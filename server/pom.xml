@@ -18,6 +18,39 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<profiles>
+		<!--内网本地环境 -->
+		<profile>
+			<id>local</id>
+			<properties>
+				<profile.env>local</profile.env>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<!--内网测试环境 -->
+		<profile>
+			<id>local_test</id>
+			<properties>
+				<profile.env>bmi</profile.env>
+			</properties>
+		</profile>
+		<!--公网测试环境 -->
+		<profile>
+			<id>company_test</id>
+			<properties>
+				<profile.env>company_test</profile.env>
+			</properties>
+		</profile>
+		<!--公网测试环境 -->
+		<profile>
+			<id>company_online</id>
+			<properties>
+				<profile.env>company_test_27car</profile.env>
+			</properties>
+		</profile>
+	</profiles>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
