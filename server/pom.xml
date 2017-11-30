@@ -26,15 +26,15 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.ih2ome.hardware</groupId>
-			<artifactId>hardware-service</artifactId>
+		<groupId>com.ih2ome.hardware</groupId>
+		<artifactId>hardware-service</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+		<dependency>
+			<groupId>com.narcissus.utils</groupId>
+			<artifactId>narcissus_common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-        <dependency>
-            <groupId>com.narcissus.utils</groupId>
-            <artifactId>narcissus_common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
 	<build>
