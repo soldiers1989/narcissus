@@ -279,7 +279,6 @@ public class WaterMeterController extends BaseController {
     @RequestMapping(value="/watermeter_gateway/list",method = RequestMethod.POST,produces = {"application/json"})
     public String watermeterGatewayList(@RequestParam(value = "id") String id){
 
-
         //假数据
         WatermeterGatewayVO watermeterGatewayVO = new WatermeterGatewayVO();
         watermeterGatewayVO.setSmartGatewayId("200121212");
