@@ -45,7 +45,7 @@ public class ammeterController extends BaseController {
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(ammeterMannagerVoList));
         JSONObject responseJson = new JSONObject();
         responseJson.put("ammeterMannagerVoList",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
 
