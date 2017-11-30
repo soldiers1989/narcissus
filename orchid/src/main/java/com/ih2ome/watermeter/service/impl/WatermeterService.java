@@ -3,9 +3,7 @@ package com.ih2ome.watermeter.service.impl;
 import com.ih2ome.watermeter.dao.WatermeterDao;
 import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.service.IWatermeterService;
-import com.ih2ome.watermeter.vo.WaterMeterRecordVO;
-import com.ih2ome.watermeter.vo.WatermeterDetailVO;
-import com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO;
+import com.ih2ome.watermeter.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,5 +83,39 @@ public class WatermeterService implements IWatermeterService{
         return waterMeterRecordVOS;
     }
 
+    /**
+     * 查询公寓信息
+     * @param id
+     * @return
+     */
+    @Override
+    public List<ApartmentVO> findApartmentIdByUserId(String id) {
+        //查询公寓信息
+        List<ApartmentVO> apartmentVOS=watermeterDao.findApartmentByUserId(id);
+        return apartmentVOS;
+    }
+
+    @Override
+    public List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId) {
+        //通过楼层ids查询水表
+        /*List<Integer> floorIds = new ArrayList<Integer>();
+        for (ApartmentVO apartmentVO : apartmentVOS) {
+            floorIds.add(apartmentVO.getFloorId());
+        }*/
+        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterDao.findWatermetersByFloorIds(floorId);
+        return jzWatermeterDetailVOS;
+
+    }
+
+    /**
+     * 改水价
+     * @param price
+     * @return
+     */
+    @Override
+    public Boolean updataWaterPrice(int price,int watermeterId) {
+        Boolean flag= watermeterDao.updataWaterPrice(price,watermeterId);
+        return flag;
+    }
 
 }

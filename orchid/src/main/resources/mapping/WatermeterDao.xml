@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.watermeter.dao.WatermeterDao">
+
+    <select id="findRoomIdByCreatebyid" parameterType="String" resultType="List">
+        SELECT id FROM room WHERE house_id in (SELECT house_id FROM house_contract WHERE created_by_id = #{id})
+    </select>
+
+    <!--配置一个resultMap 指定返回的类型 -->
+    <resultMap id="watermeterDetailVO" type="com.ih2ome.watermeter.vo.WatermeterDetailVO">
+
+        <id column="smart_watermeter_id" property="smartWatermeterId" />
+        <result column="room_name" property="roomName" />
+        <result column="meter_type" property="meterType" />
+        <result column="created_at" property="createdAt" />
+        <result column="last_amount" property="lastAmount" />
+        <result column="price" property="price" />
+        <result column="onoff_status" property="onoffStatus" />
+        <result column="smart_gateway_id" property="smartGatewayId" />
+
+    </resultMap>
+
+    <select id="finWatermeterByRoomIds" parameterType="List" resultMap="watermeterDetailVO">
+        SELECT g.smart_gateway_id FROM (SELECT
+        w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status
+        FROM
+        narcissus.smart_watermeter w ,caspain_test.room r
+        WHERE room_id IN
+        <foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ) temp,narcissus.smart_gateway_bind g WHERE g.smart_device_type = temp.smart_watermeter_id;
+
+    </select>
+
+    <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO">
+        SELECT g.smart_gateway_id,g.room_id,g.updated_at,g.created_at,g.brand FROM narcissus.smart_gateway g WHERE smart_gateway_id =  #{id}
+    </select>
+
+    <select id="finWatermeterByGatewayId" parameterType="int" resultMap="watermeterDetailVO">
+        SELECT g.smart_gateway_id FROM (SELECT
+        w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status
+        FROM
+        narcissus.smart_watermeter w ,caspain_test.room r
+        WHERE room_id IN
+        (SELECT gb.smart_id FROM narcissus.smart_gateway_bind gb WHERE smart_gateway_id = #{id})
+        ) temp,narcissus.smart_gateway_bind g WHERE g.smart_device_type = temp.smart_watermeter_id;
+
+    </select>
+
+    <!--配置一个resultMap 指定返回的类型 -->
+    <resultMap id="apartmentVO" type="com.ih2ome.watermeter.vo.ApartmentVO">
+
+        <id column="smart_watermeter_id" property="id" />
+        <result column="name" property="name" />
+        <result column="floor_id" property="floorId" />
+        <result column="floor_name" property="floorName" />
+
+    </resultMap>
+    <select id="findApartmentByUserId" parameterType="int" resultType="List">
+        SELECT
+        temp.*,f.id floor_id,f.`name` floor_name
+        FROM
+        (SELECT a.id,a.`name` FROM `volga-test`.apartment a WHERE created_by = #{id}) temp left join `volga-test`.floor f
+        ON
+        f.apartment_id = temp.id;
+    </select>
+
+
+    <select id="findWatermetersByFloorIds" parameterType="List" resultMap="watermeterDetailVO" >
+        SELECT w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status,g.smart_gateway_id
+        FROM narcissus.smart_watermeter w,caspain_test.room r,narcissus.smart_gateway_bind g
+        WHERE w.floor_id = #{floorId}
+        AND w.smart_watermeter_id = g.smart_device_type AND w.room_id = r.id;
+    </select>
+
+    <select id="updataWaterPrice" parameterType="int"  resultType="Boolean">
+         UPDATE narcissus.smart_watermeter SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-package com.ih2ome.watermeter.controller;
+package com.ih2ome.hardware_server.server.controller.watermeter.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -11,7 +11,6 @@ import com.ih2ome.watermeter.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -114,18 +113,28 @@ public class WaterMeterController extends BaseController {
      */
     @RequestMapping(value="/jz/list",method = RequestMethod.POST,produces = {"application/json"})
     public String jzList(@RequestBody ApiRequestVO apiRequestVO)  {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = dt.getString("id");
         //通过用户id查询用户公寓列表
-        //List<Apartment> apartments = watermeterService.findApartmentIdByUserId(id);
-        //通过公寓id查询楼层列表
+        List<ApartmentVO> apartmentVOS = watermeterService.findApartmentIdByUserId(id);
+        //通过公寓查询楼层id
+        int floorId=apartmentVOS.get(0).getFloorId();
+        //通过楼层id列表查询水表信息列表
+        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
+        JZWatermeterListVo JZWatermeterListVo = new JZWatermeterListVo();
+        JZWatermeterListVo.setApartmentVOS(apartmentVOS);
+        JZWatermeterListVo.setJzWatermeterDetailVOS(jzWatermeterDetailVOS);
 
-        //通过公寓楼层查询房间id列表
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(JZWatermeterListVo));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("JZWatermeterListVo",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
 
-        //通过房间id列表查询水表信息列表
-
-        //假数据
+       /* //假数据
         JZWatermeterDetailVO watermeterDetailVO =new JZWatermeterDetailVO();
         //水表序列号，房间号，楼层，房源名称，产品类型-水表型号，绑定时间，当月累计水表量，电费单价，通讯状态，绑定网关，
-        watermeterDetailVO.setSmartWatermeterId("23432432432");
+        watermeterDetailVO.setSmartWatermeterId(23432432432);
         watermeterDetailVO.setRoomName("001");
         watermeterDetailVO.setFloorName("1");
         watermeterDetailVO.setFloorNum(12);
@@ -145,9 +154,30 @@ public class WaterMeterController extends BaseController {
 
         WatermeterListVo watermeterListVo=new WatermeterListVo();
         //watermeterListVo.setList(list);
-
+*/
         //return JsonUtils.toString(watermeterListVo);
-        return null;
+
+    }
+
+    /**
+     * 根据楼层查询集中式水表列表
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/list/find",method = RequestMethod.POST,produces = {"application/json"})
+    public String jzListFind(@RequestBody ApiRequestVO apiRequestVO)  {
+        //获取楼层id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int floorId = dt.getIntValue("floorId");
+
+        //通过楼层id列表查询水表信息列表
+        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
+
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(jzWatermeterDetailVOS));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("jzWatermeterDetailVOS",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
     }
 
     /**
@@ -164,32 +194,23 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 水费单价修改
-     * @param price
-     * @return
-     */
-    @RequestMapping(value="/detail/updata_water_price/{price}",method = RequestMethod.GET,produces = {"application/json"})
-    public String updataWaterPrice(@PathVariable Float price ){
-        return "";
-    }
-
-    /**
-     * 集中式水表公寓列表
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/apartment/list",method = RequestMethod.POST,produces = {"application/json"})
-    public String apartmentList(@RequestBody ApiRequestVO apiRequestVO){
-        //假数据
-        ArrayList<String> apartments = new ArrayList<>();
-        apartments.add("钉钉公寓");
-        apartments.add("海纳公寓");
-        apartments.add("百川公寓");
-        apartments.add("呵呵公寓");
-        apartments.add("钉钉公寓");
-
-        //return JSON.toJSONString(apartments);
-        return null;
+    @RequestMapping(value="/detail/updata_water_price",method = RequestMethod.GET,produces = {"application/json"})
+    public String updataWaterPrice(@RequestBody ApiRequestVO apiRequestVO ){
+        //获取更改价格
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int price = dt.getIntValue("price");
+        int watermeterId = dt.getIntValue("watermeterId");
+        Boolean flag = watermeterService.updataWaterPrice(price,watermeterId);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString("ture"));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("price",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
     }
+
 
     /**
      * 水表读数明细当月实时累计水量

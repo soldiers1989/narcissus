@@ -1,7 +1,9 @@
 package com.ih2ome.watermeter.dao;
 
+import com.ih2ome.watermeter.vo.ApartmentVO;
 import com.ih2ome.watermeter.vo.WatermeterDetailVO;
 import com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -38,4 +40,25 @@ public interface WatermeterDao<T> extends Mapper<T> {
      * @return
      */
     List<WatermeterDetailVO> finWatermeterByGatewayId(String smartGatewayId);
+
+    /**
+     * 查询公寓列表
+     * @param id
+     * @return
+     */
+    List<ApartmentVO> findApartmentByUserId(String id);
+
+    /**
+     * 通过楼层id查询水表
+     * @return
+     * @param floorIds
+     */
+    List<WatermeterDetailVO> findWatermetersByFloorIds(int floorIds);
+
+    /**
+     * 改水价
+     * @param price
+     * @return
+     */
+    Boolean updataWaterPrice(@Param("price") int price,@Param("watermeterId")int watermeterId);
 }
