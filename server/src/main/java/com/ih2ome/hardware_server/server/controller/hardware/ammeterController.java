@@ -33,12 +33,12 @@ public class ammeterController extends BaseController {
     private AmmeterManagerService ammeterManagerService;
 
     /**
-     * 集中式房源list
+     * 分散式房源list
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/concentratedList",method = RequestMethod.POST,produces = {"application/json"})
-    public String concentratedList(@RequestBody ApiRequestVO apiRequestVO){
+    @RequestMapping(value="/dispersedList",method = RequestMethod.POST,produces = {"application/json"})
+    public String dispersedList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
         List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findConcentratAmmeter(ammeterMannagerVo);
@@ -50,13 +50,20 @@ public class ammeterController extends BaseController {
     }
 
     /**
-     * 分散式房源list
+     * 集中式房源list
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/dispersedList/{apiRequestVO}",method = RequestMethod.GET,produces = {"application/json"})
-    public String dispersedList(@PathVariable String apiRequestVO){
-        return "";
+    @RequestMapping(value="/concentratedList",method = RequestMethod.POST,produces = {"application/json"})
+    public String concentratedList(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findDispersedAmmeter(ammeterMannagerVo);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(ammeterMannagerVoList));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("ammeterMannagerVoList",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
     }
 
     /**

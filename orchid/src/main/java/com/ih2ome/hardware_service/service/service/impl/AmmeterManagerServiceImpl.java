@@ -25,4 +25,9 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     public List<AmmeterMannagerVo> findConcentratAmmeter(AmmeterMannagerVo ammeterMannagerVo) {
         return ammeterMannagerVoDao.findConcentratAmmeter(ammeterMannagerVo);
     }
+
+    @Override
+    public List<AmmeterMannagerVo> findDispersedAmmeter(AmmeterMannagerVo ammeterMannagerVo) {
+        return ammeterMannagerVoDao.findDispersedAmmeter(ammeterMannagerVo);
+    }
 }
