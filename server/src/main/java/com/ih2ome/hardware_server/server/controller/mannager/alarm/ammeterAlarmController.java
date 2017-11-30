@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_server.server.controller.alarm;
+package com.ih2ome.hardware_server.server.controller.mannager.alarm;
 
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;

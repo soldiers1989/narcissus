@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_server.server.controller.operation;
+package com.ih2ome.hardware_server.server.controller.mannager.operation;
 
 import com.ih2ome.common.base.BaseController;
 import org.springframework.web.bind.annotation.PathVariable;
