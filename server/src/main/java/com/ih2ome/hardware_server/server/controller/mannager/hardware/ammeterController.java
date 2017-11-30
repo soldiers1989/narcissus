@@ -7,6 +7,7 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
+import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +72,16 @@ public class ammeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/ammeterRelation/{apiRequestVO}",method = RequestMethod.GET,produces = {"application/json"})
-    public String ammeterRelation(@PathVariable String apiRequestVO){
-        return "";
+    @RequestMapping(value="/ammeterRelation",method = RequestMethod.POST,produces = {"application/json"})
+    public String ammeterRelation(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = resData.getString("id");
+        String type = resData.getString("type");
+        DeviceIdAndName deviceVo = ammeterManagerService.getAmmeterRelation(id,type);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("deviceVo",deviceVo);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
     }
 
     /**

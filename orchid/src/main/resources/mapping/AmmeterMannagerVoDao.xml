@@ -3,7 +3,7 @@
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterMannagerVoDao">
 
     <select id="findDispersedAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
-        SELECT csd.id ammeterId, ch.area apartmentName, CONCAT( cau.first_name, cau.last_name ) landlordName, cau.username authUserName, ch.address houseAddress, cr.`name` roomNo, crc.customer_name customerName, crc.customer_phone customerPhone, csd.`name` deviceName, csd.`status` communicationStatus FROM caspain_test.room_contract crc, caspain_test.room cr, caspain_test.house ch, caspain_test.auth_user cau, caspain_test.smart_device csd WHERE 1 = 1 AND cr.house_id = ch.id AND crc.room_id = cr.id AND crc.created_by_id = cau.id AND csd.room_id = cr.id AND csd.is_delete = '0' AND ch.is_delete = '0' AND cr.is_delete = '0' AND crc.is_delete = '0' AND crc.`status` = 'active'
+        SELECT csd.id ammeterId, ch.area apartmentName, CONCAT( cau.first_name, cau.last_name ) landlordName, cau.username authUserName, ch.address houseAddress, cr.`name` roomNo, crc.customer_name customerName, crc.customer_phone customerPhone, csd.`name` deviceName, csd.`online` communicationStatus, csd.style isHub FROM caspain_test.room_contract crc, caspain_test.room cr, caspain_test.house ch, caspain_test.auth_user cau, caspain_test.smart_device csd WHERE 1 = 1 AND cr.house_id = ch.id AND crc.room_id = cr.id AND crc.created_by_id = cau.id AND csd.room_id = cr.id AND csd.is_delete = '0' AND ch.is_delete = '0' AND cr.is_delete = '0' AND crc.is_delete = '0' AND crc.`status` = 'active'
         <if test="ammeterId != '' and ammeterId != null">
             AND csd.id = '${ammeterId}'
         </if>
@@ -40,7 +40,7 @@
     </select>
 
     <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
-        SELECT vsd.id ammeterId, va.`name` apartmentName, CONCAT( cau.first_name, cau.last_name ) landlordName, cau.username authUserName, va.address houseAddress, vr.`name` roomNo, vrc.customer_name customerName, vrc.customer_phone customerPhone, vsd.`name` deviceName, vsd.`status` communicationStatus FROM `volga-test`.smart_device vsd, `volga-test`.room vr, `volga-test`.room_contract vrc, `volga-test`.floor vf, `volga-test`.apartment va, caspain_test.auth_user cau WHERE vsd.room_id = vr.id AND vrc.room_id = vr.id AND vr.floor_id = vf.id AND vf.apartment_id = va.id AND vrc.created_by = cau.id AND vsd.is_delete = '0' AND vr.is_delete = '0' AND vrc.is_delete = '0' AND vf.is_delete = '0' AND va.is_delete = '0' AND vrc.`status` = 'active'
+        SELECT vsd.id ammeterId, va.`name` apartmentName, CONCAT( cau.first_name, cau.last_name ) landlordName, cau.username authUserName, va.address houseAddress, vr.`name` roomNo, vrc.customer_name customerName, vrc.customer_phone customerPhone, vsd.`name` deviceName, vsd.`online` communicationStatus, vsd.style isHub FROM `volga-test`.smart_device vsd, `volga-test`.room vr, `volga-test`.room_contract vrc, `volga-test`.floor vf, `volga-test`.apartment va, caspain_test.auth_user cau WHERE vsd.room_id = vr.id AND vrc.room_id = vr.id AND vr.floor_id = vf.id AND vf.apartment_id = va.id AND vrc.created_by = cau.id AND vsd.is_delete = '0' AND vr.is_delete = '0' AND vrc.is_delete = '0' AND vf.is_delete = '0' AND va.is_delete = '0' AND vrc.`status` = 'active'
         <if test="ammeterId != '' and ammeterId != null">
             AND vsd.id = '${ammeterId}'
         </if>
@@ -75,4 +75,19 @@
             AND vsd.`status` LIKE '%${communicationStatus}%'
         </if>
     </select>
+
+    <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+      select * from caspain_test.smart_device sd where sd.id=#{id}
+    </select>
+    <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+        select * from caspain_test.smart_device sd where sd.serial_id=#{serialId}
+    </select>
+
+    <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+        select * from `volga-test`.smart_device sd where sd.id=#{id}
+    </select>
+    <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+        select * from `volga-test`.smart_device sd where sd.serial_id=#{serialId}
+    </select>
+
 </mapper>

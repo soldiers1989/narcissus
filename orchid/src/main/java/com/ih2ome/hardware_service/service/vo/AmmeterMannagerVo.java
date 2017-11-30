@@ -2,6 +2,8 @@ package com.ih2ome.hardware_service.service.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * <br>
  *
@@ -10,7 +12,7 @@ import lombok.Data;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Data
-public class AmmeterMannagerVo{
+public class AmmeterMannagerVo implements Serializable {
     private String ammeterId;//电表id
     private String apartmentName;//公寓名称
     private String apartmentType;//公寓类型
@@ -26,5 +28,6 @@ public class AmmeterMannagerVo{
     private String customerPhone;//租客电话
     private String deviceName;//设备号
     private String communicationStatus;//通讯状态
+    private String isHub;//是否是主表
 
 }
