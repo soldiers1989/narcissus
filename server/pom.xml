@@ -1,43 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by MESMERiZE (MiZE) -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.ih2ome.hardware</groupId>
 	<artifactId>hardware-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
 	<name>server</name>
 	<description>Demo project for Spring Boot</description>
-
+	<profiles>
+		<!--内网开发环境 -->
+		<profile>
+			<id>local_dev</id>
+			<properties>
+				<profile.env>local_dev</profile.env>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<!--内网测试环境 -->
+		<profile>
+			<id>local_test</id>
+			<properties>
+				<profile.env>local_test</profile.env>
+			</properties>
+		</profile>
+		<!--公网测试环境 -->
+		<profile>
+			<id>company_test</id>
+			<properties>
+				<profile.env>company_test</profile.env>
+			</properties>
+		</profile>
+		<!--公网生成环境 -->
+		<profile>
+			<id>company_online</id>
+			<properties>
+				<profile.env>company_online</profile.env>
+			</properties>
+		</profile>
+	</profiles>
 	<parent>
 		<groupId>com.ih2ome</groupId>
 		<artifactId>narcissus</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.ih2ome.hardware</groupId>
 			<artifactId>hardware-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-        <dependency>
-            <groupId>com.narcissus.utils</groupId>
-            <artifactId>narcissus_common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
-
+		<dependency>
+			<groupId>com.narcissus.utils</groupId>
+			<artifactId>narcissus_common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 	<build>
+		<filters>
+			<filter>../profiles/${profile.env}/profile-${profile.env}.properties</filter>
+		</filters>
+		<resources>
+			<!-- 设置对 jdbc.properties 等进行过虑，即这些文件中的${key}会被替换掉为真正的值 -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>application.yml</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -45,6 +85,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
-

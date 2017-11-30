@@ -14,4 +14,6 @@ import java.util.List;
 public interface AmmeterManagerService {
 
     List <AmmeterMannagerVo> findConcentratAmmeter(AmmeterMannagerVo ammeterMannagerVo);
+
+    List <AmmeterMannagerVo> findDispersedAmmeter(AmmeterMannagerVo ammeterMannagerVo);
 }

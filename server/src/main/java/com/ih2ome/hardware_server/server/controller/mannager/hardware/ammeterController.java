@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_server.server.controller.hardware;
+package com.ih2ome.hardware_server.server.controller.mannager.hardware;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -33,6 +33,23 @@ public class ammeterController extends BaseController {
     private AmmeterManagerService ammeterManagerService;
 
     /**
+     * 分散式房源list
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/dispersedList",method = RequestMethod.POST,produces = {"application/json"})
+    public String dispersedList(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findConcentratAmmeter(ammeterMannagerVo);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(ammeterMannagerVoList));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("ammeterMannagerVoList",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+    /**
      * 集中式房源list
      * @param apiRequestVO
      * @return
@@ -41,22 +58,12 @@ public class ammeterController extends BaseController {
     public String concentratedList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
-        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findConcentratAmmeter(ammeterMannagerVo);
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findDispersedAmmeter(ammeterMannagerVo);
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(ammeterMannagerVoList));
         JSONObject responseJson = new JSONObject();
         responseJson.put("ammeterMannagerVoList",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
-    }
-
-    /**
-     * 分散式房源list
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/dispersedList/{apiRequestVO}",method = RequestMethod.GET,produces = {"application/json"})
-    public String dispersedList(@PathVariable String apiRequestVO){
-        return "";
     }
 
     /**

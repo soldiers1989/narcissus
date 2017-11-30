@@ -16,4 +16,6 @@ import java.util.List;
 public interface AmmeterMannagerVoDao {
 
     List<AmmeterMannagerVo>findConcentratAmmeter(AmmeterMannagerVo ammeterMannagerVo);
+
+    List <AmmeterMannagerVo> findDispersedAmmeter(AmmeterMannagerVo ammeterMannagerVo);
 }

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterMannagerVoDao">
 
-    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
-      SELECT DISTINCT csd.id ammeterId, ch.area apartmentName, cau.last_name landlordName, cau.username authUserName, ch.address houseAddress, cr.`name` roomNo, crc.customer_name customerName, crc.customer_phone customerPhone, csd.`name` deviceName, csd.`status` communicationStatus FROM caspain_test.room_contract crc, caspain_test.room cr, caspain_test.house ch, caspain_test.house_contract chc, caspain_test.auth_user cau, caspain_test.smart_device csd WHERE chc.house_id = ch.id AND cr.house_id = ch.id AND crc.room_id = cr.id AND chc.created_by_id = cau.id AND csd.room_id = cr.id AND csd.is_delete = '0' AND ch.is_delete = '0' AND chc.is_delete = '0' AND cr.is_delete = '0' AND crc.is_delete = '0'
+    <select id="findDispersedAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
+        SELECT csd.id ammeterId, ch.area apartmentName, CONCAT( cau.first_name, cau.last_name ) landlordName, cau.username authUserName, ch.address houseAddress, cr.`name` roomNo, crc.customer_name customerName, crc.customer_phone customerPhone, csd.`name` deviceName, csd.`status` communicationStatus FROM caspain_test.room_contract crc, caspain_test.room cr, caspain_test.house ch, caspain_test.auth_user cau, caspain_test.smart_device csd WHERE 1 = 1 AND cr.house_id = ch.id AND crc.room_id = cr.id AND crc.created_by_id = cau.id AND csd.room_id = cr.id AND csd.is_delete = '0' AND ch.is_delete = '0' AND cr.is_delete = '0' AND crc.is_delete = '0' AND crc.`status` = 'active'
         <if test="ammeterId != '' and ammeterId != null">
             AND csd.id = '${ammeterId}'
         </if>
@@ -36,6 +36,43 @@
         </if>
         <if test="communicationStatus != '' and communicationStatus != null">
             AND csd.`status` LIKE '%${communicationStatus}%'
+        </if>
+    </select>
+
+    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
+        SELECT vsd.id ammeterId, va.`name` apartmentName, CONCAT( cau.first_name, cau.last_name ) landlordName, cau.username authUserName, va.address houseAddress, vr.`name` roomNo, vrc.customer_name customerName, vrc.customer_phone customerPhone, vsd.`name` deviceName, vsd.`status` communicationStatus FROM `volga-test`.smart_device vsd, `volga-test`.room vr, `volga-test`.room_contract vrc, `volga-test`.floor vf, `volga-test`.apartment va, caspain_test.auth_user cau WHERE vsd.room_id = vr.id AND vrc.room_id = vr.id AND vr.floor_id = vf.id AND vf.apartment_id = va.id AND vrc.created_by = cau.id AND vsd.is_delete = '0' AND vr.is_delete = '0' AND vrc.is_delete = '0' AND vf.is_delete = '0' AND va.is_delete = '0' AND vrc.`status` = 'active'
+        <if test="ammeterId != '' and ammeterId != null">
+            AND vsd.id = '${ammeterId}'
+        </if>
+        <if test="apartmentName != '' and apartmentName != null">
+            AND va.`name` LIKE '%${apartmentName}%'
+        </if>
+        <if test="landlordName != '' and landlordName != null">
+            AND CONCAT(cau.first_name,cau.last_name) LIKE '%${apartmentName}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND vrc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="deviceName != '' and deviceName != null">
+            AND vsd.`name` LIKE '%${deviceName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND vrc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND va.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND va.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND va.area LIKE '%${areaName}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND vsd.`status` LIKE '%${communicationStatus}%'
         </if>
     </select>
 </mapper>
