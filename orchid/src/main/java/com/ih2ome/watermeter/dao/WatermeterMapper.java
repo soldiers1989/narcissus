@@ -1,15 +1,15 @@
 package com.ih2ome.watermeter.dao;
 
-import com.ih2ome.watermeter.vo.ApartmentVO;
-import com.ih2ome.watermeter.vo.WatermeterDetailVO;
-import com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO;
+import com.ih2ome.common.base.MyMapper;
+import com.ih2ome.watermeter.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface WatermeterDao {
+public interface WatermeterMapper extends MyMapper<WaterMeterRecordVO> {
+
 
     List<Integer> findRoomIdByCreatebyid(String id);
 
@@ -45,19 +45,33 @@ public interface WatermeterDao {
      * @param id
      * @return
      */
-    List<ApartmentVO> findApartmentByUserId(String id);
+    List<ApartmentVO> findApartmentByUserId(int id);
 
     /**
      * 通过楼层id查询水表
      * @return
      * @param floorIds
      */
-    List<WatermeterDetailVO> findWatermetersByFloorIds(int floorIds);
+    List<JZWatermeterDetailVO> findWatermetersByFloorIds(int floorIds);
 
     /**
      * 改水价
      * @param price
      * @return
      */
-    Boolean updataWaterPrice(@Param("price") int price,@Param("watermeterId")int watermeterId);
+    Boolean updataWaterPrice(@Param("price") int price, @Param("watermeterId") int watermeterId);
+
+    /**
+     * 通过公寓id查询网关
+     * @param apartmentId
+     * @return
+     */
+    List<JZWatermeterGatewayVO> findGatewayByApartmentId(int apartmentId);
+
+    /**
+     * 通过用户id查询分散式水表列表
+     * @param id
+     * @return
+     */
+    List<WatermeterDetailVO> findWatermetersByid(int id);
 }

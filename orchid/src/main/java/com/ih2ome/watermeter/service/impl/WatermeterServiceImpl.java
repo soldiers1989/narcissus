@@ -1,22 +1,21 @@
 package com.ih2ome.watermeter.service.impl;
 
-import com.ih2ome.watermeter.dao.WatermeterDao;
+import com.ih2ome.watermeter.dao.WatermeterMapper;
 import com.ih2ome.watermeter.model.Watermeter;
-import com.ih2ome.watermeter.service.IWatermeterService;
+import com.ih2ome.watermeter.service.WatermeterService;
 import com.ih2ome.watermeter.vo.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
  * 水表service
  */
 @Service
-public class WatermeterService implements IWatermeterService{
-    @Autowired(required = false)
-    private WatermeterDao watermeterDao;
+public class WatermeterServiceImpl implements WatermeterService {
+    @Resource
+    private WatermeterMapper watermeterDao;
 
     //通过用户create_by_id查询用户房源id
     @Override
@@ -45,8 +44,8 @@ public class WatermeterService implements IWatermeterService{
      */
     @Override
     public Watermeter findWatermeterByid(String id) {
-        Watermeter watermeter = new Watermeter();//(Watermeter) watermeterDao.selectByPrimaryKey(id);
-        return watermeter;
+        //Watermeter watermeter = (Watermeter) watermeterDao.selectByPrimaryKey(id);
+        return null;
     }
 
     /**
@@ -80,7 +79,7 @@ public class WatermeterService implements IWatermeterService{
     public List<WaterMeterRecordVO> findWatermeterRecordByWatermeterId(int smartWatermeterId) {
         WaterMeterRecordVO waterMeterRecordVO = new WaterMeterRecordVO();
         waterMeterRecordVO.setSmartWatermeterId(smartWatermeterId);
-        List<WaterMeterRecordVO> waterMeterRecordVOS= new ArrayList<>();//watermeterDao.select(waterMeterRecordVO);
+        List<WaterMeterRecordVO> waterMeterRecordVOS=watermeterDao.select(waterMeterRecordVO);
         return waterMeterRecordVOS;
     }
 
@@ -90,7 +89,7 @@ public class WatermeterService implements IWatermeterService{
      * @return
      */
     @Override
-    public List<ApartmentVO> findApartmentIdByUserId(String id) {
+    public List<ApartmentVO> findApartmentIdByUserId(int id) {
         //查询公寓信息
         List<ApartmentVO> apartmentVOS=watermeterDao.findApartmentByUserId(id);
         return apartmentVOS;
@@ -103,7 +102,7 @@ public class WatermeterService implements IWatermeterService{
         for (ApartmentVO apartmentVO : apartmentVOS) {
             floorIds.add(apartmentVO.getFloorId());
         }*/
-        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = new ArrayList<>();//watermeterDao.findWatermetersByFloorIds(floorId);
+        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterDao.findWatermetersByFloorIds(floorId);
         return jzWatermeterDetailVOS;
 
     }
@@ -117,6 +116,27 @@ public class WatermeterService implements IWatermeterService{
     public Boolean updataWaterPrice(int price,int watermeterId) {
         Boolean flag= watermeterDao.updataWaterPrice(price,watermeterId);
         return flag;
+    }
+
+    /**
+     * 通过公寓id查询水表网关
+     * @param apartmentId
+     * @return
+     */
+    @Override
+    public List<JZWatermeterGatewayVO> findGatewaysByApartmentId(int apartmentId) {
+        List<JZWatermeterGatewayVO> jzWatermeterGatewayVOS = watermeterDao.findGatewayByApartmentId(apartmentId);
+        return jzWatermeterGatewayVOS;
+    }
+
+    /**
+     * 通过用用户id查询水表列表
+     * @param id
+     * @return
+     */
+    @Override
+    public List<WatermeterDetailVO> findWatermetersByid(int id) {
+        return watermeterDao.findWatermetersByid(id);
     }
 
 }

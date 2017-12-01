@@ -62,6 +62,10 @@ spring:
 mybatis:
   typeAliasesPackage: com.ih2home.hardware_service.service.model
   mapperLocations: classpath*:/mapping/*.xml
+mapper:
+  mappers: com.ih2ome.common.base.MyMapper
+  not-empty: false
+  identity: MYSQL
 
 # java -cp druid-1.0.29.jar com.alibaba.druid.filter.config.ConfigTools 1234
 privateKey: MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAp4TF8PO2xO3zDchq1ty2wsG9B78hQt6mqiKHHJVq2jkBT86pzpFs8gUoTWD8/6cBXJ07rF2qA52kNprmJPO7ewIDAQABAkAfsg+Bt5stR5hlUzZj0P8DeoS5ooA4lsgSCNZnoh3FjBSoMP42JBoaDmOuIib5DcrHFo1FTlHUDVvbHz0KmLGBAiEA6rzWncuADHYvgjCTlazsN4SMYwWwo5WlsG5dqgqn6L0CIQC2sT3xcFtdN/FxVSrHi8buaLg616eXuPf0RIqxKgiElwIhAK510vxL9stMO1sDR20CrD1G4h/mZrXtzssl+68ZZFnxAiAwjJlxd/JPq3Y2L/PWY4bSBHIw8O5Qm48JEs3olsr8sQIgXfV2emIMkiGQEFF23FfSTDLLEFKNM9GjGb4SwC54RPU=

@@ -5,7 +5,12 @@ import com.ih2ome.watermeter.vo.*;
 
 import java.util.List;
 
-public interface IWatermeterService {
+public interface WatermeterService {
+    /**
+     * 查询分散式水表列表
+     * @param id
+     * @return
+     */
     List<Integer> findRoomIdByUserId(String id);
 
 
@@ -44,7 +49,7 @@ public interface IWatermeterService {
      * @param id
      * @return
      */
-    List<ApartmentVO> findApartmentIdByUserId(String id);
+    List<ApartmentVO> findApartmentIdByUserId(int id);
 
     /**
      * 集中式通过楼层Id查询水表详情
@@ -59,4 +64,18 @@ public interface IWatermeterService {
      * @return
      */
     Boolean updataWaterPrice(int price,int watermeterId);
+
+    /**
+     * 通过公寓id查询水表网关列表
+     * @param apartmentId
+     * @return
+     */
+    List<JZWatermeterGatewayVO> findGatewaysByApartmentId(int apartmentId);
+
+    /**
+     * 通过Create_by_id查询分散式水表列表
+     * @param id
+     * @return
+     */
+    List<WatermeterDetailVO> findWatermetersByid(int id);
 }

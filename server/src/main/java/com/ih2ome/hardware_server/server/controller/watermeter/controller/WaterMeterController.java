@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.watermeter.model.Watermeter;
-import com.ih2ome.watermeter.service.IWatermeterService;
+import com.ih2ome.watermeter.service.WatermeterService;
 import com.ih2ome.watermeter.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/watermeter")
 public class WaterMeterController extends BaseController {
-    @Autowired(required = false)
-    private IWatermeterService watermeterService;
+    @Autowired
+    private WatermeterService watermeterService;
 
     /**
      * 查询分散式水表列表
@@ -31,42 +31,17 @@ public class WaterMeterController extends BaseController {
     @RequestMapping(value="/distributed/list",method = RequestMethod.POST,produces = {"application/json"})
     public String distributedList(@RequestBody ApiRequestVO apiRequestVO)  {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        String id = dt.getString("id");
-        //通过用户id查询用户房源id
+        int id = dt.getIntValue("id");
+       /* //通过用户id查询用户房源id
         List<Integer> roomIds = watermeterService.findRoomIdByUserId(id);
         //通过房源id查询水表信息
-        List<WatermeterDetailVO> watermeterList = watermeterService.findWatermetersByids(roomIds);
+        List<WatermeterDetailVO> watermeterList = watermeterService.findWatermetersByids(roomIds);*/
+        List<WatermeterDetailVO> watermeterList = watermeterService.findWatermetersByid(id);
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(watermeterList));
         JSONObject responseJson = new JSONObject();
         responseJson.put("watermeterList",jsonArray);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
         return res;
-
-
-        //假数据
-        //水表序列号，房间号，楼层，房源名称，产品类型，水表型号，绑定时间，当月累计水表量，电费单价，通讯状态，绑定网关，
-       /* WatermeterDetailVO watermeterDetailVO =new WatermeterDetailVO();
-        watermeterDetailVO.setSmartWatermeterId("23432432432");
-        watermeterDetailVO.setRoomName("001");
-//        watermeterDetailVO.setFloorName("1");
-//        watermeterDetailVO.setFloorNum(12);
-//        watermeterDetailVO.setApartmentName("海纳公寓");
-        watermeterDetailVO.setMeterType(1);
-        watermeterDetailVO.setCreatedAt("2017-04-05T15:11");
-        watermeterDetailVO.setLastAmount(200.7f);
-        watermeterDetailVO.setPrice(200);
-        watermeterDetailVO.setOnoffStatus(1);
-        watermeterDetailVO.setSmartGatewayId("125EE454546");
-
-        ArrayList<WatermeterDetailVO> list = new ArrayList<WatermeterDetailVO>();
-        list.add(watermeterDetailVO);
-        list.add(watermeterDetailVO);
-
-        WatermeterListVo watermeterListVo=new WatermeterListVo();
-        watermeterListVo.setList(list);
-        //String data,String reqTime,String eds,String salt
-        //System.out.println(JsonUtils.toString(watermeterListVo));
-        return structureSuccessResponseVO(JSONObject.(watermeterListVo),"20171111","0","");*/
 
     }
 
@@ -114,7 +89,7 @@ public class WaterMeterController extends BaseController {
     @RequestMapping(value="/jz/list",method = RequestMethod.POST,produces = {"application/json"})
     public String jzList(@RequestBody ApiRequestVO apiRequestVO)  {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        String id = dt.getString("id");
+        int id = dt.getIntValue("id");
         //通过用户id查询用户公寓列表
         List<ApartmentVO> apartmentVOS = watermeterService.findApartmentIdByUserId(id);
         //通过公寓查询楼层id
@@ -271,22 +246,32 @@ public class WaterMeterController extends BaseController {
         return "";
     }
 
+
     /**
      * 水表网关列表
-     * @param id
+     * @param apiRequestVO
      * @return
      */
     @RequestMapping(value="/watermeter_gateway/list",method = RequestMethod.POST,produces = {"application/json"})
-    public String watermeterGatewayList(@RequestParam(value = "id") String id){
-
+    public String watermeterGatewayList(@RequestBody ApiRequestVO apiRequestVO){
+        //获取公寓id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int apartmentId = dt.getIntValue("apartmentId");
+        //网关列表
+        List<JZWatermeterGatewayVO> jzWatermeterGatewayVOS = watermeterService.findGatewaysByApartmentId(apartmentId);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(jzWatermeterGatewayVOS));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("jzWatermeterGatewayVOS",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
         //假数据
-        WatermeterGatewayVO watermeterGatewayVO = new WatermeterGatewayVO();
+        /*WatermeterGatewayVO watermeterGatewayVO = new WatermeterGatewayVO();
         watermeterGatewayVO.setSmartGatewayId("200121212");
         watermeterGatewayVO.setBindNum(10);
         watermeterGatewayVO.setOnoffNum(5);
         watermeterGatewayVO.setOnoffStatus(1);
-        //return JsonUtils.toString(watermeterGatewayVO);
-        return null;
+        //return JsonUtils.toString(watermeterGatewayVO);*/
+
     }
 
     /**

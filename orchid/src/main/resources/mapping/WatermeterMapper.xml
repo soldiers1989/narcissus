@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ih2ome.watermeter.dao.WatermeterDao">
+<mapper namespace="com.ih2ome.watermeter.dao.WatermeterMapper">
 
     <select id="findRoomIdByCreatebyid" parameterType="String" resultType="List">
         SELECT id FROM room WHERE house_id in (SELECT house_id FROM house_contract WHERE created_by_id = #{id})
@@ -74,7 +74,25 @@
         AND w.smart_watermeter_id = g.smart_device_type AND w.room_id = r.id;
     </select>
 
-    <select id="updataWaterPrice" parameterType="int"  resultType="Boolean">
+    <update id="updataWaterPrice" parameterType="int" >
          UPDATE narcissus.smart_watermeter SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
+    </update>
+
+    <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterGatewayVO" >
+        SELECT g.smart_gateway_id,g.onoff_status,COUNT(gb.smart_id) AS watermeter_num,w.onoff_status AS watermter_onoff_status
+        FROM narcissus.smart_watermeter AS w
+        INNER JOIN narcissus.smart_gateway_bind AS gb
+        ON w.smart_watermeter_id = gb.smart_id
+        INNER JOIN narcissus.smart_gateway  AS g
+        ON g.apartment_id = #{id};
+    </select>
+
+    <select id="findWatermetersByid" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO" >
+        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status
+        FROM narcissus.smart_watermeter AS w
+        INNER JOIN narcissus.smart_gateway_bind AS gb
+        ON w.smart_watermeter_id = gb.smart_id
+        INNER JOIN caspain_test.room AS r
+        ON  w.room_id= r.id AND r.created_by_id = #{id} ;
     </select>
 </mapper>

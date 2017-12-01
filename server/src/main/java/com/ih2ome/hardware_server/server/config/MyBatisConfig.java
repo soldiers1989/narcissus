@@ -25,7 +25,7 @@ import java.io.IOException;
  */
 
 @Configuration
-@MapperScan(basePackages="com.ih2ome.hardware_service.service.dao")
+@MapperScan(basePackages={"com.ih2ome.hardware_service.service.dao","com.ih2ome.watermeter.dao"})
 public class MyBatisConfig implements TransactionManagementConfigurer{
 
 	private static String MYBATIS_CONFIG = "mybatis-config.xml";
