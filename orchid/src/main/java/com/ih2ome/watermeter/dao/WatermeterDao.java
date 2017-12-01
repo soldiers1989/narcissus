@@ -5,12 +5,11 @@ import com.ih2ome.watermeter.vo.WatermeterDetailVO;
 import com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
 @Repository
-public interface WatermeterDao<T> extends Mapper<T> {
+public interface WatermeterDao {
 
     List<Integer> findRoomIdByCreatebyid(String id);
 

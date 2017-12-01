@@ -7,6 +7,7 @@ import com.ih2ome.watermeter.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class WatermeterService implements IWatermeterService{
      */
     @Override
     public Watermeter findWatermeterByid(String id) {
-        Watermeter watermeter = (Watermeter) watermeterDao.selectByPrimaryKey(id);
+        Watermeter watermeter = new Watermeter();//(Watermeter) watermeterDao.selectByPrimaryKey(id);
         return watermeter;
     }
 
@@ -79,7 +80,7 @@ public class WatermeterService implements IWatermeterService{
     public List<WaterMeterRecordVO> findWatermeterRecordByWatermeterId(int smartWatermeterId) {
         WaterMeterRecordVO waterMeterRecordVO = new WaterMeterRecordVO();
         waterMeterRecordVO.setSmartWatermeterId(smartWatermeterId);
-        List<WaterMeterRecordVO> waterMeterRecordVOS=watermeterDao.select(waterMeterRecordVO);
+        List<WaterMeterRecordVO> waterMeterRecordVOS= new ArrayList<>();//watermeterDao.select(waterMeterRecordVO);
         return waterMeterRecordVOS;
     }
 
@@ -102,7 +103,7 @@ public class WatermeterService implements IWatermeterService{
         for (ApartmentVO apartmentVO : apartmentVOS) {
             floorIds.add(apartmentVO.getFloorId());
         }*/
-        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterDao.findWatermetersByFloorIds(floorId);
+        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = new ArrayList<>();//watermeterDao.findWatermetersByFloorIds(floorId);
         return jzWatermeterDetailVOS;
 
     }

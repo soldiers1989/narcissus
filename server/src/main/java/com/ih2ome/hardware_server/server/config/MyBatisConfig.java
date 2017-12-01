@@ -31,13 +31,13 @@ public class MyBatisConfig implements TransactionManagementConfigurer{
 	private static String MYBATIS_CONFIG = "mybatis-config.xml";
 	
 	@Resource
-	private DataSource dataSource;
+	DataSource dataSource;
 	
 	@Resource
-	private Environment env;
+	Environment env;
 	
 	
-	@Bean
+	@Bean(name="sqlSessionFactoryBean")
 	public SqlSessionFactoryBean createSqlSessionFactoryBean() throws IOException {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		/** 设置mybatis configuration 扫描路径 */                
@@ -60,5 +60,6 @@ public class MyBatisConfig implements TransactionManagementConfigurer{
 	public PlatformTransactionManager annotationDrivenTransactionManager() {
 		return new DataSourceTransactionManager(dataSource);
 	}
+
 
 }

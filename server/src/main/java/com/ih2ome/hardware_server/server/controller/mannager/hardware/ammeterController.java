@@ -89,8 +89,8 @@ public class ammeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/ammeterInfo/{apiRequestVO}",method = RequestMethod.GET,produces = {"application/json"})
-    public String ammeterInfo(@PathVariable String apiRequestVO){
+    @RequestMapping(value="/ammeterInfo",method = RequestMethod.POST,produces = {"application/json"})
+    public String ammeterInfo(@RequestBody ApiRequestVO apiRequestVO){
         return "";
     }
 

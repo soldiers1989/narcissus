@@ -14,7 +14,7 @@ import java.util.List;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Repository
-public interface AmmeterMannagerVoDao {
+public interface AmmeterMannagerVoDao{
 
     List<AmmeterMannagerVo>findConcentratAmmeter(AmmeterMannagerVo ammeterMannagerVo);
 
