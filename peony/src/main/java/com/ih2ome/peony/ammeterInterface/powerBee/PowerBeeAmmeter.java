@@ -103,7 +103,35 @@ public class PowerBeeAmmeter implements IAmmeter {
     }
 
     @Override
-    public AmmeterInfoVo getAmmeterInfo(String devId) {
-        return null;
+    public AmmeterInfoVo getAmmeterInfo(String devId) throws AmmeterException {
+        Log.info("获取电表信息");
+        Log.info("电表id:"+devId);
+        AmmeterInfoVo ammeterInfoVo = new AmmeterInfoVo();
+        String uri = BASE_URL+"/device/ammeter/"+devId;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(url);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
+        JSONObject expand = resJson.getJSONObject("Data").getJSONObject("Expand");
+        ammeterInfoVo.setAmmeterName(devId);
+        ammeterInfoVo.setAllPower(expand.getDouble("allpower"));
+        ammeterInfoVo.setCurrent(expand.getDouble("current"));
+        ammeterInfoVo.setLastTime(expand.getJSONObject("lasttime").getString("time"));
+        ammeterInfoVo.setPowerDay(expand.getDouble("powerday"));
+        ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
+        ammeterInfoVo.setVoltage(expand.getDouble("voltage"));
+        ammeterInfoVo.initPowerOutput();
+        return ammeterInfoVo;
     }
 }

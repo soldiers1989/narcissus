@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.vo;
 
+import com.ih2ome.common.base.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Data
-public class AmmeterMannagerVo implements Serializable {
+public class AmmeterMannagerVo extends BaseEntity implements Serializable {
     private String ammeterId;//电表id
     private String apartmentName;//公寓名称
     private String apartmentType;//公寓类型

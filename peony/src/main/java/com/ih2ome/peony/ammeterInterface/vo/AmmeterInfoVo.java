@@ -25,7 +25,7 @@ public class AmmeterInfoVo {
     private Double allPower;//当前度数
     private Double voltage;//当前电压
     private Double powerDay;//今日耗电
-    private Double lastTime;//更新时间
+    private String lastTime;//更新时间
     private Double powerOutput;//功率
     private Double current;//当前电流
     private String powerMonth;//当月耗电

@@ -1,13 +1,14 @@
 package com.ih2ome.hardware_server.server.controller.mannager.hardware;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
+import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/ammeter")
+@CrossOrigin
 public class ammeterController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
@@ -42,10 +44,10 @@ public class ammeterController extends BaseController {
     public String dispersedList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
-        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findConcentratAmmeter(ammeterMannagerVo);
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(ammeterMannagerVoList));
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findDispersedAmmeter(ammeterMannagerVo);
+        PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("ammeterMannagerVoList",jsonArray);
+        responseJson.put("ammeterMannagerVoList",pageInfo);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
@@ -59,10 +61,10 @@ public class ammeterController extends BaseController {
     public String concentratedList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
-        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findDispersedAmmeter(ammeterMannagerVo);
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(ammeterMannagerVoList));
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findConcentratAmmeter(ammeterMannagerVo);
+        PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("ammeterMannagerVoList",jsonArray);
+        responseJson.put("ammeterMannagerVoList",pageInfo);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
@@ -89,9 +91,14 @@ public class ammeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/ammeterInfo",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/ammeterInfo",method = RequestMethod.PUT,produces = {"application/json"})
     public String ammeterInfo(@RequestBody ApiRequestVO apiRequestVO){
-        return "";
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = resData.getString("id");
+        String type = resData.getString("type");
+        AmmeterInfoVo ammeterInfoVo = ammeterManagerService.getAmmeterInfoVo(id,type);
+
+        return null;
     }
 
     /**
@@ -101,7 +108,13 @@ public class ammeterController extends BaseController {
      */
     @RequestMapping(value="/scenarioUpdate",method = RequestMethod.PUT,produces = {"application/json"})
     public String scenarioUpdate(@RequestBody ApiRequestVO apiRequestVO){
-        return "";
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = resData.getString("id");
+        String wiring = resData.getString("wiring");
+        String type = resData.getString("type");
+        ammeterManagerService.updateWiring(id,type,wiring);
+        String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");
+        return res;
     }
 
     /**
@@ -121,7 +134,31 @@ public class ammeterController extends BaseController {
      */
     @RequestMapping(value="/unitPriceOfElectricityUpdate",method = RequestMethod.PUT,produces = {"application/json"})
     public String unitPriceOfElectricityUpdate(@RequestBody ApiRequestVO apiRequestVO){
-        return "";
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = resData.getString("id");
+        String price = resData.getString("price");
+        String type = resData.getString("type");
+        try {
+            ammeterManagerService.updatePrice(id,type,price);
+        } catch (AmmeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        }
+        String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");
+        return res;
     }
 
     /**
@@ -131,7 +168,31 @@ public class ammeterController extends BaseController {
      */
     @RequestMapping(value="/operateAmmeter",method = RequestMethod.POST,produces = {"application/json"})
     public String operateAmmeter(@RequestBody ApiRequestVO apiRequestVO){
-        return "";
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = resData.getString("id");
+        String operate = resData.getString("operate");
+        String type = resData.getString("type");
+        try {
+            ammeterManagerService.switchDevice(id,operate,type);
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (AmmeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        }
+        String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");
+        return res;
     }
 
 

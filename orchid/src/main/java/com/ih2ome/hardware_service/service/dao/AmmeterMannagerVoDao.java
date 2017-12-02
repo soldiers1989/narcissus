@@ -2,6 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,7 +29,17 @@ public interface AmmeterMannagerVoDao{
 
     List <DeviceIdAndName> getDeviceBySerialIdWithConcentrated(String id);
 
+    void updateWiringWithDispersed(String id,String wiring);
 
+    void updateWiringWithConcentrated(@Param("id") String id, @Param("wiring")String wiring);
+
+    String getDeviceNameByIdWithDispersed(@Param("id")String id);
+
+    String getDeviceNameByIdWithConcentrated(@Param("id")String id);
+
+    String updateDevicePriceWithDispersed(@Param("id")String id,@Param("price")String price);
+
+    String updateDevicePriceWithConcentrated(@Param("id")String id,@Param("price")String price);
 
 
 }

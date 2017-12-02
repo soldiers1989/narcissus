@@ -30,6 +30,11 @@
 			<artifactId>narcissus_common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ih2ome</groupId>
+			<artifactId>peony</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

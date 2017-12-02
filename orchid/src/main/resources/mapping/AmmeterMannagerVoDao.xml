@@ -80,14 +80,38 @@
       select * from caspain_test.smart_device sd where sd.id=#{id}
     </select>
     <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
-        select * from caspain_test.smart_device sd where sd.serial_id=#{serialId}
+        select * from caspain_test.smart_device sd where sd.master=#{serialId}
     </select>
 
     <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
         select * from `volga-test`.smart_device sd where sd.id=#{id}
     </select>
     <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
-        select * from `volga-test`.smart_device sd where sd.serial_id=#{serialId}
+        select * from `volga-test`.smart_device sd where sd.master=#{serialId}
     </select>
+
+    <update id="updateWiringWithDispersed">
+      update caspain_test.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
+    </update>
+
+    <update id="updateWiringWithConcentrated">
+      update `volga-test`.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
+    </update>
+
+    <select id="getDeviceNameByIdWithDispersed" resultType="String">
+        SELECT sd.name FROM caspain_test.smart_device sd WHERE sd.id=#{id}
+    </select>
+
+    <select id="getDeviceNameByIdWithConcentrated" resultType="String">
+        SELECT sd.name FROM `volga-test`.smart_device sd WHERE sd.id=#{id}
+    </select>
+
+    <update id="updateDevicePriceWithDispersed">
+        UPDATE caspain_test.smart_device sd SET sd.price=#{price} where sd.id=#{id}
+    </update>
+
+    <update id="updateDevicePriceWithConcentrated">
+        UPDATE `volga-test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
+    </update>
 
 </mapper>

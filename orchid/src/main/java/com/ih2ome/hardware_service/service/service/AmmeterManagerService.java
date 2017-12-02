@@ -2,6 +2,8 @@ package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
+import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 
 import java.util.List;
 
@@ -19,4 +21,12 @@ public interface AmmeterManagerService {
     List <AmmeterMannagerVo> findDispersedAmmeter(AmmeterMannagerVo ammeterMannagerVo);
 
     DeviceIdAndName getAmmeterRelation(String id,String type);
+
+    AmmeterInfoVo getAmmeterInfoVo(String id,String type);
+
+    void updateWiring(String id, String type, String wiring);
+
+    void updatePrice(String id, String type, String price) throws AmmeterException, ClassNotFoundException, IllegalAccessException, InstantiationException;
+
+    void switchDevice(String id,String operate,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 }

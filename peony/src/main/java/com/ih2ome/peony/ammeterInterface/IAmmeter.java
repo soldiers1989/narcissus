@@ -38,7 +38,7 @@ public interface IAmmeter {
      * @param devId
      * @return
      */
-    AmmeterInfoVo getAmmeterInfo(String devId);
+    AmmeterInfoVo getAmmeterInfo(String devId) throws AmmeterException;
 
 
 }
