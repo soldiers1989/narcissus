@@ -17,13 +17,6 @@ spring:
       max-idle: 8
       min-idle: 0
     timeout: 0
-#模板引擎暂不使用
-#  thymeleaf:
-#    prefix: classpath:/templates/
-#    subfix: .html
-#    encoding: UTF-8
-#    contentType: text/html
-#    cache: false
   
   ## 数据库访问配置
   datasource:

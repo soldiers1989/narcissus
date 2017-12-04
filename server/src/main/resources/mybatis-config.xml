@@ -29,8 +29,18 @@
         <setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
     <plugins>
-        <plugin interceptor="com.ih2ome.common.interceptor.OffsetLimitInterceptor">
-            <property name="dialectClass" value="com.ih2ome.common.dbUtils.MySQLDialect" />
+        <!--<plugin interceptor="com.ih2ome.common.interceptor.OffsetLimitInterceptor">-->
+            <!--<property name="dialectClass" value="com.ih2ome.common.dbUtils.MySQLDialect" />-->
+        <!--</plugin>-->
+        <!-- com.github.pagehelper为PageHelper类所在包名 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!-- 该參数默觉得false -->
+            <!-- 设置为true时，会将RowBounds第一个參数offset当成pageNum页码使用 -->
+            <!-- 和startPage中的pageNum效果一样-->
+            <property name="offsetAsPageNum" value="true"/>
+            <!-- 该參数默觉得false -->
+            <!-- 设置为true时，使用RowBounds分页会进行count查询 -->
+            <property name="rowBoundsWithCount" value="true"/>
         </plugin>
     </plugins>
 </configuration>	
