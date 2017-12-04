@@ -1,6 +1,5 @@
 package com.ih2ome.hardware_server.server.config;
 
-import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.Properties;
 
 /**
  *
@@ -61,18 +59,6 @@ public class MyBatisConfig implements TransactionManagementConfigurer{
 	@Bean
 	public PlatformTransactionManager annotationDrivenTransactionManager() {
 		return new DataSourceTransactionManager(dataSource);
-	}
-
-	@Bean
-	public PageHelper pageHelper(){
-		PageHelper pageHelper = new PageHelper();
-		//添加配置，也可以指定文件路径
-		Properties p = new Properties();
-		p.setProperty("offsetAsPageNum", "true");
-		p.setProperty("rowBoundsWithCount", "true");
-		p.setProperty("reasonable", "true");
-		pageHelper.setProperties(p);
-		return pageHelper;
 	}
 
 
