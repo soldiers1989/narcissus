@@ -66,7 +66,7 @@ mapper:
   mappers: com.ih2ome.common.base.MyMapper
   not-empty: false
   identity: MYSQL
-#pagehelper:
+pagehelper:
   helper-dialect: mysql
   reasonable: true
   support-methods-arguments: true
