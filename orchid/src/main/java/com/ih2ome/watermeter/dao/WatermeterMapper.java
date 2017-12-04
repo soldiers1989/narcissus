@@ -1,14 +1,15 @@
 package com.ih2ome.watermeter.dao;
 
 import com.ih2ome.common.base.MyMapper;
+import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface WatermeterMapper extends MyMapper<WaterMeterRecordVO> {
+@Repository()
+public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
 
 
     List<Integer> findRoomIdByCreatebyid(String id);
@@ -31,14 +32,14 @@ public interface WatermeterMapper extends MyMapper<WaterMeterRecordVO> {
      * @param id
      * @return
      */
-    WatermeterGatewayDetailVO findGatewaybySmartGatewayId(String id);
+    WatermeterGatewayDetailVO findGatewaybySmartGatewayId(int id);
 
     /**
      * 通过网关id查询绑定的水表
      * @param smartGatewayId
      * @return
      */
-    List<WatermeterDetailVO> finWatermeterByGatewayId(String smartGatewayId);
+    List<WatermeterDetailVO> findWatermeterByGatewayId(int smartGatewayId);
 
     /**
      * 查询公寓列表
@@ -50,16 +51,16 @@ public interface WatermeterMapper extends MyMapper<WaterMeterRecordVO> {
     /**
      * 通过楼层id查询水表
      * @return
-     * @param floorIds
+     * @param floorId
      */
-    List<JZWatermeterDetailVO> findWatermetersByFloorIds(int floorIds);
+    List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
 
     /**
      * 改水价
      * @param price
      * @return
      */
-    Boolean updataWaterPrice(@Param("price") int price, @Param("watermeterId") int watermeterId);
+    int updataWaterPrice(@Param("price") int price, @Param("watermeterId") int watermeterId);
 
     /**
      * 通过公寓id查询网关
@@ -73,5 +74,5 @@ public interface WatermeterMapper extends MyMapper<WaterMeterRecordVO> {
      * @param id
      * @return
      */
-    List<WatermeterDetailVO> findWatermetersByid(int id);
+    List<WatermeterDetailVO> findWatermetersByUserId(int id);
 }

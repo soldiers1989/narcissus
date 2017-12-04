@@ -1,8 +1,10 @@
 package com.ih2ome.watermeter.service;
 
+import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.vo.*;
 
+import java.util.Date;
 import java.util.List;
 
 public interface WatermeterService {
@@ -28,21 +30,24 @@ public interface WatermeterService {
      * @param smartGatewayId
      * @return
      */
-    WatermeterGatewayDetailVO findGatewaybyId(String smartGatewayId);
+    WatermeterGatewayDetailVO findGatewaybyId(int smartGatewayId);
 
     /**
      * 通过网关id查询绑定的水表列表
      * @param smartGatewayId
      * @return
      */
-    List<WatermeterDetailVO> findWatermetersByGatewayId(String smartGatewayId);
+    List<WatermeterDetailVO> findWatermetersByGatewayId(int smartGatewayId);
 
     /**
      * 查询水表抄表列表
-     * @param watermeterId
+     *
+     * @param smartWatermeterId
+     * @param page
+     *@param count
      * @return
      */
-    List<WaterMeterRecordVO> findWatermeterRecordByWatermeterId(int watermeterId);
+    PageResult<SmartWatermeterRecord> findWatermeterRecordByWatermeterId(int smartWatermeterId, int page, int count);
 
     /**
      * 通过用户id查询用户所有公寓信息
@@ -63,7 +68,7 @@ public interface WatermeterService {
      * @param price
      * @return
      */
-    Boolean updataWaterPrice(int price,int watermeterId);
+    Boolean updataWaterPrice(int price, int watermeterId);
 
     /**
      * 通过公寓id查询水表网关列表
@@ -78,4 +83,13 @@ public interface WatermeterService {
      * @return
      */
     List<WatermeterDetailVO> findWatermetersByid(int id);
+
+    /**
+     * 筛选水表抄表记录
+     * @param watermeterId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, Date startTime, Date endTime);
 }
