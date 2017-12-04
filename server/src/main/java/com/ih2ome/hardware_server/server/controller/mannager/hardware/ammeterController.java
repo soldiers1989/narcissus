@@ -7,6 +7,7 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.slf4j.Logger;
@@ -124,7 +125,31 @@ public class ammeterController extends BaseController {
      */
     @RequestMapping(value="/payMatureUpdate",method = RequestMethod.PUT,produces = {"application/json"})
     public String payMatureUpdate(@RequestBody ApiRequestVO apiRequestVO){
-        return "";
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = resData.getString("id");
+        String payMod = resData.getString("payMod");
+        String type = resData.getString("type");
+        try {
+            ammeterManagerService.updatePayMod(id,type, PAY_MOD.getByCode(Integer.valueOf(payMod)));
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (AmmeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        }
+        String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");
+        return res;
     }
 
     /**

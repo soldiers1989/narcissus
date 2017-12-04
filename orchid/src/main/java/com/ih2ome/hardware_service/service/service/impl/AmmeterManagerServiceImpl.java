@@ -7,12 +7,13 @@ import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
 import com.ih2ome.peony.ammeterInterface.enums.AMMETER_FIRM;
+import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.beans.Transient;
 import java.util.List;
 
 /**
@@ -81,18 +82,17 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         }
     }
 
-    @Transient
+    @Transactional
     @Override
     public void updatePrice(String id, String type, String price) throws AmmeterException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        IAmmeter iAmmeter = null;
-        iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals("0")){
            devId =ammeterMannagerVoDao.getDeviceNameByIdWithDispersed(id);
            ammeterMannagerVoDao.updateDevicePriceWithDispersed(id,price);
         }else{
             devId =ammeterMannagerVoDao.getDeviceNameByIdWithConcentrated(id);
-            ammeterMannagerVoDao.updateWiringWithConcentrated(id,price);
+            ammeterMannagerVoDao.updateDevicePriceWithConcentrated(id,price);
         }
         iAmmeter.setElectricityPrice(devId,Double.valueOf(price));
 
@@ -101,8 +101,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
 
     @Override
     public void switchDevice(String id, String operate,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
-        IAmmeter iAmmeter = null;
-        iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals("0")){
             devId =ammeterMannagerVoDao.getDeviceNameByIdWithDispersed(id);
@@ -111,4 +110,21 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         }
         iAmmeter.switchAmmeter(devId,operate);
     }
+
+    @Transactional
+    @Override
+    public void updatePayMod(String id, String type, PAY_MOD pay_mod) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        String devId = null;
+        if (type.equals("0")){
+            devId =ammeterMannagerVoDao.getDeviceNameByIdWithDispersed(id);
+            ammeterMannagerVoDao.updateDevicePayModWithDispersed(id, String.valueOf(pay_mod.getCode()));
+        }else{
+            devId =ammeterMannagerVoDao.getDeviceNameByIdWithConcentrated(id);
+            ammeterMannagerVoDao.updateDevicePayModWithConcentrated(id, String.valueOf(pay_mod.getCode()));
+        }
+        iAmmeter.updatePayMod(devId,pay_mod);
+
+    }
+
 }

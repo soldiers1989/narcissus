@@ -41,5 +41,9 @@ public interface AmmeterMannagerVoDao{
 
     String updateDevicePriceWithConcentrated(@Param("id")String id,@Param("price")String price);
 
+    void updateDevicePayModWithDispersed(@Param("id")String id,@Param("payMod")String payMod);
+
+    void updateDevicePayModWithConcentrated(@Param("id")String id,@Param("payMod")String payMod);
+
 
 }
