@@ -5,11 +5,14 @@
     <sql id="smart_watermeter">narcissus.smart_watermeter</sql>
     <sql id="smart_gateway_bind">narcissus.smart_gateway_bind</sql>
     <sql id="smart_gateway">narcissus.smart_gateway</sql>
+    <sql id="smart_watermeter_record">narcissus.smart_watermeter_record</sql>
     <sql id="house">caspain_test.house</sql>
     <sql id="room">caspain_test.room</sql>
     <sql id="apartment">volga_test.apartment</sql>
     <sql id="floor">volga_test.floor</sql>
     <sql id="jzroom">volga_test.room</sql>
+
+
 
     <!-- 分散式水表 -->
     <select id="findWatermetersByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO" >
@@ -92,8 +95,19 @@
         WHERE g.apartment_id = #{id};
     </select>
 
-    <select id="findRoomIdByCreatebyid" parameterType="String" resultType="List">
-        SELECT id FROM room WHERE house_id in (SELECT house_id FROM house_contract WHERE created_by_id = #{id})
+    <!--查询水表抄表记录-->
+    <select id="findWatermeterRecordByWatermeterId" parameterType="int" resultType="com.ih2ome.watermeter.model.SmartWatermeterRecord">
+        SELECT * FROM <include refid="smart_watermeter_record"/> WHERE smart_watermeter_id = #{id} ORDER BY created_at DESC
+    </select>
+
+    <!--筛选水表抄表记录-->
+    <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.watermeter.model.SmartWatermeterRecord">
+       SELECT * FROM <include refid="smart_watermeter_record"/> WHERE smart_watermeter_id = #{id} AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
+    </select>
+
+    <!--分散式用户房源-->
+    <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.HouseVO">
+        SELECT h.id,h.area,h.building_num,h.house_num FROM <include refid="house"/> h WHERE h.created_by_id= #{id}
     </select>
 
 

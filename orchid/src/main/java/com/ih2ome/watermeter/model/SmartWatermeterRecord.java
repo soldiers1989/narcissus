@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import lombok.Data;
 
 import javax.persistence.Column;
-import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "narcissus.smart_watermeter_record")
 @Data
 public class SmartWatermeterRecord {
 

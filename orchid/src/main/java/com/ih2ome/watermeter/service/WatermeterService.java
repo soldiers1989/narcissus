@@ -4,7 +4,6 @@ import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.vo.*;
 
-import java.util.Date;
 import java.util.List;
 
 public interface WatermeterService {
@@ -91,5 +90,12 @@ public interface WatermeterService {
      * @param endTime
      * @return
      */
-    List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, Date startTime, Date endTime);
+    List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, String startTime, String endTime);
+
+    /**
+     * 分散式用户房源
+     * @param id
+     * @return
+     */
+    List<HouseVO> findHouseByUserId(int id);
 }

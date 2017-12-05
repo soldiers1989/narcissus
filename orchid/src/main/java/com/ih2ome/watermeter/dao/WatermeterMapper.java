@@ -75,4 +75,27 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      * @return
      */
     List<WatermeterDetailVO> findWatermetersByUserId(int id);
+
+    /**
+     * 查询水表抄表记录by水表id
+     * @param smartWatermeterId
+     * @return
+     */
+    List<SmartWatermeterRecord> findWatermeterRecordByWatermeterId(int smartWatermeterId);
+
+    /**
+     * 筛选水表抄表记录
+     * @param watermeterId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(@Param("id") int watermeterId, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    /**
+     * 分散式用户房源
+     * @param id
+     * @return
+     */
+    List<HouseVO> findHouseByUserId(int id);
 }

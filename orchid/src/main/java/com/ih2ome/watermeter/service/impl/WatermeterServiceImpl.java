@@ -8,10 +8,8 @@ import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.service.WatermeterService;
 import com.ih2ome.watermeter.vo.*;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -88,12 +86,13 @@ public class WatermeterServiceImpl implements WatermeterService {
         PageHelper.startPage(page, count);
 
         // 根据用户名查询，并且按照创建时间降序排列
-        Example example = new Example(SmartWatermeterRecord.class);
+        /*Example example = new Example(SmartWatermeterRecord.class);
         // 创建查询条件对象
         example.createCriteria().andEqualTo("smartWatermeterId",smartWatermeterId);
         // 实现排序
         example.setOrderByClause("created_at desc");
-        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.selectByExample(example);
+        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.selectByExample(example);*/
+        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.findWatermeterRecordByWatermeterId(smartWatermeterId);
         PageInfo<SmartWatermeterRecord> info = new PageInfo<>(waterMeterRecordVOS);
 
         // 返回分页结果对象
@@ -173,16 +172,27 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, Date startTime, Date endTime) {
+    public List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, String startTime, String endTime) {
         // 根据用户名查询，并且按照创建时间降序排列
-        Example example = new Example(SmartWatermeterRecord.class);
+        /*Example example = new Example(SmartWatermeterRecord.class);
         // 创建查询条件对象
         example.createCriteria().andEqualTo("smartWatermeterId",watermeterId);
         example.createCriteria().andBetween("created_at",startTime,endTime);
         // 实现排序
         example.setOrderByClause("created_at desc");
-        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.selectByExample(example);
+        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.selectByExample(example);*/
+        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.findWatermeterRecordByWatermeterIdAndTime(watermeterId,startTime,endTime);
         return waterMeterRecordVOS;
+    }
+
+    /**
+     * 分散式用户房源
+     * @param id
+     * @return
+     */
+    @Override
+    public List<HouseVO> findHouseByUserId(int id) {
+        return watermeterDao.findHouseByUserId(id);
     }
 
 }

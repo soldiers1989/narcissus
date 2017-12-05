@@ -31,7 +31,7 @@ public class WaterMeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/distributed/list",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/hm/list",method = RequestMethod.POST,produces = {"application/json"})
     public String distributedList(@RequestBody ApiRequestVO apiRequestVO)  {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int id = dt.getIntValue("id");
@@ -50,7 +50,7 @@ public class WaterMeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/watermeter_gateway/detail",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/hm/watermeter_gateway/detail",method = RequestMethod.POST,produces = {"application/json"})
     public String watermeterGatewayDetail(@RequestBody ApiRequestVO apiRequestVO){
         //通过网关id查询网关详情
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
@@ -133,8 +133,8 @@ public class WaterMeterController extends BaseController {
         //获取水表id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int watermeterId = dt.getIntValue("watermeterId");
-        Date startTime= dt.getDate("startTime");
-        Date endTime= dt.getDate("endTime");
+        String startTime= dt.getString("startTime");
+        String endTime= dt.getString("endTime");
         //通过水表id查询水表读数列表
         List<SmartWatermeterRecord> smartWatermeterRecords= watermeterService.findWatermeterRecordByWatermeterIdAndTime(watermeterId,startTime,endTime);
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(smartWatermeterRecords));
@@ -208,12 +208,53 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 同步房源整栋同步
+     * 分散式用户房源
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/synchronous_housing/build",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingByBuild(@RequestBody ApiRequestVO apiRequestVO){
+    @RequestMapping(value="/hm/synchronous_housing/houses",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindHouse(@RequestBody ApiRequestVO apiRequestVO){
+        //获取用户id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int id = dt.getIntValue("id");
+        List<HouseVO> houseVOS = watermeterService.findHouseByUserId(id);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(houseVOS));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("houseVOS",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
+    }
+
+    /**
+     * 分散式用户房源同步
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/hm/synchronous_housing/byhouse",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingByHouse(@RequestBody ApiRequestVO apiRequestVO){
+        //获取用户id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int houseId = dt.getIntValue("houseId");
+        //boolean falg = watermeterService.synchronousHousingByHouseId(houseId);
+
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(1));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("houseVOS",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
+    }
+
+    /**
+     * 集中式同步房源整栋
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/synchronous_housing/byapartment",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindApartment(@RequestBody ApiRequestVO apiRequestVO){
+        //获取公寓id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int apartmentId = dt.getIntValue("apartmentId");
+
         return "";
     }
 
@@ -222,8 +263,11 @@ public class WaterMeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/synchronous_housing/floor",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/synchronous_housing/byfloor",method = RequestMethod.POST,produces = {"application/json"})
     public String synchronousHousingByFloor(@RequestBody ApiRequestVO apiRequestVO){
+        //获取楼层id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int floorId = dt.getIntValue("floorId");
         return "";
     }
 
