@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class PowerBeeAmmeter implements IAmmeter {
             throw new AmmeterException("参数错误！！！");
         }
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doPutUrl(url,null);
+        String res = HttpClientUtil.doPutUrl(url,new HashMap<>(),PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -66,7 +67,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Log.info("电表id"+devId+"/n付费模式"+payMod.getName());
         String uri = BASE_URL+"/device/ammeter/paymode/"+devId+"/"+payMod.getCode();
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doPutUrl(url,null);
+        String res = HttpClientUtil.doPutUrl(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -89,7 +90,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Log.info("电表id"+devId+"/n电表单价"+value);
         String uri = BASE_URL+"/device/ammeter/price/"+devId+"/"+value;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doPutUrl(url,null);
+        String res = HttpClientUtil.doPutUrl(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -113,7 +114,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         AmmeterInfoVo ammeterInfoVo = new AmmeterInfoVo();
         String uri = BASE_URL+"/device/ammeter/"+devId;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url);
+        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -143,7 +144,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Log.info("获取离线电表数量");
         String uri = BASE_URL+"/report/offlinehour/count/"+hour;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url);
+        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -167,7 +168,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         List <String> idList = new ArrayList<>();
         String uri = BASE_URL+"/report/offlinehour/"+hour+"/1/"+size;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url);
+        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -197,7 +198,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         List <String> idList = new ArrayList<>();
         String uri = BASE_URL+"/report/onlinenodatahour/"+hour+"/1/"+size;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url);
+        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -227,7 +228,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         List <String> idList = new ArrayList<>();
         String uri = BASE_URL+"/report/vacantpoweron/"+hour+"/1/"+size;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url);
+        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -254,7 +255,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Log.info("获取长时间无数据上报设备数量");
         String uri = BASE_URL+"/report/onlinenodatahour/count/"+hour;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url);
+        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -275,7 +276,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Log.info("获取空置未断电设备数量");
         String uri = BASE_URL+"/report/vacantpoweron/count/"+hour;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url);
+        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);

@@ -82,7 +82,10 @@ public class HttpClientUtil {
      * @param params
      * @return
      */
-    public static String doGet(String url, Map<String, Object> params) {
+    public static String doGet(String url, Map<String, Object> params ){
+        return doGet(url,params,new HashMap<>());
+    }
+    public static String doGet(String url, Map<String, Object> params ,Map<String,String>header) {
         String apiUrl = url;
         StringBuffer param = new StringBuffer();
         int i = 0;
@@ -98,8 +101,11 @@ public class HttpClientUtil {
         String result = null;
         HttpClient httpclient = new DefaultHttpClient();
         try {
-            HttpGet httpPost = new HttpGet(apiUrl);
-            HttpResponse response = httpclient.execute(httpPost);
+            HttpGet httpGet = new HttpGet(apiUrl);
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpGet.addHeader(entry.getKey(),entry.getValue());
+            }
+            HttpResponse response = httpclient.execute(httpGet);
             int statusCode = response.getStatusLine().getStatusCode();
 
             HttpEntity entity = response.getEntity();
@@ -128,7 +134,11 @@ public class HttpClientUtil {
      * @param params 参数map
      * @return
      */
-    public static String doPost(String apiUrl, Map<String, Object> params) {
+    public static String doPost(String apiUrl, Map<String, Object> params){
+        return doPost(apiUrl,params,new HashMap<>());
+    }
+
+    public static String doPost(String apiUrl, Map<String, Object> params,Map<String,String>header) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         String httpStr = null;
         HttpPost httpPost = new HttpPost(apiUrl);
@@ -136,6 +146,9 @@ public class HttpClientUtil {
 
         try {
             httpPost.setConfig(requestConfig);
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpPost.addHeader(entry.getKey(),entry.getValue());
+            }
             List<NameValuePair> pairList = new ArrayList<>(params.size());
             for (Map.Entry<String, Object> entry : params.entrySet()) {
                 NameValuePair pair = new BasicNameValuePair(entry.getKey(), entry
@@ -327,13 +340,16 @@ public class HttpClientUtil {
      * @param params
      * @return
      */
-    public static String doPutUrl(String apiUrl, Map<String, Object> params){
+    public static String doPutUrl(String apiUrl, Map<String, Object> params,Map<String ,String>header){
         CloseableHttpClient httpClient = HttpClients.createDefault();
         String httpStr = null;
         HttpPut httpPut = new HttpPut(apiUrl);
         CloseableHttpResponse response = null;
 
         try {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpPut.addHeader(entry.getKey(),entry.getValue());
+            }
             httpPut.setConfig(requestConfig);
             List<NameValuePair> pairList = new ArrayList<>(params.size());
             for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -359,13 +375,26 @@ public class HttpClientUtil {
         return httpStr;
     }
 
-    public static String doPatchUrl(String apiUrl, Map<String, Object> params){
+    public static String doPutUrl(String apiUrl, Map<String, Object> params){
+        return doPutUrl(apiUrl, params);
+    }
+
+    /**
+     * 发送httpPatch请求
+     * @param apiUrl
+     * @param params
+     * @return
+     */
+    public static String doPatchUrl(String apiUrl, Map<String, Object> params,Map<String ,String>header){
         CloseableHttpClient httpClient = HttpClients.createDefault();
         String httpStr = null;
         HttpPatch httpPatch = new HttpPatch(apiUrl);
         CloseableHttpResponse response = null;
 
         try {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpPatch.addHeader(entry.getKey(),entry.getValue());
+            }
             httpPatch.setConfig(requestConfig);
             List<NameValuePair> pairList = new ArrayList<>(params.size());
             for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -392,6 +421,8 @@ public class HttpClientUtil {
     }
 
 
-
+    public static String doPatchUrl(String apiUrl, Map<String, Object> params){
+        return doPatchUrl(apiUrl,params,new HashMap<>());
+    }
 
 }

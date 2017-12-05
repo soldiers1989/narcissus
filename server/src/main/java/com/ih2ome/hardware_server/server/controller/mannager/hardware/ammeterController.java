@@ -9,7 +9,6 @@ import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
 import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
-import com.ih2ome.peony.ammeterInterface.powerBee.util.PowerBeeAmmeterUtil;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,14 +92,14 @@ public class ammeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/ammeterInfo",method = RequestMethod.PUT,produces = {"application/json"})
+    @RequestMapping(value="/ammeterInfo",method = RequestMethod.POST,produces = {"application/json"})
     public String ammeterInfo(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         String id = resData.getString("id");
         String type = resData.getString("type");
         AmmeterInfoVo ammeterInfoVo = ammeterManagerService.getAmmeterInfoVo(id,type);
 
-        return null;
+        return ammeterInfoVo.toString();
     }
 
     /**
@@ -221,10 +220,6 @@ public class ammeterController extends BaseController {
         return res;
     }
 
-    @RequestMapping(value="/test")
-    public void test() throws AmmeterException {
-        PowerBeeAmmeterUtil.getToken();
-    }
 
 
 }

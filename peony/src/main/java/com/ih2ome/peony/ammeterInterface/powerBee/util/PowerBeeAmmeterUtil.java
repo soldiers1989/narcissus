@@ -25,7 +25,7 @@ public class PowerBeeAmmeterUtil {
     private static final String UID_KEY = "POWER_BEE_AMMETER_UID";
     private static final String SECRET = "";
     private static final String BASE_URL = "http://smartammeter.zg118.com:8001";
-    private static final String VERSION = "0116010101";
+    private static final String VERSION_VALUE = "0116010101";
 
     /**
      * 获取签名
@@ -68,7 +68,7 @@ public class PowerBeeAmmeterUtil {
         if(!code.equals("0")){
             throw new AmmeterException("第三方请求失败/n"+resJson.get("Message"));
         }
-        JSONObject data = JSONObject.parseObject(resJson.get("data").toString());
+        JSONObject data = JSONObject.parseObject(resJson.get("Data").toString());
         String uid = data.get("Uuid").toString();
         String expand = resJson.get("Expand").toString();
         map.put(UID_KEY,uid);
@@ -83,22 +83,25 @@ public class PowerBeeAmmeterUtil {
      * @return
      */
     public static Map <String,String> getToken() throws AmmeterException {
-        CacheUtils cacheUtils = new CacheUtils();
         String token = CacheUtils.getStr(TOKEN_KEY);
-        String uid = cacheUtils.getStr(UID_KEY);
+        String uid = CacheUtils.getStr(UID_KEY);
         Map <String,String> map = null;
         if (StringUtils.isBlank(token)||StringUtils.isBlank(uid)){
             map = getTokenByThrid();
             token = map.get(TOKEN_KEY);
             uid = map.get(UID_KEY);
-            cacheUtils.set(TOKEN_KEY,token, ExpireTime.FIFTY_EIGHT_MIN);
-            cacheUtils.set(UID_KEY,uid,ExpireTime.FIFTY_EIGHT_MIN);
+            CacheUtils.set(TOKEN_KEY,token, ExpireTime.FIFTY_EIGHT_MIN);
+            CacheUtils.set(UID_KEY,uid,ExpireTime.FIFTY_EIGHT_MIN);
         }else{
             map = new HashMap<>();
             map.put(TOKEN_KEY,token);
             map.put(UID_KEY,uid);
         }
-        return map;
+        Map <String,String> header = new HashMap<>();
+        header.put("uid",map.get(UID_KEY));
+        header.put("token",map.get(TOKEN_KEY));
+        header.put("version",VERSION_VALUE);
+        return header;
     }
 
 

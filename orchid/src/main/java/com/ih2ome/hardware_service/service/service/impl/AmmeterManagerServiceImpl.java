@@ -68,6 +68,12 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     @Override
     public AmmeterInfoVo getAmmeterInfoVo(String id, String type) {
         AmmeterInfoVo ammeterInfoVo = null;
+        String devId = null;
+        if (type.equals("0")){
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
+        }else{
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
+        }
 
         return null;
     }
