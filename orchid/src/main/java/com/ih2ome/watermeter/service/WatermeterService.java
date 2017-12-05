@@ -1,5 +1,6 @@
 package com.ih2ome.watermeter.service;
 
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.vo.*;
@@ -67,7 +68,7 @@ public interface WatermeterService {
      * @param price
      * @return
      */
-    Boolean updataWaterPrice(int price, int watermeterId);
+    Boolean updataWaterPrice(int price, int watermeterId) throws AmmeterException, ClassNotFoundException, IllegalAccessException, InstantiationException;
 
     /**
      * 通过公寓id查询水表网关列表
@@ -98,4 +99,18 @@ public interface WatermeterService {
      * @return
      */
     List<HouseVO> findHouseByUserId(int id);
+
+    /**
+     * 查找水表异常记录
+     * @param watermeterId
+     * @return
+     */
+    List<ExceptionVO> findWatermeterException(int watermeterId);
+
+    /**
+     * 查找水表网关异常记录
+     * @param watermeterId
+     * @return
+     */
+    List<ExceptionVO> findWatermeterGatewayException(int gatewayId);
 }

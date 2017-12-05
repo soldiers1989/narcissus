@@ -6,6 +6,7 @@
     <sql id="smart_gateway_bind">narcissus.smart_gateway_bind</sql>
     <sql id="smart_gateway">narcissus.smart_gateway</sql>
     <sql id="smart_watermeter_record">narcissus.smart_watermeter_record</sql>
+    <sql id="smart_exception">narcissus.smart_exception</sql>
     <sql id="house">caspain_test.house</sql>
     <sql id="room">caspain_test.room</sql>
     <sql id="apartment">volga_test.apartment</sql>
@@ -108,6 +109,16 @@
     <!--分散式用户房源-->
     <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.HouseVO">
         SELECT h.id,h.area,h.building_num,h.house_num FROM <include refid="house"/> h WHERE h.created_by_id= #{id}
+    </select>
+
+    <!--水表异常记录-->
+    <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.watermeter.vo.ExceptionVO">
+        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
+    </select>
+
+    <!--网关异常记录-->
+    <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.ExceptionVO">
+        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
     </select>
 
 

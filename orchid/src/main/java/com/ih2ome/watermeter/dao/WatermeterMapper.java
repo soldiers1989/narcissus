@@ -98,4 +98,18 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      * @return
      */
     List<HouseVO> findHouseByUserId(int id);
+
+    /**
+     * 水表异常记录
+     * @param watermeterId
+     * @return
+     */
+    List<ExceptionVO> findWatermeterExceptionByWaterId(int watermeterId);
+
+    /**
+     * 网关异常记录
+     * @param gatewayId
+     * @return
+     */
+    List<ExceptionVO> findWatermeterGatewayExceptionByGatewayId(int gatewayId);
 }
