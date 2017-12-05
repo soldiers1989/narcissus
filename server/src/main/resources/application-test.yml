@@ -56,7 +56,7 @@ mybatis:
   typeAliasesPackage: com.ih2home.hardware_service.service.model
   mapperLocations: classpath*:/mapping/*.xml
 mapper:
-  mappers: com.ih2ome.common.base.MyMapper
+  mappers: MyMapper
   not-empty: false
   identity: MYSQL
 pagehelper:

@@ -98,12 +98,12 @@
       update `volga-test`.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
     </update>
 
-    <select id="getDeviceNameByIdWithDispersed" resultType="String">
-        SELECT sd.name FROM caspain_test.smart_device sd WHERE sd.id=#{id}
+    <select id="getDeviceIdByIdWithDispersed" resultType="String">
+        SELECT sd.uuid FROM caspain_test.smart_device sd WHERE sd.id=#{id}
     </select>
 
-    <select id="getDeviceNameByIdWithConcentrated" resultType="String">
-        SELECT sd.name FROM `volga-test`.smart_device sd WHERE sd.id=#{id}
+    <select id="getDeviceIdByIdWithConcentrated" resultType="String">
+        SELECT sd.uuid FROM `volga-test`.smart_device sd WHERE sd.id=#{id}
     </select>
 
     <update id="updateDevicePriceWithDispersed">
@@ -113,5 +113,14 @@
     <update id="updateDevicePriceWithConcentrated">
         UPDATE `volga-test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
     </update>
+
+    <update id="updateDevicePayModWithDispersed">
+        update caspain_test.smart_device csd,caspain_test.smart_device_power_contract csdpc set csdpc.charge=#{paymod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+    </update>
+
+    <update id="updateDevicePayModWithConcentrated">
+        update `volga-test`.smart_device csd,`volga-test`.smart_device_power_contract csdpc set csdpc.charge=#{paymod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+    </update>
+
 
 </mapper>

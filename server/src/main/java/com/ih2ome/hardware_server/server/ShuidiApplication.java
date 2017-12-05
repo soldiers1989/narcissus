@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.ih2ome.hardware_service.service","com.ih2ome.hardware_server.server","com.ih2ome.watermeter"})
+@ComponentScan(basePackages = {"com.ih2ome"})
 //public class ShuidiApplication extends SpringBootServletInitializer {
 public class ShuidiApplication {
 //	@Override
