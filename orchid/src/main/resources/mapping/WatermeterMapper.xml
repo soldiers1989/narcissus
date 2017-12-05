@@ -1,26 +1,117 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.watermeter.dao.WatermeterMapper">
+    <!-- 数据库表名 -->
+    <sql id="smart_watermeter">narcissus.smart_watermeter</sql>
+    <sql id="smart_gateway_bind">narcissus.smart_gateway_bind</sql>
+    <sql id="smart_gateway">narcissus.smart_gateway</sql>
+    <sql id="smart_watermeter_record">narcissus.smart_watermeter_record</sql>
+    <sql id="house">caspain_test.house</sql>
+    <sql id="room">caspain_test.room</sql>
+    <sql id="apartment">volga_test.apartment</sql>
+    <sql id="floor">volga_test.floor</sql>
+    <sql id="jzroom">volga_test.room</sql>
 
-    <select id="findRoomIdByCreatebyid" parameterType="String" resultType="List">
-        SELECT id FROM room WHERE house_id in (SELECT house_id FROM house_contract WHERE created_by_id = #{id})
+
+
+    <!-- 分散式水表 -->
+    <select id="findWatermetersByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO" >
+        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status
+        FROM
+        <include refid="smart_watermeter" /> AS w
+        INNER JOIN
+        <include refid="smart_gateway_bind" /> AS gb
+        ON w.smart_watermeter_id = gb.smart_id
+        INNER JOIN
+        <include refid="house" /> AS h
+        ON w.house_id= h.id
+        INNER JOIN
+        <include refid="room" /> AS r
+        ON  w.room_id= r.id AND h.id=r.house_id AND r.created_by_id = #{id} ;
     </select>
 
-    <!--配置一个resultMap 指定返回的类型 -->
-    <resultMap id="watermeterDetailVO" type="com.ih2ome.watermeter.vo.WatermeterDetailVO">
+    <!-- 通过网关id查询网关 -->
+    <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO">
+        SELECT g.smart_gateway_id,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g WHERE smart_gateway_id =  #{id};
+    </select>
 
-        <id column="smart_watermeter_id" property="smartWatermeterId" />
-        <result column="room_name" property="roomName" />
-        <result column="meter_type" property="meterType" />
-        <result column="created_at" property="createdAt" />
-        <result column="last_amount" property="lastAmount" />
-        <result column="price" property="price" />
-        <result column="onoff_status" property="onoffStatus" />
-        <result column="smart_gateway_id" property="smartGatewayId" />
+    <!--根据网关id查询水表-->
+    <select id="findWatermeterByGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO">
+        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status
+        FROM
+        <include refid="smart_watermeter" /> AS w
+        INNER JOIN
+        <include refid="smart_gateway_bind" /> AS gb
+        ON w.smart_watermeter_id = gb.smart_id AND gb.smart_gateway_id = #{id}
+        INNER JOIN
+        <include refid="house" /> AS h
+        ON w.house_id= h.id
+        INNER JOIN
+        <include refid="room" /> AS r
+        ON  w.room_id= r.id AND h.id=r.house_id;
+    </select>
 
+    <!--改水费单价-->
+    <update id="updataWaterPrice" parameterType="int" >
+        UPDATE <include refid="smart_watermeter" /> SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
+    </update>
+
+    <!--配置一个resultMap -->
+    <resultMap type="com.ih2ome.watermeter.vo.ApartmentVO" id="apartmentResultMap" autoMapping="true">
+        <id column="id" property="id" />
+
+        <collection property="floorVOS" javaType="List"
+                    ofType="com.ih2ome.watermeter.vo.FloorVO" autoMapping="true">
+            <id column="floor_id" property="floorId" />
+        </collection>
     </resultMap>
 
-    <select id="finWatermeterByRoomIds" parameterType="List" resultMap="watermeterDetailVO">
+    <!--查询公寓-->
+    <select id="findApartmentByUserId" parameterType="int" resultMap="apartmentResultMap">
+        SELECT a.id,a.`name`,COUNT(DISTINCT w.smart_watermeter_id) AS watermeter_num,sum(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num,f.id AS floor_id,f.`name` AS floor_name
+        FROM <include refid="apartment"/> AS a,<include refid="floor"/> AS f,<include refid="smart_watermeter"/> AS w
+        WHERE
+        f.apartment_id = a.id
+        AND w.apartment_id = a.id
+        AND a.created_by = #{id};
+    </select>
+
+    <!--查询集中式水表列表by楼层id-->
+    <select id="findWatermetersByFloorId" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterDetailVO">
+        SELECT w.smart_watermeter_id,r.`name` AS room_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.smart_gateway_id
+        FROM <include refid="smart_gateway_bind"/> AS g,<include refid="room"/> AS r,<include refid="smart_watermeter"/> AS w
+        WHERE w.floor_id = #{floorId}
+        AND w.smart_watermeter_id = g.smart_id AND w.room_id = r.id;
+    </select>
+
+    <!--集中式公寓下的网关-->
+    <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterGatewayVO" >
+        SELECT g.smart_gateway_id,g.onoff_status,COUNT(DISTINCT gb.smart_id) AS watermeter_num,sum(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num
+        FROM <include refid="smart_watermeter"/> AS w
+        INNER JOIN <include refid="smart_gateway_bind"/> AS gb
+        ON w.smart_watermeter_id = gb.smart_id
+        INNER JOIN <include refid="smart_gateway"/>  AS g
+        ON g.id = gb.smart_gateway_id
+        WHERE g.apartment_id = #{id};
+    </select>
+
+    <!--查询水表抄表记录-->
+    <select id="findWatermeterRecordByWatermeterId" parameterType="int" resultType="com.ih2ome.watermeter.model.SmartWatermeterRecord">
+        SELECT * FROM <include refid="smart_watermeter_record"/> WHERE smart_watermeter_id = #{id} ORDER BY created_at DESC
+    </select>
+
+    <!--筛选水表抄表记录-->
+    <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.watermeter.model.SmartWatermeterRecord">
+       SELECT * FROM <include refid="smart_watermeter_record"/> WHERE smart_watermeter_id = #{id} AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
+    </select>
+
+    <!--分散式用户房源-->
+    <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.HouseVO">
+        SELECT h.id,h.area,h.building_num,h.house_num FROM <include refid="house"/> h WHERE h.created_by_id= #{id}
+    </select>
+
+
+    <!--<select id="finWatermeterByRoomIds" parameterType="List" resultMap="watermeterDetailVO">
         SELECT g.smart_gateway_id FROM (SELECT
         w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status
         FROM
@@ -32,67 +123,16 @@
         ) temp,narcissus.smart_gateway_bind g WHERE g.smart_device_type = temp.smart_watermeter_id;
 
     </select>
+-->
 
-    <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO">
-        SELECT g.smart_gateway_id,g.room_id,g.updated_at,g.created_at,g.brand FROM narcissus.smart_gateway g WHERE smart_gateway_id =  #{id}
-    </select>
-
-    <select id="finWatermeterByGatewayId" parameterType="int" resultMap="watermeterDetailVO">
-        SELECT g.smart_gateway_id FROM (SELECT
-        w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status
-        FROM
-        narcissus.smart_watermeter w ,caspain_test.room r
-        WHERE room_id IN
-        (SELECT gb.smart_id FROM narcissus.smart_gateway_bind gb WHERE smart_gateway_id = #{id})
-        ) temp,narcissus.smart_gateway_bind g WHERE g.smart_device_type = temp.smart_watermeter_id;
-
-    </select>
-
-    <!--配置一个resultMap 指定返回的类型 -->
-    <resultMap id="apartmentVO" type="com.ih2ome.watermeter.vo.ApartmentVO">
-
-        <id column="smart_watermeter_id" property="id" />
-        <result column="name" property="name" />
-        <result column="floor_id" property="floorId" />
-        <result column="floor_name" property="floorName" />
-
-    </resultMap>
-    <select id="findApartmentByUserId" parameterType="int" resultType="List">
-        SELECT
-        temp.*,f.id floor_id,f.`name` floor_name
-        FROM
-        (SELECT a.id,a.`name` FROM `volga-test`.apartment a WHERE created_by = #{id}) temp left join `volga-test`.floor f
-        ON
-        f.apartment_id = temp.id;
-    </select>
-
-
-    <select id="findWatermetersByFloorIds" parameterType="List" resultMap="watermeterDetailVO" >
-        SELECT w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status,g.smart_gateway_id
-        FROM narcissus.smart_watermeter w,caspain_test.room r,narcissus.smart_gateway_bind g
-        WHERE w.floor_id = #{floorId}
-        AND w.smart_watermeter_id = g.smart_device_type AND w.room_id = r.id;
-    </select>
-
-    <update id="updataWaterPrice" parameterType="int" >
-         UPDATE narcissus.smart_watermeter SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
-    </update>
-
-    <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterGatewayVO" >
+    <!--<select id="findGatewayByApartmentIds" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterGatewayVO" >
         SELECT g.smart_gateway_id,g.onoff_status,COUNT(gb.smart_id) AS watermeter_num,w.onoff_status AS watermter_onoff_status
         FROM narcissus.smart_watermeter AS w
         INNER JOIN narcissus.smart_gateway_bind AS gb
         ON w.smart_watermeter_id = gb.smart_id
         INNER JOIN narcissus.smart_gateway  AS g
         ON g.apartment_id = #{id};
-    </select>
+    </select>-->
 
-    <select id="findWatermetersByid" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO" >
-        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status
-        FROM narcissus.smart_watermeter AS w
-        INNER JOIN narcissus.smart_gateway_bind AS gb
-        ON w.smart_watermeter_id = gb.smart_id
-        INNER JOIN caspain_test.room AS r
-        ON  w.room_id= r.id AND r.created_by_id = #{id} ;
-    </select>
+
 </mapper>

@@ -9,6 +9,6 @@ public class JZWatermeterGatewayVO {
     private int smartGatewayId;
     private int onoffNum;//网关状态，在线离线
     private int watermeterNum;
-    private int  watermterOnoffStatus;//水表状态，在线离线
+    private int watermterOnoffNum;//水表在线个数
 
 }

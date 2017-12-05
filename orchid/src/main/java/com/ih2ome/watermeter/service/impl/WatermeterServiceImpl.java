@@ -1,6 +1,9 @@
 package com.ih2ome.watermeter.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ih2ome.watermeter.dao.WatermeterMapper;
+import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.service.WatermeterService;
 import com.ih2ome.watermeter.vo.*;
@@ -54,7 +57,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public WatermeterGatewayDetailVO findGatewaybyId(String smartGatewayId) {
+    public WatermeterGatewayDetailVO findGatewaybyId(int smartGatewayId) {
         WatermeterGatewayDetailVO watermeterGatewayDetailVO = watermeterDao.findGatewaybySmartGatewayId(smartGatewayId);
         return watermeterGatewayDetailVO;
     }
@@ -65,22 +68,36 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public List<WatermeterDetailVO> findWatermetersByGatewayId(String smartGatewayId) {
-        List<WatermeterDetailVO> watermeterDetailVOS=watermeterDao.finWatermeterByGatewayId(smartGatewayId);
+    public List<WatermeterDetailVO> findWatermetersByGatewayId(int smartGatewayId) {
+        List<WatermeterDetailVO> watermeterDetailVOS=watermeterDao.findWatermeterByGatewayId(smartGatewayId);
         return watermeterDetailVOS;
     }
 
     /**
      * 水表抄表读数清单
+     *
      * @param smartWatermeterId
-     * @return
+     * @param page
+     *@param count  @return
      */
     @Override
-    public List<WaterMeterRecordVO> findWatermeterRecordByWatermeterId(int smartWatermeterId) {
-        WaterMeterRecordVO waterMeterRecordVO = new WaterMeterRecordVO();
-        waterMeterRecordVO.setSmartWatermeterId(smartWatermeterId);
-        List<WaterMeterRecordVO> waterMeterRecordVOS=watermeterDao.select(waterMeterRecordVO);
-        return waterMeterRecordVOS;
+    public PageResult<SmartWatermeterRecord> findWatermeterRecordByWatermeterId(int smartWatermeterId, int page, int count) {
+        // 开启分页
+        PageHelper.startPage(page, count);
+
+        // 根据用户名查询，并且按照创建时间降序排列
+        /*Example example = new Example(SmartWatermeterRecord.class);
+        // 创建查询条件对象
+        example.createCriteria().andEqualTo("smartWatermeterId",smartWatermeterId);
+        // 实现排序
+        example.setOrderByClause("created_at desc");
+        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.selectByExample(example);*/
+        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.findWatermeterRecordByWatermeterId(smartWatermeterId);
+        PageInfo<SmartWatermeterRecord> info = new PageInfo<>(waterMeterRecordVOS);
+
+        // 返回分页结果对象
+        return new PageResult<>(info.getTotal(), waterMeterRecordVOS);
+
     }
 
     /**
@@ -95,6 +112,11 @@ public class WatermeterServiceImpl implements WatermeterService {
         return apartmentVOS;
     }
 
+    /**
+     * 查询集中式水表列表通过楼层id
+     * @param floorId
+     * @return
+     */
     @Override
     public List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId) {
         //通过楼层ids查询水表
@@ -102,7 +124,7 @@ public class WatermeterServiceImpl implements WatermeterService {
         for (ApartmentVO apartmentVO : apartmentVOS) {
             floorIds.add(apartmentVO.getFloorId());
         }*/
-        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterDao.findWatermetersByFloorIds(floorId);
+        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterDao.findWatermetersByFloorId(floorId);
         return jzWatermeterDetailVOS;
 
     }
@@ -114,8 +136,11 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public Boolean updataWaterPrice(int price,int watermeterId) {
-        Boolean flag= watermeterDao.updataWaterPrice(price,watermeterId);
-        return flag;
+        int flag= watermeterDao.updataWaterPrice(price,watermeterId);
+        if(flag==1) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -130,13 +155,44 @@ public class WatermeterServiceImpl implements WatermeterService {
     }
 
     /**
-     * 通过用用户id查询水表列表
+     * 分散式通过用用户id查询水表列表
      * @param id
      * @return
      */
     @Override
     public List<WatermeterDetailVO> findWatermetersByid(int id) {
-        return watermeterDao.findWatermetersByid(id);
+        return watermeterDao.findWatermetersByUserId(id);
+    }
+
+    /**
+     * 筛选抄表记录根据时间区间
+     * @param watermeterId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @Override
+    public List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, String startTime, String endTime) {
+        // 根据用户名查询，并且按照创建时间降序排列
+        /*Example example = new Example(SmartWatermeterRecord.class);
+        // 创建查询条件对象
+        example.createCriteria().andEqualTo("smartWatermeterId",watermeterId);
+        example.createCriteria().andBetween("created_at",startTime,endTime);
+        // 实现排序
+        example.setOrderByClause("created_at desc");
+        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.selectByExample(example);*/
+        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.findWatermeterRecordByWatermeterIdAndTime(watermeterId,startTime,endTime);
+        return waterMeterRecordVOS;
+    }
+
+    /**
+     * 分散式用户房源
+     * @param id
+     * @return
+     */
+    @Override
+    public List<HouseVO> findHouseByUserId(int id) {
+        return watermeterDao.findHouseByUserId(id);
     }
 
 }
