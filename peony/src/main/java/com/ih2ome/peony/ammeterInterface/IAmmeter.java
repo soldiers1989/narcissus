@@ -4,6 +4,8 @@ import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 
+import java.util.List;
+
 /**
  * <br>
  *
@@ -39,6 +41,30 @@ public interface IAmmeter {
      * @return
      */
     AmmeterInfoVo getAmmeterInfo(String devId) throws AmmeterException;
+
+    /**
+     * 获取离线电表
+     * @param hour
+     * @return
+     * @throws AmmeterException
+     */
+    List <String> getMissDevice(Integer hour) throws AmmeterException;
+
+    /**
+     * 获取长时间无数据上报设备
+     * @param hour
+     * @return
+     * @throws AmmeterException
+     */
+    List <String> getOnlineNoDataDevice(Integer hour)throws AmmeterException;
+
+    /**
+     * 获取空置未断电设备数量
+     * @param hour
+     * @return
+     * @throws AmmeterException
+     */
+    List <String> getVacantPowerOn(Integer hour)throws AmmeterException;
 
 
 }

@@ -33,9 +33,9 @@ public interface AmmeterMannagerVoDao{
 
     void updateWiringWithConcentrated(@Param("id") String id, @Param("wiring")String wiring);
 
-    String getDeviceNameByIdWithDispersed(@Param("id")String id);
+    String getDeviceIdByIdWithDispersed(@Param("id")String id);
 
-    String getDeviceNameByIdWithConcentrated(@Param("id")String id);
+    String getDeviceIdByIdWithConcentrated(@Param("id")String id);
 
     String updateDevicePriceWithDispersed(@Param("id")String id,@Param("price")String price);
 

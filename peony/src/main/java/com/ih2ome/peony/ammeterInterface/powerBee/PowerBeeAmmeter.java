@@ -1,5 +1,6 @@
 package com.ih2ome.peony.ammeterInterface.powerBee;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
@@ -9,6 +10,9 @@ import com.ih2ome.peony.ammeterInterface.powerBee.util.PowerBeeAmmeterUtil;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <br>
@@ -134,4 +138,158 @@ public class PowerBeeAmmeter implements IAmmeter {
         ammeterInfoVo.initPowerOutput();
         return ammeterInfoVo;
     }
+
+    private Integer getMissDeviceNum(Integer hour) throws AmmeterException {
+        Log.info("获取离线电表数量");
+        String uri = BASE_URL+"/report/offlinehour/count/"+hour;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(url);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
+        return resJson.getInteger("Data");
+    }
+
+    @Override
+    public List<String> getMissDevice(Integer hour) throws AmmeterException {
+        Log.info("获取离线电表");
+        Integer size = getMissDeviceNum(hour);
+        List <String> idList = new ArrayList<>();
+        String uri = BASE_URL+"/report/offlinehour/"+hour+"/1/"+size;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(url);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
+        JSONArray jsonArray = resJson.getJSONArray("Data");
+        for(Object object : jsonArray){
+            JSONObject jsonObject = JSONObject.parseObject(object.toString());
+            String devId = jsonObject.getString("Uuid");
+            idList.add(devId);
+        }
+        return idList;
+    }
+
+    @Override
+    public List<String> getOnlineNoDataDevice(Integer hour) throws AmmeterException {
+        Log.info("获取长时间无数据上报设备");
+        Integer size = getOnlineNoDataDeviceNum(hour);
+        List <String> idList = new ArrayList<>();
+        String uri = BASE_URL+"/report/onlinenodatahour/"+hour+"/1/"+size;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(url);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
+        JSONArray jsonArray = resJson.getJSONArray("Data");
+        for(Object object : jsonArray){
+            JSONObject jsonObject = JSONObject.parseObject(object.toString());
+            String devId = jsonObject.getString("Uuid");
+            idList.add(devId);
+        }
+        return idList;
+    }
+
+    @Override
+    public List<String> getVacantPowerOn(Integer hour) throws AmmeterException {
+        Log.info("获取获取空置未断电设备");
+        Integer size = getVacantPowerOnNum(hour);
+        List <String> idList = new ArrayList<>();
+        String uri = BASE_URL+"/report/vacantpoweron/"+hour+"/1/"+size;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(url);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
+        JSONArray jsonArray = resJson.getJSONArray("Data");
+        for(Object object : jsonArray){
+            JSONObject jsonObject = JSONObject.parseObject(object.toString());
+            String devId = jsonObject.getString("Uuid");
+            idList.add(devId);
+        }
+        return idList;
+    }
+
+    private Integer getOnlineNoDataDeviceNum(Integer hour) throws AmmeterException {
+        Log.info("获取长时间无数据上报设备数量");
+        String uri = BASE_URL+"/report/onlinenodatahour/count/"+hour;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(url);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
+        return resJson.getInteger("Data");
+    }
+
+    private Integer getVacantPowerOnNum(Integer hour) throws AmmeterException {
+        Log.info("获取空置未断电设备数量");
+        String uri = BASE_URL+"/report/vacantpoweron/count/"+hour;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(url);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
+        return resJson.getInteger("Data");
+    }
+
 }

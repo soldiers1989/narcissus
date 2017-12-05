@@ -9,6 +9,7 @@ import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
 import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
+import com.ih2ome.peony.ammeterInterface.powerBee.util.PowerBeeAmmeterUtil;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -218,6 +219,11 @@ public class ammeterController extends BaseController {
         }
         String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");
         return res;
+    }
+
+    @RequestMapping(value="/test")
+    public void test() throws AmmeterException {
+        PowerBeeAmmeterUtil.getToken();
     }
 
 

@@ -88,10 +88,10 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals("0")){
-           devId =ammeterMannagerVoDao.getDeviceNameByIdWithDispersed(id);
+           devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
            ammeterMannagerVoDao.updateDevicePriceWithDispersed(id,price);
         }else{
-            devId =ammeterMannagerVoDao.getDeviceNameByIdWithConcentrated(id);
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
             ammeterMannagerVoDao.updateDevicePriceWithConcentrated(id,price);
         }
         iAmmeter.setElectricityPrice(devId,Double.valueOf(price));
@@ -104,9 +104,9 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals("0")){
-            devId =ammeterMannagerVoDao.getDeviceNameByIdWithDispersed(id);
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
         }else{
-            devId =ammeterMannagerVoDao.getDeviceNameByIdWithConcentrated(id);
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
         }
         iAmmeter.switchAmmeter(devId,operate);
     }
@@ -117,10 +117,10 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals("0")){
-            devId =ammeterMannagerVoDao.getDeviceNameByIdWithDispersed(id);
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
             ammeterMannagerVoDao.updateDevicePayModWithDispersed(id, String.valueOf(pay_mod.getCode()));
         }else{
-            devId =ammeterMannagerVoDao.getDeviceNameByIdWithConcentrated(id);
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
             ammeterMannagerVoDao.updateDevicePayModWithConcentrated(id, String.valueOf(pay_mod.getCode()));
         }
         iAmmeter.updatePayMod(devId,pay_mod);

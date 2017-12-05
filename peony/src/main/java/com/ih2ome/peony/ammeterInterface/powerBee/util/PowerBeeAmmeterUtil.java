@@ -2,7 +2,10 @@ package com.ih2ome.peony.ammeterInterface.powerBee.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ExpireTime;
-import com.ih2ome.common.utils.*;
+import com.ih2ome.common.utils.CacheUtils;
+import com.ih2ome.common.utils.HttpClientUtil;
+import com.ih2ome.common.utils.MyConstUtils;
+import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 
 import java.util.HashMap;
@@ -22,6 +25,7 @@ public class PowerBeeAmmeterUtil {
     private static final String UID_KEY = "POWER_BEE_AMMETER_UID";
     private static final String SECRET = "";
     private static final String BASE_URL = "http://smartammeter.zg118.com:8001";
+    private static final String VERSION = "0116010101";
 
     /**
      * 获取签名
@@ -79,15 +83,16 @@ public class PowerBeeAmmeterUtil {
      * @return
      */
     public static Map <String,String> getToken() throws AmmeterException {
+        CacheUtils cacheUtils = new CacheUtils();
         String token = CacheUtils.getStr(TOKEN_KEY);
-        String uid = CacheUtils.getStr(UID_KEY);
+        String uid = cacheUtils.getStr(UID_KEY);
         Map <String,String> map = null;
         if (StringUtils.isBlank(token)||StringUtils.isBlank(uid)){
             map = getTokenByThrid();
             token = map.get(TOKEN_KEY);
             uid = map.get(UID_KEY);
-            CacheUtils.set(TOKEN_KEY,token, ExpireTime.ONE_HOUR);
-            CacheUtils.set(UID_KEY,uid,ExpireTime.ONE_HOUR);
+            cacheUtils.set(TOKEN_KEY,token, ExpireTime.FIFTY_EIGHT_MIN);
+            cacheUtils.set(UID_KEY,uid,ExpireTime.FIFTY_EIGHT_MIN);
         }else{
             map = new HashMap<>();
             map.put(TOKEN_KEY,token);
