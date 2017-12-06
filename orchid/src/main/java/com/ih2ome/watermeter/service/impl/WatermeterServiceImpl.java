@@ -1,8 +1,13 @@
 package com.ih2ome.watermeter.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
+import com.ih2ome.peony.watermeterInterface.IWatermeter;
+import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
+import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import com.ih2ome.watermeter.dao.WatermeterMapper;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
@@ -206,9 +211,38 @@ public class WatermeterServiceImpl implements WatermeterService {
         return watermeterDao.findWatermeterExceptionByWaterId(watermeterId);
     }
 
+    /**
+     * 网关异常记录by网关id
+     * @param gatewayId
+     * @return
+     */
     @Override
     public List<ExceptionVO> findWatermeterGatewayException(int gatewayId) {
         return watermeterDao.findWatermeterGatewayExceptionByGatewayId(gatewayId);
+    }
+
+    /**
+     * 查询房源是否同步by房源id
+     * @param homeId
+     * @return
+     */
+    @Override
+    public YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
+        IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
+        String devId = null;
+        /*if (type.equals("0")){
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
+            ammeterMannagerVoDao.updateDevicePayModWithDispersed(id, String.valueOf(pay_mod.getCode()));
+        }else{
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
+            ammeterMannagerVoDao.updateDevicePayModWithConcentrated(id, String.valueOf(pay_mod.getCode()));
+        }
+        iAmmeter.updatePayMod(devId,pay_mod);*/
+
+        String res= iWatermeter.findHomeState(String.valueOf(homeId));
+
+        YunDingResponseVo jsonObject=JSONObject.parseObject(res,YunDingResponseVo.class);
+        return jsonObject;
     }
 
 }
