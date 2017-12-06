@@ -139,6 +139,13 @@ public class PowerBeeAmmeter implements IAmmeter {
         ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
         ammeterInfoVo.setVoltage(expand.getDouble("voltage"));
         ammeterInfoVo.setPowerMonth(expand.getDouble("powermonth"));
+        ammeterInfoVo.setElectrifyStatus(expand.getString("Value"));
+        ammeterInfoVo.setOnline(expand.getString("Status"));
+        Boolean isNode = jsonObject.getBoolean("Isnode");
+        String cid = jsonObject.getString("Cid");
+        //查wifi
+        //JSONObject nodeInfo = getDetailedAmmeterInfo(cid,isNode);
+
 
         ammeterInfoVo.initPowerOutput();
         return ammeterInfoVo;
@@ -280,7 +287,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Log.info("获取空置未断电设备数量");
         String uri = BASE_URL+"/report/vacantpoweron/count/"+hour;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
+        String res = HttpClientUtil.doGet(url,new HashMap<>(),PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -296,5 +303,39 @@ public class PowerBeeAmmeter implements IAmmeter {
         }
         return resJson.getInteger("Data");
     }
+
+    private  JSONObject getDetailedAmmeterInfo(String cid,Boolean isNode) throws AmmeterException {
+        Log.info("获取集中器或节点数据");
+        String uri = null;
+        if (isNode){
+            uri = BASE_URL+"/node/"+cid;
+        }else{
+            uri = BASE_URL+"/terminal/"+cid;
+        }
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(url,new HashMap<>(),PowerBeeAmmeterUtil.getToken());
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new AmmeterException("第三方请求失败/n"+msg);
+        }
+        if(isNode){
+            return (JSONObject) resJson.getJSONArray("Data").get(0);
+        }else{
+            return resJson.getJSONObject("Data");
+        }
+
+
+
+    }
+
 
 }

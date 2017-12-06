@@ -50,6 +50,8 @@ public interface AmmeterMannagerVoDao{
 
     AmmeterInfoVo getDeviceInfoWithConcentrated(@Param("id")String id);
 
+    com.ih2ome.hardware_service.service.model.caspain.SmartDevice getMasterAmmeter(@Param("id")String id);
+
 
 
 

@@ -75,6 +75,9 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         if (type.equals("0")){
             model = ammeterMannagerVoDao.getDeviceInfoWithDispersed(id);
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
+            if(model.getIsHub().equals("0")){
+                model = initFenTan(model);
+            }
         }else{
             model = ammeterMannagerVoDao.getDeviceInfoWithConcentrated(id);
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
@@ -82,6 +85,23 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         AmmeterInfoVo modelFromInterFace  =iAmmeter.getAmmeterInfo(devId);
         Object data = MyConstUtils.mergeObject(modelFromInterFace,model);
         return (AmmeterInfoVo)data;
+    }
+
+    /**
+     * 计算分摊
+     * @param ammeterInfoVo
+     * @return
+     */
+    private AmmeterInfoVo initFenTan(AmmeterInfoVo ammeterInfoVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        if(ammeterInfoVo.getUseCase().equals("0")){
+
+        }else if(ammeterInfoVo.getUseCase().equals("1")){
+            com.ih2ome.hardware_service.service.model.caspain.SmartDevice master = ammeterMannagerVoDao.getMasterAmmeter(ammeterInfoVo.getId());
+            AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getSerialId());
+
+        }
+        return null;
     }
 
     @Override

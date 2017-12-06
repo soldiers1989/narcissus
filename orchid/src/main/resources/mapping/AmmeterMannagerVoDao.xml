@@ -3,7 +3,40 @@
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterMannagerVoDao">
 
     <select id="findDispersedAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
-        SELECT csd.id ammeterId, ch.area apartmentName, CONCAT( cau.first_name, cau.last_name ) landlordName, cau.username authUserName, ch.address houseAddress, cr.`name` roomNo, crc.customer_name customerName, crc.customer_phone customerPhone, csd.`name` deviceName, csd.`online` communicationStatus, csd.style isHub FROM caspain_test.room_contract crc, caspain_test.room cr, caspain_test.house ch, caspain_test.auth_user cau, caspain_test.smart_device csd WHERE 1 = 1 AND cr.house_id = ch.id AND crc.room_id = cr.id AND crc.created_by_id = cau.id AND csd.room_id = cr.id AND csd.is_delete = '0' AND ch.is_delete = '0' AND cr.is_delete = '0' AND crc.is_delete = '0' AND crc.`status` = 'active'
+        SELECT
+        csd.id ammeterId,
+        ch.area apartmentName,
+        CONCAT(
+        cau.first_name,
+        cau.last_name
+        ) landlordName,
+        cau.username authUserName,
+        ch.address houseAddress,
+        cr.`name` roomNo,
+        crc.customer_name customerName,
+        crc.customer_phone customerPhone,
+        csd.`name` deviceName,
+        csd.`online` communicationStatus,
+        csd.style isHub
+        FROM
+        caspain_test.smart_device csd left join
+        caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
+        caspain_test.house ch on cr.house_id=ch.id LEFT JOIN
+        caspain_test.room_contract crc on crc.room_id=cr.id
+        LEFT JOIN caspain_test.auth_user cau on crc.created_by_id = cau.id
+        WHERE
+        1 = 1
+        AND (csd.is_delete != '1' or csd.is_delete is null)
+        AND (ch.is_delete != '1' or ch.is_delete is null)
+        AND (cr.is_delete != '1' or cr.is_delete is null)
+        AND (crc.is_delete != '1' or crc.is_delete is  null)
+        AND (
+        (
+        csd.style = '0'
+        AND crc.`status` = 'active'
+        )
+        OR csd.style = '1'
+        )
         <if test="ammeterId != '' and ammeterId != null">
             AND csd.id = '${ammeterId}'
         </if>
@@ -40,7 +73,41 @@
     </select>
 
     <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
-        SELECT vsd.id ammeterId, va.`name` apartmentName, CONCAT( cau.first_name, cau.last_name ) landlordName, cau.username authUserName, va.address houseAddress, vr.`name` roomNo, vrc.customer_name customerName, vrc.customer_phone customerPhone, vsd.`name` deviceName, vsd.`online` communicationStatus, vsd.style isHub FROM `volga-test`.smart_device vsd, `volga-test`.room vr, `volga-test`.room_contract vrc, `volga-test`.floor vf, `volga-test`.apartment va, caspain_test.auth_user cau WHERE vsd.room_id = vr.id AND vrc.room_id = vr.id AND vr.floor_id = vf.id AND vf.apartment_id = va.id AND vrc.created_by = cau.id AND vsd.is_delete = '0' AND vr.is_delete = '0' AND vrc.is_delete = '0' AND vf.is_delete = '0' AND va.is_delete = '0' AND vrc.`status` = 'active'
+        SELECT
+        vsd.id ammeterId,
+        va.`name` apartmentName,
+        CONCAT(
+        cau.first_name,
+        cau.last_name
+        ) landlordName,
+        cau.username authUserName,
+        va.address houseAddress,
+        vr.`name` roomNo,
+        vrc.customer_name customerName,
+        vrc.customer_phone customerPhone,
+        vsd.`name` deviceName,
+        vsd.`online` communicationStatus,
+        vsd.style isHub
+        FROM
+        `volga-test`.smart_device vsd left join
+        `volga-test`.room vr on vsd.room_id=vr.id LEFT JOIN
+        `volga-test`.apartment va on vr.apartment_id=va.id LEFT JOIN
+        `volga-test`.room_contract vrc on vrc.room_id=vr.id
+        LEFT JOIN `volga-test`.area varea on va.area=varea.id
+        LEFT JOIN caspain_test.auth_user cau on vrc.created_by = cau.id
+        WHERE
+        1 = 1
+        AND (vsd.is_delete != '1' or vsd.is_delete is null)
+        AND (va.is_delete != '1' or va.is_delete is null)
+        AND (vr.is_delete != '1' or vr.is_delete is null)
+        AND (vrc.is_delete != '1' or vrc.is_delete is  null)
+        AND (
+        (
+        vsd.style = '0'
+        AND vrc.`status` = 'active'
+        )
+        OR vsd.style = '1'
+        )
         <if test="ammeterId != '' and ammeterId != null">
             AND vsd.id = '${ammeterId}'
         </if>
@@ -123,11 +190,157 @@
     </update>
 
     <select id="getDeviceInfoWithDispersed" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        SELECT csd.id id, csd.uuid uuid, csd.wiring useCase, csdpc.charge payMod, crc.customer_name customerName, crc.customer_phone customerPhone, ch.address address, cr.`name` roomNo FROM caspain_test.room_contract crc, caspain_test.room cr, caspain_test.house ch, caspain_test.auth_user cau, caspain_test.smart_device csd, caspain_test.smart_device_power_contract csdpc WHERE 1 = 1 AND cr.house_id = ch.id AND crc.room_id = cr.id AND crc.created_by_id = cau.id AND csd.room_id = cr.id AND csdpc.power_meter_id = csd.id AND csd.is_delete = '0' AND ch.is_delete = '0' AND cr.is_delete = '0' AND crc.is_delete = '0' AND crc.`status` = 'active' AND csd.id = #{id}
+        SELECT
+	    csd.id id,
+	    csd.uuid uuid,
+	    csd.wiring useCase,
+	    csdpc.charge payMod,
+	    crc.customer_name customerName,
+	    crc.customer_phone customerPhone,
+	    ch.address address,
+	    cr.`name` roomNo,
+	    csd.`name` deviceName,
+	    (
+		  CASE
+		  WHEN csd.style = '1' THEN
+			GROUP_CONCAT(
+				IFNULL(cr2.`name`, ''),
+				CHAR (9),
+				IFNULL(csd2.`share`, ''),
+				'%'
+			)
+		  ELSE
+			NULL
+		  END
+    	) subAmmeterInfo,
+	    crc.start_time checkInDate,
+	    csd.style isHub,
+	    csd.share share
+    FROM
+	    caspain_test.smart_device csd
+        LEFT JOIN caspain_test.smart_device_power_contract csdpc ON csd.id = csdpc.power_meter_id
+        LEFT JOIN caspain_test.room cr ON csd.room_id = cr.id
+        LEFT JOIN caspain_test.house ch ON cr.house_id = ch.id
+        LEFT JOIN caspain_test.room_contract crc ON crc.room_id = cr.id
+        LEFT JOIN caspain_test.auth_user cau ON crc.created_by_id = cau.id
+        LEFT JOIN caspain_test.smart_device csd2 ON csd2.`master` = csd.serial_id
+        LEFT JOIN caspain_test.room cr2 ON csd2.room_id = cr2.id
+    WHERE
+	    1 = 1
+      AND (
+	    csd.is_delete != '1'
+	    OR ch.is_delete IS NULL
+      )
+      AND (
+	    ch.is_delete != '1'
+	    OR ch.is_delete IS NULL
+      )
+      AND (
+	    cr.is_delete != '1'
+	    OR cr.is_delete IS NULL
+      )
+      AND csd.id = #{id}
+    GROUP BY
+	  csd.id
     </select>
 
     <select id="getDeviceInfoWithConcentrated" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        SELECT vsd.id id, vsdpc.id, vsd.uuid uuid, vsd.wiring useCase, vsdpc.charge payMod, vrc.customer_name customerName, vrc.customer_phone customerPhone, va.address address, vr.`name` roomNo FROM `volga-test`.room_contract vrc, `volga-test`.room vr, `volga-test`.apartment va, `volga-test`.smart_device vsd, `volga-test`.smart_device_power_contract vsdpc WHERE 1 = 1 AND vrc.room_id = vr.id AND vr.apartment_id = va.id AND vsd.room_id = vr.id AND vsdpc.power_meter_id = vsd.id AND vsd.is_delete = '0' AND va.is_delete = '0' AND vr.is_delete = '0' AND vrc.is_delete = '0' AND vrc.`status` = 'active' AND vsd.id = #{id}
+                (
+	SELECT
+		vsd.id id,
+		vsd.uuid uuid,
+		vsd.wiring useCase,
+		vsdpc.charge payMod,
+		vrc.customer_name customerName,
+		vrc.customer_phone customerPhone,
+		va.address address,
+		vr.`name` roomNo,
+		vsd.`name` deviceName,
+		'' subAmmeterInfo,
+		vrc.start_time checkInDate,
+		vsd.style isHub,
+		vsd.share share
+	FROM
+		`volga-test`.smart_device vsd
+	LEFT JOIN `volga-test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
+	LEFT JOIN `volga-test`.room vr ON vsd.room_id = vr.id
+	LEFT JOIN `volga-test`.floor vf ON vr.floor_id = vf.id
+	LEFT JOIN `volga-test`.apartment va ON vf.apartment_id = va.id
+	LEFT JOIN `volga-test`.room_contract vrc ON vrc.room_id = vr.id
+	LEFT JOIN caspain_test.auth_user cau ON vrc.created_by = cau.id
+	WHERE
+		1 = 1
+	AND (
+		vsd.is_delete != '1'
+		OR vsd.is_delete IS NULL
+	)
+	AND (
+		va.is_delete != '1'
+		OR va.is_delete IS NULL
+	)
+	AND (
+		vr.is_delete != '1'
+		OR vr.is_delete IS NULL
+	)
+	AND vsd.id = #{id}
+	AND vsd.style = '0'
+	GROUP BY
+		vsd.id
+)
+UNION
+	(
+		SELECT
+			vsd.id id,
+			vsd.uuid uuid,
+			vsd.wiring useCase,
+			vsdpc.charge payMod,
+			'' customerName,
+			'' customerPhone,
+			va.address address,
+			'' roomNo,
+			vsd.`name` deviceName,
+			(
+				CASE
+				WHEN vsd2.`share` IS NOT NULL THEN
+					GROUP_CONCAT(
+						IFNULL(vr2.`name`, ''),
+						CHAR (9),
+						IFNULL(vsd2.`share`, ''),
+						'%'
+					)
+				ELSE
+					NULL
+				END
+			) subAmmeterInfo,
+			'' checkInDate,
+			vsd.style isHub,
+			vsd.share share
+		FROM
+			`volga-test`.smart_device vsd
+		LEFT JOIN `volga-test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
+		LEFT JOIN `volga-test`.floor vf ON vsd.floor = vf.id
+		LEFT JOIN `volga-test`.apartment va ON vf.apartment_id = va.id
+		LEFT JOIN `volga-test`.smart_device vsd2 ON vsd2.`master` = vsd.serial_id
+		LEFT JOIN `volga-test`.room vr2 ON vsd2.room_id = vr2.id
+		WHERE
+			1 = 1
+		AND (
+			vsd.is_delete != '1'
+			OR vsd.is_delete IS NULL
+		)
+		AND (
+			va.is_delete != '1'
+			OR va.is_delete IS NULL
+		)
+		AND vsd.id = #{id}
+		AND vsd.style = '1'
+		GROUP BY
+			vsd.id
+	)
+    </select>
+
+    <select id="getMasterAmmeter" resultType="com.ih2ome.hardware_service.service.model.caspain.SmartDevice">
+      SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id}
     </select>
 
 

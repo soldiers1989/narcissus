@@ -39,6 +39,8 @@ public class AmmeterInfoVo {
     private Double shareDay;//今日分摊
     private Double shareMonth;//当月分摊
     private String deviceName;//设备名称 MG MN号码
+    private String subAmmeterInfo;//关联子表
+    private String isHub;//是否是集中器
 
 
     public void initPowerOutput(){
