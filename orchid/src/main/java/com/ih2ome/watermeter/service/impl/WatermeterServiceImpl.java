@@ -2,6 +2,7 @@ package com.ih2ome.watermeter.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.watermeter.dao.WatermeterMapper;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
@@ -135,7 +136,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public Boolean updataWaterPrice(int price,int watermeterId) {
+    public Boolean updataWaterPrice(int price,int watermeterId) throws AmmeterException, ClassNotFoundException, IllegalAccessException, InstantiationException{
         int flag= watermeterDao.updataWaterPrice(price,watermeterId);
         if(flag==1) {
             return true;
@@ -193,6 +194,21 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public List<HouseVO> findHouseByUserId(int id) {
         return watermeterDao.findHouseByUserId(id);
+    }
+
+    /**
+     * 水表异常记录
+     * @param watermeterId
+     * @return
+     */
+    @Override
+    public List<ExceptionVO> findWatermeterException(int watermeterId) {
+        return watermeterDao.findWatermeterExceptionByWaterId(watermeterId);
+    }
+
+    @Override
+    public List<ExceptionVO> findWatermeterGatewayException(int gatewayId) {
+        return watermeterDao.findWatermeterGatewayExceptionByGatewayId(gatewayId);
     }
 
 }

@@ -189,6 +189,36 @@ public class CacheUtils {
     }
 
     /**
+     * 将value对象写入缓存
+     *
+     * @param key
+     * @param value
+     * @param time  失效时间(秒)
+     */
+    public static void set(String key, Object value, int time) {
+        if (value.getClass().equals(String.class)) {
+            stringRedisTemplate.opsForValue().set(key, value.toString());
+        } else if (value.getClass().equals(Integer.class)) {
+            stringRedisTemplate.opsForValue().set(key, value.toString());
+        } else if (value.getClass().equals(Double.class)) {
+            stringRedisTemplate.opsForValue().set(key, value.toString());
+        } else if (value.getClass().equals(Float.class)) {
+            stringRedisTemplate.opsForValue().set(key, value.toString());
+        } else if (value.getClass().equals(Short.class)) {
+            stringRedisTemplate.opsForValue().set(key, value.toString());
+        } else if (value.getClass().equals(Long.class)) {
+            stringRedisTemplate.opsForValue().set(key, value.toString());
+        } else if (value.getClass().equals(Boolean.class)) {
+            stringRedisTemplate.opsForValue().set(key, value.toString());
+        } else {
+            redisTemplateModel.opsForValue().set(key, value);
+        }
+        if (time > 0) {
+            redisTemplateModel.expire(key, time, TimeUnit.SECONDS);
+        }
+    }
+
+    /**
      * 将value对象以JSON格式写入缓存
      *
      * @param key

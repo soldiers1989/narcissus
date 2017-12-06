@@ -5,9 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.service.WatermeterService;
 import com.ih2ome.watermeter.vo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/watermeter")
 public class WaterMeterController extends BaseController {
+
+    private final Logger Log = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private WatermeterService watermeterService;
 
@@ -80,8 +86,28 @@ public class WaterMeterController extends BaseController {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int price = dt.getIntValue("price");
         int watermeterId = dt.getIntValue("watermeterId");
-        Boolean flag = watermeterService.updataWaterPrice(price,watermeterId);
-        JSONObject responseJson = new JSONObject();
+        Boolean flag;
+        try {
+            flag = watermeterService.updataWaterPrice(price,watermeterId);
+        } catch (AmmeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            return res;
+        }
+
+       JSONObject responseJson = new JSONObject();
         if (flag == true) {
             responseJson.put("result", "success");
         }
@@ -196,18 +222,6 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 智能水表异常记录
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/exception",method = RequestMethod.POST,produces = {"application/json"})
-    public String exception(@RequestBody ApiRequestVO apiRequestVO){
-
-
-        return "";
-    }
-
-    /**
      * 分散式用户房源
      * @param apiRequestVO
      * @return
@@ -292,17 +306,42 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
+     * 智能水表异常记录
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/exception/watermeter",method = RequestMethod.POST,produces = {"application/json"})
+    public String watermeterException(@RequestBody ApiRequestVO apiRequestVO){
+        //获取水表id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int watermeterId = dt.getIntValue("watermeterId");
+        List<ExceptionVO> exceptionVOS= watermeterService.findWatermeterException(watermeterId);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(exceptionVOS));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("exceptionVOS",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
+    }
+
+    /**
      * 水表网关异常记录
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/watermeter_gateway/exception",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/exception/watermeter_gateway",method = RequestMethod.POST,produces = {"application/json"})
     public String watermeterGatewayException(@RequestBody ApiRequestVO apiRequestVO){
-
+        //获取网关id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int gatewayId = dt.getIntValue("gatewayId");
+        List<ExceptionVO> exceptionVOS= watermeterService.findWatermeterGatewayException(gatewayId);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(exceptionVOS));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("exceptionVOS",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
 
         //return "{['time':'2017-08-26T16:39:05','onoffStatus':'离线']}";
         //return structureSuccessResponseVO("{['time':'2017-08-26T16:39:05','onoffStatus':'离线']}","20171111","0","");
-        return null;
     }
 
 
