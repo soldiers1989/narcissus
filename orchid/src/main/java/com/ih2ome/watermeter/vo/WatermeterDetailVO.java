@@ -23,6 +23,7 @@ public class WatermeterDetailVO {
     private int price;//电费单价
     private int onoffStatus;//通讯状态 wu
     private int smartGatewayId;//绑定网关
+    private String sn;//网关序列号
 
 
 }

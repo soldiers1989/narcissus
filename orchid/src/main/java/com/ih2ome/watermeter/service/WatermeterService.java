@@ -1,6 +1,8 @@
 package com.ih2ome.watermeter.service;
 
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
+import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.vo.*;
@@ -113,4 +115,11 @@ public interface WatermeterService {
      * @return
      */
     List<ExceptionVO> findWatermeterGatewayException(int gatewayId);
+
+    /**
+     * 查询房源是否已同步by房源id
+     * @param homeId
+     * @return
+     */
+    YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, WatermeterException;
 }

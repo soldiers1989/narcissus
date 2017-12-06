@@ -13,16 +13,36 @@
     <sql id="floor">volga_test.floor</sql>
     <sql id="jzroom">volga_test.room</sql>
 
+    <!--配置一个resultMap -->
+    <resultMap type="com.ih2ome.watermeter.vo.ApartmentVO" id="apartmentResultMap" autoMapping="true">
+        <id column="id" property="id" />
 
+        <collection property="floorVOS" javaType="List"
+                    ofType="com.ih2ome.watermeter.vo.FloorVO" autoMapping="true">
+            <id column="floor_id" property="floorId" />
+        </collection>
+    </resultMap>
+
+<!-- 改 -->
+
+    <!--改水费单价-->
+    <update id="updataWaterPrice" parameterType="int" >
+        UPDATE <include refid="smart_watermeter" /> SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
+    </update>
+
+<!-- 查 -->
 
     <!-- 分散式水表 -->
     <select id="findWatermetersByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO" >
-        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status
+        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
         FROM
         <include refid="smart_watermeter" /> AS w
         INNER JOIN
         <include refid="smart_gateway_bind" /> AS gb
         ON w.smart_watermeter_id = gb.smart_id
+        INNER JOIN
+        <include refid="smart_gateway" /> AS g
+        ON g.smart_gateway_id = gb.smart_gateway_id
         INNER JOIN
         <include refid="house" /> AS h
         ON w.house_id= h.id
@@ -31,12 +51,12 @@
         ON  w.room_id= r.id AND h.id=r.house_id AND r.created_by_id = #{id} ;
     </select>
 
-    <!-- 通过网关id查询网关 -->
+    <!-- 查询网关by网关id -->
     <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO">
         SELECT g.smart_gateway_id,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g WHERE smart_gateway_id =  #{id};
     </select>
 
-    <!--根据网关id查询水表-->
+    <!--查询水表by网关id-->
     <select id="findWatermeterByGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO">
         SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status
         FROM
@@ -52,22 +72,7 @@
         ON  w.room_id= r.id AND h.id=r.house_id;
     </select>
 
-    <!--改水费单价-->
-    <update id="updataWaterPrice" parameterType="int" >
-        UPDATE <include refid="smart_watermeter" /> SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
-    </update>
-
-    <!--配置一个resultMap -->
-    <resultMap type="com.ih2ome.watermeter.vo.ApartmentVO" id="apartmentResultMap" autoMapping="true">
-        <id column="id" property="id" />
-
-        <collection property="floorVOS" javaType="List"
-                    ofType="com.ih2ome.watermeter.vo.FloorVO" autoMapping="true">
-            <id column="floor_id" property="floorId" />
-        </collection>
-    </resultMap>
-
-    <!--查询公寓-->
+    <!--查询公寓by用户id-->
     <select id="findApartmentByUserId" parameterType="int" resultMap="apartmentResultMap">
         SELECT a.id,a.`name`,COUNT(DISTINCT w.smart_watermeter_id) AS watermeter_num,sum(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num,f.id AS floor_id,f.`name` AS floor_name
         FROM <include refid="apartment"/> AS a,<include refid="floor"/> AS f,<include refid="smart_watermeter"/> AS w
@@ -85,38 +90,38 @@
         AND w.smart_watermeter_id = g.smart_id AND w.room_id = r.id;
     </select>
 
-    <!--集中式公寓下的网关-->
+    <!--查询集中式公寓下的网关by公寓id-->
     <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterGatewayVO" >
         SELECT g.smart_gateway_id,g.onoff_status,COUNT(DISTINCT gb.smart_id) AS watermeter_num,sum(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num
         FROM <include refid="smart_watermeter"/> AS w
         INNER JOIN <include refid="smart_gateway_bind"/> AS gb
         ON w.smart_watermeter_id = gb.smart_id
         INNER JOIN <include refid="smart_gateway"/>  AS g
-        ON g.id = gb.smart_gateway_id
+        ON g.smart_gateway_id = gb.smart_gateway_id
         WHERE g.apartment_id = #{id};
     </select>
 
-    <!--查询水表抄表记录-->
+    <!--查询水表抄表记录by水表id-->
     <select id="findWatermeterRecordByWatermeterId" parameterType="int" resultType="com.ih2ome.watermeter.model.SmartWatermeterRecord">
-        SELECT * FROM <include refid="smart_watermeter_record"/> WHERE smart_watermeter_id = #{id} ORDER BY created_at DESC
+        SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} ORDER BY created_at DESC
     </select>
 
-    <!--筛选水表抄表记录-->
+    <!--查询筛选水表抄表记录by起止时间-->
     <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.watermeter.model.SmartWatermeterRecord">
-       SELECT * FROM <include refid="smart_watermeter_record"/> WHERE smart_watermeter_id = #{id} AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
+       SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
     </select>
 
-    <!--分散式用户房源-->
+    <!--查询分散式用户房源by用户id-->
     <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.HouseVO">
         SELECT h.id,h.area,h.building_num,h.house_num FROM <include refid="house"/> h WHERE h.created_by_id= #{id}
     </select>
 
-    <!--水表异常记录-->
+    <!--水表异常记录by水表id-->
     <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.watermeter.vo.ExceptionVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
     </select>
 
-    <!--网关异常记录-->
+    <!--网关异常记录by网关id-->
     <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.ExceptionVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
     </select>

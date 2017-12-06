@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
+import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.service.WatermeterService;
 import com.ih2ome.watermeter.vo.*;
@@ -238,6 +240,24 @@ public class WaterMeterController extends BaseController {
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
         return res;
     }
+
+    /**
+     * 查询房源是否已同步
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/synchronous_housing/FindHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindHomeIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) throws ClassNotFoundException, WatermeterException, InstantiationException, AmmeterException, IllegalAccessException {
+        //获取公寓id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int homeId = dt.getIntValue("homeId");
+        YunDingResponseVo yunDingResponseVo = watermeterService.findHomeIsSynchronousedByHomeId(homeId);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("home_state",yunDingResponseVo);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
+    }
+
 
     /**
      * 分散式用户房源同步
