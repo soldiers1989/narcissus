@@ -35,7 +35,7 @@
             AND ch.area LIKE '%${areaName}%'
         </if>
         <if test="communicationStatus != '' and communicationStatus != null">
-            AND csd.`status` LIKE '%${communicationStatus}%'
+            AND csd.`online` LIKE '%${communicationStatus}%'
         </if>
     </select>
 
@@ -72,7 +72,7 @@
             AND va.area LIKE '%${areaName}%'
         </if>
         <if test="communicationStatus != '' and communicationStatus != null">
-            AND vsd.`status` LIKE '%${communicationStatus}%'
+            AND vsd.`online` LIKE '%${communicationStatus}%'
         </if>
     </select>
 
@@ -121,6 +121,15 @@
     <update id="updateDevicePayModWithConcentrated">
         update `volga-test`.smart_device csd,`volga-test`.smart_device_power_contract csdpc set csdpc.charge=#{paymod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
     </update>
+
+    <select id="getDeviceInfoWithDispersed" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        SELECT csd.id id, csd.uuid uuid, csd.wiring useCase, csdpc.charge payMod, crc.customer_name customerName, crc.customer_phone customerPhone, ch.address address, cr.`name` roomNo FROM caspain_test.room_contract crc, caspain_test.room cr, caspain_test.house ch, caspain_test.auth_user cau, caspain_test.smart_device csd, caspain_test.smart_device_power_contract csdpc WHERE 1 = 1 AND cr.house_id = ch.id AND crc.room_id = cr.id AND crc.created_by_id = cau.id AND csd.room_id = cr.id AND csdpc.power_meter_id = csd.id AND csd.is_delete = '0' AND ch.is_delete = '0' AND cr.is_delete = '0' AND crc.is_delete = '0' AND crc.`status` = 'active' AND csd.id = #{id}
+    </select>
+
+    <select id="getDeviceInfoWithConcentrated" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        SELECT vsd.id id, vsdpc.id, vsd.uuid uuid, vsd.wiring useCase, vsdpc.charge payMod, vrc.customer_name customerName, vrc.customer_phone customerPhone, va.address address, vr.`name` roomNo FROM `volga-test`.room_contract vrc, `volga-test`.room vr, `volga-test`.apartment va, `volga-test`.smart_device vsd, `volga-test`.smart_device_power_contract vsdpc WHERE 1 = 1 AND vrc.room_id = vr.id AND vr.apartment_id = va.id AND vsd.room_id = vr.id AND vsdpc.power_meter_id = vsd.id AND vsd.is_delete = '0' AND va.is_delete = '0' AND vr.is_delete = '0' AND vrc.is_delete = '0' AND vrc.`status` = 'active' AND vsd.id = #{id}
+    </select>
+
 
 
 </mapper>

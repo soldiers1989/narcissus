@@ -1,4 +1,4 @@
-package com.ih2ome.common.Secret;
+package com.ih2ome.common.secret;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

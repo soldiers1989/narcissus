@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.ih2ome.common.utils.MyConstUtils;
 import com.ih2ome.hardware_service.service.dao.AmmeterMannagerVoDao;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
@@ -66,16 +67,21 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     }
 
     @Override
-    public AmmeterInfoVo getAmmeterInfoVo(String id, String type) {
+    public AmmeterInfoVo getAmmeterInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
         AmmeterInfoVo ammeterInfoVo = null;
+        AmmeterInfoVo model = null;
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals("0")){
+            model = ammeterMannagerVoDao.getDeviceInfoWithDispersed(id);
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
         }else{
+            model = ammeterMannagerVoDao.getDeviceInfoWithConcentrated(id);
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
         }
-
-        return null;
+        AmmeterInfoVo modelFromInterFace  =iAmmeter.getAmmeterInfo(devId);
+        Object data = MyConstUtils.mergeObject(modelFromInterFace,model);
+        return (AmmeterInfoVo)data;
     }
 
     @Override
@@ -132,5 +138,6 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         iAmmeter.updatePayMod(devId,pay_mod);
 
     }
+
 
 }

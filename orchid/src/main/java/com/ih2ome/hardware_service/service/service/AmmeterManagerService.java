@@ -23,7 +23,7 @@ public interface AmmeterManagerService {
 
     DeviceIdAndName getAmmeterRelation(String id,String type);
 
-    AmmeterInfoVo getAmmeterInfoVo(String id,String type);
+    AmmeterInfoVo getAmmeterInfoVo(String id,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 
     void updateWiring(String id, String type, String wiring);
 
@@ -32,4 +32,5 @@ public interface AmmeterManagerService {
     void switchDevice(String id,String operate,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 
     void updatePayMod(String id, String type, PAY_MOD pay_mod) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
+
 }

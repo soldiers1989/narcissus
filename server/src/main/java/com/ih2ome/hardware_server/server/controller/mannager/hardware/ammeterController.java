@@ -97,9 +97,22 @@ public class ammeterController extends BaseController {
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         String id = resData.getString("id");
         String type = resData.getString("type");
-        AmmeterInfoVo ammeterInfoVo = ammeterManagerService.getAmmeterInfoVo(id,type);
-
-        return ammeterInfoVo.toString();
+        AmmeterInfoVo ammeterInfoVo = null;
+        try {
+            ammeterInfoVo = ammeterManagerService.getAmmeterInfoVo(id,type);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (AmmeterException e) {
+            e.printStackTrace();
+        }
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("ammeterInfoVo",ammeterInfoVo);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
     }
 
     /**
