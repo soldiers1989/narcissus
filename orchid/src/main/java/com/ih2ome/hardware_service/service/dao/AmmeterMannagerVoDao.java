@@ -2,6 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -44,6 +45,12 @@ public interface AmmeterMannagerVoDao{
     void updateDevicePayModWithDispersed(@Param("id")String id,@Param("payMod")String payMod);
 
     void updateDevicePayModWithConcentrated(@Param("id")String id,@Param("payMod")String payMod);
+
+    AmmeterInfoVo getDeviceInfoWithDispersed(@Param("id")String id);
+
+    AmmeterInfoVo getDeviceInfoWithConcentrated(@Param("id")String id);
+
+
 
 
 }

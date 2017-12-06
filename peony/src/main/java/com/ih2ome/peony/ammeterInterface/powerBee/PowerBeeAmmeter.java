@@ -114,7 +114,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         AmmeterInfoVo ammeterInfoVo = new AmmeterInfoVo();
         String uri = BASE_URL+"/device/ammeter/"+devId;
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url,null,PowerBeeAmmeterUtil.getToken());
+        String res = HttpClientUtil.doGet(url,new HashMap<>(),PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -128,14 +128,18 @@ public class PowerBeeAmmeter implements IAmmeter {
             Log.error("第三方请求失败/n"+msg);
             throw new AmmeterException("第三方请求失败/n"+msg);
         }
-        JSONObject expand = resJson.getJSONObject("Data").getJSONObject("Expand");
-        ammeterInfoVo.setAmmeterName(devId);
+        JSONObject jsonObject = (JSONObject) resJson.getJSONArray("Data").get(0);
+        JSONObject expand = jsonObject.getJSONObject("Expand");
+        ammeterInfoVo.setUuid(devId);
+        ammeterInfoVo.setPowerRate(jsonObject.getDouble("Price"));
         ammeterInfoVo.setAllPower(expand.getDouble("allpower"));
         ammeterInfoVo.setCurrent(expand.getDouble("current"));
-        ammeterInfoVo.setLastTime(expand.getJSONObject("lasttime").getString("time"));
+        ammeterInfoVo.setLastTime(expand.getDate("Lasttime"));
         ammeterInfoVo.setPowerDay(expand.getDouble("powerday"));
         ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
         ammeterInfoVo.setVoltage(expand.getDouble("voltage"));
+        ammeterInfoVo.setPowerMonth(expand.getDouble("powermonth"));
+
         ammeterInfoVo.initPowerOutput();
         return ammeterInfoVo;
     }
