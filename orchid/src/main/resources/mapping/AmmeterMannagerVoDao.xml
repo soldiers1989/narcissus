@@ -343,6 +343,80 @@ UNION
       SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id}
     </select>
 
+    <select id="getAmmeterByMaster">
+        SELECT
+	    ctsds.serial_id
+        FROM
+	    caspain_test.smart_device ctsdm,
+	    caspain_test.smart_device ctsds,
+	    caspain_test.room
+        WHERE
+	    ctsds.`master` = ctsdm.serial_id
+        AND ctsdm.id = #{id}
+    </select>
 
+    <update id="updateAmmeterWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+       UPDATE caspain_test.smart_device ctsd
+        SET ctsd.last_num = #{surplus},
+            ctsd.updated_at = NOW(),
+            ctsd.last_num_date = #{lastTime},
+            ctsd.`online`= #{online},
+            ctsd.`status`=#{electrifyStatus}
+        WHERE
+	        ctsd.id = #{id}
+    </update>
+    <update id="updateAmmeterWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        UPDATE `volga-test`.smart_device vtsdm
+        SET vtsdm.last_num = #{surplus},
+            vtsdm.updated_at = NOW(),
+            vtsdm.last_num_date = #{lastTime},
+            vtsdm.`online`= #{online},
+            vtsdm.`status`=#{electrifyStatus}
+        WHERE
+	        vtsdm.id = #{id}
+    </update>
+
+    <insert id="addDeviceRecordWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        INSERT INTO caspain_test.smart_device_record (
+	created_at,
+	updated_at,
+	num,
+	power_meter_id,
+	public_num,
+	read_date,
+	resource
+)
+VALUES
+	(
+		NOW(),
+		NOW(),
+		#{surplus},
+		#{id},
+		#{shareDay},
+		#{lastTime},
+		'1'
+	)
+    </insert>
+    <insert id="addDeviceRecordWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        INSERT INTO `volga-test`.smart_device_record (
+        created_at,
+        updated_at,
+        num,
+        power_meter_id,
+        public_num,
+        read_date,
+        resource
+        )
+        VALUES
+        (
+        NOW(),
+        NOW(),
+        #{surplus},
+        #{id},
+        #{shareDay},
+        #{lastTime},
+        '1'
+        )
+    </insert>
 
 </mapper>

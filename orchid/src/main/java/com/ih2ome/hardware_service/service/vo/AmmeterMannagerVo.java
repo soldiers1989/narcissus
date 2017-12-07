@@ -30,6 +30,5 @@ public class AmmeterMannagerVo extends BaseEntity implements Serializable {
     private String deviceName;//设备号
     private String communicationStatus;//通讯状态
     private String isHub;//是否是主表
-    private String share;//分摊比例
 
 }

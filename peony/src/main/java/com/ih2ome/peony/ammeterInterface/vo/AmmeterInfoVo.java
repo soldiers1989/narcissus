@@ -35,12 +35,13 @@ public class AmmeterInfoVo {
     private String customerPhone;//租客电话
     private String checkInDate;//入住时间
     private String address;//房源地址
-    private String roomNo;//房源编号
+    private String roomNo;//房间编号
     private Double shareDay;//今日分摊
     private Double shareMonth;//当月分摊
     private String deviceName;//设备名称 MG MN号码
     private String subAmmeterInfo;//关联子表
     private String isHub;//是否是集中器
+    private String share;//分摊比例
 
 
     public void initPowerOutput(){

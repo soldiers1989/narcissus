@@ -52,6 +52,16 @@ public interface AmmeterMannagerVoDao{
 
     com.ih2ome.hardware_service.service.model.caspain.SmartDevice getMasterAmmeter(@Param("id")String id);
 
+    List<String>getAmmeterByMaster(@Param("id")String id);
+
+    void updateAmmeterWithDispersed(AmmeterInfoVo ammeterInfoVo);
+
+    void updateAmmeterWithConcentrated(AmmeterInfoVo ammeterInfoVo);
+
+    void addDeviceRecordWithDispersed(AmmeterInfoVo ammeterInfoVo);
+
+    void addDeviceRecordWithConcentrated(AmmeterInfoVo ammeterInfoVo);
+
 
 
 
