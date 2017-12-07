@@ -58,9 +58,5 @@ public class MD5Util {
 		ss = MD5(bo.toString());
 		return ss;
 	}
-	
-	public static void main(String[] args) {
-		String str = "admin123";
-		System.out.println(MD5(str));
-	}
+
 }

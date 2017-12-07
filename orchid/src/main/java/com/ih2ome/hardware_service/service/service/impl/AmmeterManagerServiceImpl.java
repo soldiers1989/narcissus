@@ -56,7 +56,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
                 deviceIdAndNameList = ammeterMannagerVoDao.getDeviceBySerialIdWithDispersed(deviceIdAndName.getSerialId());
                 deviceIdAndName.setDeviceIdAndNames(deviceIdAndNameList);
             }
-        }else{
+        }else if(type.equals("1")){
             deviceIdAndName = ammeterMannagerVoDao.getDeviceByIdWithConcentrated(id);
             if(deviceIdAndName!=null){
                 deviceIdAndNameList = ammeterMannagerVoDao.getDeviceBySerialIdWithConcentrated(deviceIdAndName.getSerialId());
@@ -66,6 +66,17 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         return deviceIdAndName;
     }
 
+    /**
+     * 获取电表详情接口
+     * @param id
+     * @param type
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws AmmeterException
+     */
+    @Transactional
     @Override
     public AmmeterInfoVo getAmmeterInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
         AmmeterInfoVo ammeterInfoVo = null;
@@ -75,13 +86,59 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         if (type.equals("0")){
             model = ammeterMannagerVoDao.getDeviceInfoWithDispersed(id);
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
-        }else{
+            if(model.getIsHub().equals("0")){
+                model = initFenTan(model);
+            }
+        }else if(type.equals("1")){
             model = ammeterMannagerVoDao.getDeviceInfoWithConcentrated(id);
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
         }
         AmmeterInfoVo modelFromInterFace  =iAmmeter.getAmmeterInfo(devId);
-        Object data = MyConstUtils.mergeObject(modelFromInterFace,model);
-        return (AmmeterInfoVo)data;
+        AmmeterInfoVo data = (AmmeterInfoVo)MyConstUtils.mergeObject(modelFromInterFace,model);
+        if(type.equals("0")){
+            ammeterMannagerVoDao.updateAmmeterWithDispersed(data);
+            ammeterMannagerVoDao.addDeviceRecordWithDispersed(data);
+        }else if(type.equals("1")){
+            ammeterMannagerVoDao.updateAmmeterWithConcentrated(data);
+            ammeterMannagerVoDao.addDeviceRecordWithConcentrated(data);
+        }
+        return data;
+    }
+
+    /**
+     * 计算分摊
+     * @param ammeterInfoVo
+     * @return
+     */
+    private AmmeterInfoVo initFenTan(AmmeterInfoVo ammeterInfoVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        com.ih2ome.hardware_service.service.model.caspain.SmartDevice master = ammeterMannagerVoDao.getMasterAmmeter(ammeterInfoVo.getId());
+        AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getSerialId());
+        Double powerDay = model.getPowerDay();
+        Double powerMonth = model.getPowerDay();
+        //0=公共区域 1=独立公共区域
+        if(ammeterInfoVo.getUseCase().equals("0")){
+            List <String> ammeterSerialId = ammeterMannagerVoDao.getAmmeterByMaster(String.valueOf(master.getId()));
+            Double allPowerDay = new Double(0.0);
+            Double allPowerMonth = new Double(0.0);
+            for (String id:ammeterSerialId){
+                AmmeterInfoVo ammeter = iAmmeter.getAmmeterInfo(id);
+                allPowerDay+=ammeter.getPowerDay();
+                allPowerMonth+=ammeter.getPowerMonth();
+            }
+            Double share = Double.valueOf(ammeterInfoVo.getShare());
+            Double shareDay = (powerDay-allPowerDay)*share/100;
+            Double shareMonth = (powerMonth-allPowerMonth)*share/100;
+            ammeterInfoVo.setShareDay(shareDay);
+            ammeterInfoVo.setShareMonth(shareMonth);
+        }else if(ammeterInfoVo.getUseCase().equals("1")){
+            Double share = Double.valueOf(ammeterInfoVo.getShare());
+            Double shareDay = powerDay*share/100;
+            Double shareMonth = powerMonth*share/100;
+            ammeterInfoVo.setShareDay(shareDay);
+            ammeterInfoVo.setShareMonth(shareMonth);
+        }
+        return ammeterInfoVo;
     }
 
     @Override
@@ -89,7 +146,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
 
         if(type.equals("0")){
             ammeterMannagerVoDao.updateWiringWithDispersed(id,wiring);
-        }else{
+        }else if(type.equals("1")){
             ammeterMannagerVoDao.updateWiringWithConcentrated(id,wiring);
         }
     }
@@ -102,7 +159,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         if (type.equals("0")){
            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
            ammeterMannagerVoDao.updateDevicePriceWithDispersed(id,price);
-        }else{
+        }else if(type.equals("1")){
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
             ammeterMannagerVoDao.updateDevicePriceWithConcentrated(id,price);
         }
@@ -131,7 +188,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         if (type.equals("0")){
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
             ammeterMannagerVoDao.updateDevicePayModWithDispersed(id, String.valueOf(pay_mod.getCode()));
-        }else{
+        }else if(type.equals("1")){
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
             ammeterMannagerVoDao.updateDevicePayModWithConcentrated(id, String.valueOf(pay_mod.getCode()));
         }
