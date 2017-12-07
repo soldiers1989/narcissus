@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/operationLog")
-public class operationLog extends BaseController {
+public class OperationLog extends BaseController {
 
     /**
      * 查看操作日志列表

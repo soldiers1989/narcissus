@@ -1,14 +1,20 @@
 package com.ih2ome.hardware_server.server.scheduled;
 
+import com.ih2ome.hardware_service.service.enums.ALARM_TYPE;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
+import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
 import com.ih2ome.peony.ammeterInterface.enums.AMMETER_FIRM;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +28,8 @@ public class AmmeterExceptionInfoScheduled {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    AmmeterAlarmService ammeterAlarmService;
     /**
      *设置线程池，多线程跑批
      * @return
@@ -56,7 +64,16 @@ public class AmmeterExceptionInfoScheduled {
         IAmmeter iAmmeter = getIAmmeter();
         Log.info("====================获取离线设备任务开始==================");
         try {
-            List<String> ids = iAmmeter.getMissDevice(Integer.valueOf(2));
+            SmartAlarmRule smartAlarmRule= ammeterAlarmService.getByReportName(ALARM_TYPE.LONG_TIME_OFF_LINE.getCode()+"");
+            List<String> ids = iAmmeter.getMissDevice(Integer.valueOf(smartAlarmRule.getReportParam()));
+            List<SmartMistakeInfo>smartMistakeInfoList = new ArrayList<>();
+            for (String id: ids) {
+                SmartMistakeInfo smartMistakeInfo = new SmartMistakeInfo();
+                smartMistakeInfo.setUuid(id);
+                smartMistakeInfo.setExceptionType(ALARM_TYPE.LONG_TIME_OFF_LINE.getCode()+"");
+
+                smartMistakeInfoList.add(smartMistakeInfo);
+            }
         } catch (AmmeterException e) {
             Log.error("获取离线设备任务失败",e);
         }
@@ -71,7 +88,8 @@ public class AmmeterExceptionInfoScheduled {
         IAmmeter iAmmeter = getIAmmeter();
         Log.info("====================获取获取长时间无数据上报任务开始==================");
         try {
-            List<String> ids = iAmmeter.getOnlineNoDataDevice(Integer.valueOf(2));
+            SmartAlarmRule smartAlarmRule= ammeterAlarmService.getByReportName(ALARM_TYPE.DATA_IS_NOT_UPDATE.getCode()+"");
+            List<String> ids = iAmmeter.getOnlineNoDataDevice(Integer.valueOf(smartAlarmRule.getReportParam()));
         } catch (AmmeterException e) {
             Log.error("获取获取长时间无数据上报任务失败",e);
         }
@@ -86,7 +104,8 @@ public class AmmeterExceptionInfoScheduled {
         IAmmeter iAmmeter = getIAmmeter();
         Log.info("====================获取获取长时间无数据上报任务开始==================");
         try {
-            List<String> ids = iAmmeter.getVacantPowerOn(Integer.valueOf(2));
+            SmartAlarmRule smartAlarmRule= ammeterAlarmService.getByReportName(ALARM_TYPE.POWER_CONSUMPTION_WITHOUT_CHECKIN.getCode()+"");
+            List<String> ids = iAmmeter.getVacantPowerOn(Integer.valueOf(smartAlarmRule.getReportParam()));
         } catch (AmmeterException e) {
             Log.error("获取获取长时间无数据上报任务失败",e);
         }

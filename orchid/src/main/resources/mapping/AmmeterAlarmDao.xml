@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterMannagerVoDao">
+
+    <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+        UPDATE narcissus.smart_alarm_rule nsar
+          SET
+        <trim prefix="set" suffixOverrides=",">
+            <if test="reportName!=null">nsar.report_name = #{reportName},</if>
+            <if test="reportParam!=null">nsar.report_param=#{reportParam},</if>
+            <if test="switchStatus!=null">nsar.switch_status=#{switchStatus},</if>
+        where nsar.id=#{id}
+        </trim>
+    </update>
+    <insert id="addAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+        INSERT INTO narcissus.smart_alarm_rule (report_name,report_param,switch_status) VALUES(#{reportName},#{reportParam},#{switchStatus});
+    </insert>
+
+    <select id="getAllSmartAlarmRules">
+        select * FROM  narcissus.smart_alarm_rule
+    </select>
+
+    <select id="getByReportName" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+        SELECT * from narcissus.smart_alarm_rule nsar where nsar.report_name=#{reportName}
+    </select>
+</mapper>

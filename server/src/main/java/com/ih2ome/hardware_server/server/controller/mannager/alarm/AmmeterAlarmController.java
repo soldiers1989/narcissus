@@ -1,8 +1,14 @@
 package com.ih2ome.hardware_server.server.controller.mannager.alarm;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
+import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * <br>
@@ -13,8 +19,10 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/ammeterAlarm")
-public class ammeterAlarmController extends BaseController {
+public class AmmeterAlarmController extends BaseController {
 
+    @Autowired
+    AmmeterAlarmService ammeterAlarmService;
     /**
      * 设置电表报警规则
      * @param apiRequestVO
@@ -22,7 +30,10 @@ public class ammeterAlarmController extends BaseController {
      */
     @RequestMapping(value="/setAmmeterAlarmRules",method = RequestMethod.POST,produces = {"application/json"})
     public String setAmmeterAlarmRules(@RequestBody ApiRequestVO apiRequestVO){
-        return "";
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        SmartAlarmRule smartReport = resData.getObject("smartReport", SmartAlarmRule.class);
+        ammeterAlarmService.saveAmmeterAlarmRules(smartReport);
+        return structureSuccessResponseVO(null,new Date().toString(),"创建成功");
     }
 
     /**
@@ -40,8 +51,9 @@ public class ammeterAlarmController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/ammeterAlarmRulesInfo/{apiRequestVO}",method = RequestMethod.GET,produces = {"application/json"})
-    public String ammeterAlarmRulesInfo(@PathVariable String apiRequestVO){
+    @RequestMapping(value="/ammeterAlarmRulesInfo",method = RequestMethod.POST,produces = {"application/json"})
+    public String ammeterAlarmRulesInfo(@RequestBody ApiRequestVO apiRequestVO){
+
         return "";
     }
 }

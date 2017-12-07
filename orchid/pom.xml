@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>service</name>
+	<name>orchid</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -27,7 +27,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.narcissus.utils</groupId>
-			<artifactId>narcissus_common</artifactId>
+			<artifactId>narcissus-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

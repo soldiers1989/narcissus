@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/accountManager")
-public class accountManager extends BaseController {
+public class AccountManager extends BaseController {
 
     /**
      * 账号列表

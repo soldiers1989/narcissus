@@ -27,7 +27,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.narcissus.utils</groupId>
-			<artifactId>narcissus_common</artifactId>
+			<artifactId>narcissus-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/ammeter")
 @CrossOrigin
-public class ammeterController extends BaseController {
+public class AmmeterController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
