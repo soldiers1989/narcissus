@@ -1,6 +1,7 @@
 package com.ih2ome.watermeter.dao;
 
 import com.ih2ome.common.base.MyMapper;
+import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.vo.*;
 import org.apache.ibatis.annotations.Param;
@@ -112,4 +113,46 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      * @return
      */
     List<ExceptionVO> findWatermeterGatewayExceptionByGatewayId(int gatewayId);
+
+    /**
+     * 查询水表抄表参数by水表id
+     * @param watermeterId
+     * @return
+     */
+    WatermeterRecordParamsVo findWatermeterRecordParamsByWatermeterId(int watermeterId);
+
+    /**
+     * 查询房源信息byhouseid
+     * @param houseId
+     * @return
+     */
+    AddHomeVo findHouseByHouseId(int houseId);
+
+    /**
+     * 查询room信息byHouseId
+     * @param houseId
+     * @return
+     */
+    List<AddRoomVO> findRoomByHouseId(int houseId);
+
+    /**
+     * 查询房源信息byApartmentId
+     * @param apartmentId
+     * @return
+     */
+    AddHomeVo findHouseByApartmentId(int apartmentId);
+
+    /**
+     * 查询room信息byApartmentId
+     * @param apartmentId
+     * @return
+     */
+    List<AddRoomVO> findRoomByApartmentId(int apartmentId);
+
+    /**
+     * 查询room信息byFloorId
+     * @param floorId
+     * @return
+     */
+    List<AddRoomVO> findRoomByFloorId(int floorId);
 }

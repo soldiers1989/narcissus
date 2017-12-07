@@ -111,7 +111,7 @@ public interface WatermeterService {
 
     /**
      * 查找水表网关异常记录
-     * @param watermeterId
+     * @param gatewayId
      * @return
      */
     List<ExceptionVO> findWatermeterGatewayException(int gatewayId);
@@ -122,4 +122,33 @@ public interface WatermeterService {
      * @return
      */
     YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, WatermeterException;
+
+    /**
+     * 查询实时抄表记录
+     * @param watermeterId
+     * @return
+     */
+    int findWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+
+    /**
+     * 分散式同步房源
+     * @param houseId
+     * @return
+     */
+    String synchronousHousingByHouseId(int houseId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+
+    /**
+     * 集中式同步房源
+     * @param apartmentId
+     * @return
+     */
+    String synchronousHousingByApartmenId(int apartmentId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+
+    /**
+     * 集中式同步房源by楼层
+     * @param apartmentId
+     * @param floorId
+     * @return
+     */
+    String synchronousHousingByFloorId(int apartmentId, int floorId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 }

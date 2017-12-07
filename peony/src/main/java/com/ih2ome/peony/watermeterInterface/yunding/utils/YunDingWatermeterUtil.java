@@ -7,6 +7,7 @@ import com.ih2ome.common.utils.MyConstUtils;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -17,13 +18,14 @@ import java.util.*;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public class YunDingWatermeterUtil {
-    private static final String USER_NAME = "13918541485";
-    private static final String PASSWORD = "cihty5sj29";
+    private static final String USER_NAME = "9cd7fde01ab3e7c6a11ad3fd";
+    private static final String PASSWORD = "5ba2e2d0c7a7d6aa332c61105fbfbb0a";
     private static final String TOKEN_KEY = "YUN_DING_WATERMETER_TOKEN";
     private static final String UID_KEY = "YUN_DING_WATERMETER_UID";
     private static final String EXPRIES_TIME = "YUN_DING_WATERMETER_EXPRIES_TIME";
     private static final String SECRET = "";
     private static final String BASE_URL = "https://lockapi.dding.net/openapi/v1";
+    //private static final String BASE_URL = "https://dev-lockapi.dding.net:8090/openapi/v1";
     private static final String VERSION_VALUE = "0116010101";
 
     /**
@@ -60,14 +62,14 @@ public class YunDingWatermeterUtil {
 
         Map<String, String> map = new HashMap<>();
         String uri = BASE_URL + "/access_token";
-        map.put("client_id",USER_NAME);
-        map.put("client_secret",PASSWORD);
+        map.put("clien_id",USER_NAME);
+        map.put("clien_secret",PASSWORD);
         //String url = generateParam(uri,map);
         JSONObject json = new JSONObject();
         json.put("clien_id", USER_NAME);
         json.put("clien_secret", PASSWORD);
         //json.put("signValue",generateSign(uri,map));
-        String res = HttpClientUtil.doPostSSL(uri,json);
+        String res = HttpClientUtil.doPost(uri,json);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
@@ -83,7 +85,9 @@ public class YunDingWatermeterUtil {
         String access_token = resJson.get("access_token").toString();
         int expires_time = resJson.getIntValue("expires_time");
         Map<String, Object> map2 = new HashMap<>();
-        map2.put(EXPRIES_TIME, (int)(expires_time - System.currentTimeMillis()));
+        System.out.println("expires_time:"+expires_time+"----"+System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        map2.put(EXPRIES_TIME, (int)(expires_time - (System.currentTimeMillis()/1000)));
         map2.put(TOKEN_KEY, access_token);
         return map2;
 
@@ -103,10 +107,11 @@ public class YunDingWatermeterUtil {
             map = getTokenByThrid();
             token = (String) map.get(TOKEN_KEY);
             Integer expires_time = (Integer) map.get(EXPRIES_TIME);
-            CacheUtils.set(TOKEN_KEY, token, expires_time);
+            System.out.println("expires_time:"+expires_time);
+            CacheUtils.set(TOKEN_KEY, token, 60*30);
             // CacheUtils.set(UID_KEY,uid,0);
         }
-
+        //CacheUtils.set(TOKEN_KEY, token, 1);
         return token;
     }
 

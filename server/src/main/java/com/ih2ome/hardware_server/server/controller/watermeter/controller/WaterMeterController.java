@@ -143,12 +143,19 @@ public class WaterMeterController extends BaseController {
      * @return
      */
     @RequestMapping(value="/find_total_water",method = RequestMethod.POST,produces = {"application/json"})
-    public String findTotalWater(@RequestBody ApiRequestVO apiRequestVO){
+    public String findTotalWater(@RequestBody ApiRequestVO apiRequestVO) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException {
         //access_token,uuid水表id,manufactory水表供应商.请求地址/openapi/v1/read_watermeter
+        //获取水表id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int watermeterId = dt.getIntValue("watermeterId");
+        int LastAmount =watermeterService.findWatermeterLastAmountByWatermeterId(watermeterId);
 
         //同步到数据库
 
-        return "200.9";
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("LastAmount",LastAmount);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
     }
 
     /**
@@ -265,15 +272,14 @@ public class WaterMeterController extends BaseController {
      * @return
      */
     @RequestMapping(value="/hm/synchronous_housing/byhouse",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingByHouse(@RequestBody ApiRequestVO apiRequestVO){
+    public String synchronousHousingByHouse(@RequestBody ApiRequestVO apiRequestVO) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException {
         //获取用户id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int houseId = dt.getIntValue("houseId");
-        //boolean falg = watermeterService.synchronousHousingByHouseId(houseId);
+        String home_id = watermeterService.synchronousHousingByHouseId(houseId);
 
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(1));
         JSONObject responseJson = new JSONObject();
-        responseJson.put("houseVOS",jsonArray);
+        responseJson.put("home_id",home_id);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
         return res;
     }
@@ -284,12 +290,17 @@ public class WaterMeterController extends BaseController {
      * @return
      */
     @RequestMapping(value="/jz/synchronous_housing/byapartment",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingFindApartment(@RequestBody ApiRequestVO apiRequestVO){
+    public String synchronousHousingFindApartment(@RequestBody ApiRequestVO apiRequestVO) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException {
         //获取公寓id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int apartmentId = dt.getIntValue("apartmentId");
+        String home_id = watermeterService.synchronousHousingByApartmenId(apartmentId);
 
-        return "";
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("home_id",home_id);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
+
     }
 
     /**
@@ -298,11 +309,17 @@ public class WaterMeterController extends BaseController {
      * @return
      */
     @RequestMapping(value="/synchronous_housing/byfloor",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingByFloor(@RequestBody ApiRequestVO apiRequestVO){
+    public String synchronousHousingByFloor(@RequestBody ApiRequestVO apiRequestVO) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException {
         //获取楼层id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int apartmentId = dt.getIntValue("apartmentId");
         int floorId = dt.getIntValue("floorId");
-        return "";
+        String home_id = watermeterService.synchronousHousingByFloorId(apartmentId,floorId);
+
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("home_id",home_id);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
     }
 
 

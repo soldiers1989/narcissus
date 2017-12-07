@@ -6,7 +6,7 @@
     <sql id="smart_gateway_bind">narcissus.smart_gateway_bind</sql>
     <sql id="smart_gateway">narcissus.smart_gateway</sql>
     <sql id="smart_watermeter_record">narcissus.smart_watermeter_record</sql>
-    <sql id="smart_exception">narcissus.smart_exception</sql>
+    <sql id="smart_exception">narcissus.smart_mistake</sql>
     <sql id="house">caspain_test.house</sql>
     <sql id="room">caspain_test.room</sql>
     <sql id="apartment">volga_test.apartment</sql>
@@ -126,6 +126,42 @@
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
     </select>
 
+    <!--查询水表抄表参数by水表id-->
+    <select id="findWatermeterRecordParamsByWatermeterId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterRecordParamsVo">
+        SELECT watermeter.uuid,watermeter.manufactory FROM <include refid="smart_watermeter"/> watermeter WHERE watermeter.smart_watermeter_id = #{id}
+    </select>
+
+    <!--查询房源信息byhouseid-->
+    <select id="findHouseByHouseId" parameterType="int" resultType="com.ih2ome.peony.watermeterInterface.vo.AddHomeVo">
+        SELECT house.city,house.block AS zone,(house.address + house.area +house.building_num+house.unit_num+house.floor_num +house.house_num) AS location,
+        house.area AS block,house.id AS home_id,house.area AS home_name,house.remark AS description
+        FROM <include refid="house"/> house WHERE house.id = #{id}
+    </select>
+
+    <!--查询room信息byhouseid-->
+    <select id="findRoomByHouseId" parameterType="int" resultType="com.ih2ome.watermeter.vo.AddRoomVO">
+        SELECT room.id AS room_id,room.name AS room_name,room.room_desc AS room_description
+        FROM <include refid="room"/> room WHERE room.house_id = #{id}
+    </select>
+
+    <!--查询房源信息byApartmentid-->
+    <select id="findHouseByApartmentId" parameterType="int" resultType="com.ih2ome.peony.watermeterInterface.vo.AddHomeVo">
+        SELECT apartment.city,apartment.block AS zone,(apartment.address + apartment.area) AS location,
+        apartment.area AS block,apartment.id AS home_id,apartment.area AS home_name,apartment.remark AS description
+        FROM <include refid="apartment"/> apartment WHERE apartment.id = #{id}
+    </select>
+
+    <!--查询room信息byApartmentId-->
+    <select id="findRoomByApartmentId" parameterType="int" resultType="com.ih2ome.watermeter.vo.AddRoomVO">
+        SELECT jzroom.id AS room_id,jzroom.name AS room_name,jzroom.room_desc AS room_description
+        FROM <include refid="jzroom"/> jzroom WHERE jzroom.apartment_id = #{id}
+    </select>
+
+    <!--查询room信息byApartmentId-->
+    <select id="findRoomByFloorId" parameterType="int" resultType="com.ih2ome.watermeter.vo.AddRoomVO">
+        SELECT jzroom.id AS room_id,jzroom.name AS room_name,jzroom.room_desc AS room_description
+        FROM <include refid="jzroom"/> jzroom WHERE jzroom.floor_id = #{id}
+    </select>
 
     <!--<select id="finWatermeterByRoomIds" parameterType="List" resultMap="watermeterDetailVO">
         SELECT g.smart_gateway_id FROM (SELECT
