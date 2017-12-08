@@ -15,6 +15,7 @@ public enum ExpireTime {
 
     /**
      * 1秒钟
+     * TODO:单词写全，不要缩写！！
      */
     ,ONE_SEC(1, "1秒钟")
 
