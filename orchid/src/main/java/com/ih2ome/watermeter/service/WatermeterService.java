@@ -158,4 +158,7 @@ public interface WatermeterService {
      * @return
      */
     List<YunDingResponseVo> findHomeIsSynchronousedByHomeIds(String[] homeIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException ;
+
+
+
 }

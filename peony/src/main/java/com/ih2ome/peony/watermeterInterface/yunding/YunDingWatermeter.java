@@ -321,6 +321,127 @@ public class YunDingWatermeter implements IWatermeter {
         return res;
     }
 
+    /**
+     * 获取水表网关信息
+     * @param uuid
+     * @return
+     * @throws WatermeterException
+     */
+    @Override
+    public String getWaterGatewayInfo(String uuid) throws WatermeterException {
+        Log.info("获取水表网关信息");
+
+        Map<String,Object> map= new HashMap();
+        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("uuid",uuid);
+
+        String uri = BASE_URL + "/get_water_gateway_info";
+        //String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(uri,map);
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String code = resJson.get("ErrNo").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new WatermeterException("第三方请求失败/n"+msg);
+        }
+        return res;
+    }
+
+    /**
+     * 获取水表信息
+     * @param uuid
+     * @param manufactory
+     * @return
+     * @throws WatermeterException
+     */
+    @Override
+    public String getWatermeterInfo(String uuid, String manufactory) throws WatermeterException {
+        Log.info("获取水表网关信息");
+
+        Map<String,Object> map= new HashMap();
+        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("uuid",uuid);
+
+        String uri = BASE_URL + "/get_watermeter_info";
+        //String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(uri,map);
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String code = resJson.get("ErrNo").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new WatermeterException("第三方请求失败/n"+msg);
+        }
+        return res;
+    }
+
+    /**
+     * 获取抄表历史
+     * @param uuid
+     * @param manufactory
+     * @param room_id
+     * @param type
+     * @param count
+     * @param offset
+     * @param begin
+     * @param end
+     * @return
+     * @throws WatermeterException
+     */
+    @Override
+    public String getMeterRecord(String uuid, String manufactory, String room_id, int type, int count, int offset, int begin, int end) throws WatermeterException {
+        Log.info("获取抄表历史");
+
+        Map<String,Object> map= new HashMap();
+        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("uuid",uuid);
+        map.put("manufactory",manufactory);
+        map.put("room_id",room_id);
+        map.put("type",type);
+        map.put("count",count);
+        map.put("offset",offset);
+        map.put("begin",begin);
+        map.put("end",end);
+
+        String uri = BASE_URL + "/get_meter_record";
+        //String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(uri,map);
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String code = resJson.get("ErrNo").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new WatermeterException("第三方请求失败/n"+msg);
+        }
+        return res;
+    }
+
+
     public String getBaseDoPostUrl(String uri,Map<String,Object> map) throws WatermeterException{
         String url = BASE_URL + uri;
         String res = HttpClientUtil.doPost(url,map);

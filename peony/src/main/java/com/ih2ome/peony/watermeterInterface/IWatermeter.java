@@ -72,5 +72,28 @@ public interface IWatermeter {
      */
     String deviceFetchExceptions(String uuid,int offset,int count,int start_time,int end_time) throws WatermeterException;
 
+    /**
+     * 获取水表网关信息
+     * @param uuid
+     * @return
+     * @throws WatermeterException
+     */
+    String getWaterGatewayInfo(String uuid) throws WatermeterException;
+
+    /**
+     * 获取水表信息
+     * @param uuid
+     * @return
+     * @throws WatermeterException
+     */
+    String getWatermeterInfo(String uuid,String manufactory) throws WatermeterException;
+
+    /**
+     * 获取抄表历史
+     * @param uuid
+     * @return
+     * @throws WatermeterException
+     */
+    String getMeterRecord(String uuid,String manufactory,String room_id,int type,int count,int offset,int begin,int end) throws WatermeterException;
 
 }
