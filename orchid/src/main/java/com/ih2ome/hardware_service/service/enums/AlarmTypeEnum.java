@@ -7,7 +7,7 @@ package com.ih2ome.hardware_service.service.enums;
  *         create by 2017/12/7
  * @Emial Lucius.li@ixiaoshuidi.com
  */
-public enum ALARM_TYPE {
+public enum AlarmTypeEnum {
 
     POWER_RATE_SMALL_THAN_ZERO("电费出现负数", 0),
     POWER_CONSUMPTION_WITHOUT_CHECKIN("未办理入住，有用电支出", 1),
@@ -19,17 +19,17 @@ public enum ALARM_TYPE {
     private String name;
     private Integer code;
 
-    public static ALARM_TYPE getByCode(Integer code) {
-        for (ALARM_TYPE alarmType : ALARM_TYPE.values()) {
-            if (alarmType.getCode().equals(code)) {
-                return alarmType;
+    public static AlarmTypeEnum getByCode(Integer code) {
+        for (AlarmTypeEnum alarmTypeEnum : AlarmTypeEnum.values()) {
+            if (alarmTypeEnum.getCode().equals(code)) {
+                return alarmTypeEnum;
             }
         }
         return null;
     }
 
 
-    ALARM_TYPE(String name, Integer code) {
+    AlarmTypeEnum(String name, Integer code) {
         this.name = name;
         this.code = code;
     }
