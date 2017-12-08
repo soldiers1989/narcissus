@@ -47,12 +47,13 @@ public class YunDingWatermeter implements IWatermeter {
             Log.error("json格式解析错误",e);
             //throw new WatermeterException("json格式解析错误"+e.getMessage());
         }
-
-        String code = resJson.get("ErrNo").toString();
-        if(!code.equals("0")){
-            String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+        if (resJson != null) {
+            String code = resJson.get("ErrNo").toString();
+            if (!code.equals("0")) {
+                String msg = resJson.get("ErrMsg").toString();
+                Log.error("第三方请求失败/n" + msg);
+                throw new WatermeterException("第三方请求失败/n" + msg);
+            }
         }
         return String.valueOf(resJson);
     }
@@ -162,6 +163,43 @@ public class YunDingWatermeter implements IWatermeter {
     }
 
     /**
+     * 获取抄表状态
+     * @param uuid
+     * @param manufactory
+     * @return
+     * @throws WatermeterException
+     */
+    @Override
+    public String readWatermeterStatus(String uuid, String manufactory) throws WatermeterException {
+        Log.info("获取抄表状态");
+        Log.info("水表uuid："+uuid+"水表供应商"+manufactory);
+        Map<String,Object> map= new HashMap();
+        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("uuid",uuid);
+        map.put("manufactory",manufactory);
+
+        String uri = BASE_URL + "/read_watermeter_status";
+        //String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(uri,map);
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String code = resJson.get("ErrNo").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new WatermeterException("第三方请求失败/n"+msg);
+        }
+        return res;
+    }
+
+    /**
      * 给指定公寓添加房间
      * @param home_id
      * @param room_id
@@ -222,6 +260,49 @@ public class YunDingWatermeter implements IWatermeter {
         String uri = BASE_URL + "/add_rooms";
         //String url = PowerBeeAmmeterUtil.generateParam(uri);
         String res = HttpClientUtil.doPost(uri,map);
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String code = resJson.get("ErrNo").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new WatermeterException("第三方请求失败/n"+msg);
+        }
+        return res;
+    }
+
+    /**
+     * 获取设备历史异常记录
+     * @param uuid
+     * @param offset
+     * @param count
+     * @param start_time
+     * @param end_time
+     * @return
+     * @throws WatermeterException
+     */
+    @Override
+    public String deviceFetchExceptions(String uuid, int offset, int count, int start_time, int end_time) throws WatermeterException {
+        Log.info("获取设备历史异常记录");
+
+        Map<String,Object> map= new HashMap();
+        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("uuid",uuid);
+        map.put("offset",offset);
+        map.put("count",count);
+        map.put("start_time",start_time);
+        map.put("end_time",end_time);
+
+        String uri = BASE_URL + "/device_fetch_exception";
+        //String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doGet(uri,map);
 
         JSONObject resJson = null;
         try {

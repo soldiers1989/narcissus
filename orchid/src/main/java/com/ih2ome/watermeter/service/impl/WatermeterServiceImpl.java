@@ -241,7 +241,9 @@ public class WatermeterServiceImpl implements WatermeterService {
         iAmmeter.updatePayMod(devId,pay_mod);*/
 
         String res= iWatermeter.findHomeState(String.valueOf(homeId));
-
+        if (res == null){
+            return null;
+        }
         YunDingResponseVo jsonObject=JSONObject.parseObject(res,YunDingResponseVo.class);
         return jsonObject;
     }
@@ -260,8 +262,7 @@ public class WatermeterServiceImpl implements WatermeterService {
         String res= iWatermeter.readWatermeter(params.getUuid(),params.getManufactory());
 
         YunDingResponseVo jsonObject=JSONObject.parseObject(res,YunDingResponseVo.class);
-        System.out.println(res);
-
+        JSONObject result = jsonObject.getResult();
         return 0;
     }
 
@@ -325,7 +326,7 @@ public class WatermeterServiceImpl implements WatermeterService {
 
         //查询home信息
         AddHomeVo addHomeVo = watermeterDao.findHouseByApartmentId(apartmentId);
-        addHomeVo.setHome_type(1);
+        addHomeVo.setHome_type(2);
         addHomeVo.setCountry("中国");
         //添加房源
         String res = iWatermeter.addHome(addHomeVo);
@@ -390,5 +391,24 @@ public class WatermeterServiceImpl implements WatermeterService {
         }
         return resJson.get("home_id").toString();
     }
+
+    /**
+     * 查询房源是否已同步byhomeIds
+     * @param homeIds
+     * @return
+     */
+    @Override
+    public List<YunDingResponseVo> findHomeIsSynchronousedByHomeIds(String[] homeIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException  {
+        IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
+
+        String res= iWatermeter.findHomeStates(homeIds);
+        if (res == null){
+            return null;
+        }
+        List<YunDingResponseVo> jsonObject=JSONObject.parseArray(res,YunDingResponseVo.class);
+        return jsonObject;
+    }
+
+
 
 }

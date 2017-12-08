@@ -62,12 +62,11 @@ public class YunDingWatermeterUtil {
 
         Map<String, String> map = new HashMap<>();
         String uri = BASE_URL + "/access_token";
-        map.put("clien_id",USER_NAME);
-        map.put("clien_secret",PASSWORD);
+
         //String url = generateParam(uri,map);
         JSONObject json = new JSONObject();
-        json.put("clien_id", USER_NAME);
-        json.put("clien_secret", PASSWORD);
+        json.put("client_id", USER_NAME);
+        json.put("client_secret", PASSWORD);
         //json.put("signValue",generateSign(uri,map));
         String res = HttpClientUtil.doPost(uri,json);
         JSONObject resJson = null;
@@ -108,7 +107,7 @@ public class YunDingWatermeterUtil {
             token = (String) map.get(TOKEN_KEY);
             Integer expires_time = (Integer) map.get(EXPRIES_TIME);
             System.out.println("expires_time:"+expires_time);
-            CacheUtils.set(TOKEN_KEY, token, 60*30);
+            CacheUtils.set(TOKEN_KEY, token, 1);
             // CacheUtils.set(UID_KEY,uid,0);
         }
         //CacheUtils.set(TOKEN_KEY, token, 1);

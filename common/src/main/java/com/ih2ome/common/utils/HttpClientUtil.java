@@ -111,7 +111,7 @@ public class HttpClientUtil {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 InputStream instream = entity.getContent();
-                result = IOUtils.toString(instream, "UTF-8");
+                result = IOUtils.toString(instream, "UTF-8").trim();
             }
         } catch (IOException e) {
             e.printStackTrace();

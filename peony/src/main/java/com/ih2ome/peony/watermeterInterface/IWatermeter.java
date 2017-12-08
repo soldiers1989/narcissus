@@ -27,12 +27,20 @@ public interface IWatermeter {
     String addHome(AddHomeVo home) throws WatermeterException;
 
     /**
-     * 读取实时抄表记录
+     * 水表抄表请求
      * @param uuid
      * @param manufactory
      * @return
      */
     String readWatermeter(String uuid,String manufactory) throws WatermeterException;
+
+    /**
+     * 获取抄表状态
+     * @param uuid
+     * @param manufactory
+     * @return
+     */
+    String readWatermeterStatus(String uuid,String manufactory) throws WatermeterException;
 
     /**
      * 给指定的公寓添加房间
@@ -52,6 +60,17 @@ public interface IWatermeter {
      */
     String addRooms(String home_id,String[] rooms) throws WatermeterException;
 
+    /**
+     * 获取设备历史异常记录
+     * @param uuid
+     * @param offset
+     * @param count
+     * @param start_time
+     * @param end_time
+     * @return
+     * @throws WatermeterException
+     */
+    String deviceFetchExceptions(String uuid,int offset,int count,int start_time,int end_time) throws WatermeterException;
 
 
 }

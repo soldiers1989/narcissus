@@ -151,4 +151,11 @@ public interface WatermeterService {
      * @return
      */
     String synchronousHousingByFloorId(int apartmentId, int floorId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+
+    /**
+     * 查询集中式房源是否已同步by房源ids
+     * @param homeIds
+     * @return
+     */
+    List<YunDingResponseVo> findHomeIsSynchronousedByHomeIds(String[] homeIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException ;
 }

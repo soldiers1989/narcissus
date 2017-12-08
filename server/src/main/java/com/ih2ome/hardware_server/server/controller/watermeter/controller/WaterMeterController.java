@@ -50,7 +50,6 @@ public class WaterMeterController extends BaseController {
         responseJson.put("watermeterList",jsonArray);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
         return res;
-
     }
 
     /**
@@ -149,8 +148,8 @@ public class WaterMeterController extends BaseController {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int watermeterId = dt.getIntValue("watermeterId");
         int LastAmount =watermeterService.findWatermeterLastAmountByWatermeterId(watermeterId);
-
         //同步到数据库
+
 
         JSONObject responseJson = new JSONObject();
         responseJson.put("LastAmount",LastAmount);
@@ -257,7 +256,7 @@ public class WaterMeterController extends BaseController {
     public String synchronousHousingFindHomeIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) throws ClassNotFoundException, WatermeterException, InstantiationException, AmmeterException, IllegalAccessException {
         //获取公寓id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int homeId = dt.getIntValue("homeId");
+        int homeId = dt.getIntValue("houseId");
         YunDingResponseVo yunDingResponseVo = watermeterService.findHomeIsSynchronousedByHomeId(homeId);
         JSONObject responseJson = new JSONObject();
         responseJson.put("home_state",yunDingResponseVo);
@@ -280,6 +279,25 @@ public class WaterMeterController extends BaseController {
 
         JSONObject responseJson = new JSONObject();
         responseJson.put("home_id",home_id);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        return res;
+    }
+
+    /**
+     * 查询集中式房源是否已同步
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/synchronous_housing/FindHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindJZHomesIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) throws ClassNotFoundException, WatermeterException, InstantiationException, AmmeterException, IllegalAccessException {
+        //获取公寓id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        JSONArray json = dt.getJSONArray("apartmentIds");
+        String[] homeIds = (String[]) json.toArray();
+        List<YunDingResponseVo> yunDingResponseVos = watermeterService.findHomeIsSynchronousedByHomeIds(homeIds);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(yunDingResponseVos));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("houseVOS",jsonArray);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
         return res;
     }
@@ -380,9 +398,6 @@ public class WaterMeterController extends BaseController {
         //return "{['time':'2017-08-26T16:39:05','onoffStatus':'离线']}";
         //return structureSuccessResponseVO("{['time':'2017-08-26T16:39:05','onoffStatus':'离线']}","20171111","0","");
     }
-
-
-
 
 
 }
