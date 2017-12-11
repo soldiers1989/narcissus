@@ -3,15 +3,17 @@ package com.ih2ome.hardware_service.service.model.narcissus;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
+
 @Data
 public class SmartGateway implements Serializable{
 
   private Long smartGatewayId;
-  private java.sql.Timestamp createdAt;
+  private Date createdAt;
   private Long createdBy;
-  private java.sql.Timestamp updatedAt;
+  private Date updatedAt;
   private Long updatedBy;
-  private java.sql.Timestamp deletedAt;
+  private Date deletedAt;
   private Long deletedBy;
   private String mac;
   private String sn;
@@ -19,7 +21,7 @@ public class SmartGateway implements Serializable{
   private String model;
   private String modelName;
   private String name;
-  private java.sql.Timestamp installTime;
+  private Date installTime;
   private String installName;
   private String installMobile;
   private String brand;

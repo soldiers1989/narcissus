@@ -3,6 +3,8 @@ package com.ih2ome.watermeter.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
@@ -10,7 +12,6 @@ import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import com.ih2ome.watermeter.dao.WatermeterMapper;
-import com.ih2ome.watermeter.model.RoomDevice;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.service.WatermeterService;
@@ -280,17 +281,7 @@ public class WatermeterServiceImpl implements WatermeterService {
         //查询house信息
         AddHomeVo addHomeVo = watermeterDao.findHouseByHouseId(houseId);
 
-//        private String access_token;
-//        private int home_type;//公寓类型，1.分散式，2.集中式
-//        private String country;
-//        private String city;
-//        private String zone;//公寓所在区域
-//        private String location;//公寓具体地址信息
-//        private String block;//小区名
-//        private String home_id;
-//        private String home_name;//公寓名称，比如公寓编号
-//        private String description;//公寓描述
-
+        addHomeVo.setHome_id("hm"+addHomeVo.getHome_id());
         addHomeVo.setHome_type(1);
         addHomeVo.setCountry("中国");
         //添加房源
@@ -310,24 +301,17 @@ public class WatermeterServiceImpl implements WatermeterService {
         //添加room
         //查询所有roombyhouseid
         List<AddRoomVO> addRoomVOS=watermeterDao.findRoomByHouseId(houseId);
-
-        String[] strings = new String[addRoomVOS.size()];
-        strings=addRoomVOS.toArray(strings);
-
-        String addRoomsRes = iWatermeter.addRooms(String.valueOf(houseId),strings);
-
-        //添加已同步的room到roomdevice
-        if(!addRoomsRes.isEmpty()){
-            List<RoomDevice> roomDevices=new ArrayList<>();
-            for (AddRoomVO roomVO:addRoomVOS
-                 ) {
-                RoomDevice roomDevice=new RoomDevice();
-                roomDevice.setRoomId(roomVO.getRoom_id());
-                roomDevice.setHomeId(home_id);
-                roomDevices.add(roomDevice);
-            }
-            watermeterDao.addSynchronousRooms(roomDevices);
+        List<AddRoomVO> addRoomVOSList =new ArrayList<>();
+        for (AddRoomVO addRoomVO:addRoomVOS
+             ) {
+            addRoomVO.setRoom_id("hm" + addRoomVO.getRoom_id());
+            addRoomVOSList.add(addRoomVO);
         }
+
+        String[] strings = new String[addRoomVOSList.size()];
+        strings=addRoomVOSList.toArray(strings);
+
+        String addRoomsRes = iWatermeter.addRooms("hm"+houseId,strings);
 
         return resJson.get("home_id").toString();
     }
@@ -349,6 +333,7 @@ public class WatermeterServiceImpl implements WatermeterService {
         AddHomeVo addHomeVo = watermeterDao.findHouseByApartmentId(apartmentId);
         addHomeVo.setHome_type(2);
         addHomeVo.setCountry("中国");
+        addHomeVo.setHome_id("jz"+addHomeVo.getHome_id());
         //添加房源
         String res = iWatermeter.addHome(addHomeVo);
 
@@ -366,25 +351,18 @@ public class WatermeterServiceImpl implements WatermeterService {
         //添加room
         //查询所有roombyApartmentId
         List<AddRoomVO> addRoomVOS=watermeterDao.findRoomByApartmentId(apartmentId);
+        List<AddRoomVO> addRoomVOSList =new ArrayList<>();
+        for (AddRoomVO addRoomVO:addRoomVOS
+                ) {
+            addRoomVO.setRoom_id("jz" + addRoomVO.getRoom_id());
+            addRoomVOSList.add(addRoomVO);
+        }
 
-        String[] strings = new String[addRoomVOS.size()];
-        strings=addRoomVOS.toArray(strings);
+        String[] strings = new String[addRoomVOSList.size()];
+        strings=addRoomVOSList.toArray(strings);
 
         String addRoomsRes = iWatermeter.addRooms(String.valueOf(apartmentId),strings);
 
-
-        //添加已同步的room到roomdevice
-        if(!addRoomsRes.isEmpty()){
-            List<RoomDevice> roomDevices=new ArrayList<>();
-            for (AddRoomVO roomVO:addRoomVOS
-                    ) {
-                RoomDevice roomDevice=new RoomDevice();
-                roomDevice.setRoomId(roomVO.getRoom_id());
-                roomDevice.setHomeId(home_id);
-                roomDevices.add(roomDevice);
-            }
-            watermeterDao.addSynchronousRooms(roomDevices);
-        }
         return resJson.get("home_id").toString();
     }
 
@@ -427,24 +405,18 @@ public class WatermeterServiceImpl implements WatermeterService {
         //添加room
         //查询所有roombyFloorId
         List<AddRoomVO> addRoomVOS=watermeterDao.findRoomByFloorId(floorId);
+        List<AddRoomVO> addRoomVOSList =new ArrayList<>();
+        for (AddRoomVO addRoomVO:addRoomVOS
+                ) {
+            addRoomVO.setRoom_id("jz" + addRoomVO.getRoom_id());
+            addRoomVOSList.add(addRoomVO);
+        }
 
-        String[] strings = new String[addRoomVOS.size()];
-        strings=addRoomVOS.toArray(strings);
+        String[] strings = new String[addRoomVOSList.size()];
+        strings=addRoomVOSList.toArray(strings);
 
         String addRoomsRes = iWatermeter.addRooms(String.valueOf(apartmentId),strings);
 
-        //添加已同步的room到roomdevice
-        if(!addRoomsRes.isEmpty()){
-            List<RoomDevice> roomDevices=new ArrayList<>();
-            for (AddRoomVO roomVO:addRoomVOS
-                    ) {
-                RoomDevice roomDevice=new RoomDevice();
-                roomDevice.setRoomId(roomVO.getRoom_id());
-                roomDevice.setHomeId(home_id);
-                roomDevices.add(roomDevice);
-            }
-            watermeterDao.addSynchronousRooms(roomDevices);
-        }
         return resJson.get("home_id").toString();
     }
 
@@ -465,6 +437,44 @@ public class WatermeterServiceImpl implements WatermeterService {
         return jsonObject;
     }
 
+    /**
+     * 更新水表抄表读数
+     * @param uuid
+     * @param amount
+     * @param time
+     */
+    @Override
+    public void updataWaterLastAmount(String uuid, int amount, int time) {
+        watermeterDao.updataWaterLastAmount(uuid, amount, time);
+    }
+
+    /**
+     * 查询floorIdbyRoomid
+     * @param room_id
+     * @return
+     */
+    @Override
+    public Long findFloorIdByRoomId(Long room_id) {
+        return  watermeterDao.findFloorIdByRoomId(room_id);
+    }
+
+    /**
+     * 添加水表
+     * @param smartWatermeter
+     */
+    @Override
+    public void createSmartWatermeter(SmartWatermeter smartWatermeter) {
+        watermeterDao.addSmartWatermeter(smartWatermeter);
+    }
+
+    /**
+     * 添加网关绑定
+     * @param smartGatewayBind
+     */
+    @Override
+    public void addSmartGatewayBind(SmartGatewayBind smartGatewayBind) {
+        watermeterDao.addSmartGatewayBind(smartGatewayBind);
+    }
 
 
 }
