@@ -8,7 +8,7 @@ spring:
   ##redis配置
   redis:
     database: 0
-    host: 10.0.0.199
+    host: 10.0.0.24
     port: 6379
     password:
     pool:
@@ -27,7 +27,7 @@ spring:
   
   ## 数据库访问配置
   datasource:
-    url: jdbc:mysql://10.0.0.199:3306
+    url: jdbc:mysql://10.0.0.24:3306
     username: root
     password: 1234
     driver-class-name: com.mysql.jdbc.Driver

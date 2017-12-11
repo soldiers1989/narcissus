@@ -43,32 +43,15 @@ public class AmmeterAlarmController extends BaseController {
     }
 
     /**
-     * 查看集中式房源所有报警信息
+     * 查看报警信息
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/dispersedAmmeterAlarmInfoList",method = RequestMethod.POST,produces = {"application/json"})
-    public String dispersedAmmeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
+    @RequestMapping(value="/ammeterAlarmInfoList",method = RequestMethod.POST,produces = {"application/json"})
+    public String ammeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
-        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterAlarmService.findDispersedAmmeterAlarm(ammeterMannagerVo);
-        PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("ammeterMannagerVoList",pageInfo);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
-    }
-
-    /**
-     * 查看分散式房源所有报警信息
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/concentratAmmeterAlarmInfoList",method = RequestMethod.POST,produces = {"application/json"})
-    public String concentratAmmeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
-        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
-        AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
-        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterAlarmService.findConcentratAmmeterAlarm(ammeterMannagerVo);
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterAlarmService.findAmmeterAlarmInfoList(ammeterMannagerVo);
         PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
         JSONObject responseJson = new JSONObject();
         responseJson.put("ammeterMannagerVoList",pageInfo);

@@ -1,6 +1,8 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao;
+import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
@@ -48,12 +50,16 @@ public class AmmeterAlarmServiceImpl implements AmmeterAlarmService {
     }
 
     @Override
-    public List<AmmeterMannagerVo> findDispersedAmmeterAlarm(AmmeterMannagerVo ammeterMannagerVo) {
-        return ammeterAlarmDao.findDispersedAmmeterAlarm(ammeterMannagerVo);
+    public List<AmmeterMannagerVo> findAmmeterAlarmInfoList(AmmeterMannagerVo ammeterMannagerVo) {
+        if(ammeterMannagerVo.getPage()!= null && ammeterMannagerVo.getRows() != null){
+            PageHelper.startPage(ammeterMannagerVo.getPage(),ammeterMannagerVo.getRows());
+        }
+        if(ammeterMannagerVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
+            return ammeterAlarmDao.findDispersedAmmeterAlarm(ammeterMannagerVo);
+        }else if(ammeterMannagerVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            return ammeterAlarmDao.findConcentratAmmeter(ammeterMannagerVo);
+        }
+        return null;
     }
 
-    @Override
-    public List<AmmeterMannagerVo> findConcentratAmmeterAlarm(AmmeterMannagerVo ammeterMannagerVo) {
-        return ammeterAlarmDao.findConcentratAmmeter(ammeterMannagerVo);
-    }
 }

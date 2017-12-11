@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao">
+<!--- insert -->
+
 
     <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
         UPDATE narcissus.smart_alarm_rule nsar
@@ -48,8 +50,9 @@
         csd.`name` deviceName,
         csd.`online` communicationStatus,
         csd.style isHub,
-				csd.last_num surplus,
-				nsmi.exception_type mistakeType
+		csd.last_num surplus,
+		nsmi.exception_type mistakeType,
+        '0' `type`
         FROM
         caspain_test.smart_device csd left join
         caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
@@ -122,8 +125,9 @@
         vsd.`name` deviceName,
         vsd.`online` communicationStatus,
         vsd.style isHub,
-				vsd.last_num surplus,
-				nsmi.exception_type mistakeType
+		vsd.last_num surplus,
+		nsmi.exception_type mistakeType,
+        '1' `type`
         FROM
         `volga_test`.smart_device vsd left join
         `volga_test`.room vr on vsd.room_id=vr.id LEFT JOIN

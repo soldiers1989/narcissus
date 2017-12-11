@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * <br>
- *
+ *TODO:package
  * @author Lucius
  * create by 2017/11/23
  * @Emial Lucius.li@ixiaoshuidi.com
@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 public class DesUtils {
     //定义加密算法，有DES、DESede(即3DES)、Blowfish
     private static final String Algorithm = "DESede";
+    //TODO:to 配置文件
     private static final String PASSWORD_CRYPT_KEY = "2012PinganVitality075522628888ForShenZhenBelter075561869839";
 
 

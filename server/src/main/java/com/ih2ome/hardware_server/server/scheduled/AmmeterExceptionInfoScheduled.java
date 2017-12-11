@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_server.server.scheduled;
 
 import com.ih2ome.hardware_service.service.enums.AlarmTypeEnum;
-import com.ih2ome.hardware_service.service.enums.SMART_DEVICE_TYPE;
+import com.ih2ome.hardware_service.service.enums.SmartDeviceTypeEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
@@ -81,7 +81,7 @@ public class AmmeterExceptionInfoScheduled {
                 SmartMistakeInfo smartMistakeInfo = new SmartMistakeInfo();
                 smartMistakeInfo.setUuid(id);
                 smartMistakeInfo.setExceptionType(AlarmTypeEnum.LONG_TIME_OFF_LINE.getCode()+"");
-                smartMistakeInfo.setSmartDeviceType(SMART_DEVICE_TYPE.POWER_BEE_AMMETER.getCode());
+                smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.POWER_BEE_AMMETER.getCode());
                 smartMistakeInfoList.add(smartMistakeInfo);
             }
             ammeterAlarmService.saveAlarmList(smartMistakeInfoList);
@@ -110,7 +110,7 @@ public class AmmeterExceptionInfoScheduled {
                 SmartMistakeInfo smartMistakeInfo = new SmartMistakeInfo();
                 smartMistakeInfo.setUuid(id);
                 smartMistakeInfo.setExceptionType(AlarmTypeEnum.DATA_IS_NOT_UPDATE.getCode()+"");
-                smartMistakeInfo.setSmartDeviceType(SMART_DEVICE_TYPE.POWER_BEE_AMMETER.getCode());
+                smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.POWER_BEE_AMMETER.getCode());
                 smartMistakeInfoList.add(smartMistakeInfo);
             }
             ammeterAlarmService.saveAlarmList(smartMistakeInfoList);
@@ -139,7 +139,7 @@ public class AmmeterExceptionInfoScheduled {
                 SmartMistakeInfo smartMistakeInfo = new SmartMistakeInfo();
                 smartMistakeInfo.setUuid(id);
                 smartMistakeInfo.setExceptionType(AlarmTypeEnum.POWER_CONSUMPTION_WITHOUT_CHECKIN.getCode()+"");
-                smartMistakeInfo.setSmartDeviceType(SMART_DEVICE_TYPE.POWER_BEE_AMMETER.getCode());
+                smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.POWER_BEE_AMMETER.getCode());
                 smartMistakeInfoList.add(smartMistakeInfo);
             }
             ammeterAlarmService.saveAlarmList(smartMistakeInfoList);
@@ -169,14 +169,14 @@ public class AmmeterExceptionInfoScheduled {
             SmartMistakeInfo smartMistakeInfo = new SmartMistakeInfo();
             smartMistakeInfo.setUuid(negativeDeviceUuid);
             smartMistakeInfo.setExceptionType(AlarmTypeEnum.POWER_RATE_SMALL_THAN_ZERO.getCode()+"");
-            smartMistakeInfo.setSmartDeviceType(SMART_DEVICE_TYPE.POWER_BEE_AMMETER.getCode());
+            smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.POWER_BEE_AMMETER.getCode());
             smartMistakeInfoList.add(smartMistakeInfo);
         }
         for(String negativePowerOnDeviceUuid:negativePowerOnDeviceList){
             SmartMistakeInfo smartMistakeInfo = new SmartMistakeInfo();
             smartMistakeInfo.setUuid(negativePowerOnDeviceUuid);
             smartMistakeInfo.setExceptionType(AlarmTypeEnum.POWER_NOT_FAILURE_WITH_POWER_RATE_THAN_ZERO.getCode()+"");
-            smartMistakeInfo.setSmartDeviceType(SMART_DEVICE_TYPE.POWER_BEE_AMMETER.getCode());
+            smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.POWER_BEE_AMMETER.getCode());
             smartMistakeInfoList.add(smartMistakeInfo);
         }
         ammeterAlarmService.saveAlarmList(smartMistakeInfoList);
