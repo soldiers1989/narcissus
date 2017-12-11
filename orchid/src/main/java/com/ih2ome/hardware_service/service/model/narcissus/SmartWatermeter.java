@@ -18,6 +18,7 @@ public class SmartWatermeter implements Serializable{
   private Long houseId;
   private Long roomId;
   private Long houseCatalog;
+  //TODO:double float
   private Double meterType;
   private String uuid;
   private Double onoffStatus;

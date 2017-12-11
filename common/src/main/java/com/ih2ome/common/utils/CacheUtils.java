@@ -166,6 +166,7 @@ public class CacheUtils {
      * @param time  失效时间(秒)
      */
     public static void set(String key, Object value, ExpireTime time) {
+//        TODO:重构
         if (value.getClass().equals(String.class)) {
             stringRedisTemplate.opsForValue().set(key, value.toString());
         } else if (value.getClass().equals(Integer.class)) {

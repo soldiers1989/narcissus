@@ -79,6 +79,7 @@ public class ApiRequestVOValidateHelper {
         try {
             Long time= DateUtils.stringToLong(crt,"yyyyMMdd:HHmmss");
             Long cruTime=System.currentTimeMillis();
+            //TODO:why@young
             if(cruTime - time > 30 * 60){
                 throw new ApiException(ApiErrorCodeEnum.Service_requesttime_overtime.toApiReturnValueVO());
             }

@@ -144,6 +144,7 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public Boolean updataWaterPrice(int price,int watermeterId) throws AmmeterException, ClassNotFoundException, IllegalAccessException, InstantiationException{
         int flag= watermeterDao.updataWaterPrice(price,watermeterId);
+        //TODO:硬编码
         if(flag==1) {
             return true;
         }
@@ -369,6 +370,7 @@ public class WatermeterServiceImpl implements WatermeterService {
         if (state == null) {
             //查询home信息
             AddHomeVo addHomeVo = watermeterDao.findHouseByApartmentId(floorId);
+            //TODO:硬编码
             addHomeVo.setHome_type(1);
             addHomeVo.setCountry("中国");
             //添加房源

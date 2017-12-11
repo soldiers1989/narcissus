@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao">
+<!--- insert -->
+
 
     <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
         UPDATE narcissus.smart_alarm_rule nsar
