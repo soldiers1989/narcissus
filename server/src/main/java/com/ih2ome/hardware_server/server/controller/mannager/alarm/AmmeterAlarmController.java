@@ -48,7 +48,7 @@ public class AmmeterAlarmController extends BaseController {
      * @return
      */
     @RequestMapping(value="/ammeterAlarmInfoList",method = RequestMethod.POST,produces = {"application/json"})
-    public String dispersedAmmeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
+    public String ammeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
         List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterAlarmService.findAmmeterAlarmInfoList(ammeterMannagerVo);
