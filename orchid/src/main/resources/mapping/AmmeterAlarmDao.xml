@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterMannagerVoDao">
+<mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao">
 
     <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
         UPDATE narcissus.smart_alarm_rule nsar
@@ -16,11 +16,168 @@
         INSERT INTO narcissus.smart_alarm_rule (report_name,report_param,switch_status) VALUES(#{reportName},#{reportParam},#{switchStatus});
     </insert>
 
-    <select id="getAllSmartAlarmRules">
+    <select id="getAllSmartAlarmRules" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
         select * FROM  narcissus.smart_alarm_rule
     </select>
 
-    <select id="getByReportName" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
-        SELECT * from narcissus.smart_alarm_rule nsar where nsar.report_name=#{reportName}
+    <select id="getByReportName" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+        SELECT * from narcissus.smart_alarm_rule nsar where nsar.report_name=#{reportName} and nsar.switch_status='on'
+    </select>
+
+    <insert id="saveAlarmList" parameterType="java.util.List">
+        insert into narcissus.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type) values
+        <foreach collection="list" item="smartMistakeInfo" index="index" separator =",">
+            (
+              NOW(),#{smartMistakeInfo.smartDeviceType},#{smartMistakeInfo.uuid},#{smartMistakeInfo.exceptionType}
+            )
+        </foreach>
+    </insert>
+    <select id="findDispersedAmmeterAlarm" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
+        SELECT
+        csd.id ammeterId,
+        ch.area apartmentName,
+        CONCAT(
+        cau.first_name,
+        cau.last_name
+        ) landlordName,
+        cau.username authUserName,
+        ch.address houseAddress,
+        cr.`name` roomNo,
+        crc.customer_name customerName,
+        crc.customer_phone customerPhone,
+        csd.`name` deviceName,
+        csd.`online` communicationStatus,
+        csd.style isHub,
+				csd.last_num surplus,
+				nsmi.exception_type mistakeType
+        FROM
+        caspain_test.smart_device csd left join
+        caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
+        caspain_test.house ch on cr.house_id=ch.id LEFT JOIN
+        caspain_test.room_contract crc on crc.room_id=cr.id
+        LEFT JOIN caspain_test.auth_user cau on crc.created_by_id = cau.id,
+				narcissus.smart_mistake_info nsmi
+        WHERE
+        1 = 1
+        AND (csd.is_delete != '1' or csd.is_delete is null)
+        AND (ch.is_delete != '1' or ch.is_delete is null)
+        AND (cr.is_delete != '1' or cr.is_delete is null)
+        AND (crc.is_delete != '1' or crc.is_delete is  null)
+        AND (
+        (
+        csd.style = '0'
+        AND crc.`status` = 'active'
+        )
+        OR csd.style = '1'
+        )
+		and nsmi.uuid=csd.uuid
+        <if test="ammeterId != '' and ammeterId != null">
+            AND csd.id = '${ammeterId}'
+        </if>
+        <if test="apartmentName != '' and apartmentName != null">
+            AND ch.area LIKE '%${apartmentName}%'
+        </if>
+        <if test="landlordName != '' and landlordName != null">
+            AND cau.last_name LIKE '%${landlordName}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND crc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="deviceName != '' and deviceName != null">
+            AND csd.`name` LIKE '%${deviceName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND crc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND ch.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND ch.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND ch.area LIKE '%${areaName}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND csd.`online` LIKE '%${communicationStatus}%'
+        </if>
+    </select>
+
+    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
+        SELECT
+        vsd.id ammeterId,
+        va.`name` apartmentName,
+        CONCAT(
+        cau.first_name,
+        cau.last_name
+        ) landlordName,
+        cau.username authUserName,
+        va.address houseAddress,
+        vr.`name` roomNo,
+        vrc.customer_name customerName,
+        vrc.customer_phone customerPhone,
+        vsd.`name` deviceName,
+        vsd.`online` communicationStatus,
+        vsd.style isHub,
+				vsd.last_num surplus,
+				nsmi.exception_type mistakeType
+        FROM
+        `volga_test`.smart_device vsd left join
+        `volga_test`.room vr on vsd.room_id=vr.id LEFT JOIN
+        `volga_test`.apartment va on vr.apartment_id=va.id LEFT JOIN
+        `volga_test`.room_contract vrc on vrc.room_id=vr.id
+        LEFT JOIN `volga_test`.area varea on va.area=varea.id
+        LEFT JOIN caspain_test.auth_user cau on vrc.created_by = cau.id,
+				narcissus.smart_mistake_info nsmi
+        WHERE
+        1 = 1
+        AND (vsd.is_delete != '1' or vsd.is_delete is null)
+        AND (va.is_delete != '1' or va.is_delete is null)
+        AND (vr.is_delete != '1' or vr.is_delete is null)
+        AND (vrc.is_delete != '1' or vrc.is_delete is  null)
+        AND (
+        (
+        vsd.style = '0'
+        AND vrc.`status` = 'active'
+        )
+        OR vsd.style = '1'
+        )
+				and nsmi.uuid=vsd.uuid
+        <if test="ammeterId != '' and ammeterId != null">
+            AND vsd.id = '${ammeterId}'
+        </if>
+        <if test="apartmentName != '' and apartmentName != null">
+            AND va.`name` LIKE '%${apartmentName}%'
+        </if>
+        <if test="landlordName != '' and landlordName != null">
+            AND CONCAT(cau.first_name,cau.last_name) LIKE '%${apartmentName}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND vrc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="deviceName != '' and deviceName != null">
+            AND vsd.`name` LIKE '%${deviceName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND vrc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND va.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND va.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND va.area LIKE '%${areaName}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND vsd.`online` LIKE '%${communicationStatus}%'
+        </if>
     </select>
 </mapper>

@@ -97,10 +97,10 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         AmmeterInfoVo data = (AmmeterInfoVo)MyConstUtils.mergeObject(modelFromInterFace,model);
         if(type.equals("0")){
             ammeterMannagerVoDao.updateAmmeterWithDispersed(data);
-            ammeterMannagerVoDao.addDeviceRecordWithDispersed(data);
+            //ammeterMannagerVoDao.addDeviceRecordWithDispersed(data);
         }else if(type.equals("1")){
             ammeterMannagerVoDao.updateAmmeterWithConcentrated(data);
-            ammeterMannagerVoDao.addDeviceRecordWithConcentrated(data);
+            //ammeterMannagerVoDao.addDeviceRecordWithConcentrated(data);
         }
         return data;
     }

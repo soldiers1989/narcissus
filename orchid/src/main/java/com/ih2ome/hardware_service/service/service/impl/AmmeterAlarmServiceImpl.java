@@ -2,7 +2,9 @@ package com.ih2ome.hardware_service.service.service.impl;
 
 import com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
+import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -38,5 +40,20 @@ public class AmmeterAlarmServiceImpl implements AmmeterAlarmService {
     @Override
     public SmartAlarmRule getByReportName(String reportName) {
         return ammeterAlarmDao.getByReportName(reportName);
+    }
+
+    @Override
+    public void saveAlarmList(List<SmartMistakeInfo> smartMistakeInfoList) {
+        ammeterAlarmDao.saveAlarmList(smartMistakeInfoList);
+    }
+
+    @Override
+    public List<AmmeterMannagerVo> findDispersedAmmeterAlarm(AmmeterMannagerVo ammeterMannagerVo) {
+        return ammeterAlarmDao.findDispersedAmmeterAlarm(ammeterMannagerVo);
+    }
+
+    @Override
+    public List<AmmeterMannagerVo> findConcentratAmmeterAlarm(AmmeterMannagerVo ammeterMannagerVo) {
+        return ammeterAlarmDao.findConcentratAmmeter(ammeterMannagerVo);
     }
 }

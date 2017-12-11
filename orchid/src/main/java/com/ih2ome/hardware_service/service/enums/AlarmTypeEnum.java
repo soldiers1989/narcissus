@@ -7,7 +7,7 @@ package com.ih2ome.hardware_service.service.enums;
  *         create by 2017/12/7
  * @Emial Lucius.li@ixiaoshuidi.com
  */
-public enum AlarmTypeEnum {
+public enum  AlarmTypeEnum {
 
     POWER_RATE_SMALL_THAN_ZERO("电费出现负数", 0),
     POWER_CONSUMPTION_WITHOUT_CHECKIN("未办理入住，有用电支出", 1),

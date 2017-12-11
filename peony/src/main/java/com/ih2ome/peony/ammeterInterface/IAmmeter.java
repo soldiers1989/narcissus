@@ -1,10 +1,11 @@
 package com.ih2ome.peony.ammeterInterface;
 
+import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
-import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <br>
@@ -60,11 +61,17 @@ public interface IAmmeter {
 
     /**
      * 获取空置未断电设备数量
-     * @param hour
      * @return
      * @throws AmmeterException
      */
-    List <String> getVacantPowerOn(Integer hour)throws AmmeterException;
+    List <String> getVacantPowerOn()throws AmmeterException;
+
+    /**
+     * 获取负数电量设备与负数未断电设备
+     * @return
+     * @throws AmmeterException
+     */
+    Map<String,List<String>> getNegativeDeviceAndNegativePowerOnDevice() throws AmmeterException;
 
 
 }

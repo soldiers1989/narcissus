@@ -1,14 +1,20 @@
 package com.ih2ome.hardware_server.server.controller.mannager.alarm;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
+import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <br>
@@ -37,13 +43,37 @@ public class AmmeterAlarmController extends BaseController {
     }
 
     /**
-     * 查看所有报警信息
+     * 查看集中式房源所有报警信息
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/ammeterAlarmInfoList/{apiRequestVO}",method = RequestMethod.GET,produces = {"application/json"})
-    public String ammeterAlarmInfoList(@PathVariable String apiRequestVO){
-        return "";
+    @RequestMapping(value="/dispersedAmmeterAlarmInfoList",method = RequestMethod.POST,produces = {"application/json"})
+    public String dispersedAmmeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterAlarmService.findDispersedAmmeterAlarm(ammeterMannagerVo);
+        PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("ammeterMannagerVoList",pageInfo);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+    /**
+     * 查看分散式房源所有报警信息
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/concentratAmmeterAlarmInfoList",method = RequestMethod.POST,produces = {"application/json"})
+    public String concentratAmmeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterAlarmService.findConcentratAmmeterAlarm(ammeterMannagerVo);
+        PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("ammeterMannagerVoList",pageInfo);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
     }
 
     /**
@@ -53,7 +83,9 @@ public class AmmeterAlarmController extends BaseController {
      */
     @RequestMapping(value="/ammeterAlarmRulesInfo",method = RequestMethod.POST,produces = {"application/json"})
     public String ammeterAlarmRulesInfo(@RequestBody ApiRequestVO apiRequestVO){
-
-        return "";
+        List<SmartAlarmRule> smartAlarmRuleList = ammeterAlarmService.getAllSmartAlarmRules();
+        JSONObject resJson = new JSONObject();
+        resJson.put("smartAlarmRuleList",smartAlarmRuleList);
+        return structureSuccessResponseVO(resJson,new Date().toString(),"创建成功");
     }
 }
