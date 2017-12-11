@@ -37,32 +37,15 @@ public class AmmeterController extends BaseController {
     private AmmeterManagerService ammeterManagerService;
 
     /**
-     * 分散式房源list
+     * 电表list
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/dispersedList",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/ammeterList",method = RequestMethod.POST,produces = {"application/json"})
     public String dispersedList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
-        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findDispersedAmmeter(ammeterMannagerVo);
-        PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("ammeterMannagerVoList",pageInfo);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
-    }
-
-    /**
-     * 集中式房源list
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/concentratedList",method = RequestMethod.POST,produces = {"application/json"})
-    public String concentratedList(@RequestBody ApiRequestVO apiRequestVO){
-        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
-        AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
-        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.findConcentratAmmeter(ammeterMannagerVo);
+        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterManagerService.ammeterList(ammeterMannagerVo);
         PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
         JSONObject responseJson = new JSONObject();
         responseJson.put("ammeterMannagerVoList",pageInfo);

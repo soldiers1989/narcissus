@@ -46,6 +46,21 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         return ammeterMannagerVoDao.findDispersedAmmeter(ammeterMannagerVo);
     }
 
+
+    @Override
+    public List<AmmeterMannagerVo> ammeterList(AmmeterMannagerVo ammeterMannagerVo) {
+        if(ammeterMannagerVo.getPage()!= null && ammeterMannagerVo.getRows() != null){
+            PageHelper.startPage(ammeterMannagerVo.getPage(),ammeterMannagerVo.getRows());
+        }
+        if(ammeterMannagerVo.getType().equals("0")){
+            return ammeterMannagerVoDao.findDispersedAmmeter(ammeterMannagerVo);
+        }else if(ammeterMannagerVo.getType().equals("1")){
+            return ammeterMannagerVoDao.findConcentratAmmeter(ammeterMannagerVo);
+        }else{
+            return null;
+        }
+    }
+
     @Override
     public DeviceIdAndName getAmmeterRelation(String id,String type) {
         DeviceIdAndName deviceIdAndName = null;
@@ -195,6 +210,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         iAmmeter.updatePayMod(devId,pay_mod);
 
     }
+
 
 
 }

@@ -39,16 +39,9 @@ public interface AmmeterAlarmService {
     void saveAlarmList(List<SmartMistakeInfo>smartMistakeInfoList);
 
     /**
-     * 查看集中式房源报警信息
+     * 查看报警信息
      * @param ammeterMannagerVo
      * @return
      */
-    List<AmmeterMannagerVo>findDispersedAmmeterAlarm(AmmeterMannagerVo ammeterMannagerVo);
-
-    /**
-     * 查看分散式房源报警信息
-     * @param ammeterMannagerVo
-     * @return
-     */
-    List<AmmeterMannagerVo>findConcentratAmmeterAlarm(AmmeterMannagerVo ammeterMannagerVo);
+    List<AmmeterMannagerVo> findAmmeterAlarmInfoList(AmmeterMannagerVo ammeterMannagerVo);
 }
