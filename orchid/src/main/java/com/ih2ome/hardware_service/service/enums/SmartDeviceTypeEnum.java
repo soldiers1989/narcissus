@@ -7,12 +7,12 @@ package com.ih2ome.hardware_service.service.enums;
  * create by 2017/12/7
  * @Emial Lucius.li@ixiaoshuidi.com
  */
-public enum SMART_DEVICE_TYPE {
+public enum SmartDeviceTypeEnum {
     POWER_BEE_AMMETER("蜂电电表",0L);
     private String name;
     private Long code;
 
-    SMART_DEVICE_TYPE(String name, Long code) {
+    SmartDeviceTypeEnum(String name, Long code) {
         this.name = name;
         this.code = code;
     }
@@ -33,8 +33,8 @@ public enum SMART_DEVICE_TYPE {
         this.code = code;
     }
 
-    public static SMART_DEVICE_TYPE getByCode(Integer code) {
-        for (SMART_DEVICE_TYPE smartDeviceType : SMART_DEVICE_TYPE.values()) {
+    public static SmartDeviceTypeEnum getByCode(Integer code) {
+        for (SmartDeviceTypeEnum smartDeviceType : SmartDeviceTypeEnum.values()) {
             if (smartDeviceType.getCode().equals(code)) {
                 return smartDeviceType;
             }

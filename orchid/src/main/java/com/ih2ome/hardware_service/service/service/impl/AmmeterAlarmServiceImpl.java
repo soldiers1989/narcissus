@@ -2,6 +2,7 @@ package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao;
+import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
@@ -53,9 +54,9 @@ public class AmmeterAlarmServiceImpl implements AmmeterAlarmService {
         if(ammeterMannagerVo.getPage()!= null && ammeterMannagerVo.getRows() != null){
             PageHelper.startPage(ammeterMannagerVo.getPage(),ammeterMannagerVo.getRows());
         }
-        if(ammeterMannagerVo.getType().equals("0")){
+        if(ammeterMannagerVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
             return ammeterAlarmDao.findDispersedAmmeterAlarm(ammeterMannagerVo);
-        }else if(ammeterMannagerVo.getType().equals("1")){
+        }else if(ammeterMannagerVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
             return ammeterAlarmDao.findConcentratAmmeter(ammeterMannagerVo);
         }
         return null;
