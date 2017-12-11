@@ -10,6 +10,7 @@ import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import com.ih2ome.watermeter.dao.WatermeterMapper;
+import com.ih2ome.watermeter.model.RoomDevice;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.service.WatermeterService;
@@ -17,6 +18,7 @@ import com.ih2ome.watermeter.vo.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -293,6 +295,18 @@ public class WatermeterServiceImpl implements WatermeterService {
         addHomeVo.setCountry("中国");
         //添加房源
         String res = iWatermeter.addHome(addHomeVo);
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String home_id = resJson.get("home_id").toString();
+        if(!home_id.equals(String.valueOf(houseId))){
+            return null;
+        }
         //添加room
         //查询所有roombyhouseid
         List<AddRoomVO> addRoomVOS=watermeterDao.findRoomByHouseId(houseId);
@@ -302,12 +316,19 @@ public class WatermeterServiceImpl implements WatermeterService {
 
         String addRoomsRes = iWatermeter.addRooms(String.valueOf(houseId),strings);
 
-        JSONObject resJson = null;
-        try {
-            resJson = JSONObject.parseObject(res);
-        }catch (Exception e){
-            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        //添加已同步的room到roomdevice
+        if(!addRoomsRes.isEmpty()){
+            List<RoomDevice> roomDevices=new ArrayList<>();
+            for (AddRoomVO roomVO:addRoomVOS
+                 ) {
+                RoomDevice roomDevice=new RoomDevice();
+                roomDevice.setRoomId(roomVO.getRoom_id());
+                roomDevice.setHomeId(home_id);
+                roomDevices.add(roomDevice);
+            }
+            watermeterDao.addSynchronousRooms(roomDevices);
         }
+
         return resJson.get("home_id").toString();
     }
 
@@ -331,6 +352,17 @@ public class WatermeterServiceImpl implements WatermeterService {
         //添加房源
         String res = iWatermeter.addHome(addHomeVo);
 
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String home_id = resJson.get("home_id").toString();
+        if(!home_id.equals(String.valueOf(apartmentId))){
+            return null;
+        }
         //添加room
         //查询所有roombyApartmentId
         List<AddRoomVO> addRoomVOS=watermeterDao.findRoomByApartmentId(apartmentId);
@@ -340,11 +372,18 @@ public class WatermeterServiceImpl implements WatermeterService {
 
         String addRoomsRes = iWatermeter.addRooms(String.valueOf(apartmentId),strings);
 
-        JSONObject resJson = null;
-        try {
-            resJson = JSONObject.parseObject(res);
-        }catch (Exception e){
-            throw new WatermeterException("json格式解析错误"+e.getMessage());
+
+        //添加已同步的room到roomdevice
+        if(!addRoomsRes.isEmpty()){
+            List<RoomDevice> roomDevices=new ArrayList<>();
+            for (AddRoomVO roomVO:addRoomVOS
+                    ) {
+                RoomDevice roomDevice=new RoomDevice();
+                roomDevice.setRoomId(roomVO.getRoom_id());
+                roomDevice.setHomeId(home_id);
+                roomDevices.add(roomDevice);
+            }
+            watermeterDao.addSynchronousRooms(roomDevices);
         }
         return resJson.get("home_id").toString();
     }
@@ -374,6 +413,17 @@ public class WatermeterServiceImpl implements WatermeterService {
             //添加房源
             res = iWatermeter.addHome(addHomeVo);
         }
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+        String home_id = resJson.get("home_id").toString();
+        if(!home_id.equals(String.valueOf(apartmentId))){
+            return null;
+        }
         //添加room
         //查询所有roombyFloorId
         List<AddRoomVO> addRoomVOS=watermeterDao.findRoomByFloorId(floorId);
@@ -383,11 +433,17 @@ public class WatermeterServiceImpl implements WatermeterService {
 
         String addRoomsRes = iWatermeter.addRooms(String.valueOf(apartmentId),strings);
 
-        JSONObject resJson = null;
-        try {
-            resJson = JSONObject.parseObject(res);
-        }catch (Exception e){
-            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        //添加已同步的room到roomdevice
+        if(!addRoomsRes.isEmpty()){
+            List<RoomDevice> roomDevices=new ArrayList<>();
+            for (AddRoomVO roomVO:addRoomVOS
+                    ) {
+                RoomDevice roomDevice=new RoomDevice();
+                roomDevice.setRoomId(roomVO.getRoom_id());
+                roomDevice.setHomeId(home_id);
+                roomDevices.add(roomDevice);
+            }
+            watermeterDao.addSynchronousRooms(roomDevices);
         }
         return resJson.get("home_id").toString();
     }
