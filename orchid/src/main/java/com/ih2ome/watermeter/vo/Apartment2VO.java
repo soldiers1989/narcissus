@@ -1,9 +1,9 @@
-package com.ih2ome.watermeter.model;
+package com.ih2ome.watermeter.vo;
 
 import lombok.Data;
 
 @Data
-public class Apartment {
+public class Apartment2VO {
     private int id;
     private String name;
     private int floorNum;

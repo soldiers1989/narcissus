@@ -1,4 +1,4 @@
-package com.ih2ome.watermeter.model;
+package com.ih2ome.watermeter.vo;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * Created by Administrator on 2017/12/10.
  */
 @Data
-public class RoomDevice {
+public class RoomDeviceVO {
     private int id;
     private String roomId;
     private String homeId;

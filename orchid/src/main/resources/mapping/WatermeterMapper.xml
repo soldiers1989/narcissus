@@ -125,12 +125,12 @@
     </select>
 
     <!--查询水表抄表记录by水表id-->
-    <select id="findWatermeterRecordByWatermeterId" parameterType="int" resultType="com.ih2ome.watermeter.model.SmartWatermeterRecord">
+    <select id="findWatermeterRecordByWatermeterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord">
         SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} ORDER BY created_at DESC
     </select>
 
     <!--查询筛选水表抄表记录by起止时间-->
-    <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.watermeter.model.SmartWatermeterRecord">
+    <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord">
        SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
     </select>
 

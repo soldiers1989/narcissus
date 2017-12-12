@@ -3,8 +3,8 @@ package com.ih2ome.watermeter.dao;
 import com.ih2ome.common.base.MyMapper;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
-import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -17,11 +17,6 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
 
     List<Integer> findRoomIdByCreatebyid(String id);
 
-    /*SELECT g.smart_gateway_id FROM (SELECT
-    w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status
-            FROM
-    narcissus.smart_watermeter w ,caspain_test.room r
-    WHERE room_id = 3) temp,narcissus.smart_gateway_bind g WHERE smart_id = temp.smart_gateway_id;*/
 
     /**
      * 分散式水表列表查询

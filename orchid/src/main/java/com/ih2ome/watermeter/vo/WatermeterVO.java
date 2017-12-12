@@ -1,11 +1,11 @@
-package com.ih2ome.watermeter.model;
+package com.ih2ome.watermeter.vo;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class Watermeter {
+public class WatermeterVO {
     private int smartWatermeterId;
     private int apartmentId;
     private Date createdAt;

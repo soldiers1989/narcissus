@@ -2,11 +2,10 @@ package com.ih2ome.watermeter.service;
 
 import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
-import com.ih2ome.watermeter.model.SmartWatermeterRecord;
-import com.ih2ome.watermeter.model.Watermeter;
 import com.ih2ome.watermeter.vo.*;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public interface WatermeterService {
      * @param id
      * @return
      */
-    Watermeter findWatermeterByid(String id);
+    WatermeterVO findWatermeterByid(String id);
 
     /**
      * 通过网关id查询网关详情

@@ -16,7 +16,7 @@
 <!-- 增  -->
     <!-- 添加网关 -->
     <insert id="insertSmartGateway" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartGateway">
-        insert into <include refid="smart_gateway" />(created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,sn,uuid,model_name,name,install_time,install_name,
+        insert into <include refid="smart_gateway" />(created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,sn,uuid,model_name,"name",install_time,install_name,
         install_mobile,brand,operator,onoff_status,remark,house_catalog,apartment_id,floor_id,house_id,room_id)
         values(#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{deletedAt},#{deletedBy},#{sn},#{uuid},#{modelName},#{name},#{installTime},#{installName},
         #{installMobile},#{brand},#{operator},#{onoffStatus},#{remark},#{houseCatalog},#{apartmentId},#{floorId},#{houseId},#{roomId})
@@ -37,6 +37,6 @@
 <!--查-->
     <!-- 查询网关idbyuuid -->
     <select id="selectGatewayIdByUuid" parameterType="String" resultType="java.lang.Integer">
-        SELECT smart_gateway.smart_gateway_id FROM <include refid="smart_gateway" />  smart_gateway WHERE smart_gateway.uuid =  #{id};
+        SELECT smart_gateway.smart_gateway_id FROM <include refid="smart_gateway" />  smart_gateway WHERE smart_gateway.uuid = #{id};
     </select>
 </mapper>
