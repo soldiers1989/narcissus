@@ -190,4 +190,25 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      * @param smartGatewayBind
      */
     void addSmartGatewayBind(SmartGatewayBind smartGatewayBind);
+
+    /**
+     * 查询CreatedByByHouseId
+     * @param houseId
+     * @return
+     */
+    int selectHouseCreatedByByHouseId(Long houseId);
+
+    /**
+     * 查询CreatedByByapartmentId
+     * @param apartmentId
+     * @return
+     */
+    int selectApartmentCreatedByByApartmentId(Long apartmentId);
+
+    /**
+     * 查询水表byuuid
+     * @return
+     * @param uuid
+     */
+    SmartWatermeter findWatermetersByUuId(String uuid);
 }

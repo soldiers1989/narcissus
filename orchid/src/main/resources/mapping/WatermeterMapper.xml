@@ -192,30 +192,21 @@
         FROM <include refid="jzroom"/> jzroom WHERE jzroom.id = #{id}
     </select>
 
-
-
-    <!--<select id="finWatermeterByRoomIds" parameterType="List" resultMap="watermeterDetailVO">
-        SELECT g.smart_gateway_id FROM (SELECT
-        w.smart_watermeter_id,r.`name`,w.meter_type,w.created_at,w.last_amount,w.price,w.onoff_status
-        FROM
-        narcissus.smart_watermeter w ,caspain_test.room r
-        WHERE room_id IN
-        <foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        ) temp,narcissus.smart_gateway_bind g WHERE g.smart_device_type = temp.smart_watermeter_id;
-
+    <!--查询floorIdByroomId-->
+    <select id="selectHouseCreatedByByHouseId" parameterType="int" resultType="java.lang.Integer">
+        SELECT house.created_by
+        FROM <include refid="house"/> house WHERE house.id = #{id}
     </select>
--->
 
-    <!--<select id="findGatewayByApartmentIds" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterGatewayVO" >
-        SELECT g.smart_gateway_id,g.onoff_status,COUNT(gb.smart_id) AS watermeter_num,w.onoff_status AS watermter_onoff_status
-        FROM narcissus.smart_watermeter AS w
-        INNER JOIN narcissus.smart_gateway_bind AS gb
-        ON w.smart_watermeter_id = gb.smart_id
-        INNER JOIN narcissus.smart_gateway  AS g
-        ON g.apartment_id = #{id};
-    </select>-->
+    <!--查询floorIdByroomId-->
+    <select id="selectApartmentCreatedByByApartmentId" parameterType="int" resultType="java.lang.Integer">
+        SELECT apartment.created_by
+        FROM <include refid="apartment"/> apartment WHERE apartment.id = #{id}
+    </select>
 
-
+    <!-- 查询水表byuuid -->
+    <select id="findWatermetersByUuId" parameterType="int" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter">
+        SELECT smartWatermeterId,createdAt,createdBy,updatedAt,deletedAt,deletedBy,apartmentId,floorId,houseId,roomId,houseCatalog,meterType,uuid,onoffStatus,price,meterAmount,lastAmount,meterUpdatedAt,manufactory
+        FROM <include refid="smart_watermeter"/> smart_watermeter WHERE smart_watermeter.uuid = #{uuid}
+    </select>
 </mapper>

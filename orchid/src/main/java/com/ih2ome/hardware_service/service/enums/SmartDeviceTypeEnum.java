@@ -8,7 +8,10 @@ package com.ih2ome.hardware_service.service.enums;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public enum SmartDeviceTypeEnum {
-    POWER_BEE_AMMETER("蜂电电表",0L);
+    POWER_BEE_AMMETER("蜂电电表",0L),
+    YUN_DING_WATERMETER_GATEWAY("云丁水表网关",1L),
+    YUN_DING_WATERMETER("云丁水表",2L);
+
     private String name;
     private Long code;
 

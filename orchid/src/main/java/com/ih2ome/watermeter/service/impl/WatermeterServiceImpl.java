@@ -478,5 +478,36 @@ public class WatermeterServiceImpl implements WatermeterService {
         watermeterDao.addSmartGatewayBind(smartGatewayBind);
     }
 
+    /**
+     * 查询HouseCreatedByByHouseId
+     * @param houseId
+     * @return
+     */
+    @Override
+    public int findHouseCreatedByByHouseId(Long houseId) {
+        return watermeterDao.selectHouseCreatedByByHouseId(houseId);
+    }
+
+    /**
+     * 查询HouseCreatedByByapartmentId
+     * @param apartmentId
+     * @return
+     */
+    @Override
+    public int findApartmentCreatedByByApartmentId(Long apartmentId) {
+        return watermeterDao.selectApartmentCreatedByByApartmentId(apartmentId);
+    }
+
+    /**
+     * 查询水表idByuuid
+     * @param uuid
+     * @return
+     */
+    @Override
+    public int findWatermeterIdByUuid(String uuid) {
+        SmartWatermeter watermeter=watermeterDao.findWatermetersByUuId(uuid);
+        return watermeter.getSmartWatermeterId();
+    }
+
 
 }

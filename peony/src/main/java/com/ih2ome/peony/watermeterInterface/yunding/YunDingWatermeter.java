@@ -84,6 +84,10 @@ public class YunDingWatermeter implements IWatermeter {
             Log.error("json格式解析错误",e);
             throw new WatermeterException("json格式解析错误"+e.getMessage());
         }
+        //如果没查到返回空
+        if (res == null){
+            return null;
+        }
 
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){

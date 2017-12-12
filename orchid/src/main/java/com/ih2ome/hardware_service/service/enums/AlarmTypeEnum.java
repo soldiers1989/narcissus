@@ -13,7 +13,9 @@ public enum  AlarmTypeEnum {
     POWER_CONSUMPTION_WITHOUT_CHECKIN("未办理入住，有用电支出", 1),
     DATA_IS_NOT_UPDATE("数据未更新", 2),
     LONG_TIME_OFF_LINE("长时间设备离线", 3),
-    POWER_NOT_FAILURE_WITH_POWER_RATE_THAN_ZERO("负数不断电", 4);
+    POWER_NOT_FAILURE_WITH_POWER_RATE_THAN_ZERO("负数不断电", 4),
+    YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_OFF_LINE("水表网关设备离线",5),
+    YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_ON_LINE("水表网关设备在线",6);
 
 
     private String name;

@@ -188,4 +188,25 @@ public interface WatermeterService {
      * @param smartGatewayBind
      */
     void addSmartGatewayBind(SmartGatewayBind smartGatewayBind);
+
+    /**
+     * 查询HouseCreatedByByHouseId
+     * @param houseId
+     * @return
+     */
+    int findHouseCreatedByByHouseId(Long houseId);
+
+    /**
+     * 查询HouseCreatedByByapartmentId
+     * @param apartmentId
+     * @return
+     */
+    int findApartmentCreatedByByApartmentId(Long apartmentId);
+
+    /**
+     * 查询水表idByuuid
+     * @param uuid
+     * @return
+     */
+    int findWatermeterIdByUuid(String uuid);
 }

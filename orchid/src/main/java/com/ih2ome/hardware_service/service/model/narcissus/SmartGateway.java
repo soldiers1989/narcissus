@@ -26,8 +26,8 @@ public class SmartGateway implements Serializable{
   private String installMobile;
   private String brand;
   private String operator;
-  private Double installStatus;
-  private Double onoffStatus;
+  private int installStatus;
+  private int onoffStatus;
   private String remark;
   private Long houseCatalog;
   private Long apartmentId;

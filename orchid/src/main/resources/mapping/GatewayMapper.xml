@@ -6,12 +6,33 @@
     <sql id="smart_gateway_bind">narcissus.smart_gateway_bind</sql>
     <sql id="smart_gateway">narcissus.smart_gateway</sql>
     <sql id="smart_watermeter_record">narcissus.smart_watermeter_record</sql>
-    <sql id="smart_exception">narcissus.smart_mistake</sql>
+    <sql id="smart_mistake">narcissus.smart_mistake</sql>
     <sql id="house">caspain_test.house</sql>
     <sql id="room">caspain_test.room</sql>
     <sql id="apartment">volga_test.apartment</sql>
     <sql id="floor">volga_test.floor</sql>
     <sql id="jzroom">volga_test.room</sql>
+
+<!-- 增  -->
+    <!-- 添加网关 -->
+    <insert id="insertSmartGateway" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartGateway">
+        insert into <include refid="smart_gateway" />(created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,sn,uuid,model_name,name,install_time,install_name,
+        install_mobile,brand,operator,onoff_status,remark,house_catalog,apartment_id,floor_id,house_id,room_id)
+        values(#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{deletedAt},#{deletedBy},#{sn},#{uuid},#{modelName},#{name},#{installTime},#{installName},
+        #{installMobile},#{brand},#{operator},#{onoffStatus},#{remark},#{houseCatalog},#{apartmentId},#{floorId},#{houseId},#{roomId})
+    </insert>
+
+    <!-- 添加网关异常 -->
+    <insert id="addSmartMistakeInfo" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo">
+        insert into <include refid="smart_mistake" />(created_at,smart_device_type,uuid,sn,exception_type)
+        values(#{createdAt},#{smartDeviceType},#{uuid},#{sn},#{exceptionType},)
+    </insert>
+<!-- 改 -->
+    <!-- 更新网关uuid -->
+    <update id="updateGatewayUuid" parameterType="String" >
+        UPDATE <include refid="smart_gateway" /> SET uuid = #{uuid},brand=#{manufactory},updated_at=#{time} WHERE uuid = #{old_uuid};
+    </update>
+
 
 <!--查-->
     <!-- 查询网关idbyuuid -->

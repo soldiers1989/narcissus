@@ -303,19 +303,19 @@ public class WaterMeterController extends BaseController {
             home_id = watermeterService.synchronousHousingByHouseId(houseId);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
             return res;
         }
 
@@ -335,31 +335,35 @@ public class WaterMeterController extends BaseController {
         //获取公寓id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         JSONArray json = dt.getJSONArray("apartmentIds");
-        String[] homeIds = (String[]) json.toArray();
+        String[] homeIds = new String[json.size()];
+        for (int i=0;i<json.size();i++) {
+            homeIds[i] = json.get(i).toString();
+        }
+
         List<YunDingResponseVo> yunDingResponseVos = null;
         try {
             yunDingResponseVos = watermeterService.findHomeIsSynchronousedByHomeIds(homeIds);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
             return res;
         }
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(yunDingResponseVos));
         JSONObject responseJson = new JSONObject();
         responseJson.put("houseVOS",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"修改成功");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
 
@@ -378,25 +382,25 @@ public class WaterMeterController extends BaseController {
             home_id = watermeterService.synchronousHousingByApartmenId(apartmentId);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         }
 
         JSONObject responseJson = new JSONObject();
         responseJson.put("home_id",home_id);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"修改成功");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
 
     }
@@ -417,25 +421,25 @@ public class WaterMeterController extends BaseController {
             home_id = watermeterService.synchronousHousingByFloorId(apartmentId,floorId);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         }
 
         JSONObject responseJson = new JSONObject();
         responseJson.put("home_id",home_id);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"修改成功");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
 
