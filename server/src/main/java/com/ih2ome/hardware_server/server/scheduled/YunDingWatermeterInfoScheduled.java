@@ -1,8 +1,8 @@
 package com.ih2ome.hardware_server.server.scheduled;
 
+import com.ih2ome.hardware_service.service.service.WatermeterScheduledService;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
-import com.ih2ome.watermeter.service.WatermeterScheduledService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

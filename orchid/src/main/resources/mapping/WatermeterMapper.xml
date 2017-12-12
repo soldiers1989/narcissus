@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ih2ome.watermeter.dao.WatermeterMapper">
+<mapper namespace="com.ih2ome.hardware_service.service.dao.WatermeterMapper">
     <!-- 数据库表名 -->
     <sql id="smart_watermeter">narcissus.smart_watermeter</sql>
     <sql id="smart_gateway_bind">narcissus.smart_gateway_bind</sql>
@@ -14,11 +14,11 @@
     <sql id="jzroom">volga_test.room</sql>
 
     <!--配置一个resultMap -->
-    <resultMap type="com.ih2ome.watermeter.vo.ApartmentVO" id="apartmentResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.hardware_service.service.vo.ApartmentVO" id="apartmentResultMap" autoMapping="true">
         <id column="id" property="id" />
 
         <collection property="floorVOS" javaType="List"
-                    ofType="com.ih2ome.watermeter.vo.FloorVO" autoMapping="true">
+                    ofType="com.ih2ome.hardware_service.service.vo.FloorVO" autoMapping="true">
             <id column="floor_id" property="floorId" />
         </collection>
     </resultMap>
@@ -56,7 +56,7 @@
 <!-- 查 -->
 
     <!-- 分散式水表 -->
-    <select id="findWatermetersByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO" >
+    <select id="findWatermetersByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" >
         SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
         FROM
         <include refid="smart_watermeter" /> AS w
@@ -75,12 +75,12 @@
     </select>
 
     <!-- 查询网关by网关id -->
-    <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterGatewayDetailVO">
+    <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterGatewayDetailVO">
         SELECT g.smart_gateway_id,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g WHERE smart_gateway_id =  #{id};
     </select>
 
     <!--查询水表by网关id-->
-    <select id="findWatermeterByGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterDetailVO">
+    <select id="findWatermeterByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO">
         SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status
         FROM
         <include refid="smart_watermeter" /> AS w
@@ -106,7 +106,7 @@
     </select>
 
     <!--查询集中式水表列表by楼层id-->
-    <select id="findWatermetersByFloorId" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterDetailVO">
+    <select id="findWatermetersByFloorId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.JZWatermeterDetailVO">
         SELECT w.smart_watermeter_id,r.`name` AS room_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.smart_gateway_id
         FROM <include refid="smart_gateway_bind"/> AS g,<include refid="room"/> AS r,<include refid="smart_watermeter"/> AS w
         WHERE w.floor_id = #{floorId}
@@ -114,7 +114,7 @@
     </select>
 
     <!--查询集中式公寓下的网关by公寓id-->
-    <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.watermeter.vo.JZWatermeterGatewayVO" >
+    <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.JZWatermeterGatewayVO" >
         SELECT g.smart_gateway_id,g.onoff_status,COUNT(DISTINCT gb.smart_id) AS watermeter_num,sum(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num
         FROM <include refid="smart_watermeter"/> AS w
         INNER JOIN <include refid="smart_gateway_bind"/> AS gb
@@ -135,22 +135,22 @@
     </select>
 
     <!--查询分散式用户房源by用户id-->
-    <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.watermeter.vo.HouseVO">
+    <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HouseVO">
         SELECT h.id,h.area,h.building_num,h.house_num FROM <include refid="house"/> h WHERE h.created_by_id= #{id}
     </select>
 
     <!--水表异常记录by水表id-->
-    <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.watermeter.vo.ExceptionVO">
+    <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
     </select>
 
     <!--网关异常记录by网关id-->
-    <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.watermeter.vo.ExceptionVO">
+    <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
     </select>
 
     <!--查询水表抄表参数by水表id-->
-    <select id="findWatermeterRecordParamsByWatermeterId" parameterType="int" resultType="com.ih2ome.watermeter.vo.WatermeterRecordParamsVo">
+    <select id="findWatermeterRecordParamsByWatermeterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterRecordParamsVo">
         SELECT watermeter.uuid,watermeter.manufactory FROM <include refid="smart_watermeter"/> watermeter WHERE watermeter.smart_watermeter_id = #{id}
     </select>
 
@@ -162,7 +162,7 @@
     </select>
 
     <!--查询room信息byhouseid-->
-    <select id="findRoomByHouseId" parameterType="int" resultType="com.ih2ome.watermeter.vo.AddRoomVO">
+    <select id="findRoomByHouseId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.AddRoomVO">
         SELECT room.id AS room_id,room.name AS room_name,room.room_desc AS room_description
         FROM <include refid="room"/> room WHERE room.house_id = #{id}
     </select>
@@ -175,13 +175,13 @@
     </select>
 
     <!--查询room信息byApartmentId-->
-    <select id="findRoomByApartmentId" parameterType="int" resultType="com.ih2ome.watermeter.vo.AddRoomVO">
+    <select id="findRoomByApartmentId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.AddRoomVO">
         SELECT jzroom.id AS room_id,jzroom.name AS room_name,jzroom.room_desc AS room_description
         FROM <include refid="jzroom"/> jzroom WHERE jzroom.apartment_id = #{id}
     </select>
 
     <!--查询room信息byApartmentId-->
-    <select id="findRoomByFloorId" parameterType="int" resultType="com.ih2ome.watermeter.vo.AddRoomVO">
+    <select id="findRoomByFloorId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.AddRoomVO">
         SELECT jzroom.id AS room_id,jzroom.name AS room_name,jzroom.room_desc AS room_description
         FROM <include refid="jzroom"/> jzroom WHERE jzroom.floor_id = #{id}
     </select>

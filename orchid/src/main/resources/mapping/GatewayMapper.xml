@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ih2ome.watermeter.dao.GatewayMapper">
+<mapper namespace="com.ih2ome.hardware_service.service.dao.GatewayMapper">
     <!-- 数据库表名 -->
     <sql id="smart_watermeter">narcissus.smart_watermeter</sql>
     <sql id="smart_gateway_bind">narcissus.smart_gateway_bind</sql>

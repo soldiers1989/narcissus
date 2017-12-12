@@ -25,11 +25,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.narcissus.utils</groupId>
-			<artifactId>narcissus-common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>
