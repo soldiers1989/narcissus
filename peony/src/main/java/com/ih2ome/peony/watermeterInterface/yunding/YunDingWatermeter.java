@@ -441,6 +441,73 @@ public class YunDingWatermeter implements IWatermeter {
         return res;
     }
 
+    /**
+     * 云丁doGet请求
+     * @param uri
+     * @param map
+     * @return
+     * @throws WatermeterException
+     */
+    @Override
+    public String yunDingDoGetUrl(String uri,Map<String,Object> map) throws WatermeterException{
+        String url = BASE_URL + uri;
+        map.put("access_token",YunDingWatermeterUtil.getToken());
+        String res = HttpClientUtil.doGet(url,map);
+
+        if(res == null){
+            return null;
+        }
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String code = resJson.get("ErrNo").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new WatermeterException("第三方请求失败/n"+msg);
+        }
+        return res;
+    }
+
+    /**
+     * 云丁doPost请求
+     * @param uri
+     * @param map
+     * @return
+     * @throws WatermeterException
+     */
+    @Override
+    public String yunDingDoPostUrl(String uri,Map<String,Object> map) throws WatermeterException{
+        String url = BASE_URL + uri;
+        map.put("access_token",YunDingWatermeterUtil.getToken());
+        String res = HttpClientUtil.doPost(url,map);
+
+        if(res == null){
+            return null;
+        }
+
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
+        }
+
+        String code = resJson.get("ErrNo").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败/n"+msg);
+            throw new WatermeterException("第三方请求失败/n"+msg);
+        }
+        return res;
+    }
 
     public String getBaseDoPostUrl(String uri,Map<String,Object> map) throws WatermeterException{
         String url = BASE_URL + uri;

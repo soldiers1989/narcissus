@@ -1,6 +1,8 @@
 package com.ih2ome.watermeter.dao;
 
 import com.ih2ome.common.base.MyMapper;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
 import com.ih2ome.watermeter.model.SmartWatermeterRecord;
 import com.ih2ome.watermeter.vo.*;
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository()
+@Repository
 public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
 
 
@@ -155,4 +157,37 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      * @return
      */
     List<AddRoomVO> findRoomByFloorId(int floorId);
+
+    /**
+     * 添加已同步的room到room_device
+     * @param roomIds
+     */
+    void addSynchronousRooms(List roomIds);
+
+    /**
+     * 更新水表抄表读数
+     * @param uuid
+     * @param amount
+     * @param time
+     */
+    void updataWaterLastAmount(@Param("uuid") String uuid,@Param("amount") int amount,@Param("time") int time);
+
+    /**
+     * 查询floorIdbyRoomId
+     * @param room_id
+     * @return
+     */
+    Long findFloorIdByRoomId(Long room_id);
+
+    /**
+     * 添加水表
+     * @param smartWatermeter
+     */
+    void addSmartWatermeter(SmartWatermeter smartWatermeter);
+
+    /**
+     * 添加网关绑定
+     * @param smartGatewayBind
+     */
+    void addSmartGatewayBind(SmartGatewayBind smartGatewayBind);
 }

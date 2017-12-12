@@ -1,5 +1,7 @@
 package com.ih2ome.watermeter.service;
 
+import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
@@ -160,5 +162,30 @@ public interface WatermeterService {
     List<YunDingResponseVo> findHomeIsSynchronousedByHomeIds(String[] homeIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException ;
 
 
+    /**
+     * 更新水表抄表读数
+     * @param uuid
+     * @param amount
+     * @param time
+     */
+    void updataWaterLastAmount(String uuid, int amount, int time);
 
+    /**
+     * 查询floorIdByroomId
+     * @param room_id
+     * @return
+     */
+    Long findFloorIdByRoomId(Long room_id);
+
+    /**
+     * 添加水表smartWatermeter
+     * @param smartWatermeter
+     */
+    void createSmartWatermeter(SmartWatermeter smartWatermeter);
+
+    /**
+     * 添加网关绑定
+     * @param smartGatewayBind
+     */
+    void addSmartGatewayBind(SmartGatewayBind smartGatewayBind);
 }

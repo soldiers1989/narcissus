@@ -23,11 +23,34 @@
         </collection>
     </resultMap>
 
+<!--增 -->
+
+    <!--添加水表-->
+    <insert id="addSmartWatermeter" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter" useGeneratedKeys="true" keyProperty="smart_watermeter_id">
+        insert into <include refid="smart_watermeter" />(created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,apartment_id,floor_id,house_id,room_id,house_catalog,meter_type,
+        uuid,onoff_status,price,meter_amount,last_amount,meter_updated_at,manufactory)
+        values(#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{deletedAt},#{deletedBy},#{apartmentId},#{floorId},#{houseId},#{roomId},#{houseCatalog},#{meterType},
+        #{uuid},#{onoffStatus},#{price},#{meterAmount},#{lastAmount},#{meterUpdatedAt},#{manufactory})
+    </insert>
+
+    <!--添加水表-->
+    <insert id="addSmartGatewayBind" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind" >
+        insert into <include refid="smart_gateway_bind" />(smart_device_type,smart_gateway_id,smart_id)
+        values(#{smartGatewayId},#{smartDeviceType},#{smartId})
+    </insert>
+
+
+
 <!-- 改 -->
 
     <!--改水费单价-->
     <update id="updataWaterPrice" parameterType="int" >
         UPDATE <include refid="smart_watermeter" /> SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
+    </update>
+
+    <!--更新水表抄表读数-->
+    <update id="updataWaterLastAmount"  >
+        UPDATE <include refid="smart_watermeter" /> SET last_amount=#{amount},meter_updated_at= FROM_UNIXTIME(#{time}/1000) WHERE uuid = #{uuid};
     </update>
 
 <!-- 查 -->
@@ -162,6 +185,14 @@
         SELECT jzroom.id AS room_id,jzroom.name AS room_name,jzroom.room_desc AS room_description
         FROM <include refid="jzroom"/> jzroom WHERE jzroom.floor_id = #{id}
     </select>
+
+    <!--查询floorIdByroomId-->
+    <select id="findFloorIdByRoomId" parameterType="int" resultType="java.lang.Integer">
+        SELECT jzroom.floor_id
+        FROM <include refid="jzroom"/> jzroom WHERE jzroom.id = #{id}
+    </select>
+
+
 
     <!--<select id="finWatermeterByRoomIds" parameterType="List" resultMap="watermeterDetailVO">
         SELECT g.smart_gateway_id FROM (SELECT
