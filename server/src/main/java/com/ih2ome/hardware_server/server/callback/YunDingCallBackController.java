@@ -5,6 +5,7 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_server.server.callback.vo.CallbackRequestVo;
 import com.ih2ome.hardware_service.service.enums.AlarmTypeEnum;
 import com.ih2ome.hardware_service.service.enums.SmartDeviceTypeEnum;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartGateway;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
@@ -150,7 +151,53 @@ public class YunDingCallBackController extends BaseController {
                 int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
                 if (gatewayId <= 0){
                     //添加网关
+                    SmartGateway smartGateway = new SmartGateway();
+                    smartGateway.setCreatedAt(new Date(System.currentTimeMillis()));
+                    smartGateway.setCreatedBy(created_by);
+                    smartGateway.setUpdatedAt(created_at);
+                    smartGateway.setUpdatedBy(created_by);
+                    smartGateway.setDeletedAt(created_at);
+                    smartGateway.setDeletedBy(created_by);
+                    try {
+                        String waterGatewayInfo = iWatermeter.getWaterGatewayInfo(apiRequestVO.getGateway_uuid());
+                    } catch (WatermeterException e) {
+                        Log.error("获取水表网关信息失败",e);
+                    }
+                    resJson = JSONObject.parseObject(watermeterInfo);
 
+                    String gatewayInfo = (String) resJson.get("info");
+                    JSONObject gatewayJsonObject = JSONObject.parseObject(gatewayInfo);
+                    String manufactory = gatewayJsonObject.getString("manufactory");
+                    int removed = gatewayJsonObject.getIntValue("removed");
+                    Date mtime = gatewayJsonObject.getDate("mtime");
+                    Date ctime = gatewayJsonObject.getDate("ctime");
+                    Date bind_time = gatewayJsonObject.getDate("bind_time");
+                    int gatewayOnoff = gatewayJsonObject.getIntValue("onoff");
+                    String gatewayHome_id = gatewayJsonObject.getString("home_id");
+                    String gatewayRoom_id = gatewayJsonObject.getString("room_id");
+
+                    //smartGateway.setMac(null);
+                    smartGateway.setSn(apiRequestVO.getGateway_uuid());
+                    smartGateway.setUuid(apiRequestVO.getGateway_uuid());
+                    //smartGateway.setModel(null);
+                    smartGateway.setModelName("watermeterGateway");
+                    smartGateway.setName("watermeter");
+                    smartGateway.setInstallTime(ctime);
+                    smartGateway.setInstallName("");
+                    smartGateway.setInstallMobile("");
+                    smartGateway.setBrand(manufactory);
+                    smartGateway.setOperator("yungding");
+                    //smartGateway.setInstallStatus(1);
+                    smartGateway.setOnoffStatus(gatewayOnoff);
+                    //smartGateway.setRemark(null);
+                    smartGateway.setHouseCatalog(Long.valueOf(house_catalog));
+                    smartGateway.setApartmentId(Long.valueOf(gatewayHome_id));
+                    smartGateway.setFloor(floorId);
+                    smartGateway.setHouseId(houseId);
+                    smartGateway.setRoomId(Long.valueOf(gatewayRoom_id));
+
+                    //添加网关
+                    gatewayService.addSmartGateway(smartGateway);
                 }
 
                 //绑定网关
@@ -187,7 +234,7 @@ public class YunDingCallBackController extends BaseController {
                 smartMistakeInfo.setSn(apiRequestVO.getUuid());
                 gatewayService.addSmartMistakeInfo(smartMistakeInfo);
                 //更改网关在线状态
-                //gatewayService.updataGatewayOffline();
+                //gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_OFF_LINE.getCode());
                 break;
             //水表网关在线事件
             case "waterGatewayOnlineAlarm" :
