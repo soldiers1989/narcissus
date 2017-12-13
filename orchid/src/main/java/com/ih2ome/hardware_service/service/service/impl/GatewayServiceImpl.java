@@ -47,9 +47,23 @@ public class GatewayServiceImpl implements GatewayService {
         gatewayMapper.updateGatewayUuid(uuid,old_uuid,time,manufactory);
     }
 
+    /**
+     * 添加异常信息
+     * @param smartMistakeInfo
+     */
     @Override
     public void addSmartMistakeInfo(SmartMistakeInfo smartMistakeInfo) {
         gatewayMapper.addSmartMistakeInfo(smartMistakeInfo);
+    }
+
+    /**
+     * 更新网关在线离线状态
+     * @param uuid
+     * @param code
+     */
+    @Override
+    public void updataGatewayOnoffStatus(String uuid, Integer code) {
+        gatewayMapper.updataGatewayOnoffStatusByUuid(uuid,code);
     }
 
 

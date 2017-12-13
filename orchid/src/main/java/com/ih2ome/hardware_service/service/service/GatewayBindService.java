@@ -6,4 +6,10 @@ public interface GatewayBindService {
      * @param watermeterId
      */
     void deleteGatewayBindByWatermeterId(int watermeterId);
+
+    /**
+     * 删除网关绑定bygatewayid
+     * @param gatewayId
+     */
+    void deleteGatewayBindByGatewayId(int gatewayId);
 }

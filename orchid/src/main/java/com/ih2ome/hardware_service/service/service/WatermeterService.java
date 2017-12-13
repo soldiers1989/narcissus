@@ -8,6 +8,7 @@ import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface WatermeterService {
@@ -52,19 +53,7 @@ public interface WatermeterService {
      */
     PageResult<SmartWatermeterRecord> findWatermeterRecordByWatermeterId(int smartWatermeterId, int page, int count);
 
-    /**
-     * 通过用户id查询用户所有公寓信息
-     * @param id
-     * @return
-     */
-    List<ApartmentVO> findApartmentIdByUserId(int id);
 
-    /**
-     * 集中式通过楼层Id查询水表详情
-     * @param floorId
-     * @return
-     */
-    List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
 
     /**
      * 更改水价
@@ -129,7 +118,7 @@ public interface WatermeterService {
      * @param watermeterId
      * @return
      */
-    int findWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+    int readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
     /**
      * 分散式同步房源
@@ -137,28 +126,6 @@ public interface WatermeterService {
      * @return
      */
     String synchronousHousingByHouseId(int houseId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
-
-    /**
-     * 集中式同步房源
-     * @param apartmentId
-     * @return
-     */
-    String synchronousHousingByApartmenId(int apartmentId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
-
-    /**
-     * 集中式同步房源by楼层
-     * @param apartmentId
-     * @param floorId
-     * @return
-     */
-    String synchronousHousingByFloorId(int apartmentId, int floorId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
-
-    /**
-     * 查询集中式房源是否已同步by房源ids
-     * @param homeIds
-     * @return
-     */
-    List<YunDingResponseVo> findHomeIsSynchronousedByHomeIds(String[] homeIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException ;
 
 
     /**
@@ -169,12 +136,6 @@ public interface WatermeterService {
      */
     void updataWaterLastAmount(String uuid, int amount, int time);
 
-    /**
-     * 查询floorIdByroomId
-     * @param room_id
-     * @return
-     */
-    Long findFloorIdByRoomId(Long room_id);
 
     /**
      * 添加水表smartWatermeter
@@ -208,4 +169,31 @@ public interface WatermeterService {
      * @return
      */
     int findWatermeterIdByUuid(String uuid);
+
+    /**
+     * 查询水表读数by水表id
+     * @param watermeterId
+     * @return
+     */
+    int findWatermeterLastAmountByWatermeterId(int watermeterId);
+
+    /**
+     * 更新水表在线离线状态
+     * @param uuid
+     * @param code
+     */
+    void updataWatermerterOnoffStatus(String uuid, Integer code);
+
+    /**
+     * 查询所有UuidAndManufactory
+     * @return
+     */
+    List<UuidAndManufactoryVO> findWatermeterUuidAndManufactory();
+
+    /**
+     * 最近一次抄表时间
+     * @param uuid
+     * @return
+     */
+    Timestamp findWatermeterMeterUpdatedAt(String uuid);
 }

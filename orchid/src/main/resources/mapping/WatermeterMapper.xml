@@ -53,6 +53,10 @@
         UPDATE <include refid="smart_watermeter" /> SET last_amount=#{amount},meter_updated_at= FROM_UNIXTIME(#{time}/1000) WHERE uuid = #{uuid};
     </update>
 
+    <!-- 更新水表在线状态byUUid-->
+    <update id="updataWatermerterOnoffStatusByUuid" >
+        UPDATE <include refid="smart_watermeter" /> SET onoff_status = #{code} WHERE uuid = #{uuid};
+    </update>
 <!-- 查 -->
 
     <!-- 分散式水表 -->
@@ -154,44 +158,6 @@
         SELECT watermeter.uuid,watermeter.manufactory FROM <include refid="smart_watermeter"/> watermeter WHERE watermeter.smart_watermeter_id = #{id}
     </select>
 
-    <!--查询房源信息byhouseid-->
-    <select id="findHouseByHouseId" parameterType="int" resultType="com.ih2ome.peony.watermeterInterface.vo.AddHomeVo">
-        SELECT house.city,house.block AS zone,(house.address + house.area +house.building_num+house.unit_num+house.floor_num +house.house_num) AS location,
-        house.area AS block,house.id AS home_id,house.area AS home_name,house.remark AS description
-        FROM <include refid="house"/> house WHERE house.id = #{id}
-    </select>
-
-    <!--查询room信息byhouseid-->
-    <select id="findRoomByHouseId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.AddRoomVO">
-        SELECT room.id AS room_id,room.name AS room_name,room.room_desc AS room_description
-        FROM <include refid="room"/> room WHERE room.house_id = #{id}
-    </select>
-
-    <!--查询房源信息byApartmentid-->
-    <select id="findHouseByApartmentId" parameterType="int" resultType="com.ih2ome.peony.watermeterInterface.vo.AddHomeVo">
-        SELECT apartment.city,apartment.block AS zone,(apartment.address + apartment.area) AS location,
-        apartment.area AS block,apartment.id AS home_id,apartment.area AS home_name,apartment.remark AS description
-        FROM <include refid="apartment"/> apartment WHERE apartment.id = #{id}
-    </select>
-
-    <!--查询room信息byApartmentId-->
-    <select id="findRoomByApartmentId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.AddRoomVO">
-        SELECT jzroom.id AS room_id,jzroom.name AS room_name,jzroom.room_desc AS room_description
-        FROM <include refid="jzroom"/> jzroom WHERE jzroom.apartment_id = #{id}
-    </select>
-
-    <!--查询room信息byApartmentId-->
-    <select id="findRoomByFloorId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.AddRoomVO">
-        SELECT jzroom.id AS room_id,jzroom.name AS room_name,jzroom.room_desc AS room_description
-        FROM <include refid="jzroom"/> jzroom WHERE jzroom.floor_id = #{id}
-    </select>
-
-    <!--查询floorIdByroomId-->
-    <select id="findFloorIdByRoomId" parameterType="int" resultType="java.lang.Integer">
-        SELECT jzroom.floor_id
-        FROM <include refid="jzroom"/> jzroom WHERE jzroom.id = #{id}
-    </select>
-
     <!--查询floorIdByroomId-->
     <select id="selectHouseCreatedByByHouseId" parameterType="int" resultType="java.lang.Integer">
         SELECT house.created_by
@@ -206,7 +172,23 @@
 
     <!-- 查询水表byuuid -->
     <select id="findWatermetersByUuId" parameterType="int" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter">
-        SELECT smartWatermeterId,createdAt,createdBy,updatedAt,deletedAt,deletedBy,apartmentId,floorId,houseId,roomId,houseCatalog,meterType,uuid,onoffStatus,price,meterAmount,lastAmount,meterUpdatedAt,manufactory
+        SELECT smart_watermeter_id,created_at,created_by,updated_at,deleted_at,deleted_by,apartment_id,floor_id,house_id,room_id,house_catalog,meter_type,uuid,onoff_status,price,meter_amount,last_amount,meter_updated_at,manufactory
         FROM <include refid="smart_watermeter"/> smart_watermeter WHERE smart_watermeter.uuid = #{uuid}
+    </select>
+
+    <!-- 查询水表读数by水表id -->
+    <select id="findWatermeterAmountByWatermeterId" parameterType="int" resultType="java.lang.Integer">
+        SELECT (last_amount-meter_amount) AS amount
+        FROM <include refid="smart_watermeter"/> smart_watermeter WHERE smart_watermeter.smart_watermeter_id = #{watermenterId}
+    </select>
+
+    <!-- 查询水表所有的uuidAndManufactory -->
+    <select id="selectWatermeterUuidAndManufactory" resultType="com.ih2ome.hardware_service.service.vo.UuidAndManufactoryVO">
+        SELECT uuid,manufactory FROM <include refid="smart_watermeter"/>
+    </select>
+
+    <!-- 查询最近一次抄表时间 -->
+    <select id="selectWatermeterMeterUpdatedAt" parameterType="String" resultType="java.sql.Timestamp">
+        SELECT meter_updated_at FROM <include refid="smart_watermeter"/>  WHERE uuid = #{uuid}
     </select>
 </mapper>
