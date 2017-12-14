@@ -8,10 +8,7 @@ import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/ammeterAlarm")
+@CrossOrigin
 public class AmmeterAlarmController extends BaseController {
 
     @Autowired

@@ -140,8 +140,8 @@ public class PowerBeeAmmeter implements IAmmeter {
         ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
         ammeterInfoVo.setVoltage(expand.getDouble("voltage"));
         ammeterInfoVo.setPowerMonth(expand.getDouble("powermonth"));
-        ammeterInfoVo.setElectrifyStatus(expand.getString("Value"));
-        ammeterInfoVo.setOnline(expand.getString("Status"));
+        ammeterInfoVo.setElectrifyStatus(jsonObject.getString("Value"));
+        ammeterInfoVo.setOnline(jsonObject.getString("Status"));
         Boolean isNode = jsonObject.getBoolean("Isnode");
         String cid = jsonObject.getString("Cid");
         //查wifi
