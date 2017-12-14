@@ -35,4 +35,11 @@ public interface GatewayMapper extends MyMapper<SmartGateway> {
      * @param smartMistakeInfo
      */
     void addSmartMistakeInfo(SmartMistakeInfo smartMistakeInfo);
+
+    /**
+     * 更新网关在线离线状态byuuid
+     * @param uuid
+     * @param code
+     */
+    void updataGatewayOnoffStatusByUuid(@Param("uuid") String uuid, @Param("code") Integer code);
 }

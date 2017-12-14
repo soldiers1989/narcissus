@@ -19,4 +19,8 @@
         DELETE FROM <include refid="smart_gateway_bind"/> WHERE smart_id=#{watermeterId}
     </delete>
 
+    <!--删除网关绑定by水表id-->
+    <delete id="deleteGatewayBindByGatewayId" parameterType="int">
+        DELETE FROM <include refid="smart_gateway_bind"/> WHERE smart_gateway_id=#{gatewayId}
+    </delete>
 </mapper>

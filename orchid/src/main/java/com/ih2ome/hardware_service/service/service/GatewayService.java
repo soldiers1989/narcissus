@@ -31,4 +31,11 @@ public interface GatewayService {
      * @param smartMistakeInfo
      */
     void addSmartMistakeInfo(SmartMistakeInfo smartMistakeInfo);
+
+    /**
+     * 更改网关在线离线状态
+     * @param uuid
+     * @param code
+     */
+    void updataGatewayOnoffStatus(String uuid, Integer code);
 }

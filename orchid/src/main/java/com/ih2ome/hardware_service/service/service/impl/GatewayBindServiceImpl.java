@@ -21,4 +21,13 @@ public class GatewayBindServiceImpl implements GatewayBindService {
     public void deleteGatewayBindByWatermeterId(int watermeterId) {
         gatewayBindMapper.deleteGatewayBindByWatermeterId(watermeterId);
     }
+
+    /**
+     * 删除网关绑定bygatewayid
+     * @param gatewayId
+     */
+    @Override
+    public void deleteGatewayBindByGatewayId(int gatewayId) {
+        gatewayBindMapper.deleteGatewayBindByGatewayId(gatewayId);
+    }
 }

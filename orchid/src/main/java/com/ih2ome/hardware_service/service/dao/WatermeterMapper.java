@@ -9,10 +9,11 @@ import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
+public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
 
     List<Integer> findRoomIdByCreatebyid(String id);
@@ -39,19 +40,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      */
     List<WatermeterDetailVO> findWatermeterByGatewayId(int smartGatewayId);
 
-    /**
-     * 查询公寓列表
-     * @param id
-     * @return
-     */
-    List<ApartmentVO> findApartmentByUserId(int id);
 
-    /**
-     * 通过楼层id查询水表
-     * @return
-     * @param floorId
-     */
-    List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
 
     /**
      * 改水价
@@ -132,26 +121,6 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      */
     List<AddRoomVO> findRoomByHouseId(int houseId);
 
-    /**
-     * 查询房源信息byApartmentId
-     * @param apartmentId
-     * @return
-     */
-    AddHomeVo findHouseByApartmentId(int apartmentId);
-
-    /**
-     * 查询room信息byApartmentId
-     * @param apartmentId
-     * @return
-     */
-    List<AddRoomVO> findRoomByApartmentId(int apartmentId);
-
-    /**
-     * 查询room信息byFloorId
-     * @param floorId
-     * @return
-     */
-    List<AddRoomVO> findRoomByFloorId(int floorId);
 
     /**
      * 添加已同步的room到room_device
@@ -167,12 +136,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      */
     void updataWaterLastAmount(@Param("uuid") String uuid, @Param("amount") int amount, @Param("time") int time);
 
-    /**
-     * 查询floorIdbyRoomId
-     * @param room_id
-     * @return
-     */
-    Long findFloorIdByRoomId(Long room_id);
+
 
     /**
      * 添加水表
@@ -206,4 +170,31 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeterRecord> {
      * @param uuid
      */
     SmartWatermeter findWatermetersByUuId(String uuid);
+
+    /**
+     * 查询水表读数by水表id
+     * @param watermeterId
+     * @return
+     */
+    int findWatermeterAmountByWatermeterId(int watermeterId);
+
+    /**
+     * 更新网关在线离线状态
+     * @param uuid
+     * @param code
+     */
+    void updataWatermerterOnoffStatusByUuid(@Param("uuid") String uuid,@Param("code") Integer code);
+
+    /**
+     * 查询所有水表的UuidAndManufactory
+     * @return
+     */
+    List<UuidAndManufactoryVO> selectWatermeterUuidAndManufactory();
+
+    /**
+     * 查询最近一次抄表时间
+     * @param uuid
+     * @return
+     */
+    Timestamp selectWatermeterMeterUpdatedAt(String uuid);
 }

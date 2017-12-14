@@ -1,14 +1,19 @@
 package com.ih2ome.hardware_server.server.scheduled;
 
 import com.ih2ome.hardware_service.service.service.WatermeterScheduledService;
+import com.ih2ome.hardware_service.service.service.WatermeterService;
+import com.ih2ome.hardware_service.service.vo.UuidAndManufactoryVO;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
+import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+
+import java.util.List;
 
 /**
  * <br>
@@ -23,6 +28,10 @@ public class YunDingWatermeterInfoScheduled {
 
     @Autowired
     WatermeterScheduledService watermeterScheduledService;
+
+    @Autowired
+    WatermeterService watermeterService;
+
     /**
      *设置线程池，多线程跑批
      * @return
@@ -50,10 +59,22 @@ public class YunDingWatermeterInfoScheduled {
         return iWatermeter;
     }
     /**
-     * 获取设备历史异常记录
+     * 定时获取水表抄表
      */
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(cron="0 0 4 * * ?")
     public void getPowerBeeMissDevice() {
         IWatermeter iWatermeter = getIWatermeter();
+        Log.info("====================水表抄表任务开始==================");
+        //获取uuids和manufactorys
+        List<UuidAndManufactoryVO> uuidAndManufactoryVOS= watermeterService.findWatermeterUuidAndManufactory();
+        for (UuidAndManufactoryVO uuidAndManufactoryVO:uuidAndManufactoryVOS
+             ) {
+            try {
+                iWatermeter.readWatermeter(uuidAndManufactoryVO.getUuid(),uuidAndManufactoryVO.getManufactory());
+            } catch (WatermeterException e) {
+                Log.error("水表抄表任务失败",e);
+            }
+        }
+        Log.info("====================水表抄表任务结束==================");
     }
 }

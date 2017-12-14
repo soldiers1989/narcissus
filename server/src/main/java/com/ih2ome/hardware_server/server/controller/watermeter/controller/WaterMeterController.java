@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
+import com.ih2ome.hardware_service.service.service.SynchronousHomeService;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
 import com.ih2ome.hardware_service.service.vo.*;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
@@ -33,6 +34,8 @@ public class WaterMeterController extends BaseController {
 
     @Autowired
     private WatermeterService watermeterService;
+    @Autowired
+    private SynchronousHomeService synchronousHomeService;
 
     /**
      * 查询分散式水表列表
@@ -137,22 +140,60 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
+     * 水表读数抄表请求
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/readwatermeteramount",method = RequestMethod.POST,produces = {"application/json"})
+    public String readWatermeterAmount(@RequestBody ApiRequestVO apiRequestVO){
+        //获取水表id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int watermeterId = dt.getIntValue("watermeterId");
+        try {
+            int code =watermeterService.readWatermeterLastAmountByWatermeterId(watermeterId);
+            //返回ErrNo 大于0请求成功
+            JSONObject responseJson = new JSONObject();
+            if(code >=0 ){
+                responseJson.put("result","success");
+            }else {
+                responseJson.put("result","fail");
+            }
+            String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+            return res;
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"请求失败"+e.getMessage());
+            return res;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"请求失败"+e.getMessage());
+            return res;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"请求失败"+e.getMessage());
+            return res;
+        } catch (WatermeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"请求失败"+e.getMessage());
+            return res;
+        }
+    }
+
+    /**
      * 水表读数明细当月实时累计水量
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/find_total_water",method = RequestMethod.POST,produces = {"application/json"})
-    public String findTotalWater(@RequestBody ApiRequestVO apiRequestVO) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException {
+    @RequestMapping(value="/findwateramount",method = RequestMethod.POST,produces = {"application/json"})
+    public String findTotalWater(@RequestBody ApiRequestVO apiRequestVO) {
         //access_token,uuid水表id,manufactory水表供应商.请求地址/openapi/v1/read_watermeter
         //获取水表id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int watermeterId = dt.getIntValue("watermeterId");
-        int LastAmount =watermeterService.findWatermeterLastAmountByWatermeterId(watermeterId);
-        //同步到数据库
-
+        int amount =watermeterService.findWatermeterLastAmountByWatermeterId(watermeterId);
 
         JSONObject responseJson = new JSONObject();
-        responseJson.put("LastAmount",LastAmount);
+        responseJson.put("amount",amount);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
         return res;
     }
@@ -188,21 +229,21 @@ public class WaterMeterController extends BaseController {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int id = dt.getIntValue("id");
         //通过用户id查询用户公寓列表
-        List<ApartmentVO> apartmentVOS = watermeterService.findApartmentIdByUserId(id);
+        List<ApartmentVO> apartmentVOS = synchronousHomeService.findApartmentIdByUserId(id);
         //通过公寓查询楼层id
         if (!apartmentVOS.isEmpty()) {
             int floorId = apartmentVOS.get(0).getFloorVOS().get(0).getFloorId();
 
-        //通过楼层id列表查询水表信息列表
-        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
-        JZWatermeterListVo jzWatermeterListVo = new JZWatermeterListVo();
-        jzWatermeterListVo.setApartmentVOS(apartmentVOS);
-        jzWatermeterListVo.setJzWatermeterDetailVOS(jzWatermeterDetailVOS);
+            //通过楼层id列表查询水表信息列表
+            List<JZWatermeterDetailVO> jzWatermeterDetailVOS = synchronousHomeService.findWatermetersByFloorId(floorId);
+            JZWatermeterListVo jzWatermeterListVo = new JZWatermeterListVo();
+            jzWatermeterListVo.setApartmentVOS(apartmentVOS);
+            jzWatermeterListVo.setJzWatermeterDetailVOS(jzWatermeterDetailVOS);
 
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("JZWatermeterListVo",jzWatermeterListVo);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
-        return res;
+            JSONObject responseJson = new JSONObject();
+            responseJson.put("JZWatermeterListVo",jzWatermeterListVo);
+            String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+            return res;
         }
         return null;
 
@@ -220,7 +261,7 @@ public class WaterMeterController extends BaseController {
         int floorId = dt.getIntValue("floorId");
 
         //通过楼层id列表查询水表信息列表
-        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
+        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = synchronousHomeService.findWatermetersByFloorId(floorId);
 
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(jzWatermeterDetailVOS));
         JSONObject responseJson = new JSONObject();
@@ -325,124 +366,6 @@ public class WaterMeterController extends BaseController {
         return res;
     }
 
-    /**
-     * 查询集中式房源是否已同步
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/synchronous_housing/FindjzHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingFindJZHomesIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) {
-        //获取公寓id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        JSONArray json = dt.getJSONArray("apartmentIds");
-        String[] homeIds = new String[json.size()];
-        for (int i=0;i<json.size();i++) {
-            homeIds[i] = json.get(i).toString();
-        }
-
-        List<YunDingResponseVo> yunDingResponseVos = null;
-        try {
-            yunDingResponseVos = watermeterService.findHomeIsSynchronousedByHomeIds(homeIds);
-        } catch (ClassNotFoundException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
-            return res;
-        } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
-            return res;
-        } catch (InstantiationException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
-            return res;
-        } catch (WatermeterException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
-            return res;
-        }
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(yunDingResponseVos));
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("houseVOS",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
-    }
-
-    /**
-     * 集中式同步房源整栋
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/jz/synchronous_housing/byapartment",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingFindApartment(@RequestBody ApiRequestVO apiRequestVO)  {
-        //获取公寓id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int apartmentId = dt.getIntValue("apartmentId");
-        String home_id = null;
-        try {
-            home_id = watermeterService.synchronousHousingByApartmenId(apartmentId);
-        } catch (ClassNotFoundException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
-            return res;
-        } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
-            return res;
-        } catch (InstantiationException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
-            return res;
-        } catch (WatermeterException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
-            return res;
-        }
-
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("home_id",home_id);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
-
-    }
-
-    /**
-     * 同步房源一层一层同步
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/synchronous_housing/byfloor",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingByFloor(@RequestBody ApiRequestVO apiRequestVO) {
-        //获取楼层id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int apartmentId = dt.getIntValue("apartmentId");
-        int floorId = dt.getIntValue("floorId");
-        String home_id = null;
-        try {
-            home_id = watermeterService.synchronousHousingByFloorId(apartmentId,floorId);
-        } catch (ClassNotFoundException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
-            return res;
-        } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
-            return res;
-        } catch (InstantiationException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
-            return res;
-        } catch (WatermeterException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
-            return res;
-        }
-
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("home_id",home_id);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
-    }
-
 
     /**
      * 水表网关列表
@@ -498,8 +421,6 @@ public class WaterMeterController extends BaseController {
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
         return res;
 
-        //return "{['time':'2017-08-26T16:39:05','onoffStatus':'离线']}";
-        //return structureSuccessResponseVO("{['time':'2017-08-26T16:39:05','onoffStatus':'离线']}","20171111","0","");
     }
 
 

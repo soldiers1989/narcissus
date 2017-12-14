@@ -33,6 +33,10 @@
         UPDATE <include refid="smart_gateway" /> SET uuid = #{uuid},brand=#{manufactory},updated_at=#{time} WHERE uuid = #{old_uuid};
     </update>
 
+    <!-- 更新网关在线状态by-->
+    <update id="updataGatewayOnoffStatusByUuid"  >
+        UPDATE <include refid="smart_gateway" /> SET onoff_status = #{code} WHERE uuid = #{uuid};
+    </update>
 
 <!--查-->
     <!-- 查询网关idbyuuid -->
