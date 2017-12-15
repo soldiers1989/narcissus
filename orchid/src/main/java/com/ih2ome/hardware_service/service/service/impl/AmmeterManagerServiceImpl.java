@@ -2,11 +2,11 @@ package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.ih2ome.common.utils.MyConstUtils;
-import com.ih2ome.hardware_service.service.dao.AmmeterMannagerVoDao;
+import com.ih2ome.hardware_service.service.dao.AmmeterMannagerDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
-import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
 import com.ih2ome.peony.ammeterInterface.enums.AMMETER_FIRM;
 import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
@@ -29,14 +29,14 @@ import java.util.List;
 public class AmmeterManagerServiceImpl implements AmmeterManagerService{
 
     @Resource
-    AmmeterMannagerVoDao ammeterMannagerVoDao;
+    AmmeterMannagerDao ammeterMannagerDao;
 
     @Override
     public List<AmmeterMannagerVo> findConcentratAmmeter(AmmeterMannagerVo ammeterMannagerVo) {
         if(ammeterMannagerVo.getPage()!= null && ammeterMannagerVo.getRows() != null){
             PageHelper.startPage(ammeterMannagerVo.getPage(),ammeterMannagerVo.getRows());
         }
-        return ammeterMannagerVoDao.findConcentratAmmeter(ammeterMannagerVo);
+        return ammeterMannagerDao.findConcentratAmmeter(ammeterMannagerVo);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         if(ammeterMannagerVo.getPage()!= null && ammeterMannagerVo.getRows() != null){
             PageHelper.startPage(ammeterMannagerVo.getPage(),ammeterMannagerVo.getRows());
         }
-        return ammeterMannagerVoDao.findDispersedAmmeter(ammeterMannagerVo);
+        return ammeterMannagerDao.findDispersedAmmeter(ammeterMannagerVo);
     }
 
 
@@ -54,48 +54,49 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
             PageHelper.startPage(ammeterMannagerVo.getPage(),ammeterMannagerVo.getRows());
         }
         if(ammeterMannagerVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
-            return ammeterMannagerVoDao.findDispersedAmmeter(ammeterMannagerVo);
+            return ammeterMannagerDao.findDispersedAmmeter(ammeterMannagerVo);
         }else if(ammeterMannagerVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            return ammeterMannagerVoDao.findConcentratAmmeter(ammeterMannagerVo);
+            return ammeterMannagerDao.findConcentratAmmeter(ammeterMannagerVo);
         }else{
             return null;
         }
     }
 
     @Override
-    public AmmeterInfoVo getAmmeterFlushInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+    public AmmeterInfoVo getAmmeterFlushInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, InterruptedException {
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         AmmeterInfoVo model = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            model = ammeterMannagerVoDao.getDeviceInfoWithDispersed(id);
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
+            model = ammeterMannagerDao.getDeviceInfoWithDispersed(id);
+            devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
             if(model.getIsHub().equals("0")){
                 model = initFenTan(model);
             }
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            model = ammeterMannagerVoDao.getDeviceInfoWithConcentrated(id);
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
+            model = ammeterMannagerDao.getDeviceInfoWithConcentrated(id);
+            devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
         }
         iAmmeter.getAmmeterFlushInfo(devId);
+        Thread.sleep(3*1000);
 
         return getAmmeterInfoVo(id,type);
     }
 
     @Override
-    public DeviceIdAndName getAmmeterRelation(String id,String type) {
-        DeviceIdAndName deviceIdAndName = null;
-        List<DeviceIdAndName>deviceIdAndNameList = null;
+    public DeviceIdAndNameVo getAmmeterRelation(String id, String type) {
+        DeviceIdAndNameVo deviceIdAndName = null;
+        List<DeviceIdAndNameVo>deviceIdAndNameList = null;
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            deviceIdAndName = ammeterMannagerVoDao.getDeviceByIdWithDispersed(id);
+            deviceIdAndName = ammeterMannagerDao.getDeviceByIdWithDispersed(id);
             if(deviceIdAndName!=null) {
-                deviceIdAndNameList = ammeterMannagerVoDao.getDeviceBySerialIdWithDispersed(deviceIdAndName.getSerialId());
+                deviceIdAndNameList = ammeterMannagerDao.getDeviceBySerialIdWithDispersed(deviceIdAndName.getSerialId());
                 deviceIdAndName.setDeviceIdAndNames(deviceIdAndNameList);
             }
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            deviceIdAndName = ammeterMannagerVoDao.getDeviceByIdWithConcentrated(id);
+            deviceIdAndName = ammeterMannagerDao.getDeviceByIdWithConcentrated(id);
             if(deviceIdAndName!=null){
-                deviceIdAndNameList = ammeterMannagerVoDao.getDeviceBySerialIdWithConcentrated(deviceIdAndName.getSerialId());
+                deviceIdAndNameList = ammeterMannagerDao.getDeviceBySerialIdWithConcentrated(deviceIdAndName.getSerialId());
                 deviceIdAndName.setDeviceIdAndNames(deviceIdAndNameList);
             }
         }
@@ -120,22 +121,22 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            model = ammeterMannagerVoDao.getDeviceInfoWithDispersed(id);
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
+            model = ammeterMannagerDao.getDeviceInfoWithDispersed(id);
+            devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
             if(model.getIsHub().equals("0")){
                 model = initFenTan(model);
             }
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            model = ammeterMannagerVoDao.getDeviceInfoWithConcentrated(id);
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
+            model = ammeterMannagerDao.getDeviceInfoWithConcentrated(id);
+            devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
         }
         AmmeterInfoVo modelFromInterFace  =iAmmeter.getAmmeterInfo(devId);
         AmmeterInfoVo data = (AmmeterInfoVo)MyConstUtils.mergeObject(modelFromInterFace,model);
         if(type.equals("0")){
-            ammeterMannagerVoDao.updateAmmeterWithDispersed(data);
+            ammeterMannagerDao.updateAmmeterWithDispersed(data);
             //ammeterMannagerVoDao.addDeviceRecordWithDispersed(data);
         }else if(type.equals("1")){
-            ammeterMannagerVoDao.updateAmmeterWithConcentrated(data);
+            ammeterMannagerDao.updateAmmeterWithConcentrated(data);
             //ammeterMannagerVoDao.addDeviceRecordWithConcentrated(data);
         }
         return data;
@@ -148,13 +149,13 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
      */
     private AmmeterInfoVo initFenTan(AmmeterInfoVo ammeterInfoVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
-        com.ih2ome.hardware_service.service.model.caspain.SmartDevice master = ammeterMannagerVoDao.getMasterAmmeter(ammeterInfoVo.getId());
+        com.ih2ome.hardware_service.service.model.caspain.SmartDevice master = ammeterMannagerDao.getMasterAmmeter(ammeterInfoVo.getId());
         AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getSerialId());
         Double powerDay = model.getPowerDay();
         Double powerMonth = model.getPowerDay();
         //0=公共区域 1=独立公共区域
         if(ammeterInfoVo.getUseCase().equals("0")){
-            List <String> ammeterSerialId = ammeterMannagerVoDao.getAmmeterByMaster(String.valueOf(master.getId()));
+            List <String> ammeterSerialId = ammeterMannagerDao.getAmmeterByMaster(String.valueOf(master.getId()));
             Double allPowerDay = new Double(0.0);
             Double allPowerMonth = new Double(0.0);
             for (String id:ammeterSerialId){
@@ -181,9 +182,9 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     public void updateWiring(String id, String type, String wiring) {
 
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            ammeterMannagerVoDao.updateWiringWithDispersed(id,wiring);
+            ammeterMannagerDao.updateWiringWithDispersed(id,wiring);
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            ammeterMannagerVoDao.updateWiringWithConcentrated(id,wiring);
+            ammeterMannagerDao.updateWiringWithConcentrated(id,wiring);
         }
     }
 
@@ -193,11 +194,11 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
-           devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
-           ammeterMannagerVoDao.updateDevicePriceWithDispersed(id,price);
+           devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
+           ammeterMannagerDao.updateDevicePriceWithDispersed(id,price);
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
-            ammeterMannagerVoDao.updateDevicePriceWithConcentrated(id,price);
+            devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
+            ammeterMannagerDao.updateDevicePriceWithConcentrated(id,price);
         }
         iAmmeter.setElectricityPrice(devId,Double.valueOf(price));
 
@@ -209,9 +210,11 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
+            devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
+            ammeterMannagerDao.updateDeviceSwitchWithDispersed(id,operate);
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
+            devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
+            ammeterMannagerDao.updateDeviceSwitchWithConcentrated(id,operate);
         }
         iAmmeter.switchAmmeter(devId,operate);
     }
@@ -222,11 +225,11 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
-            ammeterMannagerVoDao.updateDevicePayModWithDispersed(id, String.valueOf(pay_mod.getCode()));
+            devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
+            ammeterMannagerDao.updateDevicePayModWithDispersed(id, String.valueOf(pay_mod.getCode()));
         }else if(type.equals(type.equals(HouseStyleEnum.CONCENTRAT.getCode()))){
-            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
-            ammeterMannagerVoDao.updateDevicePayModWithConcentrated(id, String.valueOf(pay_mod.getCode()));
+            devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
+            ammeterMannagerDao.updateDevicePayModWithConcentrated(id, String.valueOf(pay_mod.getCode()));
         }
         iAmmeter.updatePayMod(devId,pay_mod);
 

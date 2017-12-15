@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
-import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -16,19 +16,19 @@ import java.util.List;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Repository
-public interface AmmeterMannagerVoDao{
+public interface AmmeterMannagerDao{
 
     List<AmmeterMannagerVo>findConcentratAmmeter(AmmeterMannagerVo ammeterMannagerVo);
 
     List <AmmeterMannagerVo> findDispersedAmmeter(AmmeterMannagerVo ammeterMannagerVo);
 
-    DeviceIdAndName getDeviceByIdWithDispersed(String serialId);
+    DeviceIdAndNameVo getDeviceByIdWithDispersed(String serialId);
 
-    List <DeviceIdAndName> getDeviceBySerialIdWithDispersed(String id);
+    List <DeviceIdAndNameVo> getDeviceBySerialIdWithDispersed(String id);
 
-    DeviceIdAndName getDeviceByIdWithConcentrated(String serialId);
+    DeviceIdAndNameVo getDeviceByIdWithConcentrated(String serialId);
 
-    List <DeviceIdAndName> getDeviceBySerialIdWithConcentrated(String id);
+    List <DeviceIdAndNameVo> getDeviceBySerialIdWithConcentrated(String id);
 
     void updateWiringWithDispersed(String id,String wiring);
 
@@ -38,9 +38,13 @@ public interface AmmeterMannagerVoDao{
 
     String getDeviceIdByIdWithConcentrated(@Param("id")String id);
 
-    String updateDevicePriceWithDispersed(@Param("id")String id,@Param("price")String price);
+    void updateDevicePriceWithDispersed(@Param("id")String id,@Param("price")String price);
 
-    String updateDevicePriceWithConcentrated(@Param("id")String id,@Param("price")String price);
+    void updateDevicePriceWithConcentrated(@Param("id")String id,@Param("price")String price);
+
+    void updateDeviceSwitchWithDispersed(@Param("id")String id,@Param("status")String status);
+
+    void updateDeviceSwitchWithConcentrated(@Param("id")String id,@Param("status")String status);
 
     void updateDevicePayModWithDispersed(@Param("id")String id,@Param("payMod")String payMod);
 

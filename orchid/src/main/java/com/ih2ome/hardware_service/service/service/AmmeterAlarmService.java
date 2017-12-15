@@ -2,7 +2,7 @@ package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
-import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
+import com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo;
 
 import java.util.List;
 
@@ -40,8 +40,8 @@ public interface AmmeterAlarmService {
 
     /**
      * 查看报警信息
-     * @param ammeterMannagerVo
+     * @param ammeterAlarmVo
      * @return
      */
-    List<AmmeterMannagerVo> findAmmeterAlarmInfoList(AmmeterMannagerVo ammeterMannagerVo);
+    List<AmmeterAlarmVo> findAmmeterAlarmInfoList(AmmeterAlarmVo ammeterAlarmVo);
 }

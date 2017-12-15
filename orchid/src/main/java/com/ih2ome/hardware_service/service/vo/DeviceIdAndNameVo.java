@@ -13,9 +13,9 @@ import java.util.List;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Data
-public class DeviceIdAndName implements Serializable {
+public class DeviceIdAndNameVo implements Serializable {
     private String id;
     private String Name;
     private String serialId;
-    private List<DeviceIdAndName>deviceIdAndNames;
+    private List<DeviceIdAndNameVo>deviceIdAndNames;
 }

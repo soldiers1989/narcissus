@@ -6,7 +6,7 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
-import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
 import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+
 
 
 /**
@@ -63,7 +64,7 @@ public class AmmeterController extends BaseController {
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         String id = resData.getString("id");
         String type = resData.getString("type");
-        DeviceIdAndName deviceVo = ammeterManagerService.getAmmeterRelation(id,type);
+        DeviceIdAndNameVo deviceVo = ammeterManagerService.getAmmeterRelation(id,type);
         JSONObject responseJson = new JSONObject();
         responseJson.put("deviceVo",deviceVo);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
@@ -112,13 +113,25 @@ public class AmmeterController extends BaseController {
         try {
             ammeterInfoVo = ammeterManagerService.getAmmeterFlushInfoVo(id,type);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
         } catch (AmmeterException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
+        } catch (InterruptedException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
         }
         JSONObject responseJson = new JSONObject();
         responseJson.put("ammeterInfoVo",ammeterInfoVo);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterMannagerVoDao">
+<mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterMannagerDao">
 
     <select id="findDispersedAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
         SELECT
@@ -145,17 +145,17 @@
         </if>
     </select>
 
-    <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+    <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
       select * from caspain_test.smart_device sd where sd.id=#{id}
     </select>
-    <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+    <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from caspain_test.smart_device sd where sd.master=#{serialId}
     </select>
 
-    <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+    <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from `volga_test`.smart_device sd where sd.id=#{id}
     </select>
-    <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+    <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from `volga_test`.smart_device sd where sd.master=#{serialId}
     </select>
 
@@ -181,6 +181,14 @@
 
     <update id="updateDevicePriceWithConcentrated">
         UPDATE `volga_test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
+    </update>
+
+    <update id="updateDeviceSwitchWithDispersed">
+        UPDATE caspain_test.smart_device sd SET sd.status=#{status} where sd.id=#{id}
+    </update>
+
+    <update id="updateDeviceSwitchWithConcentrated">
+        UPDATE `volga_test`.smart_device sd SET sd.status=#{status} where sd.id=#{id}
     </update>
 
     <update id="updateDevicePayModWithDispersed">
@@ -432,5 +440,7 @@ VALUES
         '1'
         )
     </insert>
+
+
 
 </mapper>

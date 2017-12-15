@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
-import com.ih2ome.hardware_service.service.vo.DeviceIdAndName;
+import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
 import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
@@ -21,7 +21,7 @@ public interface AmmeterManagerService {
 
     List <AmmeterMannagerVo> findDispersedAmmeter(AmmeterMannagerVo ammeterMannagerVo);
 
-    DeviceIdAndName getAmmeterRelation(String id,String type);
+    DeviceIdAndNameVo getAmmeterRelation(String id, String type);
 
     AmmeterInfoVo getAmmeterInfoVo(String id,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 
@@ -35,5 +35,5 @@ public interface AmmeterManagerService {
 
     List<AmmeterMannagerVo> ammeterList(AmmeterMannagerVo ammeterMannagerVo);
 
-    AmmeterInfoVo getAmmeterFlushInfoVo(String id,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
+    AmmeterInfoVo getAmmeterFlushInfoVo(String id,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, InterruptedException;
 }

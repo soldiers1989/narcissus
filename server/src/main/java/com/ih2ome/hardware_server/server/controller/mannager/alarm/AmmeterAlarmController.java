@@ -7,7 +7,7 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
-import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
+import com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,11 +54,11 @@ public class AmmeterAlarmController extends BaseController {
     @RequestMapping(value="/ammeterAlarmInfoList",method = RequestMethod.POST,produces = {"application/json"})
     public String ammeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
-        AmmeterMannagerVo ammeterMannagerVo = resData.getObject("ammeterMannagerVo",AmmeterMannagerVo.class);
-        List<AmmeterMannagerVo> ammeterMannagerVoList = ammeterAlarmService.findAmmeterAlarmInfoList(ammeterMannagerVo);
-        PageInfo <AmmeterMannagerVo> pageInfo = new PageInfo<>(ammeterMannagerVoList);
+        AmmeterAlarmVo ammeterAlarmVo = resData.getObject("ammeterAlarmVo",AmmeterAlarmVo.class);
+        List<AmmeterAlarmVo> ammeterAlarmVoList = ammeterAlarmService.findAmmeterAlarmInfoList(ammeterAlarmVo);
+        PageInfo <AmmeterAlarmVo> pageInfo = new PageInfo<>(ammeterAlarmVoList);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("ammeterMannagerVoList",pageInfo);
+        responseJson.put("ammeterAlarmVoList",pageInfo);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
