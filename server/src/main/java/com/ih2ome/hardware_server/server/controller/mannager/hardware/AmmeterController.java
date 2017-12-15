@@ -99,6 +99,34 @@ public class AmmeterController extends BaseController {
     }
 
     /**
+     * 刷新电表获取信息
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/getAmmeterFlushInfo",method = RequestMethod.POST,produces = {"application/json"})
+    public String getAmmeterFlushInfo(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = resData.getString("id");
+        String type = resData.getString("type");
+        AmmeterInfoVo ammeterInfoVo = null;
+        try {
+            ammeterInfoVo = ammeterManagerService.getAmmeterFlushInfoVo(id,type);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (AmmeterException e) {
+            e.printStackTrace();
+        }
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("ammeterInfoVo",ammeterInfoVo);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+    /**
      * 使用场景变更
      * @param apiRequestVO
      * @return

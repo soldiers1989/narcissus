@@ -34,4 +34,6 @@ public interface AmmeterManagerService {
     void updatePayMod(String id, String type, PAY_MOD pay_mod) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 
     List<AmmeterMannagerVo> ammeterList(AmmeterMannagerVo ammeterMannagerVo);
+
+    AmmeterInfoVo getAmmeterFlushInfoVo(String id,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 }

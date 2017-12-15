@@ -37,7 +37,7 @@ public interface IAmmeter {
     void setElectricityPrice(String devId,Double value) throws AmmeterException;
 
     /**
-     * 获取单个电表最新数据
+     * 获取单个电表数据
      * @param devId
      * @return
      */
@@ -72,6 +72,14 @@ public interface IAmmeter {
      * @throws AmmeterException
      */
     Map<String,List<String>> getNegativeDeviceAndNegativePowerOnDevice() throws AmmeterException;
+
+
+    /**
+     * 抄表接口
+     * @param devId
+     * @returnvoid
+     */
+     void getAmmeterFlushInfo(String devId) throws AmmeterException;
 
 
 }
