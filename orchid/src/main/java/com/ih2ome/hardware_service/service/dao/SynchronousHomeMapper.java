@@ -48,14 +48,6 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
     Long findFloorIdByRoomId(Long room_id);
 
     /**
-     * 通过楼层id查询水表
-     * @return
-     * @param floorId
-     */
-    List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
-
-
-    /**
      * 更新房源为已同步至云丁
      * @param apartmentId
      */
@@ -137,4 +129,10 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      */
     void updataHmRoomSyncByRoomId(@Param("roomSync") Integer roomSync,@Param("list") List<AddRoomVO> list);
 
+    /**
+     * 查询集中式公寓by公寓id
+     * @param apartmentId
+     * @return
+     */
+    ApartmentVO selectApartmentIdByApartmentId(int apartmentId);
 }

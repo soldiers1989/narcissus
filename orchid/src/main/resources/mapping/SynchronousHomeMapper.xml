@@ -23,6 +23,19 @@
         </collection>
     </resultMap>
 
+    <!--配置一个公寓部分resultMap-->
+    <resultMap type="com.ih2ome.hardware_service.service.vo.ApartmentVO" id="apartmentResultMap2" >
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+    </resultMap>
+
+    <!--配置一个AddHomeVo resultMap-->
+    <resultMap type="com.ih2ome.peony.watermeterInterface.vo.AddHomeVo" id="addHomeVoResultMap" autoMapping="true">
+        <id column="home_id" property="home_id" />
+        <result column="home_type" property="home_type" />
+        <result column="home_name" property="home_name" />
+    </resultMap>
+
     <!-- 增  -->
     <!-- 添加抄表记录 -->
     <!-- 改 -->
@@ -79,7 +92,7 @@
         FROM <include refid="jzroom"/> jzroom WHERE jzroom.floor_id = #{id}
     </select>
     <!--查询房源信息byhouseid-->
-    <select id="findHouseByHouseId" parameterType="int" resultType="com.ih2ome.peony.watermeterInterface.vo.AddHomeVo">
+    <select id="findHouseByHouseId" parameterType="int" resultMap="addHomeVoResultMap">
         SELECT house.city,house.block AS zone,(house.address + house.area +house.building_num+house.unit_num+house.floor_num +house.house_num) AS location,
         house.area AS block,house.id AS home_id,house.area AS home_name,house.remark AS description
         FROM <include refid="house"/> house WHERE house.id = #{id}
@@ -105,14 +118,14 @@
 
     <!--查询集中式房源同步信息byUserid-->
     <select id="findApartmentIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
-        SELECT id,'name',synchronous
-        FROM <include refid="apartment"/>  WHERE created_by = #{userId}
+        SELECT id,apartment.name,synchronous
+        FROM <include refid="apartment"/> apartment WHERE created_by = #{userId}
     </select>
 
     <!--查询分散式式房源同步信息byUserid-->
     <select id="findHouseIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
-        SELECT id,'name',synchronous
-        FROM <include refid="house"/>  WHERE created_by = #{userId}
+        SELECT id,house.name,synchronous
+        FROM <include refid="house"/> house WHERE created_by = #{userId}
     </select>
 
     <!--查询楼层idsByApartmentId-->
@@ -124,4 +137,25 @@
     <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HouseVO">
         SELECT h.id,h.area,h.building_num,h.house_num,h.synchronous FROM <include refid="house"/> h WHERE h.created_by_id= #{id}
     </select>
+
+    <!--查询公寓by用户id-->
+   <select id="findApartmentByUserId" parameterType="int" resultMap="apartmentResultMap2">
+       SELECT a.id,a.`name`
+       FROM <include refid="apartment"/> AS a
+       WHERE a.created_by = #{id}
+    </select>
+
+
+    <!--查询公寓by公寓id-->
+    <select id="selectApartmentIdByApartmentId" parameterType="int" resultMap="apartmentResultMap">
+        SELECT a.id,a.`name`,f.id AS floor_id,f.`name` AS floor_name,w.smart_watermeter_id,COUNT(smart_watermeter_id) AS watermeter_num,SUM(w.onoff_status) AS watermeter_onoff_num
+        FROM <include refid="apartment"/> AS a
+        LEFT JOIN <include refid="floor"/> AS f
+        ON f.apartment_id=a.id
+        LEFT JOIN <include refid="smart_watermeter"/> AS w
+        ON f.id =w.apartment_id
+        WHERE a.id = #{id}
+        GROUP BY f.id
+    </select>
+
 </mapper>

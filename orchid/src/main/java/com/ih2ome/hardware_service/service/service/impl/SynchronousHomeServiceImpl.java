@@ -182,19 +182,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     }
 
     /**
-     * 查询集中式水表列表通过楼层id
-     * @param floorId
-     * @return
-     */
-    @Override
-    public List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId) {
-        //通过楼层ids查询水表
-        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = synchronousHomeMapper.findWatermetersByFloorId(floorId);
-        return jzWatermeterDetailVOS;
-
-    }
-
-    /**
      * 查询集中式房源是否已同步byhomeIds
      * @param userid
      * @return
@@ -299,8 +286,15 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         return "success";
     }
 
-
-
+    /**
+     * 集中式公寓查询by公寓id
+     * @param apartmentId
+     * @return
+     */
+    @Override
+    public ApartmentVO findApartmentIdByApartmentId(int apartmentId) {
+        return synchronousHomeMapper.selectApartmentIdByApartmentId(apartmentId);
+    }
 
 
 }

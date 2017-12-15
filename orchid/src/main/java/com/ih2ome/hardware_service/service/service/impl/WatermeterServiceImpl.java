@@ -42,8 +42,8 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public List<WatermeterDetailVO> findWatermetersByids(List<Integer> ids) {
-        List<WatermeterDetailVO> watermeterDetailVOS= watermeterDao.finWatermeterByRoomIds(ids);
+    public List<HMWatermeterListVO> findWatermetersByids(List<Integer> ids) {
+        List<HMWatermeterListVO> watermeterDetailVOS= watermeterDao.finWatermeterByRoomIds(ids);
         return watermeterDetailVOS;
     }
 
@@ -75,8 +75,8 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public List<WatermeterDetailVO> findWatermetersByGatewayId(int smartGatewayId) {
-        List<WatermeterDetailVO> watermeterDetailVOS=watermeterDao.findWatermeterByGatewayId(smartGatewayId);
+    public List<HMWatermeterListVO> findWatermetersByGatewayId(int smartGatewayId) {
+        List<HMWatermeterListVO> watermeterDetailVOS=watermeterDao.findWatermeterByGatewayId(smartGatewayId);
         return watermeterDetailVOS;
     }
 
@@ -104,6 +104,19 @@ public class WatermeterServiceImpl implements WatermeterService {
 
         // 返回分页结果对象
         return new PageResult<>(info.getTotal(), waterMeterRecordVOS);
+
+    }
+
+    /**
+     * 查询集中式水表列表通过楼层id
+     * @param floorId
+     * @return
+     */
+    @Override
+    public List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId) {
+        //通过楼层ids查询水表
+        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterDao.findWatermetersByFloorId(floorId);
+        return jzWatermeterDetailVOS;
 
     }
 
@@ -139,7 +152,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public List<WatermeterDetailVO> findWatermetersByid(int id) {
+    public List<HMWatermeterListVO> findWatermetersByid(int id) {
         return watermeterDao.findWatermetersByUserId(id);
     }
 

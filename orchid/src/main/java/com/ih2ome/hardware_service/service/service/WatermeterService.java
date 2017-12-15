@@ -19,7 +19,7 @@ public interface WatermeterService {
     List<Integer> findRoomIdByUserId(String id);
 
 
-    List<WatermeterDetailVO> findWatermetersByids(List<Integer> ids);
+    List<HMWatermeterListVO> findWatermetersByids(List<Integer> ids);
 
     /**
      * 通过水表id查询水表详情
@@ -40,7 +40,7 @@ public interface WatermeterService {
      * @param smartGatewayId
      * @return
      */
-    List<WatermeterDetailVO> findWatermetersByGatewayId(int smartGatewayId);
+    List<HMWatermeterListVO> findWatermetersByGatewayId(int smartGatewayId);
 
     /**
      * 查询水表抄表列表
@@ -73,7 +73,7 @@ public interface WatermeterService {
      * @param id
      * @return
      */
-    List<WatermeterDetailVO> findWatermetersByid(int id);
+    List<HMWatermeterListVO> findWatermetersByid(int id);
 
     /**
      * 筛选水表抄表记录
@@ -116,6 +116,12 @@ public interface WatermeterService {
      */
     void updataWaterLastAmount(String uuid, int amount, int time);
 
+    /**
+     * 集中式通过楼层Id查询水表详情
+     * @param floorId
+     * @return
+     */
+    List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
 
     /**
      * 添加水表smartWatermeter
