@@ -35,5 +35,5 @@ public interface AmmeterManagerService {
 
     List<AmmeterMannagerVo> ammeterList(AmmeterMannagerVo ammeterMannagerVo);
 
-    AmmeterInfoVo getAmmeterFlushInfoVo(String id,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
+    AmmeterInfoVo getAmmeterFlushInfoVo(String id,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, InterruptedException;
 }

@@ -63,7 +63,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     }
 
     @Override
-    public AmmeterInfoVo getAmmeterFlushInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+    public AmmeterInfoVo getAmmeterFlushInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, InterruptedException {
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         AmmeterInfoVo model = null;
@@ -78,6 +78,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
         }
         iAmmeter.getAmmeterFlushInfo(devId);
+        Thread.sleep(3*1000);
 
         return getAmmeterInfoVo(id,type);
     }
@@ -210,8 +211,10 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
+            ammeterMannagerVoDao.updateDeviceSwitchWithDispersed(id,operate);
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
+            ammeterMannagerVoDao.updateDeviceSwitchWithConcentrated(id,operate);
         }
         iAmmeter.switchAmmeter(devId,operate);
     }

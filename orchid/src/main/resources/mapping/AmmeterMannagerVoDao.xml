@@ -183,6 +183,14 @@
         UPDATE `volga_test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
     </update>
 
+    <update id="updateDeviceSwitchWithDispersed">
+        UPDATE caspain_test.smart_device sd SET sd.status=#{status} where sd.id=#{id}
+    </update>
+
+    <update id="updateDeviceSwitchWithConcentrated">
+        UPDATE `volga_test`.smart_device sd SET sd.status=#{status} where sd.id=#{id}
+    </update>
+
     <update id="updateDevicePayModWithDispersed">
         update caspain_test.smart_device csd,caspain_test.smart_device_power_contract csdpc set csdpc.charge=#{paymod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
     </update>
@@ -432,5 +440,7 @@ VALUES
         '1'
         )
     </insert>
+
+
 
 </mapper>

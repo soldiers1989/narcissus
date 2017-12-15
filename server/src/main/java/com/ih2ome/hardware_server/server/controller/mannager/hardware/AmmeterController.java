@@ -112,13 +112,25 @@ public class AmmeterController extends BaseController {
         try {
             ammeterInfoVo = ammeterManagerService.getAmmeterFlushInfoVo(id,type);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
         } catch (AmmeterException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
+        } catch (InterruptedException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            return res;
         }
         JSONObject responseJson = new JSONObject();
         responseJson.put("ammeterInfoVo",ammeterInfoVo);
