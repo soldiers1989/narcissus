@@ -34,9 +34,10 @@ public class PowerBeeAmmeter implements IAmmeter {
         Log.info("电表id"+devId);
         Log.info("开关"+onOrOff);
         String uri = null;
-        if(onOrOff.equals("on")){
+        //1 表示通电  0表示断电
+        if(onOrOff.equals("1")){
             uri = BASE_URL+"/device/switchon/"+devId;
-        }else if(onOrOff.equals("off")){
+        }else if(onOrOff.equals("0")){
             uri = BASE_URL+"/device/switchoff/"+devId;
         }else{
             Log.error("参数错误！！！");
@@ -149,6 +150,29 @@ public class PowerBeeAmmeter implements IAmmeter {
 
         ammeterInfoVo.initPowerOutput();
         return ammeterInfoVo;
+    }
+
+    @Override
+    public void getAmmeterFlushInfo(String devId) throws AmmeterException {
+        Log.info("获取电表最新数据");
+        Log.info("电表id:"+devId);
+        AmmeterInfoVo ammeterInfoVo = new AmmeterInfoVo();
+        String uri = BASE_URL+"/device/ammeter/"+devId;
+        String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doPutUrl(url,new HashMap<>(),PowerBeeAmmeterUtil.getToken());
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(res);
+        }catch (Exception e){
+            Log.error("json格式解析错误",e);
+            throw new AmmeterException("json格式解析错误"+e.getMessage());
+        }
+        String code = resJson.get("Code").toString();
+        if(!code.equals("0")){
+            String msg = resJson.get("Message").toString();
+            Log.error("抄表失败/n"+msg);
+            throw new AmmeterException("抄表失败/n"+msg);
+        }
     }
 
     private Integer getMissDeviceNum(Integer hour) throws AmmeterException {

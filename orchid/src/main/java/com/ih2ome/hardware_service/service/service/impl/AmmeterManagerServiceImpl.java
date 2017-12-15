@@ -63,6 +63,26 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     }
 
     @Override
+    public AmmeterInfoVo getAmmeterFlushInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        String devId = null;
+        AmmeterInfoVo model = null;
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
+            model = ammeterMannagerVoDao.getDeviceInfoWithDispersed(id);
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithDispersed(id);
+            if(model.getIsHub().equals("0")){
+                model = initFenTan(model);
+            }
+        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            model = ammeterMannagerVoDao.getDeviceInfoWithConcentrated(id);
+            devId =ammeterMannagerVoDao.getDeviceIdByIdWithConcentrated(id);
+        }
+        iAmmeter.getAmmeterFlushInfo(devId);
+
+        return getAmmeterInfoVo(id,type);
+    }
+
+    @Override
     public DeviceIdAndName getAmmeterRelation(String id,String type) {
         DeviceIdAndName deviceIdAndName = null;
         List<DeviceIdAndName>deviceIdAndNameList = null;
