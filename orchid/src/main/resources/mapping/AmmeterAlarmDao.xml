@@ -34,7 +34,7 @@
             )
         </foreach>
     </insert>
-    <select id="findDispersedAmmeterAlarm" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
+    <select id="findDispersedAmmeterAlarm" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo">
         SELECT
         csd.id ammeterId,
         ch.area apartmentName,
@@ -52,7 +52,8 @@
         csd.style isHub,
 		csd.last_num surplus,
 		nsmi.exception_type mistakeType,
-        '0' `type`
+        '0' `type`,
+        csd.last_num_date lastUpdateTime
         FROM
         caspain_test.smart_device csd left join
         caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
@@ -109,7 +110,7 @@
         </if>
     </select>
 
-    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
+    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo">
         SELECT
         vsd.id ammeterId,
         va.`name` apartmentName,
@@ -127,7 +128,8 @@
         vsd.style isHub,
 		vsd.last_num surplus,
 		nsmi.exception_type mistakeType,
-        '1' `type`
+        '1' `type`,
+        vsd.last_num_date lastUpdateTime
         FROM
         `volga_test`.smart_device vsd left join
         `volga_test`.room vr on vsd.room_id=vr.id LEFT JOIN

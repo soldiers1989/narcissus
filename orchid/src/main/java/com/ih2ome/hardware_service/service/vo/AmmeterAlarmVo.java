@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Data
-public class AmmeterMannagerVo extends BaseEntity implements Serializable {
+public class AmmeterAlarmVo extends BaseEntity implements Serializable {
     private String ammeterId;//电表id
     private String apartmentName;//公寓名称
     private String apartmentType;//公寓类型
@@ -31,6 +31,8 @@ public class AmmeterMannagerVo extends BaseEntity implements Serializable {
     private String communicationStatus;//通讯状态
     private String isHub;//是否是主表
     private String surplus;//电表读数
+    private String mistakeType;//异常类型
     private String type;//集中式或分散式
+    private String lastUpdateTime;//最后更新时间
 
 }

@@ -2,7 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
-import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
+import com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -28,9 +28,9 @@ public interface AmmeterAlarmDao {
 
     void saveAlarmList(List<SmartMistakeInfo> smartMistakeInfoList);
 
-    List<AmmeterMannagerVo>findDispersedAmmeterAlarm(AmmeterMannagerVo ammeterMannagerVo);
+    List<AmmeterAlarmVo>findDispersedAmmeterAlarm(AmmeterAlarmVo ammeterAlarmVo);
 
-    List<AmmeterMannagerVo>findConcentratAmmeter(AmmeterMannagerVo ammeterMannagerVo);
+    List<AmmeterAlarmVo>findConcentratAmmeter(AmmeterAlarmVo ammeterAlarmVo);
 
 
 

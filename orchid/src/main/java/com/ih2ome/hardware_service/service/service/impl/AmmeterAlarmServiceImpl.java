@@ -6,7 +6,7 @@ import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
-import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
+import com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -52,14 +52,14 @@ public class AmmeterAlarmServiceImpl implements AmmeterAlarmService {
     }
 
     @Override
-    public List<AmmeterMannagerVo> findAmmeterAlarmInfoList(AmmeterMannagerVo ammeterMannagerVo) {
-        if(ammeterMannagerVo.getPage()!= null && ammeterMannagerVo.getRows() != null){
-            PageHelper.startPage(ammeterMannagerVo.getPage(),ammeterMannagerVo.getRows());
+    public List<AmmeterAlarmVo> findAmmeterAlarmInfoList(AmmeterAlarmVo ammeterAlarmVo) {
+        if(ammeterAlarmVo.getPage()!= null && ammeterAlarmVo.getRows() != null){
+            PageHelper.startPage(ammeterAlarmVo.getPage(),ammeterAlarmVo.getRows());
         }
-        if(ammeterMannagerVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
-            return ammeterAlarmDao.findDispersedAmmeterAlarm(ammeterMannagerVo);
-        }else if(ammeterMannagerVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            return ammeterAlarmDao.findConcentratAmmeter(ammeterMannagerVo);
+        if(ammeterAlarmVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
+            return ammeterAlarmDao.findDispersedAmmeterAlarm(ammeterAlarmVo);
+        }else if(ammeterAlarmVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            return ammeterAlarmDao.findConcentratAmmeter(ammeterAlarmVo);
         }
         return null;
     }

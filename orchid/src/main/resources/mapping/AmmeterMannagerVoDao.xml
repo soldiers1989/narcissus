@@ -145,17 +145,17 @@
         </if>
     </select>
 
-    <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+    <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
       select * from caspain_test.smart_device sd where sd.id=#{id}
     </select>
-    <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+    <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from caspain_test.smart_device sd where sd.master=#{serialId}
     </select>
 
-    <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+    <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from `volga_test`.smart_device sd where sd.id=#{id}
     </select>
-    <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndName">
+    <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from `volga_test`.smart_device sd where sd.master=#{serialId}
     </select>
 
