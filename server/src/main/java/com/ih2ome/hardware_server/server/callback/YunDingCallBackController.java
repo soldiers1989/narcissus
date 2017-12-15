@@ -71,7 +71,7 @@ public class YunDingCallBackController extends BaseController {
         IWatermeter iWatermeter = getIWatermeter();
         switch (even){
             //绑定水表及水表网关设备事件
-            case "deviceInstall" :
+            case  "deviceInstall" :
                 deviceInstallEvent(apiRequestVO,iWatermeter);
                 break;
             //替换水表网关事件

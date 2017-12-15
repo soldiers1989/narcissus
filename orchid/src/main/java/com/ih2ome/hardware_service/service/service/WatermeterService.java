@@ -6,7 +6,6 @@ import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord
 import com.ih2ome.hardware_service.service.vo.*;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
-import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -85,12 +84,7 @@ public interface WatermeterService {
      */
     List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, String startTime, String endTime);
 
-    /**
-     * 分散式用户房源
-     * @param id
-     * @return
-     */
-    List<HouseVO> findHouseByUserId(int id);
+
 
     /**
      * 查找水表异常记录
@@ -107,25 +101,11 @@ public interface WatermeterService {
     List<ExceptionVO> findWatermeterGatewayException(int gatewayId);
 
     /**
-     * 查询房源是否已同步by房源id
-     * @param homeId
-     * @return
-     */
-    YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, WatermeterException;
-
-    /**
      * 查询实时抄表记录
      * @param watermeterId
      * @return
      */
     int readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
-
-    /**
-     * 分散式同步房源
-     * @param houseId
-     * @return
-     */
-    String synchronousHousingByHouseId(int houseId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
 
     /**

@@ -9,4 +9,5 @@ public class HouseVO {
     private String building_num;//栋
     private String floor_num;//楼
     private String house_num;//门牌号
+    private int synchronous;//房源同步1.云丁
 }
