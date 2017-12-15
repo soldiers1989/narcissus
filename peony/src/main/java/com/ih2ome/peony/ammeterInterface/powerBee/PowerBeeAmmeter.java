@@ -11,10 +11,8 @@ import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * <br>
@@ -130,18 +128,19 @@ public class PowerBeeAmmeter implements IAmmeter {
             throw new AmmeterException("第三方请求失败/n"+msg);
         }
         JSONObject jsonObject = (JSONObject) resJson.getJSONArray("Data").get(0);
+        ammeterInfoVo.setElectrifyStatus(jsonObject.getString("Value"));
+        ammeterInfoVo.setOnline(jsonObject.getString("Status"));
+        ammeterInfoVo.setPowerRate(jsonObject.getDouble("Price"));
         JSONObject expand = jsonObject.getJSONObject("Expand");
         ammeterInfoVo.setUuid(devId);
-        ammeterInfoVo.setPowerRate(jsonObject.getDouble("Price"));
         ammeterInfoVo.setAllPower(expand.getDouble("allpower"));
         ammeterInfoVo.setCurrent(expand.getDouble("current"));
-        ammeterInfoVo.setLastTime(expand.getDate("Lasttime"));
+        Date lastTime = jsonObject.getDate("Lasttime");
+        ammeterInfoVo.setLastTime(DateToString(lastTime));
         ammeterInfoVo.setPowerDay(expand.getDouble("powerday"));
         ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
         ammeterInfoVo.setVoltage(expand.getDouble("voltage"));
         ammeterInfoVo.setPowerMonth(expand.getDouble("powermonth"));
-        ammeterInfoVo.setElectrifyStatus(expand.getString("Value"));
-        ammeterInfoVo.setOnline(expand.getString("Status"));
         Boolean isNode = jsonObject.getBoolean("Isnode");
         String cid = jsonObject.getString("Cid");
         //查wifi
@@ -379,5 +378,8 @@ public class PowerBeeAmmeter implements IAmmeter {
 
     }
 
-
+    private String DateToString(Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(date);
+    }
 }

@@ -12,12 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.ih2ome"})
-//public class ShuidiApplication extends SpringBootServletInitializer {
 public class ShuidiApplication {
-//	@Override
-//	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-//		return application.sources(ShuidiApplication.class);
-//	}
 	public static void main(String[] args) {
 		SpringApplication.run(ShuidiApplication.class, args);
 	}

@@ -16,9 +16,9 @@ import java.util.List;
 public interface AmmeterAlarmService {
     /**
      * 添加报警规则
-     * @param smartReport
+     * @param smartAlarmRuleList
      */
-    void saveAmmeterAlarmRules(SmartAlarmRule smartReport);
+    void saveAmmeterAlarmRules(List <SmartAlarmRule> smartAlarmRuleList);
 
     /**
      * 查看报警规则

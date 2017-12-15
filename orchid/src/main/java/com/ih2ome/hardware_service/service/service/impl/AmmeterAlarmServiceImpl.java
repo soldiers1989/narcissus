@@ -26,11 +26,13 @@ public class AmmeterAlarmServiceImpl implements AmmeterAlarmService {
     AmmeterAlarmDao ammeterAlarmDao;
 
     @Override
-    public void saveAmmeterAlarmRules(SmartAlarmRule smartReport) {
-        if(smartReport.getId()!=null){
-            ammeterAlarmDao.updateAmmeterAlarmRules(smartReport);
-        }else{
-            ammeterAlarmDao.addAmmeterAlarmRules(smartReport);
+    public void saveAmmeterAlarmRules(List <SmartAlarmRule> smartAlarmRuleList) {
+        for(SmartAlarmRule smartAlarmRule:smartAlarmRuleList) {
+            if (smartAlarmRule.getId() != null) {
+                ammeterAlarmDao.updateAmmeterAlarmRules(smartAlarmRule);
+            } else {
+                ammeterAlarmDao.addAmmeterAlarmRules(smartAlarmRule);
+            }
         }
     }
 
