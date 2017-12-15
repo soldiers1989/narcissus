@@ -138,11 +138,6 @@
        SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
     </select>
 
-    <!--查询分散式用户房源by用户id-->
-    <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HouseVO">
-        SELECT h.id,h.area,h.building_num,h.house_num FROM <include refid="house"/> h WHERE h.created_by_id= #{id}
-    </select>
-
     <!--水表异常记录by水表id-->
     <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}

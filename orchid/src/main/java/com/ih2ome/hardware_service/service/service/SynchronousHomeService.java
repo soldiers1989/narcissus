@@ -1,7 +1,10 @@
 package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.hardware_service.service.vo.ApartmentVO;
+import com.ih2ome.hardware_service.service.vo.HomeSyncVO;
+import com.ih2ome.hardware_service.service.vo.HouseVO;
 import com.ih2ome.hardware_service.service.vo.JZWatermeterDetailVO;
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 
@@ -46,12 +49,38 @@ public interface SynchronousHomeService {
 
     /**
      * 查询集中式房源是否已同步by房源ids
-     * @param homeIds
+     * @param userId
      * @return
      */
-    List<YunDingResponseVo> findHomeIsSynchronousedByHomeIds(String[] homeIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException ;
+    List<HomeSyncVO> findHomeIsSynchronousedByUserId(int userId) ;
 
+    /**
+     * 查询房源是否已同步by房源id
+     * @param homeId
+     * @return
+     */
+    YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, WatermeterException;
 
+    /**
+     * 查询分散式房源是否已同步by房源ids
+     * @param userId
+     * @return
+     */
+    List<HomeSyncVO> findHmHomeIsSynchronousedByUserId(int userId);
+
+    /**
+     * 分散式用户房源
+     * @param id
+     * @return
+     */
+    List<HouseVO> findHouseByUserId(int id);
+
+    /**
+     * 分散式同步房源
+     * @param houseId
+     * @return
+     */
+    String synchronousHousingByHouseId(int houseId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
 
 

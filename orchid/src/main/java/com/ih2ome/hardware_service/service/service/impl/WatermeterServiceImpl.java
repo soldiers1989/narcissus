@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ih2ome.hardware_service.service.dao.WatermeterMapper;
-import com.ih2ome.hardware_service.service.enums.HouseCatalogEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
@@ -14,13 +13,11 @@ import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
-import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +32,6 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public List<Integer> findRoomIdByUserId(String id) {
         //通过create_by_id查询houseID查询roomId
-        //SELECT id FROM room WHERE house_id in (SELECT house_id FROM house_contract WHERE created_by_id = 3);
         List<Integer> roomIds = watermeterDao.findRoomIdByCreatebyid(id);
         return roomIds;
     }
@@ -111,9 +107,6 @@ public class WatermeterServiceImpl implements WatermeterService {
 
     }
 
-
-
-
     /**
      * 改水价
      * @param price
@@ -171,15 +164,7 @@ public class WatermeterServiceImpl implements WatermeterService {
         return waterMeterRecordVOS;
     }
 
-    /**
-     * 分散式用户房源
-     * @param id
-     * @return
-     */
-    @Override
-    public List<HouseVO> findHouseByUserId(int id) {
-        return watermeterDao.findHouseByUserId(id);
-    }
+
 
     /**
      * 水表异常记录
@@ -201,23 +186,6 @@ public class WatermeterServiceImpl implements WatermeterService {
         return watermeterDao.findWatermeterGatewayExceptionByGatewayId(gatewayId);
     }
 
-    /**
-     * 查询房源是否同步by房源id
-     * @param homeId
-     * @return
-     */
-    @Override
-    public YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
-        IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-        String devId = null;
-
-        String res= iWatermeter.findHomeState(String.valueOf(homeId));
-        if (res == null){
-            return null;
-        }
-        YunDingResponseVo jsonObject=JSONObject.parseObject(res,YunDingResponseVo.class);
-        return jsonObject;
-    }
 
     /**
      * 发送抄表请求
@@ -235,53 +203,6 @@ public class WatermeterServiceImpl implements WatermeterService {
         YunDingResponseVo jsonObject=JSONObject.parseObject(res,YunDingResponseVo.class);
         int result = jsonObject.getErrNo();
         return result;
-    }
-
-    /**
-     * 分散式同步房源
-     * @param houseId
-     * @return
-     */
-    @Override
-    public String synchronousHousingByHouseId(int houseId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
-        IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-
-        //查询house信息
-        AddHomeVo addHomeVo = watermeterDao.findHouseByHouseId(houseId);
-
-        addHomeVo.setHome_id("hm"+addHomeVo.getHome_id());
-        addHomeVo.setHome_type(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode());
-        addHomeVo.setCountry("中国");
-        //添加房源
-        String res = iWatermeter.addHome(addHomeVo);
-
-        JSONObject resJson = null;
-        try {
-            resJson = JSONObject.parseObject(res);
-        }catch (Exception e){
-            throw new WatermeterException("json格式解析错误"+e.getMessage());
-        }
-
-        String home_id = resJson.get("home_id").toString();
-        if(!home_id.equals(String.valueOf(houseId))){
-            return null;
-        }
-        //添加room
-        //查询所有roombyhouseid
-        List<AddRoomVO> addRoomVOS=watermeterDao.findRoomByHouseId(houseId);
-        List<AddRoomVO> addRoomVOSList =new ArrayList<>();
-        for (AddRoomVO addRoomVO:addRoomVOS
-             ) {
-            addRoomVO.setRoom_id("hm" + addRoomVO.getRoom_id());
-            addRoomVOSList.add(addRoomVO);
-        }
-
-        String[] strings = new String[addRoomVOSList.size()];
-        strings=addRoomVOSList.toArray(strings);
-
-        String addRoomsRes = iWatermeter.addRooms("hm"+houseId,strings);
-
-        return resJson.get("home_id").toString();
     }
 
 

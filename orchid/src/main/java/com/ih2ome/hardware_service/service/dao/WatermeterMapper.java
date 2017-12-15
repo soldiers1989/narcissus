@@ -5,7 +5,6 @@ import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
 import com.ih2ome.hardware_service.service.vo.*;
-import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -79,12 +78,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      */
     List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(@Param("id") int watermeterId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
-    /**
-     * 分散式用户房源
-     * @param id
-     * @return
-     */
-    List<HouseVO> findHouseByUserId(int id);
+
 
     /**
      * 水表异常记录
@@ -106,20 +100,6 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @return
      */
     WatermeterRecordParamsVo findWatermeterRecordParamsByWatermeterId(int watermeterId);
-
-    /**
-     * 查询房源信息byhouseid
-     * @param houseId
-     * @return
-     */
-    AddHomeVo findHouseByHouseId(int houseId);
-
-    /**
-     * 查询room信息byHouseId
-     * @param houseId
-     * @return
-     */
-    List<AddRoomVO> findRoomByHouseId(int houseId);
 
 
     /**

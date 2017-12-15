@@ -11,7 +11,6 @@ import com.ih2ome.hardware_service.service.service.WatermeterService;
 import com.ih2ome.hardware_service.service.vo.*;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
-import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,7 +179,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 水表读数明细当月实时累计水量
+     * 水表读数明细当月累计水量
      * @param apiRequestVO
      * @return
      */
@@ -269,103 +268,6 @@ public class WaterMeterController extends BaseController {
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
         return res;
     }
-
-    /**
-     * 分散式用户房源
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/hm/synchronous_housing/houses",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingFindHouse(@RequestBody ApiRequestVO apiRequestVO){
-        //获取用户id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int id = dt.getIntValue("id");
-        List<HouseVO> houseVOS = watermeterService.findHouseByUserId(id);
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(houseVOS));
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("houseVOS",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
-        return res;
-    }
-
-    /**
-     * 查询房源是否已同步
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/synchronous_housing/FindHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingFindHomeIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO)  {
-        //获取公寓id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int homeId = dt.getIntValue("houseId");
-        YunDingResponseVo yunDingResponseVo = null;
-        try {
-            yunDingResponseVo = watermeterService.findHomeIsSynchronousedByHomeId(homeId);
-        } catch (ClassNotFoundException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        } catch (InstantiationException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        } catch (AmmeterException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        } catch (WatermeterException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        }
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("home_state",yunDingResponseVo);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
-        return res;
-    }
-
-
-    /**
-     * 分散式用户房源同步
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/hm/synchronous_housing/byhouse",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingByHouse(@RequestBody ApiRequestVO apiRequestVO) {
-        //获取用户id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int houseId = dt.getIntValue("houseId");
-        String home_id = null;
-        try {
-            home_id = watermeterService.synchronousHousingByHouseId(houseId);
-        } catch (ClassNotFoundException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
-            return res;
-        } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
-            return res;
-        } catch (InstantiationException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
-            return res;
-        } catch (WatermeterException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
-            return res;
-        }
-
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("home_id",home_id);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
-        return res;
-    }
-
 
     /**
      * 水表网关列表
