@@ -103,12 +103,6 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
 
     /**
-     * 添加已同步的room到room_device
-     * @param roomIds
-     */
-    void addSynchronousRooms(List roomIds);
-
-    /**
      * 更新水表抄表读数
      * @param uuid
      * @param amount

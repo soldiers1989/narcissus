@@ -136,4 +136,5 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @param list
      */
     void updataHmRoomSyncByRoomId(@Param("roomSync") Integer roomSync,@Param("list") List<AddRoomVO> list);
+
 }
