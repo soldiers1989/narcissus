@@ -352,7 +352,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Log.info("获取空置未断电设备数量");
         String uri = BASE_URL+"/report/vacantpoweron/count";
         String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doGet(url,new HashMap<>(),PowerBeeAmmeterUtil.getToken());
+        String res = HttpClientUtil.doGet(url,new HashMap<>() ,PowerBeeAmmeterUtil.getToken());
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
