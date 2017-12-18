@@ -4,8 +4,10 @@ import lombok.Data;
 
 @Data
 public class FloorVO {
-    //private int floorRoomNum;//楼层房间数
+
+    private int watermeterNum;//楼层水表总数
+    private int watermeterOnoffNum;//水表在线数
     private String floorName;
     private int floorId;
-    //private int apartmentId;
+
 }

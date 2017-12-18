@@ -23,7 +23,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param ids
      * @return
      */
-    List<WatermeterDetailVO> finWatermeterByRoomIds(List<Integer> ids);
+    List<HMWatermeterListVO> finWatermeterByRoomIds(List<Integer> ids);
 
     /**
      * 根据网关id查询网关详情
@@ -37,7 +37,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param smartGatewayId
      * @return
      */
-    List<WatermeterDetailVO> findWatermeterByGatewayId(int smartGatewayId);
+    List<HMWatermeterListVO> findWatermeterByGatewayId(int smartGatewayId);
 
 
 
@@ -60,7 +60,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param id
      * @return
      */
-    List<WatermeterDetailVO> findWatermetersByUserId(int id);
+    List<HMWatermeterListVO> findWatermetersByUserId(int id);
 
     /**
      * 查询水表抄表记录by水表id
@@ -110,7 +110,12 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      */
     void updataWaterLastAmount(@Param("uuid") String uuid, @Param("amount") int amount, @Param("time") int time);
 
-
+    /**
+     * 通过楼层id查询水表
+     * @return
+     * @param floorId
+     */
+    List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
 
     /**
      * 添加水表

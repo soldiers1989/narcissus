@@ -7,5 +7,5 @@ import java.util.ArrayList;
 @Data
 public class WatermeterListVo {
     //分散式具体房间名称,水表列表
-    private ArrayList<WatermeterDetailVO> list;
+    private ArrayList<HMWatermeterListVO> list;
 }

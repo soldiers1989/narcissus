@@ -13,13 +13,24 @@
     <sql id="floor">volga_test.floor</sql>
     <sql id="jzroom">volga_test.room</sql>
 
-    <!--配置一个resultMap -->
-    <resultMap type="com.ih2ome.hardware_service.service.vo.ApartmentVO" id="apartmentResultMap" autoMapping="true">
-        <id column="id" property="id" />
+    <!--配置resultMap -->
+    <!--分散式水表列表VO-->
+    <resultMap type="com.ih2ome.hardware_service.service.vo.HMWatermeterListVO" id="hmWatermeterListResultMap" autoMapping="true">
+        <id column="room_id" property="roomId" />
 
-        <collection property="floorVOS" javaType="List"
-                    ofType="com.ih2ome.hardware_service.service.vo.FloorVO" autoMapping="true">
-            <id column="floor_id" property="floorId" />
+        <collection property="watermeterDetailVOS" javaType="List"
+                    ofType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" autoMapping="true">
+            <id column="smart_watermeter_id" property="smartWatermeterId" />
+        </collection>
+    </resultMap>
+
+    <!--集中式水表列表VO-->
+    <resultMap type="com.ih2ome.hardware_service.service.vo.JZWatermeterDetailVO" id="jzWatermeterListResultMap" autoMapping="true">
+        <id column="room_id" property="roomId" />
+
+        <collection property="watermeterDetailVOS" javaType="List"
+                    ofType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" autoMapping="true">
+            <id column="smart_watermeter_id" property="smartWatermeterId" />
         </collection>
     </resultMap>
 
@@ -60,8 +71,8 @@
 <!-- 查 -->
 
     <!-- 分散式水表 -->
-    <select id="findWatermetersByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" >
-        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
+    <select id="findWatermetersByUserId" parameterType="int" resultMap="hmWatermeterListResultMap" >
+        SELECT r.id AS room_id,gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
         FROM
         <include refid="smart_watermeter" /> AS w
         INNER JOIN
@@ -84,7 +95,7 @@
     </select>
 
     <!--查询水表by网关id-->
-    <select id="findWatermeterByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO">
+    <select id="findWatermeterByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HMWatermeterListVO">
         SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status
         FROM
         <include refid="smart_watermeter" /> AS w
@@ -99,22 +110,23 @@
         ON  w.room_id= r.id AND h.id=r.house_id;
     </select>
 
-    <!--查询公寓by用户id-->
-    <select id="findApartmentByUserId" parameterType="int" resultMap="apartmentResultMap">
-        SELECT a.id,a.`name`,COUNT(DISTINCT w.smart_watermeter_id) AS watermeter_num,sum(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num,f.id AS floor_id,f.`name` AS floor_name
-        FROM <include refid="apartment"/> AS a,<include refid="floor"/> AS f,<include refid="smart_watermeter"/> AS w
-        WHERE
-        f.apartment_id = a.id
-        AND w.apartment_id = a.id
-        AND a.created_by = #{id};
-    </select>
-
     <!--查询集中式水表列表by楼层id-->
-    <select id="findWatermetersByFloorId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.JZWatermeterDetailVO">
-        SELECT w.smart_watermeter_id,r.`name` AS room_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.smart_gateway_id
-        FROM <include refid="smart_gateway_bind"/> AS g,<include refid="room"/> AS r,<include refid="smart_watermeter"/> AS w
-        WHERE w.floor_id = #{floorId}
-        AND w.smart_watermeter_id = g.smart_id AND w.room_id = r.id;
+    <select id="findWatermetersByFloorId" parameterType="int" resultMap="hmWatermeterListResultMap" >
+        SELECT r.id AS room_id,gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
+        FROM
+        <include refid="smart_watermeter" /> AS w
+        INNER JOIN
+        <include refid="smart_gateway_bind" /> AS gb
+        ON w.smart_watermeter_id = gb.smart_id
+        INNER JOIN
+        <include refid="smart_gateway" /> AS g
+        ON g.smart_gateway_id = gb.smart_gateway_id
+        INNER JOIN
+        <include refid="floor" /> AS f
+        ON w.floor_id= f.id
+        INNER JOIN
+        <include refid="jzroom" /> AS r
+        ON  w.room_id= r.id AND f.id=r.floor_id AND f.id = #{id} ;
     </select>
 
     <!--查询集中式公寓下的网关by公寓id-->

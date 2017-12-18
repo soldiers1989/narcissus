@@ -2,7 +2,6 @@ package com.ih2ome.peony.watermeterInterface.yunding;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.utils.HttpClientUtil;
-import com.ih2ome.peony.ammeterInterface.powerBee.util.PowerBeeAmmeterUtil;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
@@ -109,8 +108,8 @@ public class YunDingWatermeter implements IWatermeter {
         home.setAccess_token(YunDingWatermeterUtil.getToken());
 
         String uri = BASE_URL+"/add_home";
-        String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doPostSSL(url,home);
+        //String url = PowerBeeAmmeterUtil.generateParam(uri);
+        String res = HttpClientUtil.doPost(uri,home);
 
         JSONObject resJson = null;
         try {

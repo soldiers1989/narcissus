@@ -3,7 +3,6 @@ package com.ih2ome.hardware_service.service.service;
 import com.ih2ome.hardware_service.service.vo.ApartmentVO;
 import com.ih2ome.hardware_service.service.vo.HomeSyncVO;
 import com.ih2ome.hardware_service.service.vo.HouseVO;
-import com.ih2ome.hardware_service.service.vo.JZWatermeterDetailVO;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
@@ -41,13 +40,6 @@ public interface SynchronousHomeService {
     List<ApartmentVO> findApartmentIdByUserId(int id);
 
     /**
-     * 集中式通过楼层Id查询水表详情
-     * @param floorId
-     * @return
-     */
-    List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
-
-    /**
      * 查询集中式房源是否已同步by房源ids
      * @param userId
      * @return
@@ -83,5 +75,10 @@ public interface SynchronousHomeService {
     String synchronousHousingByHouseId(int houseId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
 
-
+    /**
+     * 集中式公寓查询by公寓id
+     * @param apartmentId
+     * @return
+     */
+    ApartmentVO findApartmentIdByApartmentId(int apartmentId);
 }

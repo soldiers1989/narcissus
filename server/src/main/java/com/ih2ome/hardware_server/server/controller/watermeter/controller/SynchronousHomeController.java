@@ -44,10 +44,17 @@ public class SynchronousHomeController  extends BaseController {
     public String synchronousHousingFindApartment(@RequestBody ApiRequestVO apiRequestVO)  {
         //获取公寓id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int apartmentId = dt.getIntValue("apartmentId");
+        JSONArray jsonArray = dt.getJSONArray("apartmentIds");
+        int[] apartmentIds = new int[jsonArray.size()];
+        for (int i=0;i<=jsonArray.size();i++){
+            apartmentIds[i]= (int) jsonArray.get(i);
+        }
+
         String home_id = null;
         try {
-            home_id = synchronousHomeService.synchronousHousingByApartmenId(apartmentId);
+            for (int apartmentId : apartmentIds) {
+                home_id = synchronousHomeService.synchronousHousingByApartmenId(apartmentId);
+            }
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
             String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
@@ -116,7 +123,7 @@ public class SynchronousHomeController  extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/synchronous_housing/FindjzHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/jz/synchronous_housing/FindjzHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
     public String synchronousHousingFindJZHomesIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) {
         //获取公寓id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
@@ -181,7 +188,7 @@ public class SynchronousHomeController  extends BaseController {
     public String synchronousHousingFindHomeIsSynchronouseds(@RequestBody ApiRequestVO apiRequestVO)  {
         //获取公寓id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int userId = (int) dt.get("userId");
+        int userId = (int) dt.get("id");
 
         List<HomeSyncVO> homeSyncVOS = null;
 
@@ -202,7 +209,7 @@ public class SynchronousHomeController  extends BaseController {
     public String synchronousHousingFindHouse(@RequestBody ApiRequestVO apiRequestVO){
         //获取用户id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int id = dt.getIntValue("id");
+        int id = dt.getIntValue("userId");
         List<HouseVO> houseVOS = synchronousHomeService.findHouseByUserId(id);
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(houseVOS));
         JSONObject responseJson = new JSONObject();
@@ -220,25 +227,32 @@ public class SynchronousHomeController  extends BaseController {
     public String synchronousHousingByHouse(@RequestBody ApiRequestVO apiRequestVO) {
         //获取用户id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int houseId = dt.getIntValue("houseId");
+        JSONArray jsonArray = dt.getJSONArray("houseIds");
+        int[] houseIds = new int[jsonArray.size()];
+        for (int i=0;i<jsonArray.size();i++){
+            houseIds[i]= (int) jsonArray.get(i);
+        }
+
         String home_id = null;
         try {
-            home_id = synchronousHomeService.synchronousHousingByHouseId(houseId);
+            for (int houseId:houseIds) {
+                home_id = synchronousHomeService.synchronousHousingByHouseId(houseId);
+            }
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         }
 
