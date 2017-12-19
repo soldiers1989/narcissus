@@ -3,6 +3,7 @@ package com.ih2ome.hardware_server.server.controller.watermeter.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
@@ -230,11 +231,11 @@ public class WaterMeterController extends BaseController {
         //通过用户id查询用户公寓列表
         List<ApartmentVO> apartmentVOS = synchronousHomeService.findApartmentIdByUserId(id);
         //通过公寓id查询公寓
-        ApartmentVO apartmentVO = synchronousHomeService.findApartmentIdByApartmentId(apartmentVOS.get(0).getId());
+        //ApartmentVO apartmentVO = synchronousHomeService.findApartmentIdByApartmentId(apartmentVOS.get(0).getId());
         //通过公寓查询楼层id
         if (!apartmentVOS.isEmpty()) {
             //计算水表总数和在线数
-            List<FloorVO> floorVOS = apartmentVO.getFloorVOS();
+           /* List<FloorVO> floorVOS = apartmentVO.getFloorVOS();
             int watermeterNum=0;
             int watermeterOnLineNum=0;
             for (FloorVO floor:floorVOS) {
@@ -242,19 +243,19 @@ public class WaterMeterController extends BaseController {
                 watermeterOnLineNum+=floor.getWatermeterOnoffNum();
             }
 
-            int floorId = apartmentVO.getFloorVOS().get(0).getFloorId();
+            int floorId = apartmentVO.getFloorVOS().get(0).getFloorId();*/
 
             //通过楼层id列表查询水表信息列表
-            List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
-            JZWatermeterListVo jzWatermeterListVo = new JZWatermeterListVo();
-            jzWatermeterListVo.setApartmentVOS(apartmentVOS);
-            jzWatermeterListVo.setJzWatermeterDetailVOS(jzWatermeterDetailVOS);
+//            List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
+//            JZWatermeterListVo jzWatermeterListVo = new JZWatermeterListVo();
+//            jzWatermeterListVo.setApartmentVOS(apartmentVOS);
+//            jzWatermeterListVo.setJzWatermeterDetailVOS(jzWatermeterDetailVOS);
 
             JSONObject responseJson = new JSONObject();
-            responseJson.put("JZWatermeterListVo",jzWatermeterListVo);
-            responseJson.put("apartmentVO",apartmentVO);
-            responseJson.put("watermeterNum",watermeterNum);
-            responseJson.put("watermeterOnLineNum",watermeterOnLineNum);
+            responseJson.put("apartmentVOS",apartmentVOS);
+           // responseJson.put("apartmentVO",apartmentVO);
+           /* responseJson.put("watermeterNum",watermeterNum);
+            responseJson.put("watermeterOnLineNum",watermeterOnLineNum);*/
             String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
             return res;
         }
@@ -379,4 +380,20 @@ public class WaterMeterController extends BaseController {
     }
 
 
+    /**
+     * 水表list
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/web/watermeterlist",method = RequestMethod.POST,produces = {"application/json"})
+    public String watermeterWebList(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        WatermeterWebListVo watermeterWebListVo = resData.getObject("watermeterWebListVo",WatermeterWebListVo.class);
+        List<WatermeterWebListVo> watermeterWebListVoList = watermeterService.watermeterWebListVoList(watermeterWebListVo);
+        PageInfo<WatermeterWebListVo> pageInfo = new PageInfo<>(watermeterWebListVoList);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("watermeterWebListVoList",pageInfo);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
 }

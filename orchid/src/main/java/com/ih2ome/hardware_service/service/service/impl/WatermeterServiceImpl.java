@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ih2ome.hardware_service.service.dao.WatermeterMapper;
+import com.ih2ome.hardware_service.service.enums.HouseCatalogEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
@@ -319,6 +320,22 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public Timestamp findWatermeterMeterUpdatedAt(String uuid) {
         return watermeterDao.selectWatermeterMeterUpdatedAt(uuid);
+    }
+
+    @Override
+    public List<WatermeterWebListVo> watermeterWebListVoList(WatermeterWebListVo watermeterWebListVo) {
+        if(watermeterWebListVo.getPage()!= null && watermeterWebListVo.getRows() != null){
+            PageHelper.startPage(watermeterWebListVo.getPage(),watermeterWebListVo.getRows());
+        }
+        //分散式
+        if(watermeterWebListVo.getType().equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode())){
+            return watermeterDao.findHmWatermeterWebListVoList(watermeterWebListVo);
+        } else if(watermeterWebListVo.getType().equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode())){
+            //集中式
+            return watermeterDao.findJzWatermeterWebListVoList(watermeterWebListVo);
+        }else{
+            return null;
+        }
     }
 
 

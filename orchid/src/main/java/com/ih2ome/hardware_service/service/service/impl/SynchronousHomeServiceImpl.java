@@ -204,14 +204,20 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     /**
      * 查询房源是否同步by房源id(第三方查询)
      * @param homeId
+     * @param type
      * @return
      */
     @Override
-    public YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
+    public YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId, int type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String devId = null;
-
-        String res= iWatermeter.findHomeState(String.valueOf(homeId));
+        String home=null;
+        if(type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()){
+            home="hm"+homeId;
+        }else {
+            home="jz"+homeId;
+        }
+        String res= iWatermeter.findHomeState(home);
         if (res == null){
             return null;
         }

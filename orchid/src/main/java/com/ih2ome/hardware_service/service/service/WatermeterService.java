@@ -182,4 +182,11 @@ public interface WatermeterService {
      * @return
      */
     Timestamp findWatermeterMeterUpdatedAt(String uuid);
+
+    /**
+     * 水表
+     * @param watermeterWebListVo
+     * @return
+     */
+    List<WatermeterWebListVo> watermeterWebListVoList(WatermeterWebListVo watermeterWebListVo);
 }
