@@ -2,6 +2,127 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterMannagerDao">
 
+    <!--insert-->
+    <!--分散式保存分摊结果-->
+    <insert id="addDeviceRecordWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        INSERT INTO caspain_test.smart_device_record (
+        created_at,
+        updated_at,
+        num,
+        power_meter_id,
+        public_num,
+        read_date,
+        resource
+        )
+        VALUES
+        (
+        NOW(),
+        NOW(),
+        #{surplus},
+        #{id},
+        #{shareDay},
+        #{lastTime},
+        '1'
+        )
+    </insert>
+    <!--集中式保存分摊结果-->
+    <insert id="addDeviceRecordWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        INSERT INTO `volga_test`.smart_device_record (
+        created_at,
+        updated_at,
+        created_by,
+        updated_by,
+        deleted_by,
+        version,
+        is_delete,
+        is_error,
+        num,
+        power_meter_id,
+        public_num,
+        read_date,
+        resource
+        )
+        VALUES
+        (
+        NOW(),
+        NOW(),
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        #{surplus},
+        #{id},
+        #{shareDay},
+        #{lastTime},
+        '1'
+        )
+    </insert>
+
+
+    <!--update-->
+    <!--更新分散式电表使用场景-->
+    <update id="updateWiringWithDispersed">
+        update caspain_test.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
+    </update>
+    <!--更新集中式电表使用场景-->
+    <update id="updateWiringWithConcentrated">
+        update `volga_test`.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
+    </update>
+    <!--更新分散式电表电量价格-->
+    <update id="updateDevicePriceWithDispersed">
+        UPDATE caspain_test.smart_device sd SET sd.price=#{price} where sd.id=#{id}
+    </update>
+
+    <!--更新集中式电表电量价格-->
+    <update id="updateDevicePriceWithConcentrated">
+        UPDATE `volga_test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
+    </update>
+    <!--更新分散式电表开关-->
+    <update id="updateDeviceSwitchWithDispersed">
+        UPDATE caspain_test.smart_device sd SET sd.status=#{status} where sd.id=#{id}
+    </update>
+    <!--更新集中式电表开关-->
+    <update id="updateDeviceSwitchWithConcentrated">
+        UPDATE `volga_test`.smart_device sd SET sd.status=#{status} where sd.id=#{id}
+    </update>
+
+    <!--更新分散式电表开关-->
+    <update id="updateDevicePayModWithDispersed">
+        update caspain_test.smart_device csd,caspain_test.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+    </update>
+
+    <!--更新集中式电表开关-->
+    <update id="updateDevicePayModWithConcentrated">
+        update `volga_test`.smart_device csd,`volga_test`.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+    </update>
+
+    <!--分散式电表更新-->
+    <update id="updateAmmeterWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        UPDATE caspain_test.smart_device ctsd
+        SET ctsd.last_num = #{surplus},
+        ctsd.updated_at = NOW(),
+        ctsd.last_num_date = #{lastTime},
+        ctsd.`online`= #{online},
+        ctsd.`status`=#{electrifyStatus}
+        WHERE
+        ctsd.id = #{id}
+    </update>
+    <!--集中式电表更新-->
+    <update id="updateAmmeterWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+        UPDATE `volga_test`.smart_device vtsdm
+        SET vtsdm.last_num = #{surplus},
+        vtsdm.updated_at = NOW(),
+        vtsdm.last_num_date = #{lastTime},
+        vtsdm.`online`= #{online},
+        vtsdm.`status`=#{electrifyStatus}
+        WHERE
+        vtsdm.id = #{id}
+    </update>
+
+    <!--select-->
+    <!--分散式房源电表列表（模糊查询）-->
     <select id="findDispersedAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
         SELECT
         csd.id ammeterId,
@@ -73,6 +194,7 @@
         </if>
     </select>
 
+    <!--集中式房源电表列表（模糊查询）-->
     <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
         SELECT
         vsd.id ammeterId,
@@ -145,60 +267,35 @@
         </if>
     </select>
 
+    <!--分散式根据电表id获取电表-->
     <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
       select * from caspain_test.smart_device sd where sd.id=#{id}
     </select>
+    <!--分散式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from caspain_test.smart_device sd where sd.master=#{serialId}
     </select>
 
+    <!--集中式根据电表id获取电表-->
     <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from `volga_test`.smart_device sd where sd.id=#{id}
     </select>
+    <!--集中式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
         select * from `volga_test`.smart_device sd where sd.master=#{serialId}
     </select>
 
-    <update id="updateWiringWithDispersed">
-      update caspain_test.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
-    </update>
-
-    <update id="updateWiringWithConcentrated">
-      update `volga_test`.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
-    </update>
-
+    <!--分散式根据id获取第三方对接id-->
     <select id="getDeviceIdByIdWithDispersed" resultType="String">
         SELECT sd.uuid FROM caspain_test.smart_device sd WHERE sd.id=#{id}
     </select>
-
+    <!--集中式根据id获取第三方对接id-->
     <select id="getDeviceIdByIdWithConcentrated" resultType="String">
         SELECT sd.uuid FROM `volga_test`.smart_device sd WHERE sd.id=#{id}
     </select>
 
-    <update id="updateDevicePriceWithDispersed">
-        UPDATE caspain_test.smart_device sd SET sd.price=#{price} where sd.id=#{id}
-    </update>
 
-    <update id="updateDevicePriceWithConcentrated">
-        UPDATE `volga_test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
-    </update>
-
-    <update id="updateDeviceSwitchWithDispersed">
-        UPDATE caspain_test.smart_device sd SET sd.status=#{status} where sd.id=#{id}
-    </update>
-
-    <update id="updateDeviceSwitchWithConcentrated">
-        UPDATE `volga_test`.smart_device sd SET sd.status=#{status} where sd.id=#{id}
-    </update>
-
-    <update id="updateDevicePayModWithDispersed">
-        update caspain_test.smart_device csd,caspain_test.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
-    </update>
-
-    <update id="updateDevicePayModWithConcentrated">
-        update `volga_test`.smart_device csd,`volga_test`.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
-    </update>
-
+    <!--获取分散式电表列表-->
     <select id="getDeviceInfoWithDispersed" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
         SELECT
 	    csd.id id,
@@ -253,7 +350,7 @@
     GROUP BY
 	  csd.id
     </select>
-
+    <!--获取集中式电表列表-->
     <select id="getDeviceInfoWithConcentrated" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
                 (
 	SELECT
@@ -349,10 +446,12 @@ UNION
 	)
     </select>
 
+    <!--获取分散式电表主表-->
     <select id="getMasterAmmeter" resultType="com.ih2ome.hardware_service.service.model.caspain.SmartDevice">
       SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id}
     </select>
 
+    <!--通过主表获取子表-->
     <select id="getAmmeterByMaster">
         SELECT
 	    ctsds.serial_id
@@ -365,81 +464,8 @@ UNION
         AND ctsdm.id = #{id}
     </select>
 
-    <update id="updateAmmeterWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-       UPDATE caspain_test.smart_device ctsd
-        SET ctsd.last_num = #{surplus},
-            ctsd.updated_at = NOW(),
-            ctsd.last_num_date = #{lastTime},
-            ctsd.`online`= #{online},
-            ctsd.`status`=#{electrifyStatus}
-        WHERE
-	        ctsd.id = #{id}
-    </update>
-    <update id="updateAmmeterWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        UPDATE `volga_test`.smart_device vtsdm
-        SET vtsdm.last_num = #{surplus},
-            vtsdm.updated_at = NOW(),
-            vtsdm.last_num_date = #{lastTime},
-            vtsdm.`online`= #{online},
-            vtsdm.`status`=#{electrifyStatus}
-        WHERE
-	        vtsdm.id = #{id}
-    </update>
 
-    <insert id="addDeviceRecordWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        INSERT INTO caspain_test.smart_device_record (
-	created_at,
-	updated_at,
-	num,
-	power_meter_id,
-	public_num,
-	read_date,
-	resource
-)
-VALUES
-	(
-		NOW(),
-		NOW(),
-		#{surplus},
-		#{id},
-		#{shareDay},
-		#{lastTime},
-		'1'
-	)
-    </insert>
-    <insert id="addDeviceRecordWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        INSERT INTO `volga_test`.smart_device_record (
-        created_at,
-        updated_at,
-        created_by,
-        updated_by,
-        deleted_by,
-        version,
-        is_delete,
-        is_error,
-        num,
-        power_meter_id,
-        public_num,
-        read_date,
-        resource
-        )
-        VALUES
-        (
-        NOW(),
-        NOW(),
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        #{surplus},
-        #{id},
-        #{shareDay},
-        #{lastTime},
-        '1'
-        )
-    </insert>
+
 
 
 
