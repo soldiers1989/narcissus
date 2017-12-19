@@ -1,5 +1,6 @@
 spring:
   ##redis配置
+  profiles: test
   redis:
     database: 0
     host: 10.0.0.24
