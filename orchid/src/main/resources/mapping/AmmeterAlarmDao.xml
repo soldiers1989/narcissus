@@ -18,7 +18,7 @@
     <!--delete-->
     <!--清空报警规则-->
     <delete id="clearAmmeterAlarmRules">
-        Delete FROM narcissus.smart_alarm_rule nsar
+        Delete FROM narcissus.smart_alarm_rule
     </delete>
 
     <!--更新电表报警规则-->
