@@ -168,7 +168,29 @@
 		</dependency>
 		<!--生产配置-->
 	</dependencies>
-
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<proileActive>dev</proileActive>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<proileActive>test</proileActive>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<proileActive>prod</proileActive>
+			</properties>
+		</profile>
+	</profiles>
 
 
 

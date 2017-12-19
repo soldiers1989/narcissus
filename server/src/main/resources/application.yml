@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: @proileActive@
     application:
         name: shuidi
 server:

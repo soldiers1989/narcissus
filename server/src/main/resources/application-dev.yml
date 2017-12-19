@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   ##redis配置
   profiles: dev
