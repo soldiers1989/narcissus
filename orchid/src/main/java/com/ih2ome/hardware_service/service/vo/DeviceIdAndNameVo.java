@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 public class DeviceIdAndNameVo implements Serializable {
     private String id;
-    private String Name;
+    private String name;
     private String serialId;
     private List<DeviceIdAndNameVo>deviceIdAndNames;
 }

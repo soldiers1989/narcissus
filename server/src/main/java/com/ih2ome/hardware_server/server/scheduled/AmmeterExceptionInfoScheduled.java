@@ -6,7 +6,7 @@ import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
-import com.ih2ome.peony.ammeterInterface.enums.AMMETER_FIRM;
+import com.ih2ome.peony.ammeterInterface.enums.AmmeterFirm;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class AmmeterExceptionInfoScheduled {
     private IAmmeter getIAmmeter(){
         IAmmeter iAmmeter = null;
         try {
-            iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+            iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         } catch (InstantiationException e) {
             Log.error("获取电表类失败",e);
         } catch (IllegalAccessException e) {

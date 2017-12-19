@@ -137,7 +137,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         ammeterInfoVo.setAllPower(expand.getDouble("allpower"));
         ammeterInfoVo.setCurrent(expand.getDouble("current"));
         Date lastTime = jsonObject.getDate("Lasttime");
-        ammeterInfoVo.setLastTime(DateToString(lastTime));
+        ammeterInfoVo.setLastTime(dateToString(lastTime));
         ammeterInfoVo.setPowerDay(expand.getDouble("powerday"));
         ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
         ammeterInfoVo.setVoltage(expand.getDouble("voltage"));
@@ -402,7 +402,7 @@ public class PowerBeeAmmeter implements IAmmeter {
 
     }
 
-    private String DateToString(Date date){
+    private String dateToString(Date date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return simpleDateFormat.format(date);
     }

@@ -9,7 +9,7 @@ import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
-import com.ih2ome.peony.ammeterInterface.enums.AMMETER_FIRM;
+import com.ih2ome.peony.ammeterInterface.enums.AmmeterFirm;
 import com.ih2ome.peony.ammeterInterface.enums.PayMod;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
@@ -65,7 +65,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
 
     @Override
     public AmmeterInfoVo getAmmeterFlushInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, InterruptedException {
-        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         AmmeterInfoVo model = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
@@ -119,7 +119,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     public AmmeterInfoVo getAmmeterInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
         AmmeterInfoVo ammeterInfoVo = null;
         AmmeterInfoVo model = null;
-        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
             model = ammeterMannagerDao.getDeviceInfoWithDispersed(id);
@@ -149,7 +149,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
      * @return
      */
     private AmmeterInfoVo initFenTan(AmmeterInfoVo ammeterInfoVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
-        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         com.ih2ome.hardware_service.service.model.caspain.SmartDevice master = ammeterMannagerDao.getMasterAmmeter(ammeterInfoVo.getId());
         AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getSerialId());
         Double powerDay = model.getPowerDay();
@@ -198,7 +198,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         if(StringUtils.isEmpty(id)||StringUtils.isEmpty(type)||StringUtils.isEmpty(price)){
             throw new AmmeterException("参数错误");
         }
-        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
            devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
@@ -215,12 +215,13 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
 
     }
 
+    @Transactional
     @Override
     public void switchDevice(String id, String operate,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
         if(StringUtils.isEmpty(id)||StringUtils.isEmpty(type)||StringUtils.isEmpty(operate)){
             throw new AmmeterException("参数错误");
         }
-        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
             devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
@@ -241,7 +242,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         if(StringUtils.isEmpty(id)||StringUtils.isEmpty(type)||payMod == null){
             throw new AmmeterException("参数错误");
         }
-        IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
+        IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
             devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);

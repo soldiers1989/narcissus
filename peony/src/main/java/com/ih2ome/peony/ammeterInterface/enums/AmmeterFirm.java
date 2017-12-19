@@ -7,11 +7,11 @@ package com.ih2ome.peony.ammeterInterface.enums;
  * create by 2017/12/1
  * @Emial Lucius.li@ixiaoshuidi.com
  */
-public enum AMMETER_FIRM {
+public enum AmmeterFirm {
     POWER_BEE("com.ih2ome.peony.ammeterInterface.powerBee.PowerBeeAmmeter");
     private String clazz;
 
-    AMMETER_FIRM(String clazz) {
+    AmmeterFirm(String clazz) {
         this.clazz = clazz;
     }
 
