@@ -19,11 +19,11 @@
     </insert>
 
     <select id="getAllSmartAlarmRules" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
-        select * FROM  narcissus.smart_alarm_rule
+        select * FROM  narcissus.smart_alarm_rule nsar WHERE nsar.switch_status='0'
     </select>
 
     <select id="getByReportName" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
-        SELECT * from narcissus.smart_alarm_rule nsar where nsar.report_name=#{reportName} and nsar.switch_status='on'
+        SELECT * from narcissus.smart_alarm_rule nsar where nsar.report_name=#{reportName} and nsar.switch_status='0'
     </select>
 
     <insert id="saveAlarmList" parameterType="java.util.List">
