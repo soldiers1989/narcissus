@@ -176,4 +176,19 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @return
      */
     Timestamp selectWatermeterMeterUpdatedAt(String uuid);
+
+    /**
+     * 查找集中式水表list
+     * @param watermeterWebListVo
+     * @return
+     */
+    List<WatermeterWebListVo> findJzWatermeterWebListVoList(WatermeterWebListVo watermeterWebListVo);
+
+    /**
+     * 查找分散式水表list
+     * @param watermeterWebListVo
+     * @return
+     */
+    List<WatermeterWebListVo> findHmWatermeterWebListVoList(WatermeterWebListVo watermeterWebListVo);
+
 }

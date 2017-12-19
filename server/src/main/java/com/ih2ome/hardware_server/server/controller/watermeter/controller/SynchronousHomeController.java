@@ -149,9 +149,10 @@ public class SynchronousHomeController  extends BaseController {
         //获取公寓id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int homeId = dt.getIntValue("homeId");
+        int type = dt.getIntValue("type");
         YunDingResponseVo yunDingResponseVo = null;
         try {
-            yunDingResponseVo = synchronousHomeService.findHomeIsSynchronousedByHomeId(homeId);
+            yunDingResponseVo = synchronousHomeService.findHomeIsSynchronousedByHomeId(homeId,type);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
             String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());

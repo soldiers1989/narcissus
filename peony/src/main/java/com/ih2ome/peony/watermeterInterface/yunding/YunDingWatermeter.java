@@ -18,7 +18,7 @@ public class YunDingWatermeter implements IWatermeter {
     private static final String UID_KEY = "YUN_DING_WATERMETER_UID";
     private static final String EXPRIES_TIME = "YUN_DING_WATERMETER_EXPRIES_TIME";
     private static final String BASE_URL = "https://lockapi.dding.net/openapi/v1";
-    //private static final String BASE_URL = "http://dev-lockapi.dding.net:8090/openspi/v1";
+//    private static final String BASE_URL = "http://dev-lockapi.dding.net:8090/openspi/v1";
     private static final Logger Log = LoggerFactory.getLogger(YunDingWatermeter.class);
 
     /**
@@ -33,11 +33,11 @@ public class YunDingWatermeter implements IWatermeter {
         Log.info("房源id："+home_id);
         JSONObject json= new JSONObject();
         json.put("access_token",YunDingWatermeterUtil.getToken());
-        json.put("home_id","001");
+        json.put("home_id",home_id);
 
         String uri = BASE_URL+"/find_home_state";
         //String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doPost(uri,(Object) json);
+        String res = HttpClientUtil.doGet(uri,json);
         System.out.println(res);
         JSONObject resJson = null;
         try {
@@ -107,9 +107,10 @@ public class YunDingWatermeter implements IWatermeter {
         Log.info("房源信息："+home.toString());
         home.setAccess_token(YunDingWatermeterUtil.getToken());
 
+        String json = JSONObject.toJSONString(home);
+
         String uri = BASE_URL+"/add_home";
-        //String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doPost(uri,home);
+        String res = HttpClientUtil.doPost(uri,json);
 
         JSONObject resJson = null;
         try {
@@ -532,6 +533,7 @@ public class YunDingWatermeter implements IWatermeter {
         }
         return res;
     }
+
 
 
 }

@@ -49,9 +49,10 @@ public interface SynchronousHomeService {
     /**
      * 查询房源是否已同步by房源id
      * @param homeId
+     * @param type
      * @return
      */
-    YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, WatermeterException;
+    YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId, int type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException, WatermeterException;
 
     /**
      * 查询分散式房源是否已同步by房源ids

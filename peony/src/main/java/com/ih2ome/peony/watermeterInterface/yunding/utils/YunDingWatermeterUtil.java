@@ -25,7 +25,7 @@ public class YunDingWatermeterUtil {
     private static final String EXPRIES_TIME = "YUN_DING_WATERMETER_EXPRIES_TIME";
     private static final String SECRET = "";
     private static final String BASE_URL = "https://lockapi.dding.net/openapi/v1";
-    //private static final String BASE_URL = "https://dev-lockapi.dding.net:8090/openapi/v1";
+//    private static final String BASE_URL = "http://dev-lockapi.dding.net:8090/openapi/v1";
     private static final String VERSION_VALUE = "0116010101";
 
     /**
@@ -68,6 +68,7 @@ public class YunDingWatermeterUtil {
         json.put("client_id", USER_NAME);
         json.put("client_secret", PASSWORD);
         //json.put("signValue",generateSign(uri,map));
+
         String res = HttpClientUtil.doPost(uri,json);
         JSONObject resJson = null;
         try {
