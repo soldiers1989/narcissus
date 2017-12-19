@@ -3,5 +3,5 @@
 #mvn clean install
 cd /app/git/server/narcissus
 git pull
-mvn clean package
+mvn clean package -Ptest
 
