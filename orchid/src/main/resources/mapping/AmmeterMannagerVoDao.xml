@@ -192,11 +192,11 @@
     </update>
 
     <update id="updateDevicePayModWithDispersed">
-        update caspain_test.smart_device csd,caspain_test.smart_device_power_contract csdpc set csdpc.charge=#{paymod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+        update caspain_test.smart_device csd,caspain_test.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
     </update>
 
     <update id="updateDevicePayModWithConcentrated">
-        update `volga_test`.smart_device csd,`volga_test`.smart_device_power_contract csdpc set csdpc.charge=#{paymod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+        update `volga_test`.smart_device csd,`volga_test`.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
     </update>
 
     <select id="getDeviceInfoWithDispersed" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">

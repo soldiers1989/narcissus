@@ -32,6 +32,8 @@ public interface AmmeterAlarmDao {
 
     List<AmmeterAlarmVo>findConcentratAmmeter(AmmeterAlarmVo ammeterAlarmVo);
 
+    void clearAmmeterAlarmRules();
+
 
 
 }

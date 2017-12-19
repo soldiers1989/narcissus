@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao">
-<!--- insert -->
+    <!--- insert -->
+    <insert id="addAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+        INSERT INTO narcissus.smart_alarm_rule (report_name,report_param,switch_status) VALUES(#{reportName},#{reportParam},#{switchStatus});
+    </insert>
 
+    <insert id="saveAlarmList" parameterType="java.util.List">
+        insert into narcissus.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type) values
+        <foreach collection="list" item="smartMistakeInfo" index="index" separator =",">
+            (
+            NOW(),#{smartMistakeInfo.smartDeviceType},#{smartMistakeInfo.uuid},#{smartMistakeInfo.exceptionType}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="clearAmmeterAlarmRules">
+        Delete FROM narcissus.smart_alarm_rule nsar
+    </delete>
 
     <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
         UPDATE narcissus.smart_alarm_rule nsar
@@ -14,9 +29,8 @@
         where nsar.id=#{id}
         </trim>
     </update>
-    <insert id="addAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
-        INSERT INTO narcissus.smart_alarm_rule (report_name,report_param,switch_status) VALUES(#{reportName},#{reportParam},#{switchStatus});
-    </insert>
+
+
 
     <select id="getAllSmartAlarmRules" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
         select * FROM  narcissus.smart_alarm_rule nsar WHERE nsar.switch_status='0'
@@ -26,14 +40,7 @@
         SELECT * from narcissus.smart_alarm_rule nsar where nsar.report_name=#{reportName} and nsar.switch_status='0'
     </select>
 
-    <insert id="saveAlarmList" parameterType="java.util.List">
-        insert into narcissus.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type) values
-        <foreach collection="list" item="smartMistakeInfo" index="index" separator =",">
-            (
-              NOW(),#{smartMistakeInfo.smartDeviceType},#{smartMistakeInfo.uuid},#{smartMistakeInfo.exceptionType}
-            )
-        </foreach>
-    </insert>
+
     <select id="findDispersedAmmeterAlarm" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo">
         SELECT
         csd.id ammeterId,

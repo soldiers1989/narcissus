@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
-import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
+import com.ih2ome.peony.ammeterInterface.enums.PayMod;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.powerBee.util.PowerBeeAmmeterUtil;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
@@ -62,7 +62,7 @@ public class PowerBeeAmmeter implements IAmmeter {
     }
 
     @Override
-    public void updatePayMod(String devId, PAY_MOD payMod) throws AmmeterException {
+    public void updatePayMod(String devId, PayMod payMod) throws AmmeterException {
         Log.info("付费模式更改");
         Log.info("电表id"+devId+"/n付费模式"+payMod.getName());
         String uri = BASE_URL+"/device/ammeter/paymode/"+devId+"/"+payMod.getCode();

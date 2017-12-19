@@ -2,12 +2,13 @@ package com.ih2ome.hardware_server.server.controller.mannager.hardware;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
-import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
+import com.ih2ome.peony.ammeterInterface.enums.PayMod;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.slf4j.Logger;
@@ -114,23 +115,23 @@ public class AmmeterController extends BaseController {
             ammeterInfoVo = ammeterManagerService.getAmmeterFlushInfoVo(id,type);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
             return res;
         } catch (AmmeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
             return res;
         } catch (InterruptedException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"查询失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
             return res;
         }
         JSONObject responseJson = new JSONObject();
@@ -150,7 +151,13 @@ public class AmmeterController extends BaseController {
         String id = resData.getString("id");
         String wiring = resData.getString("wiring");
         String type = resData.getString("type");
-        ammeterManagerService.updateWiring(id,type,wiring);
+        try {
+            ammeterManagerService.updateWiring(id,type,wiring);
+        } catch (AmmeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
+            return res;
+        }
         String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");
         return res;
     }
@@ -167,22 +174,22 @@ public class AmmeterController extends BaseController {
         String payMod = resData.getString("payMod");
         String type = resData.getString("type");
         try {
-            ammeterManagerService.updatePayMod(id,type, PAY_MOD.getByCode(Integer.valueOf(payMod)));
+            ammeterManagerService.updatePayMod(id,type, PayMod.getByCode(Integer.valueOf(payMod)));
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (AmmeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         }
         String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");
@@ -204,19 +211,19 @@ public class AmmeterController extends BaseController {
             ammeterManagerService.updatePrice(id,type,price);
         } catch (AmmeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         }
         String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");
@@ -238,19 +245,19 @@ public class AmmeterController extends BaseController {
             ammeterManagerService.switchDevice(id,operate,type);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         } catch (AmmeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败");
             return res;
         }
         String res = structureSuccessResponseVO(null,new Date().toString(),"修改成功");

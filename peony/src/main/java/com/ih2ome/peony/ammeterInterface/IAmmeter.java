@@ -1,6 +1,6 @@
 package com.ih2ome.peony.ammeterInterface;
 
-import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
+import com.ih2ome.peony.ammeterInterface.enums.PayMod;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 
@@ -27,7 +27,7 @@ public interface IAmmeter {
      * @param devId
      * @param payMod
      */
-    void updatePayMod(String devId, PAY_MOD payMod) throws AmmeterException;
+    void updatePayMod(String devId, PayMod payMod) throws AmmeterException;
 
     /**
      * 设置电表单价

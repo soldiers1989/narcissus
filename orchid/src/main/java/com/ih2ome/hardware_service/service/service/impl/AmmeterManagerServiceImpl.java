@@ -2,6 +2,7 @@ package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.ih2ome.common.utils.MyConstUtils;
+import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.dao.AmmeterMannagerDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
@@ -9,7 +10,7 @@ import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
 import com.ih2ome.peony.ammeterInterface.enums.AMMETER_FIRM;
-import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
+import com.ih2ome.peony.ammeterInterface.enums.PayMod;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.springframework.stereotype.Service;
@@ -179,8 +180,11 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     }
 
     @Override
-    public void updateWiring(String id, String type, String wiring) {
+    public void updateWiring(String id, String type, String wiring) throws AmmeterException {
 
+        if(StringUtils.isEmpty(id)||StringUtils.isEmpty(type)||StringUtils.isEmpty(wiring)){
+            throw new AmmeterException("参数错误");
+        }
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             ammeterMannagerDao.updateWiringWithDispersed(id,wiring);
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
@@ -191,6 +195,9 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     @Transactional
     @Override
     public void updatePrice(String id, String type, String price) throws AmmeterException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        if(StringUtils.isEmpty(id)||StringUtils.isEmpty(type)||StringUtils.isEmpty(price)){
+            throw new AmmeterException("参数错误");
+        }
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
@@ -200,6 +207,9 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
             devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
             ammeterMannagerDao.updateDevicePriceWithConcentrated(id,price);
         }
+        if(StringUtils.isEmpty(devId)){
+            throw new AmmeterException("参数错误");
+        }
         iAmmeter.setElectricityPrice(devId,Double.valueOf(price));
 
 
@@ -207,6 +217,9 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
 
     @Override
     public void switchDevice(String id, String operate,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+        if(StringUtils.isEmpty(id)||StringUtils.isEmpty(type)||StringUtils.isEmpty(operate)){
+            throw new AmmeterException("参数错误");
+        }
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
@@ -216,22 +229,31 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
             devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
             ammeterMannagerDao.updateDeviceSwitchWithConcentrated(id,operate);
         }
+        if(StringUtils.isEmpty(devId)){
+            throw new AmmeterException("参数错误");
+        }
         iAmmeter.switchAmmeter(devId,operate);
     }
 
     @Transactional
     @Override
-    public void updatePayMod(String id, String type, PAY_MOD pay_mod) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+    public void updatePayMod(String id, String type, PayMod payMod) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
+        if(StringUtils.isEmpty(id)||StringUtils.isEmpty(type)||payMod == null){
+            throw new AmmeterException("参数错误");
+        }
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AMMETER_FIRM.POWER_BEE.getClazz()).newInstance();
         String devId = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
             devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
-            ammeterMannagerDao.updateDevicePayModWithDispersed(id, String.valueOf(pay_mod.getCode()));
-        }else if(type.equals(type.equals(HouseStyleEnum.CONCENTRAT.getCode()))){
+            ammeterMannagerDao.updateDevicePayModWithDispersed(id, String.valueOf(payMod.getCode()));
+        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
-            ammeterMannagerDao.updateDevicePayModWithConcentrated(id, String.valueOf(pay_mod.getCode()));
+            ammeterMannagerDao.updateDevicePayModWithConcentrated(id, String.valueOf(payMod.getCode()));
         }
-        iAmmeter.updatePayMod(devId,pay_mod);
+        if(StringUtils.isEmpty(devId)){
+            throw new AmmeterException("参数错误");
+        }
+        iAmmeter.updatePayMod(devId,payMod);
 
     }
 

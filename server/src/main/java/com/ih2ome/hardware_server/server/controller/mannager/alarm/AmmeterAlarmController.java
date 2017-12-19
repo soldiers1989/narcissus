@@ -3,11 +3,15 @@ package com.ih2ome.hardware_server.server.controller.mannager.alarm;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
 import com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo;
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,8 @@ import java.util.List;
 @CrossOrigin
 public class AmmeterAlarmController extends BaseController {
 
+    private final Logger Log = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     AmmeterAlarmService ammeterAlarmService;
     /**
@@ -42,7 +48,13 @@ public class AmmeterAlarmController extends BaseController {
         for(Object o:smartReportArr){
             smartAlarmRuleList.add((JSONObject.parseObject(o.toString(),SmartAlarmRule.class)));
         }
-        ammeterAlarmService.saveAmmeterAlarmRules(smartAlarmRuleList);
+        try {
+            ammeterAlarmService.saveAmmeterAlarmRules(smartAlarmRuleList);
+        } catch (AmmeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"创建失败");
+            return res;
+        }
         return structureSuccessResponseVO(null,new Date().toString(),"创建成功");
     }
 
@@ -55,7 +67,14 @@ public class AmmeterAlarmController extends BaseController {
     public String ammeterAlarmInfoList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         AmmeterAlarmVo ammeterAlarmVo = resData.getObject("ammeterAlarmVo",AmmeterAlarmVo.class);
-        List<AmmeterAlarmVo> ammeterAlarmVoList = ammeterAlarmService.findAmmeterAlarmInfoList(ammeterAlarmVo);
+        List<AmmeterAlarmVo> ammeterAlarmVoList = null;
+        try {
+            ammeterAlarmVoList = ammeterAlarmService.findAmmeterAlarmInfoList(ammeterAlarmVo);
+        } catch (AmmeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"获取失败");
+            return res;
+        }
         PageInfo <AmmeterAlarmVo> pageInfo = new PageInfo<>(ammeterAlarmVoList);
         JSONObject responseJson = new JSONObject();
         responseJson.put("ammeterAlarmVoList",pageInfo);

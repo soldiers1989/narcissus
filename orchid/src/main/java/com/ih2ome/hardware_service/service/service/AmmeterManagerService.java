@@ -2,7 +2,7 @@ package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
 import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
-import com.ih2ome.peony.ammeterInterface.enums.PAY_MOD;
+import com.ih2ome.peony.ammeterInterface.enums.PayMod;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 
@@ -25,13 +25,13 @@ public interface AmmeterManagerService {
 
     AmmeterInfoVo getAmmeterInfoVo(String id,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 
-    void updateWiring(String id, String type, String wiring);
+    void updateWiring(String id, String type, String wiring) throws AmmeterException;
 
     void updatePrice(String id, String type, String price) throws AmmeterException, ClassNotFoundException, IllegalAccessException, InstantiationException;
 
     void switchDevice(String id,String operate,String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 
-    void updatePayMod(String id, String type, PAY_MOD pay_mod) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
+    void updatePayMod(String id, String type, PayMod payMod) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException;
 
     List<AmmeterMannagerVo> ammeterList(AmmeterMannagerVo ammeterMannagerVo);
 

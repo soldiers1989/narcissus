@@ -1,12 +1,14 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.service.AmmeterAlarmService;
 import com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo;
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,13 +28,13 @@ public class AmmeterAlarmServiceImpl implements AmmeterAlarmService {
     AmmeterAlarmDao ammeterAlarmDao;
 
     @Override
-    public void saveAmmeterAlarmRules(List <SmartAlarmRule> smartAlarmRuleList) {
+    public void saveAmmeterAlarmRules(List <SmartAlarmRule> smartAlarmRuleList) throws AmmeterException {
+        if(smartAlarmRuleList == null){
+            throw new AmmeterException("参数为空");
+        }
+        ammeterAlarmDao.clearAmmeterAlarmRules();
         for(SmartAlarmRule smartAlarmRule:smartAlarmRuleList) {
-            if (smartAlarmRule.getId() != null) {
-                ammeterAlarmDao.updateAmmeterAlarmRules(smartAlarmRule);
-            } else {
-                ammeterAlarmDao.addAmmeterAlarmRules(smartAlarmRule);
-            }
+            ammeterAlarmDao.addAmmeterAlarmRules(smartAlarmRule);
         }
     }
 
@@ -42,17 +44,26 @@ public class AmmeterAlarmServiceImpl implements AmmeterAlarmService {
     }
 
     @Override
-    public SmartAlarmRule getByReportName(String reportName) {
+    public SmartAlarmRule getByReportName(String reportName) throws AmmeterException {
+        if(StringUtils.isEmpty(reportName)){
+            throw new AmmeterException("参数为空");
+        }
         return ammeterAlarmDao.getByReportName(reportName);
     }
 
     @Override
-    public void saveAlarmList(List<SmartMistakeInfo> smartMistakeInfoList) {
+    public void saveAlarmList(List<SmartMistakeInfo> smartMistakeInfoList) throws AmmeterException {
+        if(smartMistakeInfoList == null){
+           throw new AmmeterException("参数错误");
+        }
         ammeterAlarmDao.saveAlarmList(smartMistakeInfoList);
     }
 
     @Override
-    public List<AmmeterAlarmVo> findAmmeterAlarmInfoList(AmmeterAlarmVo ammeterAlarmVo) {
+    public List<AmmeterAlarmVo> findAmmeterAlarmInfoList(AmmeterAlarmVo ammeterAlarmVo) throws AmmeterException {
+        if(ammeterAlarmVo == null){
+            throw new AmmeterException("参数错误");
+        }
         if(ammeterAlarmVo.getPage()!= null && ammeterAlarmVo.getRows() != null){
             PageHelper.startPage(ammeterAlarmVo.getPage(),ammeterAlarmVo.getRows());
         }

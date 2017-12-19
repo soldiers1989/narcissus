@@ -179,7 +179,11 @@ public class AmmeterExceptionInfoScheduled {
             smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.POWER_BEE_AMMETER.getCode());
             smartMistakeInfoList.add(smartMistakeInfo);
         }
-        ammeterAlarmService.saveAlarmList(smartMistakeInfoList);
+        try {
+            ammeterAlarmService.saveAlarmList(smartMistakeInfoList);
+        } catch (AmmeterException e) {
+            Log.error("获取电量为负数与电量为负数且未断电失败",e);
+        }
         Log.info("====================获取电量为负数与电量为负数且未断电结束==================");
     }
 }

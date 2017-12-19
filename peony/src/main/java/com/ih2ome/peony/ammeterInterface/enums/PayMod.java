@@ -7,12 +7,13 @@ package com.ih2ome.peony.ammeterInterface.enums;
  * create by 2017/11/27
  * @Emial Lucius.li@ixiaoshuidi.com
  */
-public enum PAY_MOD {
+public enum PayMod {
     PRE_PAYMENT("prepayment",1),BY_METER("by_meter",0);
 
     private String name;
     private Integer code;
-    PAY_MOD(String name,int code) {
+
+    PayMod(String name, Integer code) {
         this.name = name;
         this.code = code;
     }
@@ -25,21 +26,21 @@ public enum PAY_MOD {
         return code;
     }
 
-    public static PAY_MOD getByCode(Integer code){
+    public static PayMod getByCode(Integer code){
         if(code.equals(1)){
-            return PAY_MOD.PRE_PAYMENT;
+            return PayMod.PRE_PAYMENT;
         }else if(code.equals(0)){
-            return PAY_MOD.BY_METER;
+            return PayMod.BY_METER;
         }else{
             return null;
         }
     }
 
-    public static PAY_MOD getByName(String name){
+    public static PayMod getByName(String name){
         if(name.equals("prepayment")){
-            return PAY_MOD.PRE_PAYMENT;
+            return PayMod.PRE_PAYMENT;
         }else if(name.equals("by_meter")){
-            return PAY_MOD.BY_METER;
+            return PayMod.BY_METER;
         }else{
             return null;
         }
