@@ -192,6 +192,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND csd.`online` LIKE '%${communicationStatus}%'
         </if>
+        order by csd.updated_at desc
     </select>
 
     <!--集中式房源电表列表（模糊查询）-->
@@ -265,6 +266,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND vsd.`online` LIKE '%${communicationStatus}%'
         </if>
+        order by vsd.updated_at desc
     </select>
 
     <!--分散式根据电表id获取电表-->
@@ -349,6 +351,7 @@
       AND csd.id = #{id}
     GROUP BY
 	  csd.id
+	order by csd.updated_at desc
     </select>
     <!--获取集中式电表列表-->
     <select id="getDeviceInfoWithConcentrated" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
