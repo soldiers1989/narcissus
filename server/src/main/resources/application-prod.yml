@@ -1,13 +1,13 @@
 server:
-  port: 80
+  port: 8080
 spring:
   ##redis配置
   profiles: prod
   redis:
     database: 0
-    host: 10.0.0.24
+    host: 2df27a68346746ba.m.cnhza.kvstore.aliyuncs.com
     port: 6379
-    password:
+    password: 2df27a68346746ba:h2omeRedis
     pool:
       max-active: 8
       max-wait: -1
@@ -17,9 +17,9 @@ spring:
 
   ## 数据库访问配置
   datasource:
-    url: jdbc:mysql://localhost:3306
+    url: jdbc:mysql://rds03jhkvv73853nd232.mysql.rds.aliyuncs.com:3306
     username: xiaoshuidi
-    password: xiaoshuidi
+    password: ACA6VdyocBuTNduF
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
