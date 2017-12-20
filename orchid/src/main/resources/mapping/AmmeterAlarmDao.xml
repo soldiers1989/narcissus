@@ -120,7 +120,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND csd.`online` LIKE '%${communicationStatus}%'
         </if>
-        order by csd.updated_at desc
+        order by nsmi.created_at desc
     </select>
 
     <!--分散式房源电表报警信息列表（模糊查询）-->
@@ -199,6 +199,6 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND vsd.`online` LIKE '%${communicationStatus}%'
         </if>
-        order by vsd.updated_at desc
+        order by nsmi.created_at desc
     </select>
 </mapper>
