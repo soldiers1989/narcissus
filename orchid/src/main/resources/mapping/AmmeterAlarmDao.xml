@@ -4,11 +4,11 @@
     <!--- insert -->
     <!--添加报警规则-->
     <insert id="addAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
-        INSERT INTO narcissus.smart_alarm_rule (report_name,report_param,switch_status) VALUES(#{reportName},#{reportParam},#{switchStatus});
+        INSERT INTO narcissus_test.smart_alarm_rule (report_name,report_param,switch_status) VALUES(#{reportName},#{reportParam},#{switchStatus});
     </insert>
     <!--添加报警信息-->
     <insert id="saveAlarmList" parameterType="java.util.List">
-        insert into narcissus.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type) values
+        insert into narcissus_test.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type) values
         <foreach collection="list" item="smartMistakeInfo" index="index" separator =",">
             (
             NOW(),#{smartMistakeInfo.smartDeviceType},#{smartMistakeInfo.uuid},#{smartMistakeInfo.exceptionType}
@@ -18,12 +18,12 @@
     <!--delete-->
     <!--清空报警规则-->
     <delete id="clearAmmeterAlarmRules">
-        Delete FROM narcissus.smart_alarm_rule
+        Delete FROM narcissus_test.smart_alarm_rule
     </delete>
 
     <!--更新电表报警规则-->
     <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
-        UPDATE narcissus.smart_alarm_rule nsar
+        UPDATE narcissus_test.smart_alarm_rule nsar
           SET
         <trim prefix="set" suffixOverrides=",">
             <if test="reportName!=null">nsar.report_name = #{reportName},</if>
@@ -36,12 +36,12 @@
 
     <!--获取所有有效电表报警规则-->
     <select id="getAllSmartAlarmRules" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
-        select * FROM  narcissus.smart_alarm_rule nsar WHERE nsar.switch_status='0'
+        select * FROM  narcissus_test.smart_alarm_rule nsar WHERE nsar.switch_status='0'
     </select>
 
     <!--根据报警类型查找报警规则 -->
     <select id="getByReportName" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
-        SELECT * from narcissus.smart_alarm_rule nsar where nsar.report_name=#{reportName} and nsar.switch_status='0'
+        SELECT * from narcissus_test.smart_alarm_rule nsar where nsar.report_name=#{reportName} and nsar.switch_status='0'
     </select>
 
 
@@ -72,7 +72,7 @@
         caspain_test.house ch on cr.house_id=ch.id LEFT JOIN
         caspain_test.room_contract crc on crc.room_id=cr.id
         LEFT JOIN caspain_test.auth_user cau on crc.created_by_id = cau.id,
-				narcissus.smart_mistake_info nsmi
+        narcissus_test.smart_mistake_info nsmi
         WHERE
         1 = 1
         AND (csd.is_delete != '1' or csd.is_delete is null)
@@ -151,7 +151,7 @@
         `volga_test`.room_contract vrc on vrc.room_id=vr.id
         LEFT JOIN `volga_test`.area varea on va.area=varea.id
         LEFT JOIN caspain_test.auth_user cau on vrc.created_by = cau.id,
-				narcissus.smart_mistake_info nsmi
+        narcissus_test.smart_mistake_info nsmi
         WHERE
         1 = 1
         AND (vsd.is_delete != '1' or vsd.is_delete is null)
