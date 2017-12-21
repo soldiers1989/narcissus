@@ -5,9 +5,9 @@ spring:
   profiles: test
   redis:
     database: 0
-    host: localhost
+    host: 127.0.0.1
     port: 6379
-    password: 2df27a68346746ba:h2omeRedis
+    password:
     pool:
       max-active: 8
       max-wait: -1
@@ -17,9 +17,9 @@ spring:
 
   ## 数据库访问配置
   datasource:
-    url: jdbc:mysql://localhost:3308
+    url: jdbc:mysql://rds4y3ify14fg0auc3f9.mysql.rds.aliyuncs.com:3306
     username: xiaoshuidi
-    password: ACA6VdyocBuTNduF
+    password: xiaoshuidi
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
