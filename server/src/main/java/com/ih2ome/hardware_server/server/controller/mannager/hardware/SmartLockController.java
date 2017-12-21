@@ -23,25 +23,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/mannager/smartLock")
 @CrossOrigin
-public class SmartLockController extends BaseController{
+public class SmartLockController extends BaseController {
 
     @Autowired
     private LockManagerService lockManagerService;
+
     /**
      * 门锁list
+     *
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/lockList",method = RequestMethod.POST,produces = {"application/json"})
-    public String lockList(@RequestBody ApiRequestVO apiRequestVO){
-        JSONObject resData=apiRequestVO.getDataRequestBodyVO().getDt();
-        LockManagerVo lockManagerVo=resData.getObject("lockMannagerVo", LockManagerVo.class);
-        List<LockManagerVo> lockManagerVoList=lockManagerService.lockList(lockManagerVo);
+    @RequestMapping(value = "/lockList", method = RequestMethod.POST, produces = {"application/json"})
+    public String lockList(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        LockManagerVo lockManagerVo = resData.getObject("lockMannagerVo", LockManagerVo.class);
+        List<LockManagerVo> lockManagerVoList = lockManagerService.lockList(lockManagerVo);
         PageInfo<LockManagerVo> pageInfo = new PageInfo<>(lockManagerVoList);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("lockMannagerVoList",pageInfo);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        responseJson.put("lockMannagerVoList", pageInfo);
+        String res = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return res;
     }
+
 
 }

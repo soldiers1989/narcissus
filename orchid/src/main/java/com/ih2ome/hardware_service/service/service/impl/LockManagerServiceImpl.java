@@ -22,21 +22,20 @@ public class LockManagerServiceImpl implements LockManagerService {
     private LockManagerDao lockManagerDao;
 
     //门锁列表
-    public  List<LockManagerVo> lockList(LockManagerVo lockManagerVo){
-        if(lockManagerVo!=null){
-            if(lockManagerVo.getPage()!= null && lockManagerVo.getRows() != null){
-                PageHelper.startPage(lockManagerVo.getPage(),lockManagerVo.getRows());
-            }
-            //判断是分散式
-            if(lockManagerVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
-                return lockManagerDao.findDispersedLock(lockManagerVo);
-             //判断是集中式
-            }else if(lockManagerVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
-                return lockManagerDao.findConcentrateLock(lockManagerVo);
-            }else{
-                return null;
-            }
-        }else{
+    public List<LockManagerVo> lockList(LockManagerVo lockManagerVo) {
+        if (lockManagerVo == null) {
+            return null;
+        }
+        if (lockManagerVo.isInitPageRows()) {
+            PageHelper.startPage(lockManagerVo.getPage(), lockManagerVo.getRows());
+        }
+        //判断是分散式
+        if (lockManagerVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())) {
+            return lockManagerDao.findDispersedLock(lockManagerVo);
+            //判断是集中式
+        } else if (lockManagerVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            return lockManagerDao.findConcentrateLock(lockManagerVo);
+        } else {
             return null;
         }
     }
