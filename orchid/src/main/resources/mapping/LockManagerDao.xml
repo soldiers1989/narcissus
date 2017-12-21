@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.LockManagerDao">
+
+    <!--select-->
+    <!--分散式房源门锁列表（模糊查询）-->
+    <select id="findDispersedLock" parameterType="com.ih2ome.hardware_service.service.vo.LockManagerVo"
+            resultType="com.ih2ome.hardware_service.service.vo.LockManagerVo">
+        SELECT
+        csl.id lockId,
+        ch.area apartmentName,
+        '0' apartmentType,
+        cau.username authUserName,
+        ch.address houseAddress,
+        cr.`name` roomNo,
+        crc.customer_name customerName,
+        crc.customer_phone customerPhone,
+        csl.serial_num serialNum,
+        csl.`status` status,
+        CONCAT(csl.remaining_battery,'%') remainingBattery,
+        DATE_FORMAT(csl.install_time,'%Y.%m.%d %H:%i:%s') installTime,
+        cslg.gateway getway,
+        nsp.`name` providerName
+        FROM
+        caspain_test.smart_lock csl
+        LEFT JOIN narcissus_test.smart_provider nsp ON nsp.smart_provider_ID = csl.smart_provider_ID
+        LEFT JOIN caspain_test.room cr ON csl.room_id = cr.id
+        LEFT JOIN caspain_test.smart_lock_gateway cslg ON cslg.id = csl.gateway_id
+        LEFT JOIN caspain_test.house ch ON cr.house_id = ch.id
+        LEFT JOIN caspain_test.room_contract crc ON crc.room_id = cr.id
+        LEFT JOIN caspain_test.auth_user cau ON crc.created_by_id = cau.id
+        WHERE
+        1 = 1
+        AND (
+        csl.is_delete != '1'
+        OR csl.is_delete IS NULL
+        )
+        AND (
+        ch.is_delete != '1'
+        OR ch.is_delete IS NULL
+        )
+        AND (
+        cr.is_delete != '1'
+        OR cr.is_delete IS NULL
+        )
+        AND (
+        crc.is_delete != '1'
+        OR crc.is_delete IS NULL
+        )
+        AND (
+        cslg.is_delete != '1'
+        OR cslg.is_delete IS NULL
+        )
+        AND crc.`status` = 'active'
+        <if test="serialNum != '' and serialNum != null">
+            AND csl.serial_num = '${serialNum}'
+        </if>
+        <if test="roomNo != '' and roomNo != null">
+            AND cr.name LIKE '%${roomNo}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND crc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND crc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND ch.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND ch.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND ch.area LIKE '%${areaName}%'
+        </if>
+        <if test="status != '' and status != null">
+            AND csl.status LIKE '%${status}%'
+        </if>
+    </select>
+
+    <!--集中式房源门锁列表（模糊查询）-->
+    <select id="findConcentrateLock" parameterType="com.ih2ome.hardware_service.service.vo.LockManagerVo"
+            resultType="com.ih2ome.hardware_service.service.vo.LockManagerVo">
+        SELECT
+        vsl.id lockId,
+        va.`name` apartmentName,
+        '1' apartmentType,
+        cau.username authUserName,
+        va.address houseAddress,
+        vr.`name` roomNo,
+        vrc.customer_name customerName,
+        vrc.customer_phone customerPhone,
+        vsl.serial_num serialNum,
+        vsl.`status` status,
+        CONCAT(vsl.remaining_battery,'%') remainingBattery,
+        DATE_FORMAT(vsl.install_time,'%Y.%m.%d %H:%i:%s') installTime,
+        vslg.gateway getway,
+        nsp.`name` providerName
+        FROM
+            `volga_test`.smart_lock vsl
+        LEFT JOIN narcissus_test.smart_provider nsp ON nsp.smart_provider_ID = vsl.smart_provider_ID
+        LEFT JOIN volga_test.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
+        LEFT JOIN `volga_test`.room vr ON vsl.room_id = vr.id
+        LEFT JOIN `volga_test`.apartment va ON vr.apartment_id = va.id
+        LEFT JOIN `volga_test`.room_contract vrc ON vrc.room_id = vr.id
+        LEFT JOIN `volga_test`.area varea ON va.area = varea.id
+        LEFT JOIN caspain_test.auth_user cau ON vrc.created_by = cau.id
+        WHERE
+            1 = 1
+        AND (
+            vsl.is_delete != '1'
+            OR vsl.is_delete IS NULL
+        )
+        AND (
+            va.is_delete != '1'
+            OR va.is_delete IS NULL
+        )
+        AND (
+            vr.is_delete != '1'
+            OR vr.is_delete IS NULL
+        )
+        AND (
+            vrc.is_delete != '1'
+            OR vrc.is_delete IS NULL
+        )
+        and vrc.`status`='active'
+        <if test="serialNum != '' and serialNum != null">
+            AND vsl.serial_num = '${serialNum}'
+        </if>
+        <if test="roomNo != '' and roomNo != null">
+            AND cr.name LIKE '%${roomNo}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND crc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND crc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND ch.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND ch.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND ch.area LIKE '%${areaName}%'
+        </if>
+        <if test="status != '' and status != null">
+            AND vsl.status LIKE '%${status}%'
+        </if>
+    </select>
+</mapper>

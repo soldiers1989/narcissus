@@ -33,9 +33,9 @@ public class SmartLockController extends BaseController{
      * @return
      */
     @RequestMapping(value="/lockList",method = RequestMethod.POST,produces = {"application/json"})
-    public String ammeterList(@RequestBody ApiRequestVO apiRequestVO){
+    public String lockList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData=apiRequestVO.getDataRequestBodyVO().getDt();
-        LockManagerVo lockManagerVo=resData.getObject("lockManagerVo", LockManagerVo.class);
+        LockManagerVo lockManagerVo=resData.getObject("lockMannagerVo", LockManagerVo.class);
         List<LockManagerVo> lockManagerVoList=lockManagerService.lockList(lockManagerVo);
         PageInfo<LockManagerVo> pageInfo = new PageInfo<>(lockManagerVoList);
         JSONObject responseJson = new JSONObject();
