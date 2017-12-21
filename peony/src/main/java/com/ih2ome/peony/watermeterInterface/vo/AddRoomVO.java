@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_service.service.vo;
+package com.ih2ome.peony.watermeterInterface.vo;
 
 import lombok.Data;
 

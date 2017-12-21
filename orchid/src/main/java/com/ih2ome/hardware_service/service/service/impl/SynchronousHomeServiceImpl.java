@@ -11,6 +11,7 @@ import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
+import com.ih2ome.peony.watermeterInterface.vo.AddRoomVO;
 import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import org.springframework.stereotype.Service;
 
