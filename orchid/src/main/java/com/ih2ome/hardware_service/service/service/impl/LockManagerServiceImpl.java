@@ -5,7 +5,6 @@ import com.ih2ome.hardware_service.service.dao.LockManagerDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
 import com.ih2ome.hardware_service.service.vo.LockManagerVo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
