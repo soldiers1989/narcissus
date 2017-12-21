@@ -6,7 +6,7 @@
     <sql id="smart_gateway_bind">narcissus_test.smart_gateway_bind</sql>
     <sql id="smart_gateway">narcissus_test.smart_gateway</sql>
     <sql id="smart_watermeter_record">narcissus_test.smart_watermeter_record</sql>
-    <sql id="smart_exception">narcissus_test.smart_mistake</sql>
+    <sql id="smart_exception">narcissus_test.smart_mistake_info</sql>
     <sql id="house">caspain_test.house</sql>
     <sql id="room">caspain_test.room</sql>
     <sql id="apartment">volga_test.apartment</sql>
