@@ -106,7 +106,6 @@
         LEFT JOIN `volga_test`.room vr ON vsl.room_id = vr.id
         LEFT JOIN `volga_test`.apartment va ON vr.apartment_id = va.id
         LEFT JOIN `volga_test`.room_contract vrc ON vrc.room_id = vr.id
-        LEFT JOIN `volga_test`.area varea ON va.area = varea.id
         LEFT JOIN caspain_test.auth_user cau ON vrc.created_by = cau.id
         WHERE
             1 = 1
@@ -131,25 +130,25 @@
             AND vsl.serial_num = '${serialNum}'
         </if>
         <if test="roomNo != '' and roomNo != null">
-            AND cr.name LIKE '%${roomNo}%'
+            AND vr.name LIKE '%${roomNo}%'
         </if>
         <if test="customerName != '' and customerName != null">
-            AND crc.customer_name LIKE '%${customerName}%'
+            AND vrc.customer_name LIKE '%${customerName}%'
         </if>
         <if test="authUserName != '' and authUserName != null">
             AND cau.username LIKE '%${authUserName}%'
         </if>
         <if test="customerPhone != '' and customerPhone != null">
-            AND crc.customer_phone LIKE '%${customerPhone}%'
+            AND vrc.customer_phone LIKE '%${customerPhone}%'
         </if>
         <if test="cityName != '' and cityName != null">
-            AND ch.city LIKE '%${cityName}%'
+            AND va.city LIKE '%${cityName}%'
         </if>
         <if test="districtName != '' and districtName != null">
-            AND ch.district LIKE '%${districtName}%'
+            AND va.district LIKE '%${districtName}%'
         </if>
         <if test="areaName != '' and areaName != null">
-            AND ch.area LIKE '%${areaName}%'
+            AND va.area LIKE '%${areaName}%'
         </if>
         <if test="status != '' and status != null">
             AND vsl.status LIKE '%${status}%'
