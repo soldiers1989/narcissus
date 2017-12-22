@@ -25,7 +25,7 @@ spring:
 
     ## 连接池配置
     initialSize: 1
-    minIdle: 5
+    minIdle: 1
     maxActive: 20
     # 超时时间
     maxWait: 60000
