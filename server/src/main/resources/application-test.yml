@@ -24,9 +24,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 
     ## 连接池配置
-    initialSize: 1
-    minIdle: 1
-    maxActive: 60
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
     # 超时时间
     maxWait: 60000
 
