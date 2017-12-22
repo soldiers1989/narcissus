@@ -1,15 +1,28 @@
 package com.ih2ome.peony.watermeterInterface.yunding;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
+import com.ih2ome.peony.watermeterInterface.vo.AddRoomVO;
 import com.ih2ome.peony.watermeterInterface.yunding.utils.YunDingWatermeterUtil;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class YunDingWatermeter implements IWatermeter {
@@ -19,6 +32,7 @@ public class YunDingWatermeter implements IWatermeter {
     private static final String EXPRIES_TIME = "YUN_DING_WATERMETER_EXPRIES_TIME";
     private static final String BASE_URL = "https://lockapi.dding.net/openapi/v1";
 //    private static final String BASE_URL = "http://dev-lockapi.dding.net:8090/openspi/v1";
+//    private static final String BASE_URL = "http://yundinghometest.dding.net:8088/openapi/v1";
     private static final Logger Log = LoggerFactory.getLogger(YunDingWatermeter.class);
 
     /**
@@ -36,22 +50,19 @@ public class YunDingWatermeter implements IWatermeter {
         json.put("home_id",home_id);
 
         String uri = BASE_URL+"/find_home_state";
-        //String url = PowerBeeAmmeterUtil.generateParam(uri);
         String res = HttpClientUtil.doGet(uri,json);
-        System.out.println(res);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(res);
         }catch (Exception e){
             Log.error("json格式解析错误",e);
-            //throw new WatermeterException("json格式解析错误"+e.getMessage());
+            throw new WatermeterException("json格式解析错误"+e.getMessage());
         }
         if (resJson != null) {
             String code = resJson.get("ErrNo").toString();
             if (!code.equals("0")) {
                 String msg = resJson.get("ErrMsg").toString();
-                Log.error("第三方请求失败/n" + msg);
-                throw new WatermeterException("第三方请求失败/n" + msg);
+                Log.error("查询房源状态/n" + msg);
             }
         }
         return String.valueOf(resJson);
@@ -124,7 +135,6 @@ public class YunDingWatermeter implements IWatermeter {
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
             Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
         }
         return res;
     }
@@ -160,10 +170,10 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
+            return "第三方请求失败"+msg;
         }
-        return res;
+        return "success";
     }
 
     /**
@@ -216,16 +226,15 @@ public class YunDingWatermeter implements IWatermeter {
     public String addRoom(String home_id, String room_id, String room_name, String rooom_description) throws WatermeterException {
         Log.info("给指定公寓添加房间");
 
-        Map<String,Object> map= new HashMap();
-        map.put("access_token",YunDingWatermeterUtil.getToken());
-        map.put("home_id",home_id);
-        map.put("room_id",room_id);
-        map.put("room_name",room_name);
-        map.put("rooom_description",rooom_description);
-
+        JSONObject json=new JSONObject();
+        json.put("access_token",YunDingWatermeterUtil.getToken());
+        json.put("home_id",home_id);
+        json.put("room_id",room_id);
+        json.put("room_name",room_name);
+        json.put("rooom_description",rooom_description);
         String uri = BASE_URL + "/add_room";
         //String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doPost(uri,map);
+        String res = HttpClientUtil.doPost(uri,json.toJSONString());
 
         JSONObject resJson = null;
         try {
@@ -238,8 +247,8 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
+            //throw new WatermeterException("第三方请求失败/n"+msg);
         }
         return res;
     }
@@ -252,18 +261,18 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String addRooms(String home_id, String[] rooms) throws WatermeterException {
+    public String addRooms(String home_id, List<AddRoomVO> rooms) throws WatermeterException {
         Log.info("给指定公寓添加多个房间");
 
-        Map<String,Object> map= new HashMap();
-        map.put("access_token",YunDingWatermeterUtil.getToken());
-        map.put("home_id",home_id);
-        map.put("rooms",rooms);
+        JSONObject json =new JSONObject();
+        json.put("access_token",YunDingWatermeterUtil.getToken());
+        json.put("home_id",home_id);
+        json.put("rooms", JSONArray.parseArray(JSON.toJSONString(rooms)));
 
 
         String uri = BASE_URL + "/add_rooms";
         //String url = PowerBeeAmmeterUtil.generateParam(uri);
-        String res = HttpClientUtil.doPost(uri,map);
+        String res = HttpClientUtil.doPost(uri,json.toJSONString());
 
         JSONObject resJson = null;
         try {
@@ -277,7 +286,7 @@ public class YunDingWatermeter implements IWatermeter {
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
             Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+           // throw new WatermeterException("第三方请求失败/n"+msg);
         }
         return res;
     }
@@ -319,8 +328,8 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
+            throw new WatermeterException("第三方请求失败"+msg);
         }
         return res;
     }
@@ -354,8 +363,8 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
+            throw new WatermeterException("第三方请求失败"+msg);
         }
         return res;
     }
@@ -390,8 +399,8 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
+            throw new WatermeterException("第三方请求失败"+msg);
         }
         return res;
     }
@@ -439,8 +448,8 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
+            throw new WatermeterException("第三方请求失败"+msg);
         }
         return res;
     }
@@ -473,7 +482,7 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
             throw new WatermeterException("第三方请求失败/n"+msg);
         }
         return res;
@@ -490,7 +499,9 @@ public class YunDingWatermeter implements IWatermeter {
     public String yunDingDoPostUrl(String uri,Map<String,Object> map) throws WatermeterException{
         String url = BASE_URL + uri;
         map.put("access_token",YunDingWatermeterUtil.getToken());
-        String res = HttpClientUtil.doPost(url,map);
+        JSONArray jsonArray=JSONArray.parseArray(JSON.toJSONString(map));
+        String json = jsonArray.toString();
+        String res = HttpClientUtil.doPost(url,json);
 
         if(res == null){
             return null;
@@ -507,8 +518,8 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
+            throw new WatermeterException("第三方请求失败"+msg);
         }
         return res;
     }
@@ -528,12 +539,42 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败"+msg);
+            throw new WatermeterException("第三方请求失败"+msg);
         }
         return res;
     }
 
+    private static RequestConfig requestConfig;
+    public static String doPost(String apiUrl, Object json) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        String httpStr = null;
+        HttpPost httpPost = new HttpPost(apiUrl);
+        CloseableHttpResponse response = null;
 
+        try {
+            httpPost.setConfig(requestConfig);
+            StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
+            //stringEntity.setContentEncoding("UTF-8");
+            stringEntity.setContentType("application/json");
+            httpPost.setEntity(stringEntity);
+            response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            httpStr = EntityUtils.toString(entity, "UTF-8");
+        } catch (IOException var16) {
+            var16.printStackTrace();
+        } finally {
+            if (response != null) {
+                try {
+                    EntityUtils.consume(response.getEntity());
+                } catch (IOException var15) {
+                    var15.printStackTrace();
+                }
+            }
+
+        }
+
+        return httpStr;
+    }
 
 }

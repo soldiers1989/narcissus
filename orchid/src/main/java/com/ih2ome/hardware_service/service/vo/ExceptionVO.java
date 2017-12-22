@@ -9,6 +9,6 @@ import java.util.Date;
 @Data
 public class ExceptionVO {
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
-    private Date date;
-    private String exceotionType;//异常类型
+    private Date createdAt;
+    private String exceptionType;//异常类型
 }

@@ -105,7 +105,7 @@ public interface WatermeterService {
      * @param watermeterId
      * @return
      */
-    int readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+    String readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
 
     /**
@@ -161,7 +161,7 @@ public interface WatermeterService {
      * @param watermeterId
      * @return
      */
-    int findWatermeterLastAmountByWatermeterId(int watermeterId);
+    Integer findWatermeterLastAmountByWatermeterId(int watermeterId);
 
     /**
      * 更新水表在线离线状态
@@ -184,9 +184,23 @@ public interface WatermeterService {
     Timestamp findWatermeterMeterUpdatedAt(String uuid);
 
     /**
-     * 水表
-     * @param watermeterWebListVo
+     * 集中式水表listby网关id
+     * @param smartGatewayId
      * @return
      */
-    List<WatermeterWebListVo> watermeterWebListVoList(WatermeterWebListVo watermeterWebListVo);
+    List<JZWatermeterDetailVO> findJzWatermetersByGatewayId(int smartGatewayId);
+
+    /**
+     * 分散式网关listbyUserId
+     * @param userId
+     * @return
+     */
+    List<JZWatermeterGatewayVO> findGatewaysByUserId(int userId);
+
+    /**
+     * 查询水表在线状态byuuid
+     * @param uuid
+     * @return
+     */
+    Integer findWatermeterOnOffStatusByUuid(String uuid);
 }

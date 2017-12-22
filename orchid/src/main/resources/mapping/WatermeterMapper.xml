@@ -231,4 +231,10 @@
         WHERE g.created_by = #{id}
         GROUP BY g.smart_gateway_id;
     </select>
+
+    <!-- 查询水表在线状态byuuid -->
+    <select id="selectWatermeterOnOffStatusByUuid" parameterType="String" resultType="java.sql.Timestamp">
+        SELECT onoff_status FROM <include refid="smart_watermeter"/>  WHERE uuid = #{uuid}
+    </select>
+
 </mapper>

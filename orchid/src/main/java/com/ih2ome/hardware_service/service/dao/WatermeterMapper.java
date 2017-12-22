@@ -155,14 +155,14 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param watermeterId
      * @return
      */
-    int findWatermeterAmountByWatermeterId(int watermeterId);
+    Integer findWatermeterAmountByWatermeterId(int watermeterId);
 
     /**
      * 更新网关在线离线状态
      * @param uuid
      * @param code
      */
-    void updataWatermerterOnoffStatusByUuid(@Param("uuid") String uuid,@Param("code") Integer code);
+    void updataWatermerterOnoffStatusByUuid(@Param("uuid") String uuid, @Param("code") Integer code);
 
     /**
      * 查询所有水表的UuidAndManufactory
@@ -177,18 +177,20 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      */
     Timestamp selectWatermeterMeterUpdatedAt(String uuid);
 
-    /**
-     * 查找集中式水表list
-     * @param watermeterWebListVo
-     * @return
-     */
-    List<WatermeterWebListVo> findJzWatermeterWebListVoList(WatermeterWebListVo watermeterWebListVo);
 
     /**
-     * 查找分散式水表list
-     * @param watermeterWebListVo
+     * 集中式水表listby网关id
+     * @param smartGatewayId
      * @return
      */
-    List<WatermeterWebListVo> findHmWatermeterWebListVoList(WatermeterWebListVo watermeterWebListVo);
+    List<JZWatermeterDetailVO> selectJzWatermetersByGatewayId(int smartGatewayId);
 
+    /**
+     * 分散式网关list
+     * @param userId
+     * @return
+     */
+    List<JZWatermeterGatewayVO> selectGatewaysByUserId(int userId);
+
+    Integer selectWatermeterOnOffStatusByUuid(String uuid);
 }

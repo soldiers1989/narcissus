@@ -18,14 +18,15 @@ import java.util.*;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public class YunDingWatermeterUtil {
-    private static final String USER_NAME = "9cd7fde01ab3e7c6a11ad3fd";
-    private static final String PASSWORD = "5ba2e2d0c7a7d6aa332c61105fbfbb0a";
+    private static final String USER_NAME = "7b7c10ebdec490d4e0d5850c";
+    private static final String PASSWORD = "b7019a28af49f61dcda9e6b4b42b4aca";
     private static final String TOKEN_KEY = "YUN_DING_WATERMETER_TOKEN";
     private static final String UID_KEY = "YUN_DING_WATERMETER_UID";
     private static final String EXPRIES_TIME = "YUN_DING_WATERMETER_EXPRIES_TIME";
     private static final String SECRET = "";
     private static final String BASE_URL = "https://lockapi.dding.net/openapi/v1";
 //    private static final String BASE_URL = "http://dev-lockapi.dding.net:8090/openapi/v1";
+//    private static final String BASE_URL = "http://yundinghometest.dding.net:8088/openapi/v1";
     private static final String VERSION_VALUE = "0116010101";
 
     /**

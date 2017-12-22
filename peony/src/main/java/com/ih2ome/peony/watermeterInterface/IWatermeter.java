@@ -2,7 +2,9 @@ package com.ih2ome.peony.watermeterInterface;
 
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
+import com.ih2ome.peony.watermeterInterface.vo.AddRoomVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,7 +62,7 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String addRooms(String home_id, String[] rooms) throws WatermeterException;
+    String addRooms(String home_id, List<AddRoomVO> rooms) throws WatermeterException;
 
     /**
      * 获取设备历史异常记录
