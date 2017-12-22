@@ -14,12 +14,13 @@ import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * 云丁回调接口
@@ -28,6 +29,8 @@ import java.util.Date;
 public class YunDingCallBackController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
+
+    private static String CALLBACK_PATH="http://rose.shuidiguanjia.com/api"+"/callback/watermeter/yunding";
 
     @Autowired
     private WatermeterService watermeterService;
@@ -66,6 +69,12 @@ public class YunDingCallBackController extends BaseController {
     @RequestMapping(value="/callback/watermeter/yunding",method = RequestMethod.POST,produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<Object> watermeterAmountAsync(@RequestBody CallbackRequestVo apiRequestVO) {
+        //校验签名
+        String sign = apiRequestVO.getSign();
+        boolean flag=checkSign(sign,apiRequestVO);
+        if(!flag){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("请求错误");
+        }
         String even = apiRequestVO.getEven();
         IWatermeter iWatermeter = getIWatermeter();
         switch (even){
@@ -337,5 +346,66 @@ public class YunDingCallBackController extends BaseController {
         }
         return false;
     }
+
+    //校验签名
+    private boolean checkSign(String sign, CallbackRequestVo apiRequestVO) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("even",apiRequestVO.getEven());
+        map.put("time",apiRequestVO.getTime());
+        map.put("uuid",apiRequestVO.getUuid());
+        map.put("old_uuid",apiRequestVO.getOld_uuid());
+        map.put("manufactory",apiRequestVO.getManufactory());
+        map.put("home_id",apiRequestVO.getHome_id());
+        map.put("gateway_uuid",apiRequestVO.getGateway_uuid());
+        map.put("room_id",apiRequestVO.getRoom_id());
+        map.put("detail",apiRequestVO.getDetail());
+
+        String sign1 = getSign(map);
+        return sign.equals(sign1);
+
+    }
+
+    /**
+     * map字典排序
+     * @param map
+     * @return
+     */
+    public static String getSign(Map map) {
+
+        Collection<String> keyset= map.keySet();
+
+        List list=new ArrayList<String>(keyset);
+
+        Collections.sort(list);
+        //这种打印出的字符串顺序和微信官网提供的字典序顺序是一致的
+        String str = "";
+        for(int i=0;i<list.size();i++){
+            if (map.get(list.get(i)) != null && map.get(list.get(i)) != "") {
+                str += list.get(i) + "=" + map.get(list.get(i))+"&";
+            }
+        }
+        String stringA=str.substring(0,str.length()-1);
+        String stringSignTemp=CALLBACK_PATH + stringA;
+        System.out.println(stringSignTemp);
+        String sign= DigestUtils.md5DigestAsHex(stringSignTemp.getBytes());
+        return sign;
+    }
+
+   /* public static void main(String[] arge){
+        Map<String,Object> map=new HashMap<>();
+        map.put("even","erwerw");
+        map.put("time","2017-01-01");
+        map.put("uuid","454656");
+        map.put("old_uuid",45646465);
+        map.put("manufactory","cy");
+        map.put("home_id",5);
+        map.put("gateway_uuid",45);
+        map.put("room_id",23);
+        map.put("detail",232);
+
+        String sign= getSign(map);
+        System.out.println(sign);
+    }*/
+
 
 }

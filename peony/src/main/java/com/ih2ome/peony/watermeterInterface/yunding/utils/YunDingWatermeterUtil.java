@@ -136,7 +136,7 @@ public class YunDingWatermeterUtil {
                 sign = list.get(i) + "=" + map.get(list.get(i));
             }
         }
-        
+
         return sign;
     }
 
