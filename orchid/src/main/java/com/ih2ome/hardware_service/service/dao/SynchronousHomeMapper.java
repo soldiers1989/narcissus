@@ -46,7 +46,7 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @param room_id
      * @return
      */
-    Long findFloorIdByRoomId(Long room_id);
+    Integer findFloorIdByRoomId(Long room_id);
 
     /**
      * 更新房源为已同步至云丁

@@ -5,6 +5,7 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_server.server.callback.vo.CallbackRequestVo;
 import com.ih2ome.hardware_service.service.enums.AlarmTypeEnum;
 import com.ih2ome.hardware_service.service.enums.HouseCatalogEnum;
+import com.ih2ome.hardware_service.service.enums.OnOffStatusEnum;
 import com.ih2ome.hardware_service.service.enums.SmartDeviceTypeEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.*;
 import com.ih2ome.hardware_service.service.service.*;
@@ -71,16 +72,21 @@ public class YunDingCallBackController extends BaseController {
     public ResponseEntity<Object> watermeterAmountAsync(@RequestBody CallbackRequestVo apiRequestVO) {
         //校验签名
         String sign = apiRequestVO.getSign();
-        boolean flag=checkSign(sign,apiRequestVO);
+        /*boolean flag=checkSign(sign,apiRequestVO);
         if(!flag){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("请求错误");
-        }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
+        }*/
         String even = apiRequestVO.getEven();
         IWatermeter iWatermeter = getIWatermeter();
         switch (even){
             //绑定水表及水表网关设备事件
             case  "deviceInstall" :
-                deviceInstallEvent(apiRequestVO,iWatermeter);
+                try {
+                    deviceInstallEvent(apiRequestVO,iWatermeter);
+                } catch (WatermeterException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+                }
                 break;
             //替换水表网关事件
             case "deviceReplace" :
@@ -119,11 +125,13 @@ public class YunDingCallBackController extends BaseController {
                 watermeterAmountAsyncEvent(apiRequestVO);
                 break;
         }
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body("ok");
     }
 
     private void watermeterAmountAsyncEvent(CallbackRequestVo apiRequestVO) {
-        JSONObject detail = (JSONObject) apiRequestVO.getDetail();
+        Object detailObj = apiRequestVO.getDetail();
+        String s = JSONObject.toJSONString(detailObj);
+        JSONObject detail=JSONObject.parseObject(s);
         Integer amount = (Integer) detail.get("amount");
         int time = apiRequestVO.getTime();
         Date date=new Date();
@@ -138,7 +146,7 @@ public class YunDingCallBackController extends BaseController {
             SmartWatermeterRecord smartWatermeterRecord=new SmartWatermeterRecord();
             smartWatermeterRecord.setCreatedAt(new Date(time));
             smartWatermeterRecord.setDeviceAmount(amount);
-            int watermeterid = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
+            Integer watermeterid = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
             smartWatermeterRecord.setSmartWatermeterId(watermeterid);
             //判断是否为同一天
             if(isTheSameDate(timestamp,nowTime)){
@@ -152,7 +160,7 @@ public class YunDingCallBackController extends BaseController {
             //查询水表在线状态
             Integer onOffStatus= watermeterService.findWatermeterOnOffStatusByUuid(apiRequestVO.getUuid());
             //水表状态离线
-            if (onOffStatus==2) {
+            if (onOffStatus == OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()) {
                 //水表在线
                 watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), AlarmTypeEnum.YUN_DING_WATERMETER_EXCEPTION_TYPE_ON_LINE.getCode());
                 //添加异常上线记录
@@ -179,17 +187,19 @@ public class YunDingCallBackController extends BaseController {
     }
 
 
-    public void deviceInstallEvent(CallbackRequestVo apiRequestVO,IWatermeter iWatermeter){
+    public void deviceInstallEvent(CallbackRequestVo apiRequestVO,IWatermeter iWatermeter) throws WatermeterException {
 
         String uuid = apiRequestVO.getUuid();
-        JSONObject detail = (JSONObject) apiRequestVO.getDetail();
+        Object detailObj =  apiRequestVO.getDetail();
+        String s = JSONObject.toJSONString(detailObj);
+        JSONObject detail=JSONObject.parseObject(s);
 
         String home_id =apiRequestVO.getHome_id();
         String str = home_id.substring(0,2);
         Integer house_catalog=null;
         Long houseId=null;
         Long apartmentId=null;
-        Long floorId=null;
+        Integer floorId=null;
         Long room_id= Long.parseLong(apiRequestVO.getRoom_id().substring(2));
         Long created_by=null;
         switch (str){
@@ -218,11 +228,8 @@ public class YunDingCallBackController extends BaseController {
         JSONObject resJson = null;
 
         String watermeterInfo = null;
-        try {
-            watermeterInfo = iWatermeter.getWatermeterInfo(uuid, apiRequestVO.getManufactory());
-        } catch (WatermeterException e) {
-            Log.error("获取水表信息失败",e);
-        }
+
+        watermeterInfo = iWatermeter.getWatermeterInfo(uuid, apiRequestVO.getManufactory());
 
         resJson = JSONObject.parseObject(watermeterInfo);
 
@@ -391,21 +398,23 @@ public class YunDingCallBackController extends BaseController {
         return sign;
     }
 
-   /* public static void main(String[] arge){
+    public static void main(String[] arge){
         Map<String,Object> map=new HashMap<>();
-        map.put("even","erwerw");
-        map.put("time","2017-01-01");
+        map.put("even","deviceInstall");
+        int time = (int) System.currentTimeMillis();
+        map.put("time",time);
         map.put("uuid","454656");
         map.put("old_uuid",45646465);
         map.put("manufactory","cy");
         map.put("home_id",5);
         map.put("gateway_uuid",45);
         map.put("room_id",23);
-        map.put("detail",232);
+        map.put("detail","");
 
+        System.out.println(time);
         String sign= getSign(map);
         System.out.println(sign);
-    }*/
+    }
 
 
 }

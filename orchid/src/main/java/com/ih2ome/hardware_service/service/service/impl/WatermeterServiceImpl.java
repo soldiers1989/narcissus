@@ -263,7 +263,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public int findApartmentCreatedByByApartmentId(Long apartmentId) {
+    public Integer findApartmentCreatedByByApartmentId(Long apartmentId) {
         return watermeterDao.selectApartmentCreatedByByApartmentId(apartmentId);
     }
 
@@ -273,9 +273,9 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public int findWatermeterIdByUuid(String uuid) {
-        SmartWatermeter watermeter=watermeterDao.findWatermetersByUuId(uuid);
-        return watermeter.getSmartWatermeterId();
+    public Integer findWatermeterIdByUuid(String uuid) {
+        Integer watermeterId=watermeterDao.findWatermetersByUuId(uuid);
+        return watermeterId;
     }
 
     /**

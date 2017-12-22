@@ -147,14 +147,14 @@ public interface WatermeterService {
      * @param apartmentId
      * @return
      */
-    int findApartmentCreatedByByApartmentId(Long apartmentId);
+    Integer findApartmentCreatedByByApartmentId(Long apartmentId);
 
     /**
      * 查询水表idByuuid
      * @param uuid
      * @return
      */
-    int findWatermeterIdByUuid(String uuid);
+    Integer findWatermeterIdByUuid(String uuid);
 
     /**
      * 查询水表读数by水表id

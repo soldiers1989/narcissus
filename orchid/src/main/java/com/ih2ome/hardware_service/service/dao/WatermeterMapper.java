@@ -141,14 +141,14 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param apartmentId
      * @return
      */
-    int selectApartmentCreatedByByApartmentId(Long apartmentId);
+    Integer selectApartmentCreatedByByApartmentId(Long apartmentId);
 
     /**
      * 查询水表byuuid
      * @return
      * @param uuid
      */
-    SmartWatermeter findWatermetersByUuId(String uuid);
+    Integer findWatermetersByUuId(String uuid);
 
     /**
      * 查询水表读数by水表id

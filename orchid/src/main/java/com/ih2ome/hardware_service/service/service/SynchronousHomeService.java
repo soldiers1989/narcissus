@@ -30,7 +30,7 @@ public interface SynchronousHomeService {
      * @param room_id
      * @return
      */
-    Long findFloorIdByRoomId(Long room_id);
+    Integer findFloorIdByRoomId(Long room_id);
 
     /**
      * 通过用户id查询用户所有公寓信息

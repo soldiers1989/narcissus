@@ -192,14 +192,14 @@
     </select>
 
     <!--查询floorIdByroomId-->
-    <select id="selectApartmentCreatedByByApartmentId" parameterType="int" resultType="java.lang.Integer">
+    <select id="selectApartmentCreatedByByApartmentId" resultType="java.lang.Integer">
         SELECT apartment.created_by
         FROM <include refid="apartment"/> apartment WHERE apartment.id = #{id}
     </select>
 
     <!-- 查询水表byuuid -->
-    <select id="findWatermetersByUuId" parameterType="int" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter">
-        SELECT smart_watermeter_id,created_at,created_by,updated_at,deleted_at,deleted_by,apartment_id,floor_id,house_id,room_id,house_catalog,meter_type,uuid,onoff_status,price,meter_amount,last_amount,meter_updated_at,manufactory
+    <select id="findWatermetersByUuId" parameterType="String" resultType="java.lang.Integer">
+        SELECT smart_watermeter_id
         FROM <include refid="smart_watermeter"/> smart_watermeter WHERE smart_watermeter.uuid = #{uuid}
     </select>
 
@@ -233,7 +233,7 @@
     </select>
 
     <!-- 查询水表在线状态byuuid -->
-    <select id="selectWatermeterOnOffStatusByUuid" parameterType="String" resultType="java.sql.Timestamp">
+    <select id="selectWatermeterOnOffStatusByUuid" parameterType="String" resultType="java.lang.Integer">
         SELECT onoff_status FROM <include refid="smart_watermeter"/>  WHERE uuid = #{uuid}
     </select>
 

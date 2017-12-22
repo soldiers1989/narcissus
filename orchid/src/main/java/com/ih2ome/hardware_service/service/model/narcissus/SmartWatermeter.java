@@ -16,7 +16,7 @@ public class SmartWatermeter implements Serializable{
   private Date deletedAt;
   private Long deletedBy;
   private Long apartmentId;
-  private Long floorId;
+  private int floorId;
   private Long houseId;
   private Long roomId;
   private int houseCatalog;

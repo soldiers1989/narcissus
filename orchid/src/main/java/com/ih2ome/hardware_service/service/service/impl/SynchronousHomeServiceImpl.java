@@ -205,8 +205,8 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      * @return
      */
     @Override
-    public Long findFloorIdByRoomId(Long room_id) {
-        return  synchronousHomeMapper.findFloorIdByRoomId(room_id);
+    public Integer findFloorIdByRoomId(Long room_id) {
+        return synchronousHomeMapper.findFloorIdByRoomId(room_id);
     }
 
     /**

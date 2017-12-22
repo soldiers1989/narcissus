@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ import java.util.List;
  * create by 2017/12/5
  * @Emial Lucius.li@ixiaoshuidi.com
  */
+@Component
+@EnableScheduling
 public class YunDingWatermeterInfoScheduled {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
