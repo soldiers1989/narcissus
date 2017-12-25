@@ -1,8 +1,6 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO;
-import com.ih2ome.hardware_service.service.vo.WatermeterRecordManagerVO;
-import com.ih2ome.hardware_service.service.vo.WatermeterWebListVo;
+import com.ih2ome.hardware_service.service.vo.*;
 
 import java.util.List;
 
@@ -29,4 +27,36 @@ public interface WatermeterManagerService {
      * @return
      */
     List<WatermeterRecordManagerVO> findWatermeterRecordByWatermeterIdAndTime(WatermeterRecordManagerVO watermeterRecordManagerVO);
+
+    /**
+     * 查找水表异常记录
+     * @param watermeterId
+     * @param page
+     *@param count @return
+     */
+    PageResult<ExceptionVO> findWatermeterException(Integer watermeterId, Integer page, Integer count);
+
+    /**
+     * 网关list
+     * @param gatewayWebListVo
+     * @return
+     */
+    List<GatewayWebListVo> gatewayWebListVoList(GatewayWebListVo gatewayWebListVo);
+
+    /**
+     * 网关详情
+     * @param smartGatewayId
+     * @param type
+     * @return
+     */
+    GatewayWebDetailVO findGatewayDetailbyId(int smartGatewayId, String type);
+
+    /**
+     * 网关异常记录
+     * @param gatewayId
+     * @param page
+     * @param count
+     * @return
+     */
+    PageResult<ExceptionVO> findGatewayException(int gatewayId, Integer page, Integer count);
 }

@@ -13,8 +13,8 @@ import java.io.Serializable;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Data
-public class WatermeterWebListVo extends BaseEntity implements Serializable {
-    private String watermeterId;//水表id
+public class GatewayWebListVo extends BaseEntity implements Serializable {
+    private String smartGatewayId;//网关id
     private String apartmentName;//公寓名称
     private String apartmentType;//公寓类型
     private String authUserName;//用户名(房东手机号)
@@ -27,11 +27,14 @@ public class WatermeterWebListVo extends BaseEntity implements Serializable {
     private String roomNo;//房间编号
     private String customerName;//租客姓名
     private String customerPhone;//租客电话
-    private String deviceName;//设备号（水表序列号）
+//    private String deviceName;//设备号（网关序列号）
     private String communicationStatus;//通讯状态
-    private String updatedAt;
+    private String updatedAt;//更新时间
+    private String installTime;//安装时间
 //    private String isHub;//是否是主表
+    private String g;//是否是主表
     private String amount;//电表读数
     private String type;//集中式或分散式
-    private String gatewayUuid;//水表网关
+    private String gatewayUuid;//水表网关uuid（网关编号）
+    private String operator;//厂商
 }

@@ -134,7 +134,7 @@ public class YunDingCallBackController extends BaseController {
         JSONObject detail=JSONObject.parseObject(s);
         Integer amount = (Integer) detail.get("amount");
         int time = apiRequestVO.getTime();
-        Date date=new Date();
+        //抄表成功
         if(amount > 0) {
             //存入数据库
             watermeterService.updataWaterLastAmount(apiRequestVO.getUuid(), amount, time);
@@ -272,10 +272,10 @@ public class YunDingCallBackController extends BaseController {
             SmartGateway smartGateway = new SmartGateway();
             smartGateway.setCreatedAt(new Date(System.currentTimeMillis()));
             smartGateway.setCreatedBy(created_by);
-            smartGateway.setUpdatedAt(created_at);
-            smartGateway.setUpdatedBy(created_by);
-            smartGateway.setDeletedAt(created_at);
-            smartGateway.setDeletedBy(created_by);
+//            smartGateway.setUpdatedAt(created_at);
+//            smartGateway.setUpdatedBy(created_by);
+//            smartGateway.setDeletedAt(created_at);
+//            smartGateway.setDeletedBy(created_by);
             try {
                 String waterGatewayInfo = iWatermeter.getWaterGatewayInfo(apiRequestVO.getGateway_uuid());
             } catch (WatermeterException e) {
@@ -304,7 +304,7 @@ public class YunDingCallBackController extends BaseController {
             smartGateway.setInstallName("");
             smartGateway.setInstallMobile("");
             smartGateway.setBrand(manufactory);
-            smartGateway.setOperator("yungding");
+            smartGateway.setOperator("云丁");
             //smartGateway.setInstallStatus(1);
             smartGateway.setOnoffStatus(gatewayOnoff);
             //smartGateway.setRemark(null);

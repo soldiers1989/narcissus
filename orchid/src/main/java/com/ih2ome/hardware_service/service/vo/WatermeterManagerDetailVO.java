@@ -20,8 +20,10 @@ public class WatermeterManagerDetailVO {
     private Date createdAt;
     //更新时间
     private Date meterUpdateAt;
-    //当月累计水表量
-    private int Amount;
+    //最近抄表读数
+    private int lastAmount;
+    //月初水量
+    private int meterAmount;
     //通讯状态
     private int onoffStatus;
     //绑定网关

@@ -2,9 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.common.base.MyMapper;
 import com.ih2ome.hardware_service.service.model.volga.Apartment;
-import com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO;
-import com.ih2ome.hardware_service.service.vo.WatermeterRecordManagerVO;
-import com.ih2ome.hardware_service.service.vo.WatermeterWebListVo;
+import com.ih2ome.hardware_service.service.vo.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -47,4 +45,32 @@ public interface WatermeterManagerMapper extends MyMapper<Apartment>{
      */
     List<WatermeterRecordManagerVO> selectWatermeterRecordByWatermeterIdAndTime(WatermeterRecordManagerVO watermeterRecordManagerVO);
 
+
+    /**
+     * 查找分散式网关list
+     * @param gatewayWebListVo
+     * @return
+     */
+    List<GatewayWebListVo> findHmGatewayWebListVoList(GatewayWebListVo gatewayWebListVo);
+
+    /**
+     * 查找集中式网关list
+     * @param gatewayWebListVo
+     * @return
+     */
+    List<GatewayWebListVo> findJzGatewayWebListVoList(GatewayWebListVo gatewayWebListVo);
+
+    /**
+     * 查询分散式网关详情
+     * @param smartGatewayId
+     * @return
+     */
+    GatewayWebDetailVO selectHmGatewayDetailbyGatewayId(int smartGatewayId);
+
+    /**
+     * 查询集中式网关详情
+     * @param smartGatewayId
+     * @return
+     */
+    GatewayWebDetailVO selectJzGatewayDetailbyGatewayId(int smartGatewayId);
 }
