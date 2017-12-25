@@ -17,7 +17,7 @@ spring:
 
   ## 数据库访问配置
   datasource:
-    url: jdbc:mysql://rds03jhkvv73853nd232.mysql.rds.aliyuncs.com?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false:3306
+    url: jdbc:mysql://rds03jhkvv73853nd232.mysql.rds.aliyuncs.com:3306
     username: xiaoshuidi
     password: ACA6VdyocBuTNduF
     driver-class-name: com.mysql.cj.jdbc.Driver
