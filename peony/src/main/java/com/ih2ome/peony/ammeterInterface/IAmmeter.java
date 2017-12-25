@@ -23,8 +23,8 @@ public interface IAmmeter {
     void switchAmmeter(String devId,String onOrOff) throws AmmeterException;
 
     /**
-     * 设置电表先后付费
-     * @param devId
+
+     * @param devId   * 设置电表先后付费
      * @param payMod
      */
     void updatePayMod(String devId, PayMod payMod) throws AmmeterException;
