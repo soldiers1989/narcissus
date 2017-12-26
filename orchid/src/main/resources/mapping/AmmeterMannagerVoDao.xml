@@ -139,7 +139,7 @@
         csd.`name` deviceName,
         csd.`online` communicationStatus,
         csd.style isHub,
-        '0' `type`
+        '1' `type`
         FROM
         caspain_test.smart_device csd left join
         caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
@@ -213,7 +213,7 @@
         vsd.`name` deviceName,
         vsd.`online` communicationStatus,
         vsd.style isHub,
-        '1' `type`
+        '0' `type`
         FROM
         `volga_test`.smart_device vsd left join
         `volga_test`.room vr on vsd.room_id=vr.id LEFT JOIN
