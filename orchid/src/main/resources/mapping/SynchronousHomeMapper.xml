@@ -134,8 +134,8 @@
 
     <!--查询分散式式房源同步信息byUserid  -->
     <select id="findHouseIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
-        SELECT id,house.adress AS name,synchronous
-        FROM <include refid="house"/> house WHERE created_by = #{userId}
+        SELECT id,CONCAT(house.area,house.building_num,"栋",house.unit_num,"单元",house.house_num) AS name,synchronous
+        FROM <include refid="house"/> house WHERE created_by_id = #{userId}
     </select>
 
     <!--查询楼层idsByApartmentId-->
