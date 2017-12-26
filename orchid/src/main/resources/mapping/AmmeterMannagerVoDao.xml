@@ -192,6 +192,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND csd.`online` LIKE '%${communicationStatus}%'
         </if>
+        and csd.bind='1'
         order by csd.updated_at desc
     </select>
 
@@ -266,6 +267,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND vsd.`online` LIKE '%${communicationStatus}%'
         </if>
+        and vsd.bind='1'
         order by vsd.updated_at desc
     </select>
 
