@@ -213,27 +213,6 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 查询分散式房源是否已同步byuserId
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/hm/synchronous_housing/FindHomeIsSynchronouseds",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingFindHomeIsSynchronouseds(@RequestBody ApiRequestVO apiRequestVO)  {
-        //获取公寓id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int userId = (int) dt.get("id");
-
-        List<HomeSyncVO> homeSyncVOS = null;
-
-        homeSyncVOS = synchronousHomeService.findHmHomeIsSynchronousedByUserId(userId);
-
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("homeSyncVOS",homeSyncVOS);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
-    }
-
-    /**
      * 分散式用户房源
      * @param apiRequestVO
      * @return
