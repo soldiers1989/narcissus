@@ -64,7 +64,7 @@
         csd.style isHub,
 		csd.last_num surplus,
 		nsmi.exception_type mistakeType,
-        '0' `type`,
+        '1' `type`,
         csd.last_num_date lastUpdateTime
         FROM
         caspain_test.smart_device csd left join
@@ -120,6 +120,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND csd.`online` LIKE '%${communicationStatus}%'
         </if>
+        and csd.bind='1'
         order by nsmi.created_at desc
     </select>
 
@@ -142,7 +143,7 @@
         vsd.style isHub,
 		vsd.last_num surplus,
 		nsmi.exception_type mistakeType,
-        '1' `type`,
+        '0' `type`,
         vsd.last_num_date lastUpdateTime
         FROM
         `volga_test`.smart_device vsd left join
@@ -199,6 +200,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND vsd.`online` LIKE '%${communicationStatus}%'
         </if>
+        and vsd.bind='1'
         order by nsmi.created_at desc
     </select>
 </mapper>

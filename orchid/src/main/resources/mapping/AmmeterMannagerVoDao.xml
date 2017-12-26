@@ -139,7 +139,7 @@
         csd.`name` deviceName,
         csd.`online` communicationStatus,
         csd.style isHub,
-        '0' `type`
+        '1' `type`
         FROM
         caspain_test.smart_device csd left join
         caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
@@ -192,6 +192,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND csd.`online` LIKE '%${communicationStatus}%'
         </if>
+        and csd.bind='1'
         order by csd.updated_at desc
     </select>
 
@@ -212,7 +213,7 @@
         vsd.`name` deviceName,
         vsd.`online` communicationStatus,
         vsd.style isHub,
-        '1' `type`
+        '0' `type`
         FROM
         `volga_test`.smart_device vsd left join
         `volga_test`.room vr on vsd.room_id=vr.id LEFT JOIN
@@ -266,25 +267,26 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND vsd.`online` LIKE '%${communicationStatus}%'
         </if>
+        and vsd.bind='1'
         order by vsd.updated_at desc
     </select>
 
     <!--分散式根据电表id获取电表-->
     <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-      select * from caspain_test.smart_device sd where sd.id=#{id}
+      select * from caspain_test.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--分散式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from caspain_test.smart_device sd where sd.master=#{serialId}
+        select * from caspain_test.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
     <!--集中式根据电表id获取电表-->
     <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from `volga_test`.smart_device sd where sd.id=#{id}
+        select * from `volga_test`.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--集中式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from `volga_test`.smart_device sd where sd.master=#{serialId}
+        select * from `volga_test`.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
     <!--分散式根据id获取第三方对接id-->
@@ -349,6 +351,7 @@
 	    OR cr.is_delete IS NULL
       )
       AND csd.id = #{id}
+      and csd.bind='1'
     GROUP BY
 	  csd.id
 	order by csd.updated_at desc
@@ -394,6 +397,7 @@
 	)
 	AND vsd.id = #{id}
 	AND vsd.style = '0'
+	and vsd.bind='1'
 	GROUP BY
 		vsd.id
 )
@@ -444,6 +448,7 @@ UNION
 		)
 		AND vsd.id = #{id}
 		AND vsd.style = '1'
+		and vsd.bind='1'
 		GROUP BY
 			vsd.id
 	)
@@ -451,7 +456,7 @@ UNION
 
     <!--获取分散式电表主表-->
     <select id="getMasterAmmeter" resultType="com.ih2ome.hardware_service.service.model.caspain.SmartDevice">
-      SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id}
+      SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id} and ctsdm.bind='1' and ctsds.bind='1'
     </select>
 
     <!--通过主表获取子表-->
@@ -465,6 +470,8 @@ UNION
         WHERE
 	    ctsds.`master` = ctsdm.serial_id
         AND ctsdm.id = #{id}
+        and ctsdm.bind='1'
+        and ctsds.bind='1'
     </select>
 
 
