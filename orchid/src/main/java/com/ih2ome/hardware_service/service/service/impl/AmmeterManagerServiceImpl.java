@@ -140,9 +140,39 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
             ammeterMannagerDao.updateAmmeterWithConcentrated(data);
             //ammeterMannagerVoDao.addDeviceRecordWithConcentrated(data);
         }
-        return data;
+        return ammeterParamRound(data);
     }
 
+
+    /**
+     * 四舍五入
+     * @param ammeterInfoVo
+     * @return
+     */
+    private AmmeterInfoVo ammeterParamRound(AmmeterInfoVo ammeterInfoVo){
+        if(ammeterInfoVo.getPowerDay()!=null){
+            ammeterInfoVo.setPowerDay(Math.round(ammeterInfoVo.getPowerDay()*100)/100d);
+        }
+        if(ammeterInfoVo.getPowerOutput()!=null){
+            ammeterInfoVo.setPowerOutput(Math.round(ammeterInfoVo.getPowerOutput()*100)/100d);
+        }
+        if(ammeterInfoVo.getCurrent()!=null){
+            ammeterInfoVo.setCurrent(Math.round(ammeterInfoVo.getCurrent()*100)/100d);
+        }
+        if(ammeterInfoVo.getPowerMonth()!=null){
+            ammeterInfoVo.setPowerMonth(Math.round(ammeterInfoVo.getPowerMonth()*100)/100d);
+        }
+        if(ammeterInfoVo.getShareDay()!=null){
+            ammeterInfoVo.setShareDay(Math.round(ammeterInfoVo.getShareDay()*100)/100d);
+        }
+        if(ammeterInfoVo.getShareMonth()!=null){
+            ammeterInfoVo.setShareMonth(Math.round(ammeterInfoVo.getShareMonth()*100)/100d);
+        }
+        if(ammeterInfoVo.getSurplus()!=null){
+            ammeterInfoVo.setSurplus(Math.round(ammeterInfoVo.getSurplus()*100)/100d);
+        }
+        return ammeterInfoVo;
+    }
     /**
      * 计算分摊
      * @param ammeterInfoVo
