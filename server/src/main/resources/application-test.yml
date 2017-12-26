@@ -17,9 +17,9 @@ spring:
 
   ## 数据库访问配置
   datasource:
-    url: jdbc:mysql://rds4y3ify14fg0auc3f9.mysql.rds.aliyuncs.com:3306
-    username: xiaoshuidi
-    password: xiaoshuidi
+    url: jdbc:mysql://rds03jhkvv73853nd232.mysql.rds.aliyuncs.com:3306
+    username: h2ome_test
+    password: h2ome_test
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
