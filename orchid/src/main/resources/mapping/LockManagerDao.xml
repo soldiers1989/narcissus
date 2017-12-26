@@ -4,12 +4,12 @@
 
     <!--select-->
     <!--分散式房源门锁列表（模糊查询）-->
-    <select id="findDispersedLock" parameterType="com.ih2ome.hardware_service.service.vo.LockManagerVo"
-            resultType="com.ih2ome.hardware_service.service.vo.LockManagerVo">
+    <select id="findDispersedLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
+            resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
         SELECT
         csl.id lockId,
         ch.area apartmentName,
-        '0' apartmentType,
+        '1' apartmentType,
         cau.username authUserName,
         ch.address houseAddress,
         cr.`name` roomNo,
@@ -82,12 +82,12 @@
     </select>
 
     <!--集中式房源门锁列表（模糊查询）-->
-    <select id="findConcentrateLock" parameterType="com.ih2ome.hardware_service.service.vo.LockManagerVo"
-            resultType="com.ih2ome.hardware_service.service.vo.LockManagerVo">
+    <select id="findConcentrateLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
+            resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
         SELECT
         vsl.id lockId,
         va.`name` apartmentName,
-        '1' apartmentType,
+        '0' apartmentType,
         cau.username authUserName,
         va.address houseAddress,
         vr.`name` roomNo,
@@ -154,4 +154,6 @@
             AND vsl.status LIKE '%${status}%'
         </if>
     </select>
+
+
 </mapper>

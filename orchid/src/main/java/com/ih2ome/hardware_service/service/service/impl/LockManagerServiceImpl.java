@@ -4,9 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.ih2ome.hardware_service.service.dao.LockManagerDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
-import com.ih2ome.hardware_service.service.vo.LockManagerVo;
+import com.ih2ome.hardware_service.service.vo.LockListVo;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -22,19 +21,19 @@ public class LockManagerServiceImpl implements LockManagerService {
     private LockManagerDao lockManagerDao;
 
     //门锁列表
-    public List<LockManagerVo> lockList(LockManagerVo lockManagerVo) {
-        if (lockManagerVo == null) {
+    public List<LockListVo> lockList(LockListVo lockListVo) {
+        if (lockListVo == null) {
             return null;
         }
-        if (lockManagerVo.isInitPageRows()) {
-            PageHelper.startPage(lockManagerVo.getPage(), lockManagerVo.getRows());
+        if (lockListVo.isInitPageRows()) {
+            PageHelper.startPage(lockListVo.getPage(), lockListVo.getRows());
         }
         //判断是分散式
-        if (lockManagerVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())) {
-            return lockManagerDao.findDispersedLock(lockManagerVo);
+        if (lockListVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())) {
+            return lockManagerDao.findDispersedLock(lockListVo);
             //判断是集中式
-        } else if (lockManagerVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())) {
-            return lockManagerDao.findConcentrateLock(lockManagerVo);
+        } else if (lockListVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            return lockManagerDao.findConcentrateLock(lockListVo);
         } else {
             return null;
         }

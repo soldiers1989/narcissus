@@ -1,6 +1,6 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.vo.LockManagerVo;
+import com.ih2ome.hardware_service.service.vo.LockListVo;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ import java.util.List;
 public interface LockManagerService {
 
     //门锁列表
-    List<LockManagerVo> lockList(LockManagerVo lockManagerVo);
+    List<LockListVo> lockList(LockListVo lockListVo);
 }

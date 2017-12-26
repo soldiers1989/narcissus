@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @email sky.li@ixiaoshuidi.com
  **/
 @Data
-public class LockManagerVo extends BaseEntity implements Serializable{
+public class LockListVo extends BaseEntity implements Serializable{
     private String lockId;//门锁id
     private String apartmentName;//公寓名称
     private String apartmentType;//公寓类型
