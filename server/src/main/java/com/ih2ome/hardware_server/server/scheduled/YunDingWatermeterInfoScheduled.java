@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ import java.util.List;
  * create by 2017/12/5
  * @Emial Lucius.li@ixiaoshuidi.com
  */
+@Component
+@EnableScheduling
 public class YunDingWatermeterInfoScheduled {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
@@ -61,8 +65,8 @@ public class YunDingWatermeterInfoScheduled {
     /**
      * 定时获取水表抄表
      */
-    @Scheduled(cron="0 0 4 * * ?")
-    public void getPowerBeeMissDevice() {
+    @Scheduled(cron="0 0 2 * * ?")
+    public void getWatermeterRecord() {
         IWatermeter iWatermeter = getIWatermeter();
         Log.info("====================水表抄表任务开始==================");
         //获取uuids和manufactorys
@@ -76,5 +80,24 @@ public class YunDingWatermeterInfoScheduled {
             }
         }
         Log.info("====================水表抄表任务结束==================");
+    }
+
+    /**
+     * 定时同步月初水表读数
+     */
+    @Scheduled(cron="0 0 4 1 * ?")
+    public void setMeterAmount() {
+        Log.info("====================水表月初读数同步开始==================");
+        //获取水表id
+        List<Integer> watermeterIds= watermeterService.findAllWatermeterIds();
+        for (Integer watermeterId:watermeterIds) {
+                //获取月初水表读数
+                Integer meterAmount = watermeterService.findMeterAmountByWatermeterId(watermeterId);
+                //更新月初水表读数
+                if (meterAmount != null) {
+                    watermeterService.updataWatermeterMeterAmount(watermeterId,meterAmount);
+                }
+        }
+        Log.info("====================水表月初读数同步结束==================");
     }
 }

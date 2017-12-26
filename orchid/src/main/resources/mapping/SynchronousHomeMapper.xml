@@ -118,7 +118,7 @@
     </select>
 
     <!--查询floorIdByroomId-->
-    <select id="findFloorIdByRoomId" parameterType="int" resultType="java.lang.Integer">
+    <select id="findFloorIdByRoomId" resultType="java.lang.Integer">
         SELECT jzroom.floor_id
         FROM <include refid="jzroom"/> jzroom WHERE jzroom.id = #{id}
     </select>

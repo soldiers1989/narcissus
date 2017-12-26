@@ -1,10 +1,8 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ih2ome.hardware_service.service.dao.WatermeterMapper;
-import com.ih2ome.hardware_service.service.enums.HouseCatalogEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
@@ -14,7 +12,6 @@ import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
-import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -207,16 +204,14 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public int readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
+    public String readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
         //查询水表uuid，和供应商
         WatermeterRecordParamsVo params=watermeterDao.findWatermeterRecordParamsByWatermeterId(watermeterId);
         //查询水表实时抄表记录
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-        String res= iWatermeter.readWatermeter(params.getUuid(),params.getManufactory());
+        String reslut= iWatermeter.readWatermeter(params.getUuid(),params.getManufactory());
 
-        YunDingResponseVo jsonObject=JSONObject.parseObject(res,YunDingResponseVo.class);
-        int result = jsonObject.getErrNo();
-        return result;
+        return reslut;
     }
 
 
@@ -268,7 +263,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public int findApartmentCreatedByByApartmentId(Long apartmentId) {
+    public Integer findApartmentCreatedByByApartmentId(Long apartmentId) {
         return watermeterDao.selectApartmentCreatedByByApartmentId(apartmentId);
     }
 
@@ -278,9 +273,9 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public int findWatermeterIdByUuid(String uuid) {
-        SmartWatermeter watermeter=watermeterDao.findWatermetersByUuId(uuid);
-        return watermeter.getSmartWatermeterId();
+    public Integer findWatermeterIdByUuid(String uuid) {
+        Integer watermeterId=watermeterDao.findWatermetersByUuId(uuid);
+        return watermeterId;
     }
 
     /**
@@ -289,7 +284,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public int findWatermeterLastAmountByWatermeterId(int watermeterId) {
+    public Integer findWatermeterLastAmountByWatermeterId(int watermeterId) {
         return watermeterDao.findWatermeterAmountByWatermeterId(watermeterId);
     }
 
@@ -322,20 +317,58 @@ public class WatermeterServiceImpl implements WatermeterService {
         return watermeterDao.selectWatermeterMeterUpdatedAt(uuid);
     }
 
+    /**
+     * 集中式水表listby网关id
+     * @param smartGatewayId
+     * @return
+     */
     @Override
-    public List<WatermeterWebListVo> watermeterWebListVoList(WatermeterWebListVo watermeterWebListVo) {
-        if(watermeterWebListVo.getPage()!= null && watermeterWebListVo.getRows() != null){
-            PageHelper.startPage(watermeterWebListVo.getPage(),watermeterWebListVo.getRows());
-        }
-        //分散式
-        if(watermeterWebListVo.getType().equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode())){
-            return watermeterDao.findHmWatermeterWebListVoList(watermeterWebListVo);
-        } else if(watermeterWebListVo.getType().equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode())){
-            //集中式
-            return watermeterDao.findJzWatermeterWebListVoList(watermeterWebListVo);
-        }else{
-            return null;
-        }
+    public List<JZWatermeterDetailVO> findJzWatermetersByGatewayId(int smartGatewayId) {
+        return watermeterDao.selectJzWatermetersByGatewayId(smartGatewayId);
+    }
+
+    @Override
+    public List<JZWatermeterGatewayVO> findGatewaysByUserId(int userId) {
+        return watermeterDao.selectGatewaysByUserId(userId);
+    }
+
+    /**
+     * 查询水表在线状态byuuid
+     * @param uuid
+     * @return
+     */
+    @Override
+    public Integer findWatermeterOnOffStatusByUuid(String uuid) {
+        return watermeterDao.selectWatermeterOnOffStatusByUuid(uuid);
+    }
+
+    /**
+     * 查询所有水表id
+     * @return
+     */
+    @Override
+    public List<Integer> findAllWatermeterIds() {
+        return watermeterDao.selectAllWatermeterIds();
+    }
+
+    /**
+     * 查询水表月初抄表读数
+     * @param watermeterId
+     * @return
+     */
+    @Override
+    public Integer findMeterAmountByWatermeterId(Integer watermeterId) {
+        return watermeterDao.selectMeterAmountByWatermeterId(watermeterId);
+    }
+
+    /**
+     * 更新水表月初读数
+     * @param watermeterId
+     * @param meterAmount
+     */
+    @Override
+    public void updataWatermeterMeterAmount(Integer watermeterId, Integer meterAmount) {
+        watermeterDao.updataWatermeterMeterAmount(watermeterId,meterAmount);
     }
 
 

@@ -3,6 +3,7 @@ package com.ih2ome.hardware_server.server.controller.watermeter.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SynchronousHomeService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class SynchronousHomeController  extends BaseController {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         JSONArray jsonArray = dt.getJSONArray("apartmentIds");
         int[] apartmentIds = new int[jsonArray.size()];
-        for (int i=0;i<=jsonArray.size();i++){
+        for (int i=0;i<jsonArray.size();i++){
             apartmentIds[i]= (int) jsonArray.get(i);
         }
 
@@ -57,19 +59,19 @@ public class SynchronousHomeController  extends BaseController {
             }
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         }
 
@@ -90,44 +92,51 @@ public class SynchronousHomeController  extends BaseController {
         //获取楼层id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int apartmentId = dt.getIntValue("apartmentId");
-        int floorId = dt.getIntValue("floorId");
+        JSONArray floorIds = dt.getJSONArray("floorIds");
         String result = null;
+        List<String> list =new ArrayList<>();
         try {
-            result = synchronousHomeService.synchronousHousingByFloorId(apartmentId,floorId);
+            for (int i=0;i<floorIds.size();i++ ) {
+                Integer floorId = (Integer) floorIds.get(i);
+                result = synchronousHomeService.synchronousHousingByFloorId(apartmentId,floorId);
+                list.add(result);
+            }
+
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         }
 
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(list));
         JSONObject responseJson = new JSONObject();
-        responseJson.put("result",result);
+        responseJson.put("result",jsonArray);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
 
     /**
-     * 查询集中式房源是否已同步
+     * 查询集中式房源s同步状态
      * @param apiRequestVO
      * @return
      */
     @RequestMapping(value="/jz/synchronous_housing/FindjzHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
     public String synchronousHousingFindJZHomesIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) {
-        //获取公寓id
+        //获取id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int userId = (int) dt.get("userId");
+        int userId = (int) dt.get("id");
 
         List<HomeSyncVO> homeSyncVOS = null;
 
@@ -135,9 +144,32 @@ public class SynchronousHomeController  extends BaseController {
 
         JSONObject responseJson = new JSONObject();
         responseJson.put("homeSyncVOS",homeSyncVOS);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
+
+    /**
+     * 查询集中式房源floors同步状态
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/synchronous_housing/FindjzFloorsIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindJZFloorsIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) {
+        //获取公寓id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int apartmentId = (int) dt.get("apartmentId");
+
+        List<HomeSyncVO> homeSyncVOS = null;
+
+        homeSyncVOS = synchronousHomeService.findFloorsIsSynchronousedByApartmentId(apartmentId);
+
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("homeSyncVOS",homeSyncVOS);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+
 
     /**
      * 查询房源是否已同步byhomeId（从第三方查询）
@@ -155,28 +187,28 @@ public class SynchronousHomeController  extends BaseController {
             yunDingResponseVo = synchronousHomeService.findHomeIsSynchronousedByHomeId(homeId,type);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
             return res;
         } catch (AmmeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"修改失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
             return res;
         }
         JSONObject responseJson = new JSONObject();
         responseJson.put("home_state",yunDingResponseVo);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
 
@@ -185,7 +217,7 @@ public class SynchronousHomeController  extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/synchronous_housing/FindHomeIsSynchronouseds",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/hm/synchronous_housing/FindHomeIsSynchronouseds",method = RequestMethod.POST,produces = {"application/json"})
     public String synchronousHousingFindHomeIsSynchronouseds(@RequestBody ApiRequestVO apiRequestVO)  {
         //获取公寓id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
@@ -197,7 +229,7 @@ public class SynchronousHomeController  extends BaseController {
 
         JSONObject responseJson = new JSONObject();
         responseJson.put("homeSyncVOS",homeSyncVOS);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
 
@@ -210,12 +242,12 @@ public class SynchronousHomeController  extends BaseController {
     public String synchronousHousingFindHouse(@RequestBody ApiRequestVO apiRequestVO){
         //获取用户id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int id = dt.getIntValue("userId");
+        int id = dt.getIntValue("id");
         List<HouseVO> houseVOS = synchronousHomeService.findHouseByUserId(id);
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(houseVOS));
         JSONObject responseJson = new JSONObject();
         responseJson.put("houseVOS",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
 
@@ -241,27 +273,156 @@ public class SynchronousHomeController  extends BaseController {
             }
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         } catch (WatermeterException e) {
             Log.error(e.getMessage(),e);
-            String res = structureSuccessResponseVO(null,new Date().toString(),"同步失败"+e.getMessage());
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
             return res;
         }
 
         JSONObject responseJson = new JSONObject();
         responseJson.put("result",home_id);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"哈哈哈");
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
 
+    /**
+     * 查询集中式未同步room
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/synchronous_housing/FindjzRoomsIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindJZRoomsIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) {
+        //获取公寓id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int apartmentId = (int) dt.get("apartmentId");
+
+        List<HomeSyncVO> homeSyncVOS = null;
+
+        homeSyncVOS = synchronousHomeService.findRoomsIsSynchronousedByApartmentId(apartmentId);
+
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("homeSyncVOS",homeSyncVOS);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+    /**
+     * 查询分散式未同步room
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/hm/synchronous_housing/FindhmRoomsIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindHMRoomsIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) {
+        //获取公寓id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int userId = (int) dt.get("houseId");
+
+        List<HomeSyncVO> homeSyncVOS = null;
+
+        homeSyncVOS = synchronousHomeService.findHmRoomsIsSynchronousedByUserId(userId);
+
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("homeSyncVOS",homeSyncVOS);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+    /**
+     * 集中式同步房源byrooms
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/synchronous_housing/byrooms",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingByRooms(@RequestBody ApiRequestVO apiRequestVO) {
+        //获取楼层id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int apartmentId = dt.getIntValue("apartmentId");
+        JSONArray jsonArray = dt.getJSONArray("roomIds");
+        int[] roomIds = new int[jsonArray.size()];
+        for (int i=0;i<jsonArray.size();i++){
+            roomIds[i]= (int) jsonArray.get(i);
+        }
+        String reslut=null;
+        try {
+            reslut = synchronousHomeService.synchronousHousingByRooms(apartmentId, roomIds);
+
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+            return res;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+            return res;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+            return res;
+        } catch (WatermeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+            return res;
+        }
+
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("result",reslut);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+
+    /**
+     * 分散式同步房源byrooms
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/hm/synchronous_housing/byrooms",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingByHmRooms(@RequestBody ApiRequestVO apiRequestVO) {
+        //获取楼层id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        //int apartmentId = dt.getIntValue("apartmentId");
+        JSONArray jsonArray = dt.getJSONArray("roomIds");
+        int[] roomIds = new int[jsonArray.size()];
+        for (int i=0;i<jsonArray.size();i++){
+            roomIds[i]= (int) jsonArray.get(i);
+        }
+        String reslut=null;
+        try {
+            for (int roomId:roomIds) {
+                reslut = synchronousHomeService.synchronousHousingByHmRooms(roomId);
+            }
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+            return res;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+            return res;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+            return res;
+        } catch (WatermeterException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+            return res;
+        }
+
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("result",reslut);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
 
 }

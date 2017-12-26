@@ -105,7 +105,7 @@ public interface WatermeterService {
      * @param watermeterId
      * @return
      */
-    int readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+    String readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
 
     /**
@@ -147,21 +147,21 @@ public interface WatermeterService {
      * @param apartmentId
      * @return
      */
-    int findApartmentCreatedByByApartmentId(Long apartmentId);
+    Integer findApartmentCreatedByByApartmentId(Long apartmentId);
 
     /**
      * 查询水表idByuuid
      * @param uuid
      * @return
      */
-    int findWatermeterIdByUuid(String uuid);
+    Integer findWatermeterIdByUuid(String uuid);
 
     /**
      * 查询水表读数by水表id
      * @param watermeterId
      * @return
      */
-    int findWatermeterLastAmountByWatermeterId(int watermeterId);
+    Integer findWatermeterLastAmountByWatermeterId(int watermeterId);
 
     /**
      * 更新水表在线离线状态
@@ -184,9 +184,43 @@ public interface WatermeterService {
     Timestamp findWatermeterMeterUpdatedAt(String uuid);
 
     /**
-     * 水表
-     * @param watermeterWebListVo
+     * 集中式水表listby网关id
+     * @param smartGatewayId
      * @return
      */
-    List<WatermeterWebListVo> watermeterWebListVoList(WatermeterWebListVo watermeterWebListVo);
+    List<JZWatermeterDetailVO> findJzWatermetersByGatewayId(int smartGatewayId);
+
+    /**
+     * 分散式网关listbyUserId
+     * @param userId
+     * @return
+     */
+    List<JZWatermeterGatewayVO> findGatewaysByUserId(int userId);
+
+    /**
+     * 查询水表在线状态byuuid
+     * @param uuid
+     * @return
+     */
+    Integer findWatermeterOnOffStatusByUuid(String uuid);
+
+    /**
+     * 查询所有水表id
+     * @return
+     */
+    List<Integer> findAllWatermeterIds();
+
+    /**
+     * 查询水表月初抄表读数
+     * @param watermeterId
+     * @return
+     */
+    Integer findMeterAmountByWatermeterId(Integer watermeterId);
+
+    /**
+     * 更新水表月初读数
+     * @param watermeterId
+     * @param meterAmount
+     */
+    void updataWatermeterMeterAmount(Integer watermeterId, Integer meterAmount);
 }

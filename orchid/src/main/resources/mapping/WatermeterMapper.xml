@@ -71,6 +71,12 @@
     <update id="updataWatermerterOnoffStatusByUuid" >
         UPDATE <include refid="smart_watermeter" /> SET onoff_status = #{code} WHERE uuid = #{uuid};
     </update>
+
+    <!-- 更新水表在线状态byUUid-->
+    <update id="updataWatermeterMeterAmount" >
+        UPDATE <include refid="smart_watermeter" /> SET meter_amount = #{meterAmount} WHERE smart_watermeter_id = #{watermeterId};
+    </update>
+
 <!-- 查 -->
 
     <!-- 分散式水表 -->
@@ -192,14 +198,14 @@
     </select>
 
     <!--查询floorIdByroomId-->
-    <select id="selectApartmentCreatedByByApartmentId" parameterType="int" resultType="java.lang.Integer">
+    <select id="selectApartmentCreatedByByApartmentId" resultType="java.lang.Integer">
         SELECT apartment.created_by
         FROM <include refid="apartment"/> apartment WHERE apartment.id = #{id}
     </select>
 
     <!-- 查询水表byuuid -->
-    <select id="findWatermetersByUuId" parameterType="int" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter">
-        SELECT smart_watermeter_id,created_at,created_by,updated_at,deleted_at,deleted_by,apartment_id,floor_id,house_id,room_id,house_catalog,meter_type,uuid,onoff_status,price,meter_amount,last_amount,meter_updated_at,manufactory
+    <select id="findWatermetersByUuId" parameterType="String" resultType="java.lang.Integer">
+        SELECT smart_watermeter_id
         FROM <include refid="smart_watermeter"/> smart_watermeter WHERE smart_watermeter.uuid = #{uuid}
     </select>
 
@@ -231,4 +237,22 @@
         WHERE g.created_by = #{id}
         GROUP BY g.smart_gateway_id;
     </select>
+
+    <!-- 查询水表在线状态byuuid -->
+    <select id="selectWatermeterOnOffStatusByUuid" parameterType="String" resultType="java.lang.Integer">
+        SELECT onoff_status FROM <include refid="smart_watermeter"/>  WHERE uuid = #{uuid}
+    </select>
+
+    <!-- 查询水表在线状态byuuid -->
+    <select id="selectAllWatermeterIds" resultType="java.lang.Integer">
+        SELECT smart_watermeter_id FROM <include refid="smart_watermeter"/>
+    </select>
+
+    <!-- 查询水表月初抄表记录 -->
+    <select id="selectMeterAmountByWatermeterId" resultType="java.lang.Integer">
+        SELECT device_amount FROM <include refid="smart_watermeter_record" /> WHERE TO_DAYS(created_at) =TO_DAYS(last_day(date_sub(now(),interval 1 month))) AND smart_watermeter_id = #{watermeterId}
+    </select>
+
+
+
 </mapper>

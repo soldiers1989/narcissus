@@ -30,7 +30,7 @@ public interface SynchronousHomeService {
      * @param room_id
      * @return
      */
-    Long findFloorIdByRoomId(Long room_id);
+    Integer findFloorIdByRoomId(Long room_id);
 
     /**
      * 通过用户id查询用户所有公寓信息
@@ -82,4 +82,47 @@ public interface SynchronousHomeService {
      * @return
      */
     ApartmentVO findApartmentIdByApartmentId(int apartmentId);
+
+    /**
+     * 查询floor同步状态
+     * @param apartmentId
+     * @return
+     */
+    List<HomeSyncVO> findFloorsIsSynchronousedByApartmentId(int apartmentId);
+
+    /**
+     * 查询room同步状态
+     * @param apartmentId
+     * @return
+     */
+    List<HomeSyncVO> findRoomsIsSynchronousedByApartmentId(int apartmentId);
+
+    /**
+     * 同步房源byRooms
+     * @param homeId
+     * @param roomId
+     * @return
+     */
+    String synchronousHousingByRooms(int homeId, int[] roomId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+
+    /**
+     * 查询分散式为同步房间
+     * @param userId
+     * @return
+     */
+    List<HomeSyncVO> findHmRoomsIsSynchronousedByUserId(int userId);
+
+    /**
+     * 同步分散式roomByroomIds
+     * @param roomIds
+     * @return
+     */
+    String synchronousHousingByHmRooms(int roomIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+
+    /**
+     * 查询公寓id和nameby用户id
+     * @param id
+     * @return
+     *//*
+    List<ApartmentVO> findApartmentByUserId(int id);*/
 }

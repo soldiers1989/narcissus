@@ -46,20 +46,20 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @param room_id
      * @return
      */
-    Long findFloorIdByRoomId(Long room_id);
+    Integer findFloorIdByRoomId(Long room_id);
 
     /**
      * 更新房源为已同步至云丁
      * @param apartmentId
      */
-    void updateHomeSyncByApartmentId(@Param("homeSync") int homeSync,@Param("apartmentId") int apartmentId);
+    void updateHomeSyncByApartmentId(@Param("homeSync") int homeSync, @Param("apartmentId") int apartmentId);
 
     /**
      * 更新room为已同步至云丁
      * @param roomSync
      * @param list
      */
-    void updataRoomSyncByRoomId(@Param("roomSync") Integer roomSync,@Param("list") List<AddRoomVO> list);
+    void updataRoomSyncByRoomId(@Param("roomSync") Integer roomSync, @Param("list") List<AddRoomVO> list);
 
     /**
      * 查询集中式房源同步信息
@@ -80,7 +80,7 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @param homeSync
      * @param floorId
      */
-    void updataFloorSyncByFloorId(@Param("homeSync") int homeSync,@Param("floorId") int floorId);
+    void updataFloorSyncByFloorId(@Param("homeSync") int homeSync, @Param("floorId") int floorId);
 
     /**
      * 查询楼层idsByapartmentId
@@ -94,7 +94,7 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @param floorSync
      * @param floorIds
      */
-    void updataFloorSyncByFloorIds(@Param("floorSync")Integer floorSync,@Param("list") List<Integer> floorIds);
+    void updataFloorSyncByFloorIds(@Param("floorSync") Integer floorSync, @Param("list") List<Integer> floorIds);
 
     /**
      * 分散式用户房源
@@ -121,14 +121,14 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * 更新分散式房源为已同步至云丁
      * @param houseId
      */
-    void updateHouseSyncByHouseId(@Param("homeSync") Integer homeSync,@Param("houseId")int houseId);
+    void updateHouseSyncByHouseId(@Param("homeSync") Integer homeSync, @Param("houseId") int houseId);
 
     /**
      * 更新分散式room为已同步至云丁
      * @param roomSync
      * @param list
      */
-    void updataHmRoomSyncByRoomId(@Param("roomSync") Integer roomSync,@Param("list") List<AddRoomVO> list);
+    void updataHmRoomSyncByRoomId(@Param("roomSync") Integer roomSync, @Param("list") List<AddRoomVO> list);
 
     /**
      * 查询集中式公寓by公寓id
@@ -136,4 +136,45 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @return
      */
     ApartmentVO selectApartmentIdByApartmentId(int apartmentId);
+
+    /**
+     * 查询集中式floor同步状态
+     * @param apartmentId
+     * @return
+     */
+    List<HomeSyncVO> selectFloorsIsSynchronousedByApartmentId(int apartmentId);
+
+    /**
+     * 查询集中式未同步rooms
+     * @param apartmentId
+     * @return
+     */
+    List<HomeSyncVO> selectRoomsIsSynchronousedByApartmentId(int apartmentId);
+
+    /**
+     * 查询房间byrooms
+     * @param roomIds
+     * @return
+     */
+    List<AddRoomVO> findRoomByRoomIds(int[] roomIds);
+
+    /**
+     * 查询分散式未同步room
+     * @param userId
+     * @return
+     */
+    List<HomeSyncVO> selectHmRoomsIsSynchronousedByUserId(int userId);
+
+    /**
+     * 查询houseIdByroomId
+     * @param roomId
+     */
+    Integer selectHouseIdByRoomId(int roomId);
+
+    /**
+     * 查询分散式roombyroomId
+     * @param roomId
+     * @return
+     */
+    AddRoomVO findhmRoomByRoomId(int roomId);
 }
