@@ -151,16 +151,16 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     private AmmeterInfoVo initFenTan(AmmeterInfoVo ammeterInfoVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         com.ih2ome.hardware_service.service.model.caspain.SmartDevice master = ammeterMannagerDao.getMasterAmmeter(ammeterInfoVo.getId());
-        AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getSerialId());
+        AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getUuid());
         Double powerDay = model.getPowerDay();
         Double powerMonth = model.getPowerDay();
         //0=公共区域 1=独立公共区域
         if(ammeterInfoVo.getUseCase().equals("0")){
-            List <String> ammeterSerialId = ammeterMannagerDao.getAmmeterByMaster(String.valueOf(master.getId()));
+            List <String> ammeterUuid = ammeterMannagerDao.getAmmeterByMaster(String.valueOf(master.getId()));
             Double allPowerDay = new Double(0.0);
             Double allPowerMonth = new Double(0.0);
-            for (String id:ammeterSerialId){
-                AmmeterInfoVo ammeter = iAmmeter.getAmmeterInfo(id);
+            for (String uuid:ammeterUuid){
+                AmmeterInfoVo ammeter = iAmmeter.getAmmeterInfo(uuid);
                 allPowerDay+=ammeter.getPowerDay();
                 allPowerMonth+=ammeter.getPowerMonth();
             }

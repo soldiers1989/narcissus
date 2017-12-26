@@ -5,7 +5,7 @@
     <!--insert-->
     <!--分散式保存分摊结果-->
     <insert id="addDeviceRecordWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        INSERT INTO caspain_test.smart_device_record (
+        INSERT INTO caspain_pro.smart_device_record (
         created_at,
         updated_at,
         num,
@@ -27,7 +27,7 @@
     </insert>
     <!--集中式保存分摊结果-->
     <insert id="addDeviceRecordWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        INSERT INTO `volga_test`.smart_device_record (
+        INSERT INTO `volga-pro`.smart_device_record (
         created_at,
         updated_at,
         created_by,
@@ -64,43 +64,43 @@
     <!--update-->
     <!--更新分散式电表使用场景-->
     <update id="updateWiringWithDispersed">
-        update caspain_test.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
+        update caspain_pro.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
     </update>
     <!--更新集中式电表使用场景-->
     <update id="updateWiringWithConcentrated">
-        update `volga_test`.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
+        update `volga-pro`.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
     </update>
     <!--更新分散式电表电量价格-->
     <update id="updateDevicePriceWithDispersed">
-        UPDATE caspain_test.smart_device sd SET sd.price=#{price} where sd.id=#{id}
+        UPDATE caspain_pro.smart_device sd SET sd.price=#{price} where sd.id=#{id}
     </update>
 
     <!--更新集中式电表电量价格-->
     <update id="updateDevicePriceWithConcentrated">
-        UPDATE `volga_test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
+        UPDATE `volga-pro`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
     </update>
     <!--更新分散式电表开关-->
     <update id="updateDeviceSwitchWithDispersed">
-        UPDATE caspain_test.smart_device sd SET sd.status=#{status} where sd.id=#{id}
+        UPDATE caspain_pro.smart_device sd SET sd.status=#{status} where sd.id=#{id}
     </update>
     <!--更新集中式电表开关-->
     <update id="updateDeviceSwitchWithConcentrated">
-        UPDATE `volga_test`.smart_device sd SET sd.status=#{status} where sd.id=#{id}
+        UPDATE `volga-pro`.smart_device sd SET sd.status=#{status} where sd.id=#{id}
     </update>
 
     <!--更新分散式电表开关-->
     <update id="updateDevicePayModWithDispersed">
-        update caspain_test.smart_device csd,caspain_test.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+        update caspain_pro.smart_device csd,caspain_pro.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
     </update>
 
     <!--更新集中式电表开关-->
     <update id="updateDevicePayModWithConcentrated">
-        update `volga_test`.smart_device csd,`volga_test`.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+        update `volga-pro`.smart_device csd,`volga-pro`.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
     </update>
 
     <!--分散式电表更新-->
     <update id="updateAmmeterWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        UPDATE caspain_test.smart_device ctsd
+        UPDATE caspain_pro.smart_device ctsd
         SET ctsd.last_num = #{surplus},
         ctsd.updated_at = NOW(),
         ctsd.last_num_date = #{lastTime},
@@ -111,7 +111,7 @@
     </update>
     <!--集中式电表更新-->
     <update id="updateAmmeterWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        UPDATE `volga_test`.smart_device vtsdm
+        UPDATE `volga-pro`.smart_device vtsdm
         SET vtsdm.last_num = #{surplus},
         vtsdm.updated_at = NOW(),
         vtsdm.last_num_date = #{lastTime},
@@ -141,11 +141,11 @@
         csd.style isHub,
         '1' `type`
         FROM
-        caspain_test.smart_device csd left join
-        caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
-        caspain_test.house ch on cr.house_id=ch.id LEFT JOIN
-        caspain_test.room_contract crc on crc.room_id=cr.id
-        LEFT JOIN caspain_test.auth_user cau on crc.created_by_id = cau.id
+        caspain_pro.smart_device csd left join
+        caspain_pro.room cr on csd.room_id=cr.id LEFT JOIN
+        caspain_pro.house ch on cr.house_id=ch.id LEFT JOIN
+        caspain_pro.room_contract crc on crc.room_id=cr.id
+        LEFT JOIN caspain_pro.auth_user cau on crc.created_by_id = cau.id
         WHERE
         1 = 1
         AND (csd.is_delete != '1' or csd.is_delete is null)
@@ -215,12 +215,12 @@
         vsd.style isHub,
         '0' `type`
         FROM
-        `volga_test`.smart_device vsd left join
-        `volga_test`.room vr on vsd.room_id=vr.id LEFT JOIN
-        `volga_test`.apartment va on vr.apartment_id=va.id LEFT JOIN
-        `volga_test`.room_contract vrc on vrc.room_id=vr.id
-        LEFT JOIN `volga_test`.area varea on va.area=varea.id
-        LEFT JOIN caspain_test.auth_user cau on vrc.created_by = cau.id
+        `volga-pro`.smart_device vsd left join
+        `volga-pro`.room vr on vsd.room_id=vr.id LEFT JOIN
+        `volga-pro`.apartment va on vr.apartment_id=va.id LEFT JOIN
+        `volga-pro`.room_contract vrc on vrc.room_id=vr.id
+        LEFT JOIN `volga-pro`.area varea on va.area=varea.id
+        LEFT JOIN caspain_pro.auth_user cau on vrc.created_by = cau.id
         WHERE
         1 = 1
         AND (vsd.is_delete != '1' or vsd.is_delete is null)
@@ -273,29 +273,29 @@
 
     <!--分散式根据电表id获取电表-->
     <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-      select * from caspain_test.smart_device sd where sd.id=#{id} and sd.bind='1'
+      select * from caspain_pro.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--分散式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from caspain_test.smart_device sd where sd.master=#{serialId} and sd.bind='1'
+        select * from caspain_pro.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
     <!--集中式根据电表id获取电表-->
     <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from `volga_test`.smart_device sd where sd.id=#{id} and sd.bind='1'
+        select * from `volga-pro`.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--集中式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from `volga_test`.smart_device sd where sd.master=#{serialId} and sd.bind='1'
+        select * from `volga-pro`.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
     <!--分散式根据id获取第三方对接id-->
     <select id="getDeviceIdByIdWithDispersed" resultType="String">
-        SELECT sd.uuid FROM caspain_test.smart_device sd WHERE sd.id=#{id}
+        SELECT sd.uuid FROM caspain_pro.smart_device sd WHERE sd.id=#{id}
     </select>
     <!--集中式根据id获取第三方对接id-->
     <select id="getDeviceIdByIdWithConcentrated" resultType="String">
-        SELECT sd.uuid FROM `volga_test`.smart_device sd WHERE sd.id=#{id}
+        SELECT sd.uuid FROM `volga-pro`.smart_device sd WHERE sd.id=#{id}
     </select>
 
 
@@ -328,14 +328,14 @@
 	    csd.style isHub,
 	    csd.share share
     FROM
-	    caspain_test.smart_device csd
-        LEFT JOIN caspain_test.smart_device_power_contract csdpc ON csd.id = csdpc.power_meter_id
-        LEFT JOIN caspain_test.room cr ON csd.room_id = cr.id
-        LEFT JOIN caspain_test.house ch ON cr.house_id = ch.id
-        LEFT JOIN caspain_test.room_contract crc ON crc.room_id = cr.id
-        LEFT JOIN caspain_test.auth_user cau ON crc.created_by_id = cau.id
-        LEFT JOIN caspain_test.smart_device csd2 ON csd2.`master` = csd.serial_id
-        LEFT JOIN caspain_test.room cr2 ON csd2.room_id = cr2.id
+	    caspain_pro.smart_device csd
+        LEFT JOIN caspain_pro.smart_device_power_contract csdpc ON csd.id = csdpc.power_meter_id
+        LEFT JOIN caspain_pro.room cr ON csd.room_id = cr.id
+        LEFT JOIN caspain_pro.house ch ON cr.house_id = ch.id
+        LEFT JOIN caspain_pro.room_contract crc ON crc.room_id = cr.id
+        LEFT JOIN caspain_pro.auth_user cau ON crc.created_by_id = cau.id
+        LEFT JOIN caspain_pro.smart_device csd2 ON csd2.`master` = csd.serial_id
+        LEFT JOIN caspain_pro.room cr2 ON csd2.room_id = cr2.id
     WHERE
 	    1 = 1
       AND (
@@ -374,13 +374,13 @@
 		vsd.style isHub,
 		vsd.share share
 	FROM
-		`volga_test`.smart_device vsd
-	LEFT JOIN `volga_test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
-	LEFT JOIN `volga_test`.room vr ON vsd.room_id = vr.id
-	LEFT JOIN `volga_test`.floor vf ON vr.floor_id = vf.id
-	LEFT JOIN `volga_test`.apartment va ON vf.apartment_id = va.id
-	LEFT JOIN `volga_test`.room_contract vrc ON vrc.room_id = vr.id
-	LEFT JOIN caspain_test.auth_user cau ON vrc.created_by = cau.id
+		`volga-pro`.smart_device vsd
+	LEFT JOIN `volga-pro`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
+	LEFT JOIN `volga-pro`.room vr ON vsd.room_id = vr.id
+	LEFT JOIN `volga-pro`.floor vf ON vr.floor_id = vf.id
+	LEFT JOIN `volga-pro`.apartment va ON vf.apartment_id = va.id
+	LEFT JOIN `volga-pro`.room_contract vrc ON vrc.room_id = vr.id
+	LEFT JOIN caspain_pro.auth_user cau ON vrc.created_by = cau.id
 	WHERE
 		1 = 1
 	AND (
@@ -430,12 +430,12 @@ UNION
 			vsd.style isHub,
 			vsd.share share
 		FROM
-			`volga_test`.smart_device vsd
-		LEFT JOIN `volga_test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
-		LEFT JOIN `volga_test`.floor vf ON vsd.floor = vf.id
-		LEFT JOIN `volga_test`.apartment va ON vf.apartment_id = va.id
-		LEFT JOIN `volga_test`.smart_device vsd2 ON vsd2.`master` = vsd.serial_id
-		LEFT JOIN `volga_test`.room vr2 ON vsd2.room_id = vr2.id
+			`volga-pro`.smart_device vsd
+		LEFT JOIN `volga-pro`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
+		LEFT JOIN `volga-pro`.floor vf ON vsd.floor = vf.id
+		LEFT JOIN `volga-pro`.apartment va ON vf.apartment_id = va.id
+		LEFT JOIN `volga-pro`.smart_device vsd2 ON vsd2.`master` = vsd.serial_id
+		LEFT JOIN `volga-pro`.room vr2 ON vsd2.room_id = vr2.id
 		WHERE
 			1 = 1
 		AND (
@@ -456,17 +456,16 @@ UNION
 
     <!--获取分散式电表主表-->
     <select id="getMasterAmmeter" resultType="com.ih2ome.hardware_service.service.model.caspain.SmartDevice">
-      SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id} and ctsdm.bind='1' and ctsds.bind='1'
+      SELECT ctsdm.* from caspain_pro.smart_device ctsdm,caspain_pro.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id} and ctsdm.bind='1' and ctsds.bind='1'
     </select>
 
     <!--通过主表获取子表-->
-    <select id="getAmmeterByMaster">
+    <select id="getAmmeterByMaster" resultType="String">
         SELECT
-	    ctsds.serial_id
+	    ctsds.uuid
         FROM
-	    caspain_test.smart_device ctsdm,
-	    caspain_test.smart_device ctsds,
-	    caspain_test.room
+	    caspain_pro.smart_device ctsdm,
+	    caspain_pro.smart_device ctsds
         WHERE
 	    ctsds.`master` = ctsdm.serial_id
         AND ctsdm.id = #{id}
