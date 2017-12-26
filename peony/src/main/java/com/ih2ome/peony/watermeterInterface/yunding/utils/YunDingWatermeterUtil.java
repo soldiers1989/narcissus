@@ -1,6 +1,7 @@
 package com.ih2ome.peony.watermeterInterface.yunding.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.common.utils.MyConstUtils;
@@ -108,8 +109,7 @@ public class YunDingWatermeterUtil {
             map = getTokenByThrid();
             token = (String) map.get(TOKEN_KEY);
             Integer expires_time = (Integer) map.get(EXPRIES_TIME);
-            System.out.println("expires_time:"+expires_time);
-            CacheUtils.set(TOKEN_KEY, token, 1);
+            CacheUtils.set(TOKEN_KEY, token, ExpireTime.HALF_AN_HOUR);
             // CacheUtils.set(UID_KEY,uid,0);
         }
         //CacheUtils.set(TOKEN_KEY, token, 1);

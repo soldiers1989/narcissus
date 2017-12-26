@@ -193,4 +193,24 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
     List<JZWatermeterGatewayVO> selectGatewaysByUserId(int userId);
 
     Integer selectWatermeterOnOffStatusByUuid(String uuid);
+
+    /**
+     * 查询所有水表id
+     * @return
+     */
+    List<Integer> selectAllWatermeterIds();
+
+    /**
+     * 查询月初水表抄表读数
+     * @param watermeterId
+     * @return
+     */
+    Integer selectMeterAmountByWatermeterId(Integer watermeterId);
+
+    /**
+     * 更新水表月初读数
+     * @param watermeterId
+     * @param meterAmount
+     */
+    void updataWatermeterMeterAmount(@Param("watermeterId") Integer watermeterId,@Param("meterAmount") Integer meterAmount);
 }

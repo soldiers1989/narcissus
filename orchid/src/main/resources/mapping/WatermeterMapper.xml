@@ -71,6 +71,12 @@
     <update id="updataWatermerterOnoffStatusByUuid" >
         UPDATE <include refid="smart_watermeter" /> SET onoff_status = #{code} WHERE uuid = #{uuid};
     </update>
+
+    <!-- 更新水表在线状态byUUid-->
+    <update id="updataWatermeterMeterAmount" >
+        UPDATE <include refid="smart_watermeter" /> SET meter_amount = #{meterAmount} WHERE smart_watermeter_id = #{watermeterId};
+    </update>
+
 <!-- 查 -->
 
     <!-- 分散式水表 -->
@@ -236,5 +242,17 @@
     <select id="selectWatermeterOnOffStatusByUuid" parameterType="String" resultType="java.lang.Integer">
         SELECT onoff_status FROM <include refid="smart_watermeter"/>  WHERE uuid = #{uuid}
     </select>
+
+    <!-- 查询水表在线状态byuuid -->
+    <select id="selectAllWatermeterIds" resultType="java.lang.Integer">
+        SELECT smart_watermeter_id FROM <include refid="smart_watermeter"/>
+    </select>
+
+    <!-- 查询水表月初抄表记录 -->
+    <select id="selectMeterAmountByWatermeterId" resultType="java.lang.Integer">
+        SELECT device_amount FROM <include refid="smart_watermeter_record" /> WHERE TO_DAYS(created_at) =TO_DAYS(last_day(date_sub(now(),interval 1 month))) AND smart_watermeter_id = #{watermeterId}
+    </select>
+
+
 
 </mapper>

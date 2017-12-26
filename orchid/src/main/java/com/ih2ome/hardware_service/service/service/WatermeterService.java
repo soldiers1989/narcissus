@@ -203,4 +203,24 @@ public interface WatermeterService {
      * @return
      */
     Integer findWatermeterOnOffStatusByUuid(String uuid);
+
+    /**
+     * 查询所有水表id
+     * @return
+     */
+    List<Integer> findAllWatermeterIds();
+
+    /**
+     * 查询水表月初抄表读数
+     * @param watermeterId
+     * @return
+     */
+    Integer findMeterAmountByWatermeterId(Integer watermeterId);
+
+    /**
+     * 更新水表月初读数
+     * @param watermeterId
+     * @param meterAmount
+     */
+    void updataWatermeterMeterAmount(Integer watermeterId, Integer meterAmount);
 }

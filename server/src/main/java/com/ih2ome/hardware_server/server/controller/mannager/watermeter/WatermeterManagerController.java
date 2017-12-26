@@ -98,13 +98,12 @@ public class WatermeterManagerController extends BaseController{
     @RequestMapping(value="/exception/watermeter",method = RequestMethod.POST,produces = {"application/json"})
     public String watermeterException(@RequestBody ApiRequestVO apiRequestVO){
         //获取水表id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int watermeterId = dt.getIntValue("watermeterId");
-        Integer page= dt.getIntValue("page");
-        Integer count= dt.getIntValue("count");
-        PageResult<ExceptionVO> pageResult= watermeterManagerService.findWatermeterException(watermeterId,page,count);
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        ExceptionVO exceptionVO = resData.getObject("exceptionVO", ExceptionVO.class);
+
+        List<ExceptionVO> exceptionVOS= watermeterManagerService.findWatermeterException(exceptionVO);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("ExceptionVOList",pageResult);
+        responseJson.put("exceptionVOS",exceptionVOS);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
@@ -155,13 +154,11 @@ public class WatermeterManagerController extends BaseController{
     @RequestMapping(value="/exception/Gateway",method = RequestMethod.POST,produces = {"application/json"})
     public String gatewayException(@RequestBody ApiRequestVO apiRequestVO){
         //获取水表id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int gatewayId = dt.getIntValue("gatewayId");
-        Integer page= dt.getIntValue("page");
-        Integer count= dt.getIntValue("count");
-        PageResult<ExceptionVO> pageResult= watermeterManagerService.findGatewayException(gatewayId,page,count);
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        ExceptionVO exceptionVO = resData.getObject("exceptionVO", ExceptionVO.class);
+        List<ExceptionVO> exceptionVOS= watermeterManagerService.findGatewayException(exceptionVO);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("ExceptionVOList",pageResult);
+        responseJson.put("exceptionVOS",exceptionVOS);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }

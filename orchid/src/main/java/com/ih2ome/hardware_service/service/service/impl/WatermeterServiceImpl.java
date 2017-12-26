@@ -342,5 +342,34 @@ public class WatermeterServiceImpl implements WatermeterService {
         return watermeterDao.selectWatermeterOnOffStatusByUuid(uuid);
     }
 
+    /**
+     * 查询所有水表id
+     * @return
+     */
+    @Override
+    public List<Integer> findAllWatermeterIds() {
+        return watermeterDao.selectAllWatermeterIds();
+    }
+
+    /**
+     * 查询水表月初抄表读数
+     * @param watermeterId
+     * @return
+     */
+    @Override
+    public Integer findMeterAmountByWatermeterId(Integer watermeterId) {
+        return watermeterDao.selectMeterAmountByWatermeterId(watermeterId);
+    }
+
+    /**
+     * 更新水表月初读数
+     * @param watermeterId
+     * @param meterAmount
+     */
+    @Override
+    public void updataWatermeterMeterAmount(Integer watermeterId, Integer meterAmount) {
+        watermeterDao.updataWatermeterMeterAmount(watermeterId,meterAmount);
+    }
+
 
 }

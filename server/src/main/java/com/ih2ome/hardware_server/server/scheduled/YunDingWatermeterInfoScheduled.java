@@ -65,8 +65,8 @@ public class YunDingWatermeterInfoScheduled {
     /**
      * 定时获取水表抄表
      */
-    @Scheduled(cron="0 0 4 * * ?")
-    public void getPowerBeeMissDevice() {
+    @Scheduled(cron="0 0 2 * * ?")
+    public void getWatermeterRecord() {
         IWatermeter iWatermeter = getIWatermeter();
         Log.info("====================水表抄表任务开始==================");
         //获取uuids和manufactorys
@@ -80,5 +80,24 @@ public class YunDingWatermeterInfoScheduled {
             }
         }
         Log.info("====================水表抄表任务结束==================");
+    }
+
+    /**
+     * 定时同步月初水表读数
+     */
+    @Scheduled(cron="0 0 4 1 * ?")
+    public void setMeterAmount() {
+        Log.info("====================水表月初读数同步开始==================");
+        //获取水表id
+        List<Integer> watermeterIds= watermeterService.findAllWatermeterIds();
+        for (Integer watermeterId:watermeterIds) {
+                //获取月初水表读数
+                Integer meterAmount = watermeterService.findMeterAmountByWatermeterId(watermeterId);
+                //更新月初水表读数
+                if (meterAmount != null) {
+                    watermeterService.updataWatermeterMeterAmount(watermeterId,meterAmount);
+                }
+        }
+        Log.info("====================水表月初读数同步结束==================");
     }
 }

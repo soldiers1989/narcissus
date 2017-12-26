@@ -30,11 +30,10 @@ public interface WatermeterManagerService {
 
     /**
      * 查找水表异常记录
-     * @param watermeterId
-     * @param page
-     *@param count @return
+     * @param exceptionVO
+     * @return
      */
-    PageResult<ExceptionVO> findWatermeterException(Integer watermeterId, Integer page, Integer count);
+    List<ExceptionVO> findWatermeterException(ExceptionVO exceptionVO);
 
     /**
      * 网关list
@@ -53,10 +52,8 @@ public interface WatermeterManagerService {
 
     /**
      * 网关异常记录
-     * @param gatewayId
-     * @param page
-     * @param count
+     * @param exceptionVO
      * @return
      */
-    PageResult<ExceptionVO> findGatewayException(int gatewayId, Integer page, Integer count);
+    List<ExceptionVO> findGatewayException(ExceptionVO exceptionVO);
 }

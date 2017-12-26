@@ -128,6 +128,10 @@ public class YunDingCallBackController extends BaseController {
         return ResponseEntity.ok().body("ok");
     }
 
+    /**
+     * 抄表读数同步
+     * @param apiRequestVO
+     */
     private void watermeterAmountAsyncEvent(CallbackRequestVo apiRequestVO) {
         Object detailObj = apiRequestVO.getDetail();
         String s = JSONObject.toJSONString(detailObj);
@@ -160,7 +164,7 @@ public class YunDingCallBackController extends BaseController {
             //查询水表在线状态
             Integer onOffStatus= watermeterService.findWatermeterOnOffStatusByUuid(apiRequestVO.getUuid());
             //水表状态离线
-            if (onOffStatus == OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()) {
+            if (onOffStatus.equals(OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode())) {
                 //水表在线
                 watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), AlarmTypeEnum.YUN_DING_WATERMETER_EXCEPTION_TYPE_ON_LINE.getCode());
                 //添加异常上线记录
@@ -187,6 +191,12 @@ public class YunDingCallBackController extends BaseController {
     }
 
 
+    /**
+     * 绑定水表及水表网关设备事件
+     * @param apiRequestVO
+     * @param iWatermeter
+     * @throws WatermeterException
+     */
     public void deviceInstallEvent(CallbackRequestVo apiRequestVO,IWatermeter iWatermeter) throws WatermeterException {
 
         String uuid = apiRequestVO.getUuid();
@@ -326,7 +336,12 @@ public class YunDingCallBackController extends BaseController {
         watermeterService.addSmartGatewayBind(smartGatewayBind);
     }
 
-    //判断两个时间戳(Timestamp)是否在同一天
+    /**
+     * 判断两个时间戳(Timestamp)是否在同一天
+     * @param time1
+     * @param time2
+     * @return
+     */
     public  boolean isTheSameDate(Timestamp time1,Timestamp time2 ) {
         if(time1!=null&&time2!=null){
             Calendar c1=Calendar.getInstance();
@@ -354,7 +369,12 @@ public class YunDingCallBackController extends BaseController {
         return false;
     }
 
-    //校验签名
+    /**
+     * 校验签名
+     * @param sign
+     * @param apiRequestVO
+     * @return
+     */
     private boolean checkSign(String sign, CallbackRequestVo apiRequestVO) {
         Map<String,Object> map=new HashMap<>();
         map.put("even",apiRequestVO.getEven());

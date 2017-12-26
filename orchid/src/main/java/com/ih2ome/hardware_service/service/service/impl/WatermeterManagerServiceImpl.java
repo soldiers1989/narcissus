@@ -93,22 +93,17 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
 
     /**
      * 水表异常记录
-     * @param watermeterId
-     * @param page
-     *@param count @return
+     * @param exceptionVO
+     *  @return
      */
     @Override
-    public PageResult<ExceptionVO> findWatermeterException(Integer watermeterId, Integer page, Integer count) {
-        if(page == null && count != null){
-            page=1;
-            count=10;
+    public List<ExceptionVO> findWatermeterException(ExceptionVO exceptionVO) {
+        if(exceptionVO.getPage()!= null && exceptionVO.getRows() != null){
+            PageHelper.startPage(exceptionVO.getPage(),exceptionVO.getRows());
         }
-        // 开启分页
-        PageHelper.startPage(page, count);
-        List<ExceptionVO> exceptionVOList = watermeterMapper.findWatermeterExceptionByWaterId(watermeterId);
-        PageInfo<ExceptionVO> info = new PageInfo<>(exceptionVOList);
-        // 返回分页结果对象
-        return new PageResult<>(info.getTotal(), exceptionVOList);
+        List<ExceptionVO> exceptionVOList = watermeterMapper.findWatermeterExceptionByWaterId(exceptionVO.getDaviceId());
+
+        return exceptionVOList;
     }
 
     /**
@@ -139,7 +134,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      * @return
      */
     @Override
-    public GatewayWebDetailVO findGatewayDetailbyId(int smartGatewayId, String type) {
+    public GatewayWebDetailVO findGatewayDetailbyId (int smartGatewayId, String type) {
         //分散式
         if(type.equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode())){
             return watermeterManagerMapper.selectHmGatewayDetailbyGatewayId(smartGatewayId);
@@ -153,23 +148,17 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
 
     /**
      * 查询网关异常记录
-     * @param gatewayId
-     * @param page
-     * @param count
+     * @param exceptionVO
      * @return
      */
     @Override
-    public PageResult<ExceptionVO> findGatewayException(int gatewayId, Integer page, Integer count) {
-        if(page == null && count != null){
-            page=1;
-            count=10;
+    public List<ExceptionVO> findGatewayException(ExceptionVO exceptionVO) {
+        if(exceptionVO.getPage()!= null && exceptionVO.getRows() != null){
+            PageHelper.startPage(exceptionVO.getPage(),exceptionVO.getRows());
         }
-        // 开启分页
-        PageHelper.startPage(page, count);
-        List<ExceptionVO> exceptionVOList = watermeterMapper.findWatermeterGatewayExceptionByGatewayId(gatewayId);
-        PageInfo<ExceptionVO> info = new PageInfo<>(exceptionVOList);
-        // 返回分页结果对象
-        return new PageResult<>(info.getTotal(), exceptionVOList);
+        List<ExceptionVO> exceptionVOList = watermeterMapper.findWatermeterGatewayExceptionByGatewayId(exceptionVO.getDaviceId());
+
+        return exceptionVOList;
     }
 
 
