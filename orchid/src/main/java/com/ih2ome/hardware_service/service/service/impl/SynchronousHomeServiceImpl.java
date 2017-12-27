@@ -229,6 +229,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findHomeIsSynchronousedByUserId(int userid) {
+        Log.info("用户id："+userid);
         return synchronousHomeMapper.findApartmentIsSynchronousedByUserId(userid);
     }
 
@@ -239,6 +240,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findHmHomeIsSynchronousedByUserId(int userid) {
+        Log.info("用户id："+userid);
         return synchronousHomeMapper.findHouseIsSynchronousedByUserId(userid);
     }
 
@@ -254,9 +256,9 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String devId = null;
         String home=null;
         if(type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()){
-            home="hm"+homeId;
+            home=HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+homeId;
         }else {
-            home="jz"+homeId;
+            home=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+homeId;
         }
         String res= iWatermeter.findHomeState(home);
         if (res == null){
