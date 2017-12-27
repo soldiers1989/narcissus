@@ -139,7 +139,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Date lastTime = jsonObject.getDate("Lasttime");
         ammeterInfoVo.setLastTime(dateToString(lastTime));
         ammeterInfoVo.setPowerDay(expand.getDouble("powerday"));
-        ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
+        //ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
         ammeterInfoVo.setVoltage(expand.getDouble("voltage"));
         ammeterInfoVo.setPowerMonth(expand.getDouble("powermonth"));
         Boolean isNode = jsonObject.getBoolean("Isnode");
