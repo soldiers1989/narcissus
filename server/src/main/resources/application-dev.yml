@@ -17,7 +17,7 @@ spring:
   
   ## 数据库访问配置
   datasource:
-    url: jdbc:mysql://10.0.0.24:3306
+    url: jdbc:mysql://10.0.0.20:3306
     username: root
     password: 1234
     driver-class-name: com.mysql.jdbc.Driver
