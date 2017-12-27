@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.dao;
 
+import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,14 @@ import java.util.List;
 public interface LockManagerDao {
     //门锁列表（集中式）
     List<LockListVo> findConcentrateLock(LockListVo lockListVo);
+
     //门锁列表（分散式）
     List<LockListVo> findDispersedLock(LockListVo lockListVo);
+
+    //门锁基本信息(分散式)
+    LockInfoVo findDispersedLockByLockNo(String lockNo);
+
+    //门锁基本信息(集中式)
+    LockInfoVo findConcentrateLockByLockNo(String lockNo);
 
 }

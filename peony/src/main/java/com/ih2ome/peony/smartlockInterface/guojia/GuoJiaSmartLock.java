@@ -74,5 +74,6 @@ public class GuoJiaSmartLock implements ISmartLock{
         guoJiaLockInfoVo.setRegion(regionList);
         System.out.println(guoJiaLockInfoVo.toString());
         return guoJiaLockInfoVo;
+
     }
 }

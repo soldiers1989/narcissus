@@ -4,9 +4,17 @@ import com.github.pagehelper.PageHelper;
 import com.ih2ome.hardware_service.service.dao.LockManagerDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
+import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
+import com.ih2ome.peony.smartlockInterface.ISmartLock;
+import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.peony.smartlockInterface.vo.GuoJiaLockInfoVo;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,4 +46,29 @@ public class LockManagerServiceImpl implements LockManagerService {
             return null;
         }
     }
+
+    //根据门锁编码查询门锁基本信息
+    @Override
+    public LockInfoVo getLockInfoVo(String lockNo, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
+        LockInfoVo lockInfoVo = null;
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            lockInfoVo = lockManagerDao.findDispersedLockByLockNo(lockNo);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            lockInfoVo = lockManagerDao.findConcentrateLockByLockNo(lockNo);
+        }
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
+        GuoJiaLockInfoVo guoJiaLockInfo = iSmartLock.getGuoJiaLockInfo(lockNo);
+        Long guaranteeTimeStart = guoJiaLockInfo.getGuaranteeTimeStart();
+        Long guaranteeTimeEnd = guoJiaLockInfo.getGuaranteeTimeEnd();
+        Long comuStatusUpdateTime = guoJiaLockInfo.getComuStatusUpdateTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        lockInfoVo.setGuaranteeTimeStart(simpleDateFormat.format(new Date(guaranteeTimeStart)));
+        lockInfoVo.setGuaranteeTimeEnd(simpleDateFormat.format(new Date(guaranteeTimeEnd)));
+        lockInfoVo.setStatusUpdateTime(simpleDateFormat.format(new Date(comuStatusUpdateTime)));
+        return lockInfoVo;
+    }
+
+
 }
