@@ -10,7 +10,7 @@ package com.ih2ome.hardware_service.service.enums;
 public enum HouseCatalogEnum {
 
    HOUSE_CATALOG_ENUM_CASPAIN("分散式", 1),
-    HOUSE_CATALOG_ENUM_VOLGA("集中式",2);
+    HOUSE_CATALOG_ENUM_VOLGA("集中式",0);
 
 
     private String name;
