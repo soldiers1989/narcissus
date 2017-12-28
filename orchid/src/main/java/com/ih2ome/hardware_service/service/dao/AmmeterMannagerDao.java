@@ -30,7 +30,7 @@ public interface AmmeterMannagerDao{
 
     List <DeviceIdAndNameVo> getDeviceBySerialIdWithConcentrated(String id);
 
-    void updateWiringWithDispersed(String id,String wiring);
+    void updateWiringWithDispersed(@Param("id")String id,@Param("wiring")String wiring);
 
     void updateWiringWithConcentrated(@Param("id") String id, @Param("wiring")String wiring);
 
