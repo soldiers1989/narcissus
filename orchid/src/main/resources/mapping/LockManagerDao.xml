@@ -201,6 +201,77 @@
     LEFT JOIN `volga_test`.apartment va ON vr.apartment_id = va.id
     LEFT JOIN volga_test.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
     WHERE vsl.serial_num=#{lockNo}
+    </select>
 
+    <!--分散式根据门锁编码查询密码列表-->
+    <select id="findDispersedPwdList" resultType="com.ih2ome.hardware_service.service.vo.LockPasswordListVo">
+        SELECT
+            sl.serial_num serial_num,
+            DATE_FORMAT(
+                slp.enable_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) enable_time,
+            DATE_FORMAT(
+                slp.disable_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) disable_time,
+            slp.digit_pwd_type,
+            slp.`status`,
+            CASE
+        WHEN slp.password_type = 0 THEN
+            '密码'
+        ELSE
+            '门卡'
+        END password_type,
+         slp.user_name,
+         slp.mobile,
+         slp.`password`,
+         slp.remark
+        FROM
+            caspain_test.`smart_lock_password` slp,
+            caspain_test.smart_lock sl
+        WHERE
+            slp.lock_id = sl.id
+        AND (
+            slp.is_delete != '1'
+            OR slp.is_delete IS NULL
+        )
+           AND sl.serial_num = #{lockNo}
+    </select>
+
+    <!--集中式根据门锁编码查询密码列表-->
+    <select id="findConcentratePwdList" resultType="com.ih2ome.hardware_service.service.vo.LockPasswordListVo">
+        SELECT
+            sl.serial_num serial_num,
+            DATE_FORMAT(
+                slp.enable_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) enable_time,
+            DATE_FORMAT(
+                slp.disable_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) disable_time,
+            slp.digit_pwd_type,
+            slp.`status`,
+            CASE
+        WHEN slp.password_type = 0 THEN
+            '密码'
+        ELSE
+            '门卡'
+        END password_type,
+         slp.user_name,
+         slp.mobile,
+         slp.`password`,
+         slp.remark
+        FROM
+            volga_test.`smart_lock_password` slp,
+            volga_test.smart_lock sl
+        WHERE
+            slp.lock_id = sl.id
+        AND (
+            slp.is_delete != '1'
+            OR slp.is_delete IS NULL
+        )
+           AND sl.serial_num = #{lockNo}
     </select>
 </mapper>
