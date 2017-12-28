@@ -54,7 +54,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 分散水表网关详情
+     * 分散水表网关详情 D3
      * @param apiRequestVO
      * @return
      */
@@ -78,7 +78,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 水费单价修改
+     * 水费单价修改  C6
      * @param apiRequestVO
      * @return
      */
@@ -138,7 +138,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 水表读数抄表请求
+     * 水表读数抄表请求 D6-1/D7-1
      * @param apiRequestVO
      * @return
      */
@@ -175,7 +175,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 水表读数明细当月累计水量
+     * 水表读数明细当月累计水量 D6-1/D7-1
      * @param apiRequestVO
      * @return
      */
@@ -194,7 +194,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 水表读数明细通过时间筛选查询
+     * 水表读数明细通过时间筛选查询 D8/D9
      * @param apiRequestVO
      * @return
      */
@@ -215,7 +215,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 查询集中式公寓列表
+     * 查询集中式公寓列表 C3
      * @param apiRequestVO
      * @return
      */
@@ -241,7 +241,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 查询集中式楼层列表by公寓id
+     * 查询集中式楼层列表by公寓id C2-1
      * @param apiRequestVO
      * @return
      */
@@ -279,7 +279,7 @@ public class WaterMeterController extends BaseController {
 
 
     /**
-     * 根据楼层查询集中式水表列表
+     * 根据楼层查询集中式水表列表 C2-2
      * @param apiRequestVO
      * @return
      */
@@ -300,7 +300,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 集中式水表网关列表
+     * 集中式水表网关列表 A1
      * @param apiRequestVO
      * @return
      */
@@ -328,7 +328,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 分散式水表网关列表
+     * 分散式水表网关列表 D4
      * @param apiRequestVO
      * @return
      */
@@ -348,7 +348,7 @@ public class WaterMeterController extends BaseController {
 
 
     /**
-     * 集中式水表网关详情
+     * 集中式水表网关详情 A3
      * @param apiRequestVO
      * @return
      */
@@ -373,7 +373,7 @@ public class WaterMeterController extends BaseController {
 
 
     /**
-     * 智能水表异常记录
+     * 智能水表异常记录 D4
      * @param apiRequestVO
      * @return
      */
@@ -391,7 +391,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 水表网关异常记录
+     * 水表网关异常记录 A4
      * @param apiRequestVO
      * @return
      */

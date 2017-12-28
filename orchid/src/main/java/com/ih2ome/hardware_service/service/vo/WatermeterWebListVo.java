@@ -31,7 +31,7 @@ public class WatermeterWebListVo extends BaseEntity implements Serializable {
     private String communicationStatus;//通讯状态
     private String updatedAt;
 //    private String isHub;//是否是主表
-    private String amount;//电表读数
+    private String amount;//水表读数
     private String type;//集中式或分散式
     private String gatewayUuid;//水表网关
 }

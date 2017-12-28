@@ -33,11 +33,32 @@ public class WatermeterManagerController extends BaseController{
     @Autowired
     private SynchronousHomeService synchronousHomeService;
 
-
     /**
      * 水表list
+     * @url /watermeter/manager/watermeterlist
      * @param apiRequestVO
-     * @return
+     * <pre>
+     *       watermeterWebListVo
+     *              watermeterId 水表id
+     *              apartmentName 公寓名称
+     *              apartmentType 公寓类型
+     *              authUserName 用户名(房东手机号)
+     *              provinceName 省名
+     *              cityName 市名
+     *              districtName 区名
+     *              areaName 小区名
+     *              houseAddress 房源地址
+     *              roomNo 房间编号
+     *              customerName 租客姓名
+     *              customerPhone 租客电话
+     *              deviceName 设备号（水表序列号）
+     *              communicationStatus 通讯状态
+     *              updatedAt  更新时间
+     *              amount 水表读数
+     *              type 集中式或分散式
+     *              gatewayUuid 水表网关
+     * </pre>
+     * @return result
      */
     @RequestMapping(value="/watermeterlist",method = RequestMethod.POST,produces = {"application/json"})
     public String watermeterWebList(@RequestBody ApiRequestVO apiRequestVO){

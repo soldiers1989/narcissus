@@ -36,7 +36,7 @@ public class SynchronousHomeController  extends BaseController {
 
 
     /**
-     * 集中式同步房源整栋
+     * 集中式同步房源整栋 B3
      * @param apiRequestVO
      * @return
      */
@@ -81,7 +81,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 同步房源一层一层同步
+     * 同步房源一层一层同步 B4-2
      * @param apiRequestVO
      * @return
      */
@@ -126,7 +126,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 查询集中式房源s同步状态
+     * 查询集中式房源s同步状态 B3-1
      * @param apiRequestVO
      * @return
      */
@@ -147,7 +147,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 查询集中式房源floors同步状态
+     * 查询集中式房源floors同步状态 B4-1
      * @param apiRequestVO
      * @return
      */
@@ -232,7 +232,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 分散式用户房源
+     * 分散式用户房源 D3
      * @param apiRequestVO
      * @return
      */
@@ -250,7 +250,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 分散式用户房源同步
+     * 分散式用户房源同步 D10
      * @param apiRequestVO
      * @return
      */

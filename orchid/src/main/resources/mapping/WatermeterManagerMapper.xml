@@ -134,7 +134,7 @@
         <include refid="house" /> va on vr.house_id=va.id LEFT JOIN
         <include refid="room_contract" /> vrc on vrc.room_id=vr.id
         LEFT JOIN <include refid="area" /> varea on va.area=varea.id
-        LEFT JOIN <include refid="auth_user" /> cau on vrc.created_by_id = cau.id
+        LEFT JOIN <include refid="auth_user" /> cau on watermeter.created_by_id = cau.id
         LEFT JOIN <include refid="smart_gateway_bind" /> gateway_bind ON gateway_bind.smart_id=watermeter.smart_watermeter_id
         LEFT JOIN <include refid="smart_gateway" /> gateway ON gateway.smart_gateway_id=gateway_bind.smart_gateway_id
         WHERE
