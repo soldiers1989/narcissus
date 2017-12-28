@@ -12,6 +12,8 @@ import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,6 +25,9 @@ import java.util.List;
  */
 @Service
 public class WatermeterServiceImpl implements WatermeterService {
+
+    private static final Logger Log = LoggerFactory.getLogger(WatermeterServiceImpl.class);
+
     @Resource
     private WatermeterMapper watermeterDao;
 
@@ -112,6 +117,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId) {
+        Log.info("floorId："+floorId);
         //通过楼层ids查询水表
         List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterDao.findWatermetersByFloorId(floorId);
         return jzWatermeterDetailVOS;
