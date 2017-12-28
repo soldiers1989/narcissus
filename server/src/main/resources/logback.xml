@@ -22,6 +22,25 @@
         </encoder>
     </appender>
 
+    <appender name="peony" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_peony.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="hardware_service" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_hardware_service.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="hardware_server" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_hardware_server.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- root级别 DEBUG -->
     <root>
         <!-- 打印debug级别日志及以上级别日志 -->
@@ -35,12 +54,11 @@
         <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="com.ih2ome.hardware_service" level="INFO" additivity="false">
+        <appender-ref ref="hardware_service"/>
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="logback.LogbackDemo" level="INFO" additivity="false">
-        <appender-ref ref="STDOUT"/>
-    </logger>
-    <logger name="logback.LogbackDemo" level="INFO" additivity="false">
+    <logger name="com.ih2ome.hardware_server" level="INFO" additivity="false">
+        <appender-ref ref="hardware_server"/>
         <appender-ref ref="STDOUT"/>
     </logger>
 
