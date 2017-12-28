@@ -222,7 +222,7 @@ public class YunDingCallBackController extends BaseController {
                 break;
             case "jz":
                 //2:集中式 volga
-                house_catalog=HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode();
+                house_catalog= HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode();
                 apartmentId =Long.valueOf(home_id.substring(2));
                 floorId = synchronousHomeService.findFloorIdByRoomId(room_id);
                 //查询created_by

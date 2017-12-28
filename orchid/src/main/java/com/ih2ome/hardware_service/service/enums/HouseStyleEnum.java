@@ -8,7 +8,7 @@ package com.ih2ome.hardware_service.service.enums;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public enum HouseStyleEnum {
-    CONCENTRAT("集中式","0"),DISPERSED("分散式","1");
+    DISPERSED("分散式","1"),CONCENTRAT("集中式","0");
 
     private String name;
     private String code;

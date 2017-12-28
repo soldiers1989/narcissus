@@ -10,7 +10,6 @@ import com.ih2ome.peony.ammeterInterface.powerBee.util.PowerBeeAmmeterUtil;
 import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -139,7 +138,7 @@ public class PowerBeeAmmeter implements IAmmeter {
         Date lastTime = jsonObject.getDate("Lasttime");
         ammeterInfoVo.setLastTime(dateToString(lastTime));
         ammeterInfoVo.setPowerDay(expand.getDouble("powerday"));
-        ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
+        //ammeterInfoVo.setSurplus(expand.getDouble("surplus"));
         ammeterInfoVo.setVoltage(expand.getDouble("voltage"));
         ammeterInfoVo.setPowerMonth(expand.getDouble("powermonth"));
         Boolean isNode = jsonObject.getBoolean("Isnode");

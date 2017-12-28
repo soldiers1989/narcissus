@@ -212,5 +212,5 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param watermeterId
      * @param meterAmount
      */
-    void updataWatermeterMeterAmount(@Param("watermeterId") Integer watermeterId,@Param("meterAmount") Integer meterAmount);
+    void updataWatermeterMeterAmount(@Param("watermeterId") Integer watermeterId, @Param("meterAmount") Integer meterAmount);
 }

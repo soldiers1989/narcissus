@@ -140,9 +140,39 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
             ammeterMannagerDao.updateAmmeterWithConcentrated(data);
             //ammeterMannagerVoDao.addDeviceRecordWithConcentrated(data);
         }
-        return data;
+        return ammeterParamRound(data);
     }
 
+
+    /**
+     * 四舍五入
+     * @param ammeterInfoVo
+     * @return
+     */
+    private AmmeterInfoVo ammeterParamRound(AmmeterInfoVo ammeterInfoVo){
+        if(ammeterInfoVo.getPowerDay()!=null){
+            ammeterInfoVo.setPowerDay(Math.round(ammeterInfoVo.getPowerDay()*100)/100d);
+        }
+        if(ammeterInfoVo.getPowerOutput()!=null){
+            ammeterInfoVo.setPowerOutput(Math.round(ammeterInfoVo.getPowerOutput()*100)/100d);
+        }
+        if(ammeterInfoVo.getCurrent()!=null){
+            ammeterInfoVo.setCurrent(Math.round(ammeterInfoVo.getCurrent()*100)/100d);
+        }
+        if(ammeterInfoVo.getPowerMonth()!=null){
+            ammeterInfoVo.setPowerMonth(Math.round(ammeterInfoVo.getPowerMonth()*100)/100d);
+        }
+        if(ammeterInfoVo.getShareDay()!=null){
+            ammeterInfoVo.setShareDay(Math.round(ammeterInfoVo.getShareDay()*100)/100d);
+        }
+        if(ammeterInfoVo.getShareMonth()!=null){
+            ammeterInfoVo.setShareMonth(Math.round(ammeterInfoVo.getShareMonth()*100)/100d);
+        }
+        if(ammeterInfoVo.getSurplus()!=null){
+            ammeterInfoVo.setSurplus(Math.round(ammeterInfoVo.getSurplus()*100)/100d);
+        }
+        return ammeterInfoVo;
+    }
     /**
      * 计算分摊
      * @param ammeterInfoVo
@@ -151,16 +181,16 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
     private AmmeterInfoVo initFenTan(AmmeterInfoVo ammeterInfoVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
         com.ih2ome.hardware_service.service.model.caspain.SmartDevice master = ammeterMannagerDao.getMasterAmmeter(ammeterInfoVo.getId());
-        AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getSerialId());
+        AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getUuid());
         Double powerDay = model.getPowerDay();
         Double powerMonth = model.getPowerDay();
         //0=公共区域 1=独立公共区域
         if(ammeterInfoVo.getUseCase().equals("0")){
-            List <String> ammeterSerialId = ammeterMannagerDao.getAmmeterByMaster(String.valueOf(master.getId()));
+            List <String> ammeterUuid = ammeterMannagerDao.getAmmeterByMaster(String.valueOf(master.getId()));
             Double allPowerDay = new Double(0.0);
             Double allPowerMonth = new Double(0.0);
-            for (String id:ammeterSerialId){
-                AmmeterInfoVo ammeter = iAmmeter.getAmmeterInfo(id);
+            for (String uuid:ammeterUuid){
+                AmmeterInfoVo ammeter = iAmmeter.getAmmeterInfo(uuid);
                 allPowerDay+=ammeter.getPowerDay();
                 allPowerMonth+=ammeter.getPowerMonth();
             }

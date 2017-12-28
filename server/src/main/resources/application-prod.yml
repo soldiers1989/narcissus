@@ -20,7 +20,7 @@ spring:
     url: jdbc:mysql://rds03jhkvv73853nd232.mysql.rds.aliyuncs.com:3306
     username: xiaoshuidi
     password: ACA6VdyocBuTNduF
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
     ## 连接池配置

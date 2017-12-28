@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -153,11 +153,11 @@
 		<dependency>
 			<groupId>com.ih2ome</groupId>
 			<artifactId>lotus</artifactId>
-			<version>0.1.7</version>
+			<version>0.1.6</version>
 		</dependency>
 
 		<!--生产配置-->
-		<dependency>
+		<!--<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-web</artifactId>
 	</dependency>
@@ -165,7 +165,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>-->
 		<!--生产配置-->
 	</dependencies>
 	<profiles>

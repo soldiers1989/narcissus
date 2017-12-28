@@ -139,7 +139,7 @@
         csd.`name` deviceName,
         csd.`online` communicationStatus,
         csd.style isHub,
-        '0' `type`
+        '1' `type`
         FROM
         caspain_test.smart_device csd left join
         caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
@@ -192,6 +192,7 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND csd.`online` LIKE '%${communicationStatus}%'
         </if>
+        and csd.bind='1'
         order by csd.updated_at desc
     </select>
 
@@ -212,7 +213,7 @@
         vsd.`name` deviceName,
         vsd.`online` communicationStatus,
         vsd.style isHub,
-        '1' `type`
+        '0' `type`
         FROM
         `volga_test`.smart_device vsd left join
         `volga_test`.room vr on vsd.room_id=vr.id LEFT JOIN
@@ -266,25 +267,26 @@
         <if test="communicationStatus != '' and communicationStatus != null">
             AND vsd.`online` LIKE '%${communicationStatus}%'
         </if>
+        and vsd.bind='1'
         order by vsd.updated_at desc
     </select>
 
     <!--分散式根据电表id获取电表-->
     <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-      select * from caspain_test.smart_device sd where sd.id=#{id}
+      select * from caspain_test.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--分散式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from caspain_test.smart_device sd where sd.master=#{serialId}
+        select * from caspain_test.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
     <!--集中式根据电表id获取电表-->
     <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from `volga_test`.smart_device sd where sd.id=#{id}
+        select * from `volga_test`.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--集中式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from `volga_test`.smart_device sd where sd.master=#{serialId}
+        select * from `volga_test`.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
     <!--分散式根据id获取第三方对接id-->
@@ -297,7 +299,7 @@
     </select>
 
 
-    <!--获取分散式电表列表-->
+    <!--获取分散式电表详情-->
     <select id="getDeviceInfoWithDispersed" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
         SELECT
 	    csd.id id,
@@ -324,13 +326,15 @@
     	) subAmmeterInfo,
 	    crc.start_time checkInDate,
 	    csd.style isHub,
-	    csd.share share
+	    csd.share share,
+		csdur.total_money surplus
     FROM
 	    caspain_test.smart_device csd
         LEFT JOIN caspain_test.smart_device_power_contract csdpc ON csd.id = csdpc.power_meter_id
         LEFT JOIN caspain_test.room cr ON csd.room_id = cr.id
         LEFT JOIN caspain_test.house ch ON cr.house_id = ch.id
         LEFT JOIN caspain_test.room_contract crc ON crc.room_id = cr.id
+		left join caspain_test.smart_device_topup csdur on csdur.power_meter_id=csd.id
         LEFT JOIN caspain_test.auth_user cau ON crc.created_by_id = cau.id
         LEFT JOIN caspain_test.smart_device csd2 ON csd2.`master` = csd.serial_id
         LEFT JOIN caspain_test.room cr2 ON csd2.room_id = cr2.id
@@ -348,7 +352,8 @@
 	    cr.is_delete != '1'
 	    OR cr.is_delete IS NULL
       )
-      AND csd.id = #{id}
+       AND csd.id = #{id}
+      and csd.bind='1'
     GROUP BY
 	  csd.id
 	order by csd.updated_at desc
@@ -369,13 +374,15 @@
 		'' subAmmeterInfo,
 		vrc.start_time checkInDate,
 		vsd.style isHub,
-		vsd.share share
+		vsd. SHARE SHARE,
+		vsdt.total_money surplus
 	FROM
 		`volga_test`.smart_device vsd
 	LEFT JOIN `volga_test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
 	LEFT JOIN `volga_test`.room vr ON vsd.room_id = vr.id
 	LEFT JOIN `volga_test`.floor vf ON vr.floor_id = vf.id
 	LEFT JOIN `volga_test`.apartment va ON vf.apartment_id = va.id
+	LEFT JOIN `volga_test`.smart_device_topup vsdt ON vsdt.power_meter_id = vsd.id
 	LEFT JOIN `volga_test`.room_contract vrc ON vrc.room_id = vr.id
 	LEFT JOIN caspain_test.auth_user cau ON vrc.created_by = cau.id
 	WHERE
@@ -394,6 +401,7 @@
 	)
 	AND vsd.id = #{id}
 	AND vsd.style = '0'
+	AND vsd.bind = '1'
 	GROUP BY
 		vsd.id
 )
@@ -424,12 +432,14 @@ UNION
 			) subAmmeterInfo,
 			'' checkInDate,
 			vsd.style isHub,
-			vsd.share share
+			vsd. SHARE SHARE,
+			vsdt.total_money surplus
 		FROM
 			`volga_test`.smart_device vsd
 		LEFT JOIN `volga_test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
 		LEFT JOIN `volga_test`.floor vf ON vsd.floor = vf.id
 		LEFT JOIN `volga_test`.apartment va ON vf.apartment_id = va.id
+		LEFT JOIN `volga_test`.smart_device_topup vsdt ON vsdt.power_meter_id = vsd.id
 		LEFT JOIN `volga_test`.smart_device vsd2 ON vsd2.`master` = vsd.serial_id
 		LEFT JOIN `volga_test`.room vr2 ON vsd2.room_id = vr2.id
 		WHERE
@@ -444,6 +454,7 @@ UNION
 		)
 		AND vsd.id = #{id}
 		AND vsd.style = '1'
+		AND vsd.bind = '1'
 		GROUP BY
 			vsd.id
 	)
@@ -451,20 +462,21 @@ UNION
 
     <!--获取分散式电表主表-->
     <select id="getMasterAmmeter" resultType="com.ih2ome.hardware_service.service.model.caspain.SmartDevice">
-      SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id}
+      SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id} and ctsdm.bind='1' and ctsds.bind='1'
     </select>
 
     <!--通过主表获取子表-->
-    <select id="getAmmeterByMaster">
+    <select id="getAmmeterByMaster" resultType="String">
         SELECT
-	    ctsds.serial_id
+	    ctsds.uuid
         FROM
 	    caspain_test.smart_device ctsdm,
-	    caspain_test.smart_device ctsds,
-	    caspain_test.room
+	    caspain_test.smart_device ctsds
         WHERE
 	    ctsds.`master` = ctsdm.serial_id
         AND ctsdm.id = #{id}
+        and ctsdm.bind='1'
+        and ctsds.bind='1'
     </select>
 
 
