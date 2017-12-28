@@ -492,6 +492,8 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByHmRooms(int roomId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
+        Log.info("分散式同步房间byRoomId");
+        Log.info("roomId："+roomId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         //查询houseid
         Integer houseId = synchronousHomeMapper.selectHouseIdByRoomId(roomId);
