@@ -139,13 +139,12 @@
         LEFT JOIN <include refid="smart_gateway" /> gateway ON gateway.smart_gateway_id=gateway_bind.smart_gateway_id
         WHERE
         1 = 1
-        /*AND (vsd.is_delete != '1' or vsd.is_delete is null)*/
         AND (va.is_delete != '1' or va.is_delete is null)
         AND (vr.is_delete != '1' or vr.is_delete is null)
         AND (vrc.is_delete != '1' or vrc.is_delete is  null)
         AND watermeter.house_catalog = 1
         <if test="apartmentName != '' and apartmentName != null">
-            AND va.`name` LIKE '%${apartmentName}%'
+            AND va.`area` LIKE '%${apartmentName}%'
         </if>
         <if test="deviceName != '' and deviceName != null">
             AND watermeter.uuid LIKE '%${deviceName}%'
@@ -309,7 +308,7 @@
         AND (room.is_delete != '1' or room.is_delete is null)
         AND (room_contract.is_delete != '1' or room_contract.is_delete is  null)
         <if test="apartmentName != '' and apartmentName != null">
-            AND house.`name` LIKE '%${apartmentName}%'
+            AND house.`area` LIKE '%${apartmentName}%'
         </if>
         <if test="gatewayUuid != '' and gatewayUuid != null">
             AND gateway.uuid LIKE '%${gatewayUuid}%'
