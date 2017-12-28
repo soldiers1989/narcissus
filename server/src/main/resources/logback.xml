@@ -23,31 +23,31 @@
     </appender>
 
     <appender name="peony" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_peony.log</file>
+        <file>${log_dir}/peony/%d{yyyy-MM-dd}_peony.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
     <appender name="hardware_service" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_hardware_service.log</file>
+        <file>${log_dir}/hardware_service/%d{yyyy-MM-dd}_hardware_service.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
     <appender name="hardware_server" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_hardware_server.log</file>
+        <file>${log_dir}/hardware_server/%d{yyyy-MM-dd}_hardware_server.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
     <appender name="dao" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_dao_sql.log</file>
+        <file>${log_dir}/dao_sql/%d{yyyy-MM-dd}_dao_sql.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
     <appender name="http" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_http.log</file>
+        <file>${log_dir}/http/%d{yyyy-MM-dd}_http.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
         </encoder>
