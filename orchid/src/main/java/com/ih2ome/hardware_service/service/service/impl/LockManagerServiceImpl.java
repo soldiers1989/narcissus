@@ -3,9 +3,13 @@ package com.ih2ome.hardware_service.service.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.ih2ome.hardware_service.service.dao.LockManagerDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
+import com.ih2ome.hardware_service.service.enums.LockDigitPwdTypeEnum;
+import com.ih2ome.hardware_service.service.enums.LockStatusEnum;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
+import com.ih2ome.hardware_service.service.vo.LockPasswordListVo;
+import com.ih2ome.hardware_service.service.vo.LockRequestVo;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
@@ -70,5 +74,30 @@ public class LockManagerServiceImpl implements LockManagerService {
         return lockInfoVo;
     }
 
+    //根据门锁编码查询门锁密码列表
+    @Override
+    public List<LockPasswordListVo> getPwdList(LockRequestVo lockRequestVo) {
+        if(lockRequestVo==null){
+            return null;
+        }
+        String lockNo=lockRequestVo.getLockNo();
+        String type=lockRequestVo.getType();
+        List<LockPasswordListVo> pwdList=null;
+        if(lockRequestVo.isInitPageRows()){
+            PageHelper.startPage(lockRequestVo.getPage(),lockRequestVo.getRows());
+        }
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+           pwdList= lockManagerDao.findDispersedPwdList(lockNo);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            pwdList=lockManagerDao.findConcentratePwdList(lockNo);
+        }
+        for (LockPasswordListVo lockPasswordListVo:pwdList){
+            lockPasswordListVo.setStatus(LockStatusEnum.getByCode(lockPasswordListVo.getStatus()));
+            lockPasswordListVo.setDigitPwdType(LockDigitPwdTypeEnum.getByCode(lockPasswordListVo.getDigitPwdType()));
+        }
+        return pwdList;
+    }
 
 }

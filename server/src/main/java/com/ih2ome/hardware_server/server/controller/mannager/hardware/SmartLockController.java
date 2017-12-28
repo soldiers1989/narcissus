@@ -2,14 +2,17 @@ package com.ih2ome.hardware_server.server.controller.mannager.hardware;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.peony.smartlockInterface.ISmartLock;
-import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
+import com.ih2ome.hardware_service.service.vo.LockPasswordListVo;
+import com.ih2ome.hardware_service.service.vo.LockRequestVo;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,13 +30,13 @@ import java.util.List;
 @RequestMapping("/mannager/smartLock")
 @CrossOrigin
 public class SmartLockController extends BaseController {
-
+    private final Logger Log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private LockManagerService lockManagerService;
 
     /**
      * 门锁list
-     * @url /mannager/smartLock/lockList
+     * @link /mannager/smartLock/lockList
      * @param apiRequestVO
      * <pre>
      *       lockListVo
@@ -98,18 +101,45 @@ public class SmartLockController extends BaseController {
         try {
             lockInfoVo = lockManagerService.getLockInfoVo(lockNo, type);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return result;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return result;
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return result;
         } catch (SmartLockException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(),e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return result;
         }
         JSONObject responseJson = new JSONObject();
         responseJson.put("LockInfoVo", lockInfoVo);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
     }
+
+    /**
+     * 根据门锁编码查询门锁密码列表
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/passwordList", method = RequestMethod.POST, produces = {"application/json"})
+    public String passwordList(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        LockRequestVo lockRequestVo = JSONObject.parseObject(resData.toString(), LockRequestVo.class);
+        JSONObject responseJson = new JSONObject();
+        List<LockPasswordListVo> pwdList=null;
+        pwdList=lockManagerService.getPwdList(lockRequestVo);
+        responseJson.put("lockpasswordListVo", pwdList);
+        String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+        return result;
+    }
+
+
 
 }
