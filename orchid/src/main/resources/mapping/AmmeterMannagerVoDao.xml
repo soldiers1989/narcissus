@@ -27,7 +27,7 @@
     </insert>
     <!--集中式保存分摊结果-->
     <insert id="addDeviceRecordWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        INSERT INTO `volga-test`.smart_device_record (
+        INSERT INTO `volga_test`.smart_device_record (
         created_at,
         updated_at,
         created_by,
@@ -68,7 +68,7 @@
     </update>
     <!--更新集中式电表使用场景-->
     <update id="updateWiringWithConcentrated">
-        update `volga-test`.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
+        update `volga_test`.smart_device sd set sd.wiring=#{wiring}  where sd.id=#{id}
     </update>
     <!--更新分散式电表电量价格-->
     <update id="updateDevicePriceWithDispersed">
@@ -77,7 +77,7 @@
 
     <!--更新集中式电表电量价格-->
     <update id="updateDevicePriceWithConcentrated">
-        UPDATE `volga-test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
+        UPDATE `volga_test`.smart_device sd SET sd.price=#{price} where sd.id=#{id}
     </update>
     <!--更新分散式电表开关-->
     <update id="updateDeviceSwitchWithDispersed">
@@ -85,7 +85,7 @@
     </update>
     <!--更新集中式电表开关-->
     <update id="updateDeviceSwitchWithConcentrated">
-        UPDATE `volga-test`.smart_device sd SET sd.status=#{status} where sd.id=#{id}
+        UPDATE `volga_test`.smart_device sd SET sd.status=#{status} where sd.id=#{id}
     </update>
 
     <!--更新分散式电表开关-->
@@ -95,7 +95,7 @@
 
     <!--更新集中式电表开关-->
     <update id="updateDevicePayModWithConcentrated">
-        update `volga-test`.smart_device csd,`volga-test`.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
+        update `volga_test`.smart_device csd,`volga_test`.smart_device_power_contract csdpc set csdpc.charge=#{payMod} where csdpc.power_meter_id=csd.id and csd.id=#{id}
     </update>
 
     <!--分散式电表更新-->
@@ -111,7 +111,7 @@
     </update>
     <!--集中式电表更新-->
     <update id="updateAmmeterWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
-        UPDATE `volga-test`.smart_device vtsdm
+        UPDATE `volga_test`.smart_device vtsdm
         SET vtsdm.last_num = #{surplus},
         vtsdm.updated_at = NOW(),
         vtsdm.last_num_date = #{lastTime},
@@ -215,11 +215,11 @@
         vsd.style isHub,
         '0' `type`
         FROM
-        `volga-test`.smart_device vsd left join
-        `volga-test`.room vr on vsd.room_id=vr.id LEFT JOIN
-        `volga-test`.apartment va on vr.apartment_id=va.id LEFT JOIN
-        `volga-test`.room_contract vrc on vrc.room_id=vr.id
-        LEFT JOIN `volga-test`.area varea on va.area=varea.id
+        `volga_test`.smart_device vsd left join
+        `volga_test`.room vr on vsd.room_id=vr.id LEFT JOIN
+        `volga_test`.apartment va on vr.apartment_id=va.id LEFT JOIN
+        `volga_test`.room_contract vrc on vrc.room_id=vr.id
+        LEFT JOIN `volga_test`.area varea on va.area=varea.id
         LEFT JOIN caspain_test.auth_user cau on vrc.created_by = cau.id
         WHERE
         1 = 1
@@ -282,11 +282,11 @@
 
     <!--集中式根据电表id获取电表-->
     <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from `volga-test`.smart_device sd where sd.id=#{id} and sd.bind='1'
+        select * from `volga_test`.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--集中式根据第三方获取电表-->
     <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
-        select * from `volga-test`.smart_device sd where sd.master=#{serialId} and sd.bind='1'
+        select * from `volga_test`.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
     <!--分散式根据id获取第三方对接id-->
@@ -295,7 +295,7 @@
     </select>
     <!--集中式根据id获取第三方对接id-->
     <select id="getDeviceIdByIdWithConcentrated" resultType="String">
-        SELECT sd.uuid FROM `volga-test`.smart_device sd WHERE sd.id=#{id}
+        SELECT sd.uuid FROM `volga_test`.smart_device sd WHERE sd.id=#{id}
     </select>
 
 
@@ -377,13 +377,13 @@
 		vsd. SHARE SHARE,
 		vsdt.total_money surplus
 	FROM
-		`volga-test`.smart_device vsd
-	LEFT JOIN `volga-test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
-	LEFT JOIN `volga-test`.room vr ON vsd.room_id = vr.id
-	LEFT JOIN `volga-test`.floor vf ON vr.floor_id = vf.id
-	LEFT JOIN `volga-test`.apartment va ON vf.apartment_id = va.id
-	LEFT JOIN `volga-test`.smart_device_topup vsdt ON vsdt.power_meter_id = vsd.id
-	LEFT JOIN `volga-test`.room_contract vrc ON vrc.room_id = vr.id
+		`volga_test`.smart_device vsd
+	LEFT JOIN `volga_test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
+	LEFT JOIN `volga_test`.room vr ON vsd.room_id = vr.id
+	LEFT JOIN `volga_test`.floor vf ON vr.floor_id = vf.id
+	LEFT JOIN `volga_test`.apartment va ON vf.apartment_id = va.id
+	LEFT JOIN `volga_test`.smart_device_topup vsdt ON vsdt.power_meter_id = vsd.id
+	LEFT JOIN `volga_test`.room_contract vrc ON vrc.room_id = vr.id
 	LEFT JOIN caspain_test.auth_user cau ON vrc.created_by = cau.id
 	WHERE
 		1 = 1
@@ -435,13 +435,13 @@ UNION
 			vsd. SHARE SHARE,
 			vsdt.total_money surplus
 		FROM
-			`volga-test`.smart_device vsd
-		LEFT JOIN `volga-test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
-		LEFT JOIN `volga-test`.floor vf ON vsd.floor = vf.id
-		LEFT JOIN `volga-test`.apartment va ON vf.apartment_id = va.id
-		LEFT JOIN `volga-test`.smart_device_topup vsdt ON vsdt.power_meter_id = vsd.id
-		LEFT JOIN `volga-test`.smart_device vsd2 ON vsd2.`master` = vsd.serial_id
-		LEFT JOIN `volga-test`.room vr2 ON vsd2.room_id = vr2.id
+			`volga_test`.smart_device vsd
+		LEFT JOIN `volga_test`.smart_device_power_contract vsdpc ON vsd.id = vsdpc.power_meter_id
+		LEFT JOIN `volga_test`.floor vf ON vsd.floor = vf.id
+		LEFT JOIN `volga_test`.apartment va ON vf.apartment_id = va.id
+		LEFT JOIN `volga_test`.smart_device_topup vsdt ON vsdt.power_meter_id = vsd.id
+		LEFT JOIN `volga_test`.smart_device vsd2 ON vsd2.`master` = vsd.serial_id
+		LEFT JOIN `volga_test`.room vr2 ON vsd2.room_id = vr2.id
 		WHERE
 			1 = 1
 		AND (
