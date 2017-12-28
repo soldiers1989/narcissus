@@ -63,23 +63,23 @@
 
     <logger name="com.ih2ome.peony" level="INFO" additivity="false">
         <appender-ref ref="peony"/>
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="console"/>
     </logger>
     <logger name="com.ih2ome.hardware_service" level="INFO" additivity="false">
         <appender-ref ref="hardware_service"/>
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="console"/>
     </logger>
     <logger name="com.ih2ome.hardware_server" level="INFO" additivity="false">
         <appender-ref ref="hardware_server"/>
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="console"/>
     </logger>
     <logger name="com.ih2ome.hardware_service.service.dao" level="DEBUG" additivity="false">
         <appender-ref ref="dao"/>
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="console"/>
     </logger>
     <logger name="org.apache.http" level="DEBUG" additivity="false">
         <appender-ref ref="http"/>
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="console"/>
     </logger>
 
 </configuration>
