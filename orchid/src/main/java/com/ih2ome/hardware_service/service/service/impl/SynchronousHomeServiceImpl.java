@@ -42,6 +42,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByApartmenId(int apartmentId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
+        Log.info("公寓id："+apartmentId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String homeId=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+apartmentId;
         //查询home信息
@@ -117,6 +118,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByFloorId(int apartmentId, int floorId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
+        Log.info("公寓id："+apartmentId+",楼层id："+floorId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String homeId=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+apartmentId;
         //房源home是否已同步
@@ -206,6 +208,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public Integer findFloorIdByRoomId(Long room_id) {
+        Log.info("roomId："+room_id);
         return synchronousHomeMapper.findFloorIdByRoomId(room_id);
     }
 
@@ -217,6 +220,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
     @Override
     public List<ApartmentVO> findApartmentIdByUserId(int id) {
+        Log.info("用户id："+id);
         //查询公寓信息
         List<ApartmentVO> apartmentVOS=synchronousHomeMapper.findApartmentByUserId(id);
         return apartmentVOS;
@@ -252,6 +256,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId, int type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
+        Log.info("房源id："+homeId+",房源类型："+type);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String devId = null;
         String home=null;
@@ -275,6 +280,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HouseVO> findHouseByUserId(int id) {
+        Log.info("用户id："+id);
         return synchronousHomeMapper.findHouseByUserId(id);
     }
 
@@ -285,6 +291,8 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByHouseId(int houseId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
+        Log.info("分散式同步房源");
+        Log.info("房源id："+houseId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
 
         //查询house信息
@@ -347,6 +355,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public ApartmentVO findApartmentIdByApartmentId(int apartmentId) {
+        Log.info("公寓id："+apartmentId);
         return synchronousHomeMapper.selectApartmentIdByApartmentId(apartmentId);
     }
 
@@ -357,6 +366,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findFloorsIsSynchronousedByApartmentId(int apartmentId) {
+        Log.info("公寓id："+apartmentId);
         return synchronousHomeMapper.selectFloorsIsSynchronousedByApartmentId(apartmentId);
     }
 
@@ -367,6 +377,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findRoomsIsSynchronousedByApartmentId(int apartmentId) {
+        Log.info("公寓id："+apartmentId);
         return synchronousHomeMapper.selectRoomsIsSynchronousedByApartmentId(apartmentId);
     }
 
@@ -381,6 +392,8 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByRooms(int apartmentId, int[] roomIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
+        Log.info("集中式同步房源by"+apartmentId);
+        Log.info("公寓id："+apartmentId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String homeId=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+apartmentId;
         //房源home是否已同步
@@ -468,6 +481,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findHmRoomsIsSynchronousedByUserId(int userId) {
+        Log.info("用户id："+userId);
         return synchronousHomeMapper.selectHmRoomsIsSynchronousedByUserId(userId);
     }
 
