@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.ih2ome.hardware_service.service.dao.WatermeterManagerMapper;
 import com.ih2ome.hardware_service.service.dao.WatermeterMapper;
 import com.ih2ome.hardware_service.service.enums.HouseCatalogEnum;
+import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
 import com.ih2ome.hardware_service.service.service.WatermeterManagerService;
 import com.ih2ome.hardware_service.service.vo.*;
@@ -32,9 +33,9 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
             PageHelper.startPage(watermeterWebListVo.getPage(),watermeterWebListVo.getRows());
         }
         //分散式
-        if(watermeterWebListVo.getType().equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode())){
+        if(watermeterWebListVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
             return watermeterManagerMapper.findHmWatermeterWebListVoList(watermeterWebListVo);
-        } else if(watermeterWebListVo.getType().equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode())){
+        } else if(watermeterWebListVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
             //集中式
             return watermeterManagerMapper.findJzWatermeterWebListVoList(watermeterWebListVo);
         }else{
@@ -53,10 +54,10 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
     public WatermeterManagerDetailVO findWatermeterDetailByUuid(String uuid, String type) {
         WatermeterManagerDetailVO WatermeterManagerDetailVO=null;
         //分散式
-        if(type.equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode())){
+        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             WatermeterManagerDetailVO= watermeterManagerMapper.selectHmWatermeterDetailByUuid(uuid);
          //集中式
-        }else if(type.equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode())){
+        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             WatermeterManagerDetailVO= watermeterManagerMapper.selectJzWatermeterDetailByUuid(uuid);
         }
 
@@ -77,7 +78,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
 
         if(!watermeterRecordManagerVOList.isEmpty() || watermeterRecordManagerVOList != null) {
             for (int i = 0; i < watermeterRecordManagerVOList.size(); i++) {
-                int meterAmount=0;
+                int meterAmount = 0;
                 if(i==watermeterRecordManagerVOList.size()-1){
                     meterAmount=0;
                 }else {
@@ -117,9 +118,9 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
             PageHelper.startPage(gatewayWebListVo.getPage(),gatewayWebListVo.getRows());
         }
         //分散式
-        if(gatewayWebListVo.getType().equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode())){
+        if(gatewayWebListVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
             return watermeterManagerMapper.findHmGatewayWebListVoList(gatewayWebListVo);
-        } else if(gatewayWebListVo.getType().equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode())){
+        } else if(gatewayWebListVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
             //集中式
             return watermeterManagerMapper.findJzGatewayWebListVoList(gatewayWebListVo);
         }else{
@@ -136,9 +137,9 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
     @Override
     public GatewayWebDetailVO findGatewayDetailbyId (int smartGatewayId, String type) {
         //分散式
-        if(type.equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode())){
+        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             return watermeterManagerMapper.selectHmGatewayDetailbyGatewayId(smartGatewayId);
-        } else if(type.equals(HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode())){
+        } else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             //集中式
             return watermeterManagerMapper.selectJzGatewayDetailbyGatewayId(smartGatewayId);
         }else{

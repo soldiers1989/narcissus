@@ -163,4 +163,25 @@ public class WatermeterManagerController extends BaseController{
         return res;
     }
 
+    /**
+     * 同步房源搜索房源
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/synchronous_housing/FindjzHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindJZHomesIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) {
+        //获取id
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int userId = (int) dt.get("id");
+
+        List<HomeSyncVO> homeSyncVOS = null;
+
+        homeSyncVOS = synchronousHomeService.findHomeIsSynchronousedByUserId(userId);
+
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("homeSyncVOS",homeSyncVOS);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
 }

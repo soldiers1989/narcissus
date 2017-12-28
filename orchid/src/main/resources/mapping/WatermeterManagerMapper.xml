@@ -67,7 +67,7 @@
         watermeter.onoff_status communicationStatus,
         (watermeter.last_amount - watermeter.meter_amount) amount,
         gateway.uuid,
-        '2' `type`
+        '集中式' `type`
         FROM
         <include refid="smart_watermeter" /> watermeter left join
         <include refid="jzroom" /> vr on watermeter.room_id=vr.id LEFT JOIN
@@ -127,7 +127,7 @@
         watermeter.onoff_status communicationStatus,
         (watermeter.last_amount - watermeter.meter_amount) amount,
         gateway.uuid,
-        '1' `type`
+        '分散式' `type`
         FROM
         <include refid="smart_watermeter" /> watermeter left join
         <include refid="room" /> vr on watermeter.room_id=vr.id LEFT JOIN
@@ -245,7 +245,7 @@
         gateway.onoff_status communicationStatus,
         gateway.updated_at customerName,
         gateway.install_time,
-        '1' `type`
+        '分散式' `type`
         FROM
         <include refid="smart_gateway" /> AS gateway
         LEFT JOIN <include refid="room" /> room ON gateway.room_id = room.id
@@ -295,7 +295,7 @@
         gateway.onoff_status communicationStatus,
         gateway.updated_at customerName,
         gateway.install_time,
-        '2' `type`
+        '集中式' `type`
         FROM
         <include refid="smart_gateway" /> AS gateway
         LEFT JOIN <include refid="jzroom" /> room ON gateway.room_id = room.id
