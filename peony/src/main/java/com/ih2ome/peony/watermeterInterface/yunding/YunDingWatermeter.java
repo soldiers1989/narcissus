@@ -43,8 +43,7 @@ public class YunDingWatermeter implements IWatermeter {
      */
     @Override
     public String findHomeState(String home_id) throws WatermeterException {
-        Log.info("查询房源");
-        Log.info("房源id："+home_id);
+        Log.info("查询单个房屋的状态，房源home_id：{}",home_id);
         JSONObject json= new JSONObject();
         json.put("access_token",YunDingWatermeterUtil.getToken());
         json.put("home_id",home_id);
@@ -76,8 +75,7 @@ public class YunDingWatermeter implements IWatermeter {
      */
     @Override
     public String findHomeStates(String[] home_id) throws WatermeterException {
-        Log.info("查询多个房屋的状态");
-        Log.info("房源id："+home_id);
+        Log.info("查询多个房屋的状态,房源home_id:{}",home_id);
 
         JSONObject json= new JSONObject();
         json.put("access_token",YunDingWatermeterUtil.getToken());
@@ -102,8 +100,8 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n"+msg);
-            throw new WatermeterException("第三方请求失败/n"+msg);
+            Log.error("第三方请求失败,{}",msg);
+            throw new WatermeterException("第三方请求失败"+msg);
         }
         return res;
     }
@@ -114,8 +112,7 @@ public class YunDingWatermeter implements IWatermeter {
      */
     @Override
     public String addHome(AddHomeVo home) throws WatermeterException {
-        Log.info("添加房源");
-        Log.info("房源信息："+home.toString());
+        Log.info("添加房源,房源信息home:{}",home);
         home.setAccess_token(YunDingWatermeterUtil.getToken());
 
         String json = JSONObject.toJSONString(home);
@@ -148,8 +145,7 @@ public class YunDingWatermeter implements IWatermeter {
      */
     @Override
     public String readWatermeter(String uuid, String manufactory) throws WatermeterException {
-        Log.info("发送抄表命令");
-        Log.info("水表uuid："+uuid+"水表供应商"+manufactory);
+        Log.info("发送抄表命令,水表uuid:{},水表供应商manufactory:{}",uuid,manufactory);
         Map<String,Object> map= new HashMap();
         map.put("access_token",YunDingWatermeterUtil.getToken());
         map.put("uuid",uuid);
@@ -185,8 +181,7 @@ public class YunDingWatermeter implements IWatermeter {
      */
     @Override
     public String readWatermeterStatus(String uuid, String manufactory) throws WatermeterException {
-        Log.info("获取抄表状态");
-        Log.info("水表uuid："+uuid+"水表供应商"+manufactory);
+        Log.info("获取抄表状态,水表uuid:{},水表供应商manufactory:{}",uuid,manufactory);
         Map<String,Object> map= new HashMap();
         map.put("access_token",YunDingWatermeterUtil.getToken());
         map.put("uuid",uuid);
@@ -224,7 +219,7 @@ public class YunDingWatermeter implements IWatermeter {
      */
     @Override
     public String addRoom(String home_id, String room_id, String room_name, String rooom_description) throws WatermeterException {
-        Log.info("给指定公寓添加房间");
+        Log.info("给指定公寓添加房间,home_id:{},room_id:{},room_name:{},rooom_description:{}",home_id,room_id,room_name,rooom_description);
 
         JSONObject json=new JSONObject();
         json.put("access_token",YunDingWatermeterUtil.getToken());
@@ -262,7 +257,7 @@ public class YunDingWatermeter implements IWatermeter {
      */
     @Override
     public String addRooms(String home_id, List<AddRoomVO> rooms) throws WatermeterException {
-        Log.info("给指定公寓添加多个房间");
+        Log.info("给指定公寓添加多个房间,home_id:{},rooms{}");
 
         JSONObject json =new JSONObject();
         json.put("access_token",YunDingWatermeterUtil.getToken());

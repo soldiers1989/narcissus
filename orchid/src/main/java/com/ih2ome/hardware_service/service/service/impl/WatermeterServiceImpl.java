@@ -34,6 +34,7 @@ public class WatermeterServiceImpl implements WatermeterService {
     //通过用户create_by_id查询用户房源id
     @Override
     public List<Integer> findRoomIdByUserId(String id) {
+        Log.info(" 查询用户房源id，用户id：{}",id);
         //通过create_by_id查询houseID查询roomId
         List<Integer> roomIds = watermeterDao.findRoomIdByCreatebyid(id);
         return roomIds;
@@ -46,6 +47,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<HMWatermeterListVO> findWatermetersByids(List<Integer> ids) {
+        Log.info(" 通过水表id查询水表详情，水表ids：{}",ids);
         List<HMWatermeterListVO> watermeterDetailVOS= watermeterDao.finWatermeterByRoomIds(ids);
         return watermeterDetailVOS;
     }
@@ -57,7 +59,8 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public WatermeterVO findWatermeterByid(String id) {
-        //Watermeter watermeter = (Watermeter) watermeterDao.selectByPrimaryKey(id);
+        Log.info(" 通过水表id查询水表详情，水表id：{}",id);
+        SmartWatermeter smartWatermeter = watermeterDao.selectByPrimaryKey(id);
         return null;
     }
 
@@ -68,6 +71,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public WatermeterGatewayDetailVO findGatewaybyId(int smartGatewayId) {
+        Log.info("通过网关id查询网关详情，网关smartGatewayId：{}",smartGatewayId);
         WatermeterGatewayDetailVO watermeterGatewayDetailVO = watermeterDao.findGatewaybySmartGatewayId(smartGatewayId);
         return watermeterGatewayDetailVO;
     }
@@ -79,6 +83,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<HMWatermeterListVO> findWatermetersByGatewayId(int smartGatewayId) {
+        Log.info("通过网关id查询绑定的水表，水表网关smartGatewayId：{}",smartGatewayId);
         List<HMWatermeterListVO> watermeterDetailVOS=watermeterDao.findWatermeterByGatewayId(smartGatewayId);
         return watermeterDetailVOS;
     }
@@ -92,16 +97,11 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public PageResult<SmartWatermeterRecord> findWatermeterRecordByWatermeterId(int smartWatermeterId, int page, int count) {
+        Log.info("查询水表抄表记录,水表smartWatermeterId：{}",smartWatermeterId);
         // 开启分页
         PageHelper.startPage(page, count);
 
         // 根据用户名查询，并且按照创建时间降序排列
-        /*Example example = new Example(SmartWatermeterRecord.class);
-        // 创建查询条件对象
-        example.createCriteria().andEqualTo("smartWatermeterId",smartWatermeterId);
-        // 实现排序
-        example.setOrderByClause("created_at desc");
-        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.selectByExample(example);*/
         List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.findWatermeterRecordByWatermeterId(smartWatermeterId);
         PageInfo<SmartWatermeterRecord> info = new PageInfo<>(waterMeterRecordVOS);
 
@@ -117,7 +117,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId) {
-        Log.info("floorId："+floorId);
+        Log.info("查询集中式水表列表,楼层floorId：{}",floorId);
         //通过楼层ids查询水表
         List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterDao.findWatermetersByFloorId(floorId);
         return jzWatermeterDetailVOS;
@@ -131,6 +131,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public Boolean updataWaterPrice(int price,int watermeterId) throws AmmeterException, ClassNotFoundException, IllegalAccessException, InstantiationException{
+        Log.info("修改水价,水表id：{}",watermeterId);
         Integer flag= watermeterDao.updataWaterPrice(price,watermeterId);
 
         if(flag != null) {
@@ -146,6 +147,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<JZWatermeterGatewayVO> findGatewaysByApartmentId(int apartmentId) {
+        Log.info("查询水表网关,公寓apartmentId：{}"+apartmentId);
         List<JZWatermeterGatewayVO> jzWatermeterGatewayVOS = watermeterDao.findGatewayByApartmentId(apartmentId);
         return jzWatermeterGatewayVOS;
     }
@@ -157,6 +159,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<HMWatermeterListVO> findWatermetersByid(int id) {
+        Log.info("分散式查询水表列表,用户id：{}",id);
         return watermeterDao.findWatermetersByUserId(id);
     }
 
@@ -169,14 +172,8 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, String startTime, String endTime) {
+        Log.info("水表抄表记录筛选,水表watermeterId：{},开始时间：{},截止时间：{}",watermeterId,startTime,endTime);
         // 根据用户名查询，并且按照创建时间降序排列
-        /*Example example = new Example(SmartWatermeterRecord.class);
-        // 创建查询条件对象
-        example.createCriteria().andEqualTo("smartWatermeterId",watermeterId);
-        example.createCriteria().andBetween("created_at",startTime,endTime);
-        // 实现排序
-        example.setOrderByClause("created_at desc");
-        List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.selectByExample(example);*/
         List<SmartWatermeterRecord> waterMeterRecordVOS=watermeterDao.findWatermeterRecordByWatermeterIdAndTime(watermeterId,startTime,endTime);
         return waterMeterRecordVOS;
     }
@@ -190,6 +187,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<ExceptionVO> findWatermeterException(int watermeterId) {
+        Log.info("水表异常记录,水表watermeterId：{}",watermeterId);
         return watermeterDao.findWatermeterExceptionByWaterId(watermeterId);
     }
 
@@ -200,6 +198,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<ExceptionVO> findWatermeterGatewayException(int gatewayId) {
+        Log.info("网关异常记录,网关id：",gatewayId);
         return watermeterDao.findWatermeterGatewayExceptionByGatewayId(gatewayId);
     }
 
@@ -211,6 +210,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public String readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
+        Log.info("水表watermeterId：{}",watermeterId);
         //查询水表uuid，和供应商
         WatermeterRecordParamsVo params=watermeterDao.findWatermeterRecordParamsByWatermeterId(watermeterId);
         //查询水表实时抄表记录
@@ -231,6 +231,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public void updataWaterLastAmount(String uuid, int amount, int time) {
+        Log.info("更新水表读数,水表uuid:{},水表读数:{},更新时间：{}",uuid,amount,time);
         watermeterDao.updataWaterLastAmount(uuid, amount, time);
     }
 
@@ -241,6 +242,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public void createSmartWatermeter(SmartWatermeter smartWatermeter) {
+        Log.info("添加水表,水表信息smartWatermeter：{}",smartWatermeter.toString());
         watermeterDao.addSmartWatermeter(smartWatermeter);
     }
 
@@ -250,6 +252,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public void addSmartGatewayBind(SmartGatewayBind smartGatewayBind) {
+        Log.info("添加网关绑定,网关信息:{}",smartGatewayBind.toString());
         watermeterDao.addSmartGatewayBind(smartGatewayBind);
     }
 
@@ -260,6 +263,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public int findHouseCreatedByByHouseId(Long houseId) {
+        Log.info("查询房源用户id，房源houseId：{}",houseId);
         return watermeterDao.selectHouseCreatedByByHouseId(houseId);
     }
 
@@ -270,6 +274,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public Integer findApartmentCreatedByByApartmentId(Long apartmentId) {
+        Log.info("查询房源用户id，公寓apartmentId：{}",apartmentId);
         return watermeterDao.selectApartmentCreatedByByApartmentId(apartmentId);
     }
 
@@ -280,6 +285,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public Integer findWatermeterIdByUuid(String uuid) {
+        Log.info("查询水表id,水表uuid：{}"+uuid);
         Integer watermeterId=watermeterDao.findWatermetersByUuId(uuid);
         return watermeterId;
     }
@@ -291,6 +297,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public Integer findWatermeterLastAmountByWatermeterId(int watermeterId) {
+        Log.info("查询水表读数,水表watermeterId：{}",watermeterId);
         return watermeterDao.findWatermeterAmountByWatermeterId(watermeterId);
     }
 
@@ -301,6 +308,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public void updataWatermerterOnoffStatus(String uuid, Integer code) {
+        Log.info("更新水表在线离线状态，水表uuid：{},状态code：{}",uuid,code);
         watermeterDao.updataWatermerterOnoffStatusByUuid(uuid,code);
     }
 
@@ -310,6 +318,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<UuidAndManufactoryVO> findWatermeterUuidAndManufactory() {
+        Log.info("查询水表所有的uuid和Manufactory");
         return watermeterDao.selectWatermeterUuidAndManufactory();
     }
 
@@ -320,6 +329,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public Timestamp findWatermeterMeterUpdatedAt(String uuid) {
+        Log.info("最近一次抄表时间,水表uuid:{}",uuid);
         return watermeterDao.selectWatermeterMeterUpdatedAt(uuid);
     }
 
@@ -330,11 +340,13 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<JZWatermeterDetailVO> findJzWatermetersByGatewayId(int smartGatewayId) {
+        Log.info("集中式水表列表,网关smartGatewayId:{}",smartGatewayId);
         return watermeterDao.selectJzWatermetersByGatewayId(smartGatewayId);
     }
 
     @Override
     public List<JZWatermeterGatewayVO> findGatewaysByUserId(int userId) {
+        Log.info("集中式网关详情,userId：{}",userId);
         return watermeterDao.selectGatewaysByUserId(userId);
     }
 
@@ -345,6 +357,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public Integer findWatermeterOnOffStatusByUuid(String uuid) {
+        Log.info("查询水表在线状态,水表uuid：{}",uuid);
         return watermeterDao.selectWatermeterOnOffStatusByUuid(uuid);
     }
 
@@ -354,6 +367,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public List<Integer> findAllWatermeterIds() {
+        Log.info("查询所有水表id");
         return watermeterDao.selectAllWatermeterIds();
     }
 
@@ -364,6 +378,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public Integer findMeterAmountByWatermeterId(Integer watermeterId) {
+        Log.info("查询水表月初抄表读数，水表watermeterId：{}",watermeterId);
         return watermeterDao.selectMeterAmountByWatermeterId(watermeterId);
     }
 
@@ -374,6 +389,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public void updataWatermeterMeterAmount(Integer watermeterId, Integer meterAmount) {
+        Log.info("更新水表月初读数，水表watermeterId：{},水表读数meterAmount：{}",watermeterId,meterAmount);
         watermeterDao.updataWatermeterMeterAmount(watermeterId,meterAmount);
     }
 

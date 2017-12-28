@@ -42,7 +42,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByApartmenId(int apartmentId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
-        Log.info("公寓id："+apartmentId);
+        Log.info("集中式同步房源，公寓id：{}",apartmentId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String homeId=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+apartmentId;
         //查询home信息
@@ -118,7 +118,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByFloorId(int apartmentId, int floorId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
-        Log.info("公寓id："+apartmentId+",楼层id："+floorId);
+        Log.info("集中式同步房源by楼层,公寓apartmentId：{},楼层floorId：{}",apartmentId,floorId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String homeId=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+apartmentId;
         //房源home是否已同步
@@ -208,7 +208,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public Integer findFloorIdByRoomId(Long room_id) {
-        Log.info("roomId："+room_id);
+        Log.info("查询楼层id,房间roomId：{}",room_id);
         return synchronousHomeMapper.findFloorIdByRoomId(room_id);
     }
 
@@ -220,7 +220,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
     @Override
     public List<ApartmentVO> findApartmentIdByUserId(int id) {
-        Log.info("用户id："+id);
+        Log.info("查询公寓信息,用户id：{}",id);
         //查询公寓信息
         List<ApartmentVO> apartmentVOS=synchronousHomeMapper.findApartmentByUserId(id);
         return apartmentVOS;
@@ -233,7 +233,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findHomeIsSynchronousedByUserId(int userid) {
-        Log.info("用户id："+userid);
+        Log.info("查询集中式房源是否已同步,用户userid：{}",userid);
         return synchronousHomeMapper.findApartmentIsSynchronousedByUserId(userid);
     }
 
@@ -244,7 +244,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findHmHomeIsSynchronousedByUserId(int userid) {
-        Log.info("用户id："+userid);
+        Log.info("查询分散式房源是否已同步,用户id：{}",userid);
         return synchronousHomeMapper.findHouseIsSynchronousedByUserId(userid);
     }
 
@@ -256,7 +256,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public YunDingResponseVo findHomeIsSynchronousedByHomeId(int homeId, int type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
-        Log.info("房源id："+homeId+",房源类型："+type);
+        Log.info("查询房源是否同步(第三方查询),房源homeId：{},房源类型type：{}",homeId,type);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String devId = null;
         String home=null;
@@ -280,7 +280,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HouseVO> findHouseByUserId(int id) {
-        Log.info("用户id："+id);
+        Log.info("分散式用户房源,用户id：{}",id);
         return synchronousHomeMapper.findHouseByUserId(id);
     }
 
@@ -291,8 +291,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByHouseId(int houseId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
-        Log.info("分散式同步房源");
-        Log.info("房源id："+houseId);
+        Log.info("分散式同步房源,房源houseId：{}",houseId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
 
         //查询house信息
@@ -355,7 +354,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public ApartmentVO findApartmentIdByApartmentId(int apartmentId) {
-        Log.info("公寓id："+apartmentId);
+        Log.info("集中式公寓信息,公寓apartmentId：{}",apartmentId);
         return synchronousHomeMapper.selectApartmentIdByApartmentId(apartmentId);
     }
 
@@ -366,7 +365,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findFloorsIsSynchronousedByApartmentId(int apartmentId) {
-        Log.info("公寓id："+apartmentId);
+        Log.info("集中式查询floor同步状态,公寓apartmentId：{}",apartmentId);
         return synchronousHomeMapper.selectFloorsIsSynchronousedByApartmentId(apartmentId);
     }
 
@@ -377,7 +376,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public List<HomeSyncVO> findRoomsIsSynchronousedByApartmentId(int apartmentId) {
-        Log.info("公寓id："+apartmentId);
+        Log.info("集中式查询房间同步状态,公寓apartmentId：{}",apartmentId);
         return synchronousHomeMapper.selectRoomsIsSynchronousedByApartmentId(apartmentId);
     }
 
@@ -392,19 +391,15 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByRooms(int apartmentId, int[] roomIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
-        Log.info("集中式同步房源by"+apartmentId);
-        Log.info("公寓id："+apartmentId);
+        Log.info("集中式同步房源,公寓apartmentId:{},房间roomIds：{}",apartmentId,roomIds);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String homeId=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+apartmentId;
         //房源home是否已同步
         String state = iWatermeter.findHomeState(homeId);
         JSONObject jsonObject=null;
-        try {
-            jsonObject = JSONObject.parseObject(state);
-        }catch (Exception e){
-            Log.error("json格式解析错误",e);
-            throw new WatermeterException("json格式解析错误"+e.getMessage());
-        }
+
+        jsonObject = JSONObject.parseObject(state);
+
 
         Object result = jsonObject.get("result");
         String res =null;
@@ -419,17 +414,13 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             res = iWatermeter.addHome(addHomeVo);
 
             JSONObject resJson = null;
-            try {
-                resJson = JSONObject.parseObject(res);
-            }catch (Exception e){
-                Log.error("json格式解析错误",e);
-                throw new WatermeterException("json格式解析错误"+e.getMessage());
-            }
+
+            resJson = JSONObject.parseObject(res);
 
             String code = resJson.get("ErrNo").toString();
             if(!code.equals("0")){
                 String msg = resJson.get("ErrMsg").toString();
-                Log.error("添加房源失败，"+msg);
+                Log.error("添加房源失败，{}",msg);
                 throw new WatermeterException("添加房源失败，"+msg);
             }
             //更新房源为已同步至云丁
@@ -453,17 +444,14 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
         String addRoomsRes = iWatermeter.addRooms(homeId, addRoomVOSList);
         JSONObject resJson = null;
-        try {
-            resJson = JSONObject.parseObject(addRoomsRes);
-        }catch (Exception e){
-            Log.error("json格式解析错误",e);
-            throw new WatermeterException("json格式解析错误"+e.getMessage());
-        }
+
+        resJson = JSONObject.parseObject(addRoomsRes);
 
         String code = resJson.get("ErrNo").toString();
+        //返回code，0正常，非0异常
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("添加room失败，"+msg);
+            Log.error("添加room失败，{}",msg);
             return "添加room失败，"+msg;
         }
 
@@ -476,13 +464,13 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
     /**
      * 查询分散式未同步的room
-     * @param userId
+     * @param id
      * @return
      */
     @Override
-    public List<HomeSyncVO> findHmRoomsIsSynchronousedByUserId(int userId) {
-        Log.info("用户id："+userId);
-        return synchronousHomeMapper.selectHmRoomsIsSynchronousedByUserId(userId);
+    public List<HomeSyncVO> findHmRoomsIsSynchronousedByUserId(int id) {
+        Log.info("查询分散式未同步的room,用户id："+id);
+        return synchronousHomeMapper.selectHmRoomsIsSynchronousedByUserId(id);
     }
 
     /**
@@ -492,8 +480,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     public String synchronousHousingByHmRooms(int roomId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
-        Log.info("分散式同步房间byRoomId");
-        Log.info("roomId："+roomId);
+        Log.info("分散式同步房间,房间roomId：{}",roomId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         //查询houseid
         Integer houseId = synchronousHomeMapper.selectHouseIdByRoomId(roomId);
@@ -505,17 +492,13 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         AddRoomVO addRoomVOS=synchronousHomeMapper.findhmRoomByRoomId(roomId);
         String addRoomsRes = iWatermeter.addRoom(homeId, addRoomVOS.getRoom_id(),addRoomVOS.getRoom_name(),addRoomVOS.getRoom_description());
         JSONObject resJson = null;
-        try {
-            resJson = JSONObject.parseObject(addRoomsRes);
-        }catch (Exception e){
-            Log.error("json格式解析错误",e);
-            throw new WatermeterException("json格式解析错误"+e.getMessage());
-        }
+
+        resJson = JSONObject.parseObject(addRoomsRes);
 
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("添加room失败，"+msg);
+            Log.error("添加room失败，{}",msg);
             return "添加room失败，"+msg;
         }
 
