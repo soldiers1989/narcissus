@@ -17,27 +17,8 @@
         <encoder>
             <pattern>
                 <!-- 设置日志输出格式 -->
-                [%thread] %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg %n
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n
             </pattern>
-        </encoder>
-    </appender>
-
-    <!-- appender peony -->
-    <appender name="peony" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd_peony-log.log</fileNamePattern>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <!-- appender peony -->
-    <appender name="hardware_service" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log_dir}/hardware_service/%d{yyyy-MM-dd}/trace-log.log</fileNamePattern>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
 
