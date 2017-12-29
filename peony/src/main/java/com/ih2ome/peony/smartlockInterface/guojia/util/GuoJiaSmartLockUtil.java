@@ -119,7 +119,7 @@ public class GuoJiaSmartLockUtil {
         }
         byte[] bytes = new byte[0];
         try {
-            byte[] data = PASSWORD.getBytes("utf-8");
+            byte[] data = password.getBytes("utf-8");
             byte[] key = securityKey.getBytes("utf-8");
             bytes = DesUtil.encrypt(data, key);
         } catch (Exception e) {

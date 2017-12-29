@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_service.service.vo;
+package com.ih2ome.peony.smartlockInterface.vo;
 
 import com.ih2ome.common.base.BaseEntity;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @email sky.li@ixiaoshuidi.com
  **/
 @Data
-public class LockPasswordListVo extends BaseEntity implements Serializable {
+public class LockPasswordVo extends BaseEntity implements Serializable {
     //主键
     private String id;
     //门锁编码
@@ -28,17 +28,18 @@ public class LockPasswordListVo extends BaseEntity implements Serializable {
     private String updatedById;
     //删除者ID
     private String deletedById;
-    private String version;
-    //是否被删除
-    private String isDelete;
+    //默认为0
+    private String version = "0";
+    //是否被删除(默认为0)
+    private String isDelete = "0";
     //门锁密码
     private String password;
     // 门锁密码类型"0=数字密码,1=门卡
     private String passwordType;
     // 数字密码类型
     private String digitPwdType;
-    //密码状态
-    private String status;
+    //密码状态(默认已启用)
+    private String status = "1";
     //智能门锁ID
     private String lockId;
     //生效时间
@@ -56,4 +57,6 @@ public class LockPasswordListVo extends BaseEntity implements Serializable {
     private String pwdNo;
     private String rdata;
     private String rtime;
+    //判断是集中式门锁还是分散式门锁
+    private String type;
 }

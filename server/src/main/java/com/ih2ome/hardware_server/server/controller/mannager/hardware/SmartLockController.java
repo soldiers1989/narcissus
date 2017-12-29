@@ -8,14 +8,17 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.LockPasswordListVo;
+import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import com.ih2ome.hardware_service.service.vo.LockRequestVo;
+import com.ih2ome.peony.smartlockInterface.ISmartLock;
+import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -36,25 +39,24 @@ public class SmartLockController extends BaseController {
 
     /**
      * 门锁list
-     * @link /mannager/smartLock/lockList
-     * @param apiRequestVO
-     * <pre>
-     *       lockListVo
-     *           serialNum 门锁编码
-     *           roomNo 房间编号
-     *           apartmentName 公寓名称
-     *           customerName 租客姓名
-     *           authUserName 房东电话
-     *           customerPhone 租客电话
-     *           provinceName 省名
-     *           cityName 市名
-     *           districtName 区名
-     *           areaName 小区名
-     *           status 状态
-     *           type 公寓类型（0集中，1分布）
-     *           page 页码(当前页)
-     *           rows 每页大小
-     * </pre>
+     *
+     * @param apiRequestVO <pre>
+     *                                                                   lockListVo
+     *                                                                       serialNum 门锁编码
+     *                                                                       roomNo 房间编号
+     *                                                                       apartmentName 公寓名称
+     *                                                                       customerName 租客姓名
+     *                                                                       authUserName 房东电话
+     *                                                                       customerPhone 租客电话
+     *                                                                       provinceName 省名
+     *                                                                       cityName 市名
+     *                                                                       districtName 区名
+     *                                                                       areaName 小区名
+     *                                                                       status 状态
+     *                                                                       type 公寓类型（0集中，1分布）
+     *                                                                       page 页码(当前页)
+     *                                                                       rows 每页大小
+     *                                                             </pre>
      * @return result
      * <pre>
      *              lockListVo
@@ -73,6 +75,7 @@ public class SmartLockController extends BaseController {
      *                serialNum 门锁编码,
      *                status通讯状态
      * </pre>
+     * @link /mannager/smartLock/lockList
      */
     @RequestMapping(value = "/lockList", method = RequestMethod.POST, produces = {"application/json"})
     public String lockList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -101,20 +104,20 @@ public class SmartLockController extends BaseController {
         try {
             lockInfoVo = lockManagerService.getLockInfoVo(lockNo, type);
         } catch (ClassNotFoundException e) {
-            Log.error(e.getMessage(),e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
             return result;
         } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(),e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
             return result;
         } catch (InstantiationException e) {
-            Log.error(e.getMessage(),e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
             return result;
         } catch (SmartLockException e) {
-            Log.error(e.getMessage(),e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
             return result;
         }
         JSONObject responseJson = new JSONObject();
@@ -125,6 +128,7 @@ public class SmartLockController extends BaseController {
 
     /**
      * 根据门锁编码查询门锁密码列表
+     *
      * @param apiRequestVO
      * @return
      */
@@ -133,13 +137,49 @@ public class SmartLockController extends BaseController {
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         LockRequestVo lockRequestVo = JSONObject.parseObject(resData.toString(), LockRequestVo.class);
         JSONObject responseJson = new JSONObject();
-        List<LockPasswordListVo> pwdList=null;
-        pwdList=lockManagerService.getPwdList(lockRequestVo);
+        List<LockPasswordVo> pwdList = null;
+        pwdList = lockManagerService.getPwdList(lockRequestVo);
         responseJson.put("lockpasswordListVo", pwdList);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
     }
 
 
+    /**
+     * 新增门锁密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/addPassword", method = RequestMethod.POST, produces = {"application/json"})
+    public String addPassword(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        LockPasswordVo lockPasswordVo = JSONObject.parseObject(resData.toString(), LockPasswordVo.class);
+        try {
+            lockManagerService.addPassword(lockPasswordVo);
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        } catch (ParseException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        }
+        String result = structureSuccessResponseVO(null,new Date().toString(),"新增成功");
+        return result;
+    }
 
 }

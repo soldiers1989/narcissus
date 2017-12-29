@@ -2,6 +2,91 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.LockManagerDao">
 
+    <!--add-->
+    <!--分散式新增门锁密码-->
+    <insert id="addDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    INSERT INTO caspain_test.smart_lock_password (
+        version,
+        is_delete,
+        created_at,
+        created_by_id,
+        lock_id,
+        digit_pwd_type,
+        password_type,
+        user_name,
+        mobile,
+        password,
+        enable_time,
+        disable_time,
+        remark,
+        message_content
+    ) SELECT
+        '0' AS version,
+        '0' AS is_delete,
+        NOW() AS created_at,
+        created_by_id,
+        id AS look_id,
+        #{digitPwdType} AS digit_pwd_type,
+        #{passwordType} AS password_type,
+        #{userName} AS user_name,
+        #{mobile} AS mobile,
+        #{password} AS password,
+        #{enableTime} as enable_time,
+        #{disableTime} as disable_time,
+        #{remark} as remark,
+        #{messageContent} as message_content
+    FROM
+        caspain_test.smart_lock
+    WHERE
+        serial_num = #{serialNum};
+
+    </insert>
+
+    <!--集中式新增门锁密码-->
+    <insert id="addConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+      INSERT INTO volga_test.smart_lock_password (
+        version,
+        is_delete,
+        created_at,
+        created_by,
+        updated_by,
+        deleted_by,
+        lock_id,
+        digit_pwd_type,
+        password_type,
+        user_name,
+        mobile,
+        PASSWORD,
+        enable_time,
+        disable_time,
+        remark,
+        message_content
+    ) SELECT
+        '0' AS version,
+        '0' AS is_delete,
+        NOW() AS created_at,
+        created_by,
+        '0' as updated_by,
+        '0' as deleted_by,
+         id AS look_id,
+        #{digitPwdType} AS digit_pwd_type,
+        #{passwordType} AS password_type,
+        #{userName} AS user_name,
+        #{mobile} AS mobile,
+        #{password} AS password,
+        #{enableTime} as enable_time,
+        #{disableTime} as disable_time,
+        #{remark} as remark,
+        #{messageContent} as message_content
+    FROM
+        volga_test.smart_lock
+    WHERE
+        serial_num = #{serialNum};
+    </insert>
+
+
     <!--select-->
     <!--分散式房源门锁列表（模糊查询）-->
     <select id="findDispersedLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
@@ -204,7 +289,7 @@
     </select>
 
     <!--分散式根据门锁编码查询密码列表-->
-    <select id="findDispersedPwdList" resultType="com.ih2ome.hardware_service.service.vo.LockPasswordListVo">
+    <select id="findDispersedPwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
             sl.serial_num serial_num,
             DATE_FORMAT(
@@ -240,7 +325,7 @@
     </select>
 
     <!--集中式根据门锁编码查询密码列表-->
-    <select id="findConcentratePwdList" resultType="com.ih2ome.hardware_service.service.vo.LockPasswordListVo">
+    <select id="findConcentratePwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
             sl.serial_num serial_num,
             DATE_FORMAT(

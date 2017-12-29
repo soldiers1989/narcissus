@@ -2,10 +2,11 @@ package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.LockPasswordListVo;
+import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import com.ih2ome.hardware_service.service.vo.LockRequestVo;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -22,5 +23,8 @@ public interface LockManagerService {
     LockInfoVo getLockInfoVo(String lockNo, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException;
 
     //根据门锁编码查询门锁密码列表
-    List<LockPasswordListVo> getPwdList(LockRequestVo lockRequestVo);
+    List<LockPasswordVo> getPwdList(LockRequestVo lockRequestVo);
+
+    //新增门锁密码
+    void addPassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
 }

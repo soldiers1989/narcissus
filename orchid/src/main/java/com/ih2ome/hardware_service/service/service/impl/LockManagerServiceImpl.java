@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.ih2ome.hardware_service.service.dao.LockManagerDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
@@ -8,15 +9,17 @@ import com.ih2ome.hardware_service.service.enums.LockStatusEnum;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.LockPasswordListVo;
+import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import com.ih2ome.hardware_service.service.vo.LockRequestVo;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.vo.GuoJiaLockInfoVo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -76,13 +79,13 @@ public class LockManagerServiceImpl implements LockManagerService {
 
     //根据门锁编码查询门锁密码列表
     @Override
-    public List<LockPasswordListVo> getPwdList(LockRequestVo lockRequestVo) {
+    public List<LockPasswordVo> getPwdList(LockRequestVo lockRequestVo) {
         if(lockRequestVo==null){
             return null;
         }
         String lockNo=lockRequestVo.getLockNo();
         String type=lockRequestVo.getType();
-        List<LockPasswordListVo> pwdList=null;
+        List<LockPasswordVo> pwdList=null;
         if(lockRequestVo.isInitPageRows()){
             PageHelper.startPage(lockRequestVo.getPage(),lockRequestVo.getRows());
         }
@@ -93,11 +96,34 @@ public class LockManagerServiceImpl implements LockManagerService {
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             pwdList=lockManagerDao.findConcentratePwdList(lockNo);
         }
-        for (LockPasswordListVo lockPasswordListVo:pwdList){
-            lockPasswordListVo.setStatus(LockStatusEnum.getByCode(lockPasswordListVo.getStatus()));
-            lockPasswordListVo.setDigitPwdType(LockDigitPwdTypeEnum.getByCode(lockPasswordListVo.getDigitPwdType()));
+        for (LockPasswordVo lockPasswordVo :pwdList){
+            lockPasswordVo.setStatus(LockStatusEnum.getByCode(lockPasswordVo.getStatus()));
+            lockPasswordVo.setDigitPwdType(LockDigitPwdTypeEnum.getByCode(lockPasswordVo.getDigitPwdType()));
         }
         return pwdList;
+    }
+
+    //新增门锁密码
+    @Transactional
+    @Override
+    public void addPassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
+        //请求果家第三方的新增密码接口
+        String result = iSmartLock.addLockPassword(lockPasswordVo);
+        JSONObject resJson = JSONObject.parseObject(result);
+        String rlt_code = resJson.getString("rlt_code");
+        if (!rlt_code.equals("HH0000")) {
+            throw new SmartLockException("第三方添加密码失败");
+        }
+        //0代表集中式，1代表分散式
+        String type=lockPasswordVo.getType();
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            lockManagerDao.addDispersedPwd(lockPasswordVo);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            lockManagerDao.addConcentratePwd(lockPasswordVo);
+        }
     }
 
 }
