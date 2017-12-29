@@ -291,11 +291,11 @@
 
     <!--分散式根据id获取第三方对接id-->
     <select id="getDeviceIdByIdWithDispersed" resultType="String">
-        SELECT sd.uuid FROM caspain_test.smart_device sd WHERE sd.id=#{id}
+        SELECT sd.uuid FROM caspain_test.smart_device sd WHERE sd.id=#{id} and sd.bind='1'
     </select>
     <!--集中式根据id获取第三方对接id-->
     <select id="getDeviceIdByIdWithConcentrated" resultType="String">
-        SELECT sd.uuid FROM `volga_test`.smart_device sd WHERE sd.id=#{id}
+        SELECT sd.uuid FROM `volga_test`.smart_device sd WHERE sd.id=#{id} and sd.bind='1'
     </select>
 
 

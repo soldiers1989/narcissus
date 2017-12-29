@@ -124,15 +124,16 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())){
             model = ammeterMannagerDao.getDeviceInfoWithDispersed(id);
             devId =ammeterMannagerDao.getDeviceIdByIdWithDispersed(id);
-            if(model.getIsHub().equals("0")){
-                model = initFenTan(model);
-            }
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             model = ammeterMannagerDao.getDeviceInfoWithConcentrated(id);
             devId =ammeterMannagerDao.getDeviceIdByIdWithConcentrated(id);
         }
-        AmmeterInfoVo modelFromInterFace  =iAmmeter.getAmmeterInfo(devId);
+        AmmeterInfoVo modelFromInterFace = iAmmeter.getAmmeterInfo(devId);
         AmmeterInfoVo data = (AmmeterInfoVo)MyConstUtils.mergeObject(modelFromInterFace,model);
+        //分散式房源和子表才牵扯分摊计算
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())&&data.getIsHub().equals("0")){
+            data = initFenTan(data);
+        }
         if(type.equals("0")){
             ammeterMannagerDao.updateAmmeterWithDispersed(data);
             //ammeterMannagerVoDao.addDeviceRecordWithDispersed(data);
@@ -191,18 +192,20 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
             Double allPowerMonth = new Double(0.0);
             for (String uuid:ammeterUuid){
                 AmmeterInfoVo ammeter = iAmmeter.getAmmeterInfo(uuid);
-                allPowerDay+=ammeter.getPowerDay();
-                allPowerMonth+=ammeter.getPowerMonth();
+                Double powerDayAdd = ammeter.getPowerDay()==null?0:ammeter.getPowerDay();
+                Double powerMonthAdd = ammeter.getPowerMonth()==null?0:ammeter.getPowerMonth();
+                allPowerDay+=powerDayAdd;
+                allPowerMonth+=powerMonthAdd;
             }
             Double share = Double.valueOf(ammeterInfoVo.getShare());
-            Double shareDay = (powerDay-allPowerDay)*share/100;
-            Double shareMonth = (powerMonth-allPowerMonth)*share/100;
+            Double shareDay = (powerDay-allPowerDay)*share/100*ammeterInfoVo.getPowerRate();
+            Double shareMonth = (powerMonth-allPowerMonth)*share/100*ammeterInfoVo.getPowerRate();
             ammeterInfoVo.setShareDay(shareDay);
             ammeterInfoVo.setShareMonth(shareMonth);
         }else if(ammeterInfoVo.getUseCase().equals("1")){
             Double share = Double.valueOf(ammeterInfoVo.getShare());
-            Double shareDay = powerDay*share/100;
-            Double shareMonth = powerMonth*share/100;
+            Double shareDay = powerDay*share/100*ammeterInfoVo.getPowerRate();
+            Double shareMonth = powerMonth*share/100*ammeterInfoVo.getPowerRate();
             ammeterInfoVo.setShareDay(shareDay);
             ammeterInfoVo.setShareMonth(shareMonth);
         }
