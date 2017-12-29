@@ -19,7 +19,7 @@
 <!-- 增  -->
     <!-- 添加网关 -->
     <insert id="insertSmartGateway" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartGateway">
-        insert into <include refid="smart_gateway" />(created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,sn,uuid,model_name,name,install_time,install_name,
+        insert into <include refid="smart_gateway" />(created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,sn,uuid,model_name,smart_gateway.`name`,install_time,install_name,
         install_mobile,brand,operator,onoff_status,remark,house_catalog,apartment_id,floor,house_id,room_id)
         values(#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{deletedAt},#{deletedBy},#{sn},#{uuid},#{modelName},#{name},#{installTime},#{installName},
         #{installMobile},#{brand},#{operator},#{onoffStatus},#{remark},#{houseCatalog},#{apartmentId},#{floor},#{houseId},#{roomId})
