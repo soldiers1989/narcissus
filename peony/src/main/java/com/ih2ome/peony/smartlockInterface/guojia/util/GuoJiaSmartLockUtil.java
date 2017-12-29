@@ -1,11 +1,10 @@
 package com.ih2ome.peony.smartlockInterface.guojia.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.utils.CacheUtils;
-import com.ih2ome.common.utils.HttpClientUtil;
-import com.ih2ome.common.utils.MyConstUtils;
-import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.common.utils.*;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +17,7 @@ public class GuoJiaSmartLockUtil {
     //开放平台账号
     private static final String USER_NAME = "13918541485";
     //开放平台密码(加密后)9cb489dc31a4a79c
-    private static final String PASSWORD = "9cb489dc31a4a79c";
+    private static final String PASSWORD = "dengkai";
     //访问凭证
     private static final String TOKEN_KEY = "GUOJIA_SMARTLOCK_TOKEN";
     //凭证的有效时长
@@ -43,7 +42,7 @@ public class GuoJiaSmartLockUtil {
         headers.put("Content-Type", "application/json");
         headers.put("s_id", MyConstUtils.getUUID());
         headers.put("version", VERSION_VALUE);
-        body.put("password", PASSWORD);
+        body.put("password", desEncode(PASSWORD));
         body.put("account", USER_NAME);
         String result = HttpClientUtil.doPostJson(uri, body.toJSONString(), headers);
         JSONObject resJson = null;
@@ -88,17 +87,56 @@ public class GuoJiaSmartLockUtil {
 
     /**
      * 获取请求头信息（包括version,s_id,access_token）
+     *
      * @return
      * @throws SmartLockException
      */
-    public static  Map<String,String> getHeaders() throws SmartLockException{
-        Map<String,String> headers=new HashMap<>();
-        headers.put("Content-Type","application/json");
-        headers.put("version",VERSION_VALUE);
+    public static Map<String, String> getHeaders() throws SmartLockException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("version", VERSION_VALUE);
         headers.put("s_id", MyConstUtils.getUUID());
-        headers.put("access_token",getToken().get(TOKEN_KEY));
+        headers.put("access_token", getToken().get(TOKEN_KEY));
         return headers;
     }
 
-
+    /**
+     * 将密码进行des加密（果家）
+     *
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    public static String desEncode(String password) throws SmartLockException {
+        String securityKey = SECURITY_KEY;
+        int length = securityKey.length();
+        if (length >= 8) {
+            securityKey = securityKey.substring(0, length);
+        } else {
+            for (int i = 0; i < (8 - length); i++) {
+                securityKey += "0";
+            }
+        }
+        byte[] bytes = new byte[0];
+        try {
+            byte[] data = PASSWORD.getBytes("utf-8");
+            byte[] key = securityKey.getBytes("utf-8");
+            bytes = DesUtil.encrypt(data, key);
+        } catch (Exception e) {
+            throw new SmartLockException("des加密错误");
+        }
+        StringBuilder sb = new StringBuilder();
+        String tmp = null;
+        for (byte b : bytes) {
+            // 将每个字节与0xFF进行与运算，然后转化为10进制，然后借助于Integer再转化为16进制
+            tmp = Integer.toHexString(0xFF & b);
+            if (tmp.length() == 1)// 每个字节8为，转为16进制标志，2个16进制位
+            {
+                tmp = "0" + tmp;
+            }
+            sb.append(tmp);
+        }
+        return sb.toString();
+    }
 }
+
