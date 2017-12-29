@@ -101,7 +101,7 @@
     <!--分散式电表更新-->
     <update id="updateAmmeterWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
         UPDATE caspain_test.smart_device ctsd
-        SET ctsd.last_num = #{surplus},
+        SET ctsd.last_num = #{allPower},
         ctsd.updated_at = NOW(),
         ctsd.last_num_date = #{lastTime},
         ctsd.`online`= #{online},
@@ -112,7 +112,7 @@
     <!--集中式电表更新-->
     <update id="updateAmmeterWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
         UPDATE `volga_test`.smart_device vtsdm
-        SET vtsdm.last_num = #{surplus},
+        SET vtsdm.last_num = #{allPower},
         vtsdm.updated_at = NOW(),
         vtsdm.last_num_date = #{lastTime},
         vtsdm.`online`= #{online},
