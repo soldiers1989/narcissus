@@ -261,7 +261,7 @@ public class YunDingCallBackController extends BaseController {
         smartWatermeter.setUpdatedAt(created_at);
         smartWatermeter.setUpdatedBy(created_by);
         smartWatermeter.setDeletedAt(created_at);
-        smartWatermeter.setDeletedBy(created_by);
+        smartWatermeter.setDeletedBy(0L);
         smartWatermeter.setApartmentId(apartmentId);
         smartWatermeter.setFloorId(floorId);
         smartWatermeter.setHouseId(houseId);
@@ -284,10 +284,10 @@ public class YunDingCallBackController extends BaseController {
             SmartGateway smartGateway = new SmartGateway();
             smartGateway.setCreatedAt(new Date(System.currentTimeMillis()));
             smartGateway.setCreatedBy(created_by);
-//            smartGateway.setUpdatedAt(created_at);
-//            smartGateway.setUpdatedBy(created_by);
-//            smartGateway.setDeletedAt(created_at);
-//            smartGateway.setDeletedBy(created_by);
+            smartGateway.setUpdatedAt(created_at);
+            smartGateway.setUpdatedBy(0L);
+            smartGateway.setDeletedAt(created_at);
+            smartGateway.setDeletedBy(0L);
             try {
                 String waterGatewayInfo = iWatermeter.getWaterGatewayInfo(apiRequestVO.getGateway_uuid());
             } catch (WatermeterException e) {
