@@ -84,7 +84,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         for (AddRoomVO addRoomVO:addRoomVOS
                 ) {
             //jz区分集中式和分散式的homeId
-            addRoomVO.setRoom_id("jz" + addRoomVO.getRoom_id());
+            addRoomVO.setRoom_id(HomeIdNameEnum.HOME_ID_NAME_JZ.getCode() + addRoomVO.getRoom_id());
             addRoomVOSList.add(addRoomVO);
         }
 
