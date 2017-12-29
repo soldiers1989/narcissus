@@ -324,7 +324,7 @@ public class YunDingCallBackController extends BaseController {
             smartGateway.setApartmentId(Long.valueOf(gatewayHome_id.substring(2)));
             smartGateway.setFloor(floorId);
             smartGateway.setHouseId(houseId);
-            smartGateway.setRoomId(Long.valueOf(gatewayRoom_id));
+            smartGateway.setRoomId(Long.valueOf(gatewayRoom_id.substring(2)));
 
             //添加网关
             gatewayService.addSmartGateway(smartGateway);
