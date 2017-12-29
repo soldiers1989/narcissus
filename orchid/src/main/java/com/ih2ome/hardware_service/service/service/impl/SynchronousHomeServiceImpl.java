@@ -91,7 +91,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String addRoomsRes = iWatermeter.addRooms(homeId,addRoomVOSList);
 
         JSONObject resJson2 = JSONObject.parseObject(addRoomsRes);
-        String room_id = String.valueOf(resJson2.get("room_id"));
+        String room_id = resJson2.getString("room_id");
         //room_id不为空添加成功
         if (room_id != null){
             //更新room为已同步

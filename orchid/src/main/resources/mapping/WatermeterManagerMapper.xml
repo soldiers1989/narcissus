@@ -242,7 +242,7 @@
         gateway.operator,
         gateway.uuid,
         gateway.onoff_status communicationStatus,
-        gateway.updated_at customerName,
+        gateway.updated_at ,
         gateway.install_time,
         '分散式' `type`
         FROM
@@ -292,7 +292,7 @@
         gateway.operator,
         gateway.uuid,
         gateway.onoff_status communicationStatus,
-        gateway.updated_at customerName,
+        gateway.updated_at,
         gateway.install_time,
         '集中式' `type`
         FROM

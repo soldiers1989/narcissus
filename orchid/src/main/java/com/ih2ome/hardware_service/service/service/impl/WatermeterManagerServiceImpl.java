@@ -9,6 +9,8 @@ import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
 import com.ih2ome.hardware_service.service.service.WatermeterManagerService;
 import com.ih2ome.hardware_service.service.vo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
     @Autowired
     private WatermeterMapper watermeterMapper;
 
+    private static final Logger Log = LoggerFactory.getLogger(WatermeterManagerServiceImpl.class);
     /**
      * 查询水表列表
      * @param watermeterWebListVo
@@ -29,6 +32,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public List<WatermeterWebListVo> watermeterWebListVoList(WatermeterWebListVo watermeterWebListVo) {
+        Log.info("查询水表列表，watermeterWebListVo：{}",watermeterWebListVo.toString());
         if(watermeterWebListVo.getPage()!= null && watermeterWebListVo.getRows() != null){
             PageHelper.startPage(watermeterWebListVo.getPage(),watermeterWebListVo.getRows());
         }
@@ -52,6 +56,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public WatermeterManagerDetailVO findWatermeterDetailByUuid(String uuid, String type) {
+        Log.info("查询水表详情，uuid：{},type:{}",uuid,type);
         WatermeterManagerDetailVO WatermeterManagerDetailVO=null;
         //分散式
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
@@ -71,6 +76,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public List<WatermeterRecordManagerVO> findWatermeterRecordByWatermeterIdAndTime(WatermeterRecordManagerVO watermeterRecordManagerVO) {
+        Log.info("查询水表查表记录by时间段，watermeterRecordManagerVO:{}",watermeterRecordManagerVO.toString());
         if(watermeterRecordManagerVO.getPage()!= null && watermeterRecordManagerVO.getRows() != null){
             PageHelper.startPage(watermeterRecordManagerVO.getPage(),watermeterRecordManagerVO.getRows());
         }
@@ -99,6 +105,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public List<ExceptionVO> findWatermeterException(ExceptionVO exceptionVO) {
+        Log.info("水表异常记录，exceptionVO:{}",exceptionVO.toString());
         if(exceptionVO.getPage()!= null && exceptionVO.getRows() != null){
             PageHelper.startPage(exceptionVO.getPage(),exceptionVO.getRows());
         }
@@ -114,6 +121,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public List<GatewayWebListVo> gatewayWebListVoList(GatewayWebListVo gatewayWebListVo) {
+        Log.info("查询网关列表，gatewayWebListVo:{}",gatewayWebListVo.toString());
         if(gatewayWebListVo.getPage()!= null && gatewayWebListVo.getRows() != null){
             PageHelper.startPage(gatewayWebListVo.getPage(),gatewayWebListVo.getRows());
         }
@@ -136,6 +144,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public GatewayWebDetailVO findGatewayDetailbyId (int smartGatewayId, String type) {
+        Log.info("查询网关详情，smartGatewayId:{},type:{}",smartGatewayId,type);
         //分散式
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             return watermeterManagerMapper.selectHmGatewayDetailbyGatewayId(smartGatewayId);
@@ -154,6 +163,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public List<ExceptionVO> findGatewayException(ExceptionVO exceptionVO) {
+        Log.info("查询网关异常记录，exceptionVO:{}",exceptionVO.toString());
         if(exceptionVO.getPage()!= null && exceptionVO.getRows() != null){
             PageHelper.startPage(exceptionVO.getPage(),exceptionVO.getRows());
         }
