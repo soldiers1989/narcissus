@@ -19,9 +19,9 @@
         cslg.install_time installDate,
         '0' `type`
         FROM
-        caspain_pro.smart_lock_gateway cslg
-        LEFT JOIN caspain_pro.house ch ON cslg.house_id = ch.id
-        left join caspain_pro.auth_user cau on ch.created_by_id=cau.id
+        caspain_test.smart_lock_gateway cslg
+        LEFT JOIN caspain_test.house ch ON cslg.house_id = ch.id
+        left join caspain_test.auth_user cau on ch.created_by_id=cau.id
         WHERE
         1 = 1
         AND (
