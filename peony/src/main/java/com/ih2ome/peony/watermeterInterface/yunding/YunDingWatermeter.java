@@ -373,11 +373,12 @@ public class YunDingWatermeter implements IWatermeter {
      */
     @Override
     public String getWatermeterInfo(String uuid, String manufactory) throws WatermeterException {
-        Log.info("获取水表网关信息,uuid:{},manufactory:{}",uuid,manufactory);
+        Log.info("获取水表信息,uuid:{},manufactory:{}",uuid,manufactory);
 
         Map<String,Object> map= new HashMap();
         map.put("access_token",YunDingWatermeterUtil.getToken());
         map.put("uuid",uuid);
+        map.put("manufactory",manufactory);
 
         String uri = BASE_URL + "/get_watermeter_info";
         //String url = PowerBeeAmmeterUtil.generateParam(uri);
