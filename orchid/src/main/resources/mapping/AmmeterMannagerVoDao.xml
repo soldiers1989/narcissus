@@ -145,7 +145,7 @@
         caspain_test.room cr on csd.room_id=cr.id LEFT JOIN
         caspain_test.house ch on cr.house_id=ch.id LEFT JOIN
         caspain_test.room_contract crc on crc.room_id=cr.id
-        LEFT JOIN caspain_test.auth_user cau on crc.created_by_id = cau.id
+        LEFT JOIN caspain_test.auth_user cau on ch.created_by_id = cau.id
         WHERE
         1 = 1
         AND (csd.is_delete != '1' or csd.is_delete is null)
@@ -219,7 +219,7 @@
         `volga_test`.apartment va on vr.apartment_id=va.id LEFT JOIN
         `volga_test`.room_contract vrc on vrc.room_id=vr.id
         LEFT JOIN `volga_test`.area varea on va.area=varea.id
-        LEFT JOIN caspain_test.auth_user cau on vrc.created_by = cau.id
+        LEFT JOIN caspain_test.auth_user cau on va.created_by = cau.id
         WHERE
         1 = 1
         AND (vsd.is_delete != '1' or vsd.is_delete is null)

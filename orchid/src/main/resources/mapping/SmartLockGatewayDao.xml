@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao">
+
+    <!--INSERT-->
+    <!--查询集中式房源网关列表-->
+    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
+
+    </select>
+    <!--查询分散式房源网关列表-->
+    <select id="findDispersedAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
+        SELECT
+        cslg.id gatewayId,
+        ch.area apartmentName,
+        cau.username authUserName,
+        ch.address houseAddress,
+        cslg.gateway gatewayCode,
+        cslg.`status` communicationStatus,
+        cslg.install_time installDate,
+        '0' `type`
+        FROM
+        caspain_test.smart_lock_gateway cslg
+        LEFT JOIN caspain_test.house ch ON cslg.house_id = ch.id
+        left join caspain_test.auth_user cau on ch.created_by_id=cau.id
+        WHERE
+        1 = 1
+        AND (
+        cslg.is_delete != '1'
+        OR cslg.is_delete IS NULL
+        )
+        AND (
+        ch.is_delete != '1'
+        OR ch.is_delete IS NULL
+        )
+        and cslg.installed='1'
+        <if test="gatewayId != '' and gatewayId != null">
+            AND cslg.id = '${gatewayId}'
+        </if>
+        <if test="apartmentName != '' and apartmentName != null">
+            AND ch.area = '${apartmentName}'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username = '${authUserName}'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND ch.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND ch.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND ch.area LIKE '%${areaName}%'
+        </if>
+
+    </select>
+</mapper>
