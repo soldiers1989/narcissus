@@ -19,7 +19,7 @@ public class WatermeterManagerDetailVO {
     //绑定时间
     private Date createdAt;
     //更新时间
-    private Date meterUpdateAt;
+    private Date meterUpdatedAt;
     //最近抄表读数
     private int lastAmount;
     //月初水量
@@ -27,6 +27,6 @@ public class WatermeterManagerDetailVO {
     //通讯状态
     private int onoffStatus;
     //绑定网关
-    private int gatewayUuid;
+    private String gatewayUuid;
 
 }

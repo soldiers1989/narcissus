@@ -77,7 +77,7 @@ public class YunDingCallBackController extends BaseController {
         if(!flag){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
         }*/
-        String even = apiRequestVO.getEven();
+        String even = apiRequestVO.getEvent();
         IWatermeter iWatermeter = getIWatermeter();
         switch (even){
             //绑定水表及水表网关设备事件
@@ -378,7 +378,7 @@ public class YunDingCallBackController extends BaseController {
      */
     private boolean checkSign(String sign, CallbackRequestVo apiRequestVO) {
         Map<String,Object> map=new HashMap<>();
-        map.put("even",apiRequestVO.getEven());
+        map.put("even",apiRequestVO.getEvent());
         map.put("time",apiRequestVO.getTime());
         map.put("uuid",apiRequestVO.getUuid());
         map.put("old_uuid",apiRequestVO.getOld_uuid());

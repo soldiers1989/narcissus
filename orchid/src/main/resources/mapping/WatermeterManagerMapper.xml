@@ -174,7 +174,7 @@
 
     <!-- 查询分散式水表详情byuuid -->
     <select id="selectHmWatermeterDetailByUuid" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
-        SELECT w.uuid,CONCAT(h.area,h.building_num,unit_num) AS house_name,h.floor_num AS floor_name,h.house_num AS room_name,w.meter_type,w.created_at,w.meter_updated_at,(w.last_amount-w.meter_amount) AS amount,w.onoff_status,g.uuid AS gateway_uuid
+        SELECT w.uuid,CONCAT(h.area,h.building_num,unit_num) AS home_name,h.floor_num AS floor_name,h.house_num AS room_name,w.meter_type,w.created_at,w.meter_updated_at,(w.last_amount-w.meter_amount) AS amount,w.onoff_status,g.uuid AS gateway_uuid
         FROM
         <include refid="smart_watermeter" /> AS w
         INNER JOIN

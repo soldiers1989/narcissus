@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CallbackRequestVo {
-    private String even;//事件类别 'deviceInstall',' deviceReplace',deviceUninstall,waterGatewayOfflineAlarm,waterGatewayOnlineAlarm,watermeterAmountAsync
+    private String event;//事件类别 'deviceInstall',' deviceReplace',deviceUninstall,waterGatewayOfflineAlarm,waterGatewayOnlineAlarm,watermeterAmountAsync
     private Long time;//时间戳，单位 ms
     private String uuid;//设备唯一标识
     private String old_uuid;//设备唯一标识
