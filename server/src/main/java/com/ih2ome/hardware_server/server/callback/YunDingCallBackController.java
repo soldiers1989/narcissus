@@ -63,14 +63,14 @@ public class YunDingCallBackController extends BaseController {
     }
 
     /**
-     * 水表抄表回调接口
+     * 水表回调接口
      * @param apiRequestVO
      * @return
      */
     @RequestMapping(value="/callback/watermeter/yunding",method = RequestMethod.POST,produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<Object> watermeterAmountAsync(@RequestBody CallbackRequestVo apiRequestVO) {
-        Log.info("水表抄表回调接口,apiRequestVO：{}",apiRequestVO.toString());
+        Log.info("水表回调接口,apiRequestVO：{}",apiRequestVO.toString());
         //校验签名
         String sign = apiRequestVO.getSign();
         /*boolean flag=checkSign(sign,apiRequestVO);
@@ -244,11 +244,12 @@ public class YunDingCallBackController extends BaseController {
 
         resJson = JSONObject.parseObject(watermeterInfo);
 
-        String info = (String) resJson.get("info");
+        String info =  resJson.getString("info");
         JSONObject jsonObject = JSONObject.parseObject(info);
         int meter_type = jsonObject.getIntValue("meter_type");
         int onoff = jsonObject.getIntValue("onoff");
-        Date meter_updated_at=detail.getDate("time");
+        Long time=detail.getLong("time");
+        Date meter_updated_at=new Date(System.currentTimeMillis());
 
 
         //绑定水表及水表网关设备事件
@@ -294,7 +295,7 @@ public class YunDingCallBackController extends BaseController {
             }
             resJson = JSONObject.parseObject(watermeterInfo);
 
-            String gatewayInfo = (String) resJson.get("info");
+            String gatewayInfo = resJson.getString("info");
             JSONObject gatewayJsonObject = JSONObject.parseObject(gatewayInfo);
             String manufactory = gatewayJsonObject.getString("manufactory");
             int removed = gatewayJsonObject.getIntValue("removed");
@@ -320,10 +321,10 @@ public class YunDingCallBackController extends BaseController {
             smartGateway.setOnoffStatus(gatewayOnoff);
             //smartGateway.setRemark(null);
             smartGateway.setHouseCatalog(Long.valueOf(house_catalog));
-            smartGateway.setApartmentId(Long.valueOf(gatewayHome_id));
+            smartGateway.setApartmentId(Long.valueOf(gatewayHome_id.substring(2)));
             smartGateway.setFloor(floorId);
             smartGateway.setHouseId(houseId);
-            smartGateway.setRoomId(Long.valueOf(gatewayRoom_id));
+            smartGateway.setRoomId(Long.valueOf(gatewayRoom_id.substring(2)));
 
             //添加网关
             gatewayService.addSmartGateway(smartGateway);
