@@ -248,7 +248,8 @@ public class YunDingCallBackController extends BaseController {
         JSONObject jsonObject = JSONObject.parseObject(info);
         int meter_type = jsonObject.getIntValue("meter_type");
         int onoff = jsonObject.getIntValue("onoff");
-        Date meter_updated_at=detail.getDate("time");
+        Long time=detail.getLong("time");
+        Date meter_updated_at=new Date(time);
 
 
         //绑定水表及水表网关设备事件
