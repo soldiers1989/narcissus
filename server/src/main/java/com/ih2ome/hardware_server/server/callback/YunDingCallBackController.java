@@ -244,7 +244,7 @@ public class YunDingCallBackController extends BaseController {
 
         resJson = JSONObject.parseObject(watermeterInfo);
 
-        String info = (String) resJson.get("info");
+        String info =  resJson.getString("info");
         JSONObject jsonObject = JSONObject.parseObject(info);
         int meter_type = jsonObject.getIntValue("meter_type");
         int onoff = jsonObject.getIntValue("onoff");
@@ -294,7 +294,7 @@ public class YunDingCallBackController extends BaseController {
             }
             resJson = JSONObject.parseObject(watermeterInfo);
 
-            String gatewayInfo = (String) resJson.get("info");
+            String gatewayInfo = resJson.getString("info");
             JSONObject gatewayJsonObject = JSONObject.parseObject(gatewayInfo);
             String manufactory = gatewayJsonObject.getString("manufactory");
             int removed = gatewayJsonObject.getIntValue("removed");
