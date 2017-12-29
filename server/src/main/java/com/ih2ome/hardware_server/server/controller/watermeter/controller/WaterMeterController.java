@@ -38,7 +38,7 @@ public class WaterMeterController extends BaseController {
     private SynchronousHomeService synchronousHomeService;
 
     /**
-     * 查询分散式水表列表
+     * 查询分散式水表列表 D1/D2
      * @param apiRequestVO
      * @return
      */
