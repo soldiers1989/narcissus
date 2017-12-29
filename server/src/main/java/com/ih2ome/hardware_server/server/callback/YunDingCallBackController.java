@@ -31,7 +31,7 @@ public class YunDingCallBackController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
-    private static String CALLBACK_PATH="http://rose.shuidiguanjia.com/api"+"/callback/watermeter/yunding";
+    private static String CALLBACK_PATH="http://rose.h2ome.cn/api"+"/callback/watermeter/yunding";
 
     @Autowired
     private WatermeterService watermeterService;
@@ -70,6 +70,7 @@ public class YunDingCallBackController extends BaseController {
     @RequestMapping(value="/callback/watermeter/yunding",method = RequestMethod.POST,produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<Object> watermeterAmountAsync(@RequestBody CallbackRequestVo apiRequestVO) {
+        Log.info("水表抄表回调接口,apiRequestVO：{}",apiRequestVO.toString());
         //校验签名
         String sign = apiRequestVO.getSign();
         /*boolean flag=checkSign(sign,apiRequestVO);
@@ -137,7 +138,7 @@ public class YunDingCallBackController extends BaseController {
         String s = JSONObject.toJSONString(detailObj);
         JSONObject detail=JSONObject.parseObject(s);
         Integer amount = (Integer) detail.get("amount");
-        int time = apiRequestVO.getTime();
+        Long time = apiRequestVO.getTime();
         //抄表成功
         if(amount > 0) {
             //存入数据库

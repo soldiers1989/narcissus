@@ -50,7 +50,7 @@ public class GatewayServiceImpl implements GatewayService {
      * @param manufactory
      */
     @Override
-    public void updataGatewayUuid(String uuid, String old_uuid, int time, String manufactory) {
+    public void updataGatewayUuid(String uuid, String old_uuid, Long time, String manufactory) {
         Log.info("替换网关，新网关uuid：{},老网关old_uuid:{},时间time：{},厂商manufactory:{}",uuid,old_uuid,time,manufactory);
         gatewayMapper.updateGatewayUuid(uuid,old_uuid,time,manufactory);
     }

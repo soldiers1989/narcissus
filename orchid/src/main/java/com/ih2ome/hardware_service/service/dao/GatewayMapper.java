@@ -28,7 +28,7 @@ public interface GatewayMapper extends MyMapper<SmartGateway> {
      * @param time
      * @param manufactory
      */
-    void updateGatewayUuid(@Param("uuid") String uuid, @Param("old_uuid") String old_uuid, @Param("time") int time, @Param("manufactory") String manufactory);
+    void updateGatewayUuid(@Param("uuid") String uuid, @Param("old_uuid") String old_uuid, @Param("time") Long time, @Param("manufactory") String manufactory);
 
     /**
      * 添加网关异常

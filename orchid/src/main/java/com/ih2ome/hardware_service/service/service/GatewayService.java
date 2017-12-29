@@ -24,7 +24,7 @@ public interface GatewayService {
      * @param time
      * @param manufactory
      */
-    void updataGatewayUuid(String uuid, String old_uuid, int time, String manufactory);
+    void updataGatewayUuid(String uuid, String old_uuid, Long time, String manufactory);
 
     /**
      * 添网关异常

@@ -80,7 +80,7 @@ public class WatermeterManagerController extends BaseController{
     @RequestMapping(value="/watermeterDetail",method = RequestMethod.POST,produces = {"application/json"})
     public String watermeterWebDetail (@RequestBody ApiRequestVO apiRequestVO){
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
-        String uuid = String.valueOf(resData.get("uuid"));
+        String uuid = resData.getString("uuid");
         String type = resData.getString("type");
         //查询水表详情byUuid
         WatermeterManagerDetailVO watermeterManagerDetailVO = watermeterManagerService.findWatermeterDetailByUuid(uuid,type);

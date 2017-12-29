@@ -108,7 +108,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param amount
      * @param time
      */
-    void updataWaterLastAmount(@Param("uuid") String uuid, @Param("amount") int amount, @Param("time") int time);
+    void updataWaterLastAmount(@Param("uuid") String uuid, @Param("amount") int amount, @Param("time") Long time);
 
     /**
      * 通过楼层id查询水表
