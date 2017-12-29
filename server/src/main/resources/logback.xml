@@ -52,24 +52,30 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="druid" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/druid/%d{yyyy-MM-dd}_druid.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <!-- root级别 DEBUG -->
     <root>
         <!-- 打印debug级别日志及以上级别日志 -->
-        <level value="DEBUG"/>
+        <level value="INFO"/>
         <!-- 控制台输出 -->
         <appender-ref ref="console"/>
     </root>
 
-    <logger name="com.ih2ome.peony" level="INFO" additivity="false">
+    <logger name="com.ih2ome.peony" level="DEBUG" additivity="false">
         <appender-ref ref="peony"/>
         <appender-ref ref="console"/>
     </logger>
-    <logger name="com.ih2ome.hardware_service" level="INFO" additivity="false">
+    <logger name="com.ih2ome.hardware_service" level="DEBUG" additivity="false">
         <appender-ref ref="hardware_service"/>
         <appender-ref ref="console"/>
     </logger>
-    <logger name="com.ih2ome.hardware_server" level="INFO" additivity="false">
+    <logger name="com.ih2ome.hardware_server" level="DEBUG" additivity="false">
         <appender-ref ref="hardware_server"/>
         <appender-ref ref="console"/>
     </logger>
@@ -79,7 +85,9 @@
     </logger>
     <logger name="org.apache.http" level="DEBUG" additivity="false">
         <appender-ref ref="http"/>
-        <appender-ref ref="console"/>
+    </logger>
+    <logger name="druid.sql" level="DEBUG" additivity="false">
+        <appender-ref ref="druid"/>
     </logger>
 
 </configuration>
