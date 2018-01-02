@@ -7,8 +7,10 @@ import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.enums.LockDigitPwdTypeEnum;
 import com.ih2ome.hardware_service.service.enums.LockStatusEnum;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
+import com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO;
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
+import com.ih2ome.peony.smartlockInterface.enums.GuoJiaLockStatusEnum;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import com.ih2ome.hardware_service.service.vo.LockRequestVo;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
@@ -175,6 +177,38 @@ public class LockManagerServiceImpl implements LockManagerService {
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             lockManagerDao.deleteConcentratePwd(lockPasswordVo);
         }
+    }
+
+    //查询门锁的历史状态
+    @Override
+    public List<LockHistoryStatusVO> getLockHistoryList(LockHistoryStatusVO lockHistoryStatusVO) {
+        List<LockHistoryStatusVO> historyStatus = null;
+        if (lockHistoryStatusVO == null) {
+            return null;
+        }
+        String type = lockHistoryStatusVO.getType();
+        if (lockHistoryStatusVO.isInitPageRows()) {
+            PageHelper.startPage(lockHistoryStatusVO.getPage(), lockHistoryStatusVO.getRows());
+        }
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            historyStatus = lockManagerDao.findDispersedLockHistoryStatus(lockHistoryStatusVO);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            historyStatus = lockManagerDao.findConcentrateLockHistoryStatus(lockHistoryStatusVO);
+        }
+        for (LockHistoryStatusVO lockHistoryStatus : historyStatus) {
+            String status = lockHistoryStatus.getStatus();
+            //如果当前状态是'电量低'
+            if(status.equals(GuoJiaLockStatusEnum.PUSH_LOCK_POWRE_LOW.getStatus())){
+                JSONObject jsonData = JSONObject.parseObject(lockHistoryStatus.getRdata());
+                String power = jsonData.getString("power");
+                lockHistoryStatus.setStatus(GuoJiaLockStatusEnum.PUSH_LOCK_POWRE_LOW.getStatusName()+"("+power+"%)");
+                continue;
+            }
+            lockHistoryStatus.setStatus(GuoJiaLockStatusEnum.getByStatus(status));
+        }
+        return historyStatus;
     }
 
 }

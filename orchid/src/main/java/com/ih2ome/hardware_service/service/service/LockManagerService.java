@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.service;
 
+import com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO;
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
@@ -34,4 +35,6 @@ public interface LockManagerService {
     //删除门锁密码
     void deletePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
 
+    //查询门锁的历史状态
+    List<LockHistoryStatusVO> getLockHistoryList(LockHistoryStatusVO lockHistoryStatusVO);
 }

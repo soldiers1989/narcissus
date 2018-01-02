@@ -6,6 +6,7 @@ import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
+import com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO;
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
@@ -41,22 +42,22 @@ public class SmartLockController extends BaseController {
      * 门锁list
      *
      * @param apiRequestVO <pre>
-     *                                                                                                                                                                       lockListVo
-     *                                                                                                                                                                           serialNum 门锁编码
-     *                                                                                                                                                                           roomNo 房间编号
-     *                                                                                                                                                                           apartmentName 公寓名称
-     *                                                                                                                                                                           customerName 租客姓名
-     *                                                                                                                                                                           authUserName 房东电话
-     *                                                                                                                                                                           customerPhone 租客电话
-     *                                                                                                                                                                           provinceName 省名
-     *                                                                                                                                                                           cityName 市名
-     *                                                                                                                                                                           districtName 区名
-     *                                                                                                                                                                           areaName 小区名
-     *                                                                                                                                                                           status 状态
-     *                                                                                                                                                                           type 公寓类型（0集中，1分布）
-     *                                                                                                                                                                           page 页码(当前页)
-     *                                                                                                                                                                           rows 每页大小
-     *                                                                                                                                                                 </pre>
+     *                                                                                                                                                                                                                                                                                                                   lockListVo
+     *                                                                                                                                                                                                                                                                                                                       serialNum 门锁编码
+     *                                                                                                                                                                                                                                                                                                                       roomNo 房间编号
+     *                                                                                                                                                                                                                                                                                                                       apartmentName 公寓名称
+     *                                                                                                                                                                                                                                                                                                                       customerName 租客姓名
+     *                                                                                                                                                                                                                                                                                                                       authUserName 房东电话
+     *                                                                                                                                                                                                                                                                                                                       customerPhone 租客电话
+     *                                                                                                                                                                                                                                                                                                                       provinceName 省名
+     *                                                                                                                                                                                                                                                                                                                       cityName 市名
+     *                                                                                                                                                                                                                                                                                                                       districtName 区名
+     *                                                                                                                                                                                                                                                                                                                       areaName 小区名
+     *                                                                                                                                                                                                                                                                                                                       status 状态
+     *                                                                                                                                                                                                                                                                                                                       type 公寓类型（0集中，1分布）
+     *                                                                                                                                                                                                                                                                                                                       page 页码(当前页)
+     *                                                                                                                                                                                                                                                                                                                       rows 每页大小
+     *                                                                                                                                                                                                                                                                                                             </pre>
      * @return result
      * <pre>
      *              lockListVo
@@ -253,6 +254,24 @@ public class SmartLockController extends BaseController {
             return result;
         }
         String result = structureSuccessResponseVO(null, new Date().toString(), "删除成功");
+        return result;
+    }
+
+    /**
+     * 查询门锁的历史状态
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/lockStatusList", method = RequestMethod.POST, produces = {"application/json"})
+    public String lockStatusList(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        LockHistoryStatusVO lockHistoryStatusVO = JSONObject.parseObject(resData.toString(), LockHistoryStatusVO.class);
+        JSONObject responseJson = new JSONObject();
+        List<LockHistoryStatusVO> lockStatusList = null;
+        lockStatusList = lockManagerService.getLockHistoryList(lockHistoryStatusVO);
+        responseJson.put("lockpasswordListVo", lockStatusList);
+        String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
     }
 }

@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.dao;
 
+import com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO;
 import com.ih2ome.hardware_service.service.vo.LockInfoVo;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
@@ -49,4 +50,10 @@ public interface LockManagerDao {
 
     //删除密码(集中式)
     void deleteConcentratePwd(LockPasswordVo lockPasswordVo);
+
+    //查询门锁的历史状态(分散式)
+    List<LockHistoryStatusVO> findDispersedLockHistoryStatus(LockHistoryStatusVO lockHistoryStatusVO);
+
+    //查询门锁的历史状态(集中式)
+    List<LockHistoryStatusVO> findConcentrateLockHistoryStatus(LockHistoryStatusVO lockHistoryStatusVO);
 }

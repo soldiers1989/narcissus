@@ -443,4 +443,42 @@
         )
            AND sl.serial_num = #{lockNo}
     </select>
+
+    <!--分散式根据门锁编码查询门锁历史状态-->
+    <select id="findDispersedLockHistoryStatus"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO">
+      SELECT
+       DATE_FORMAT(
+                sls.report_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) reportTime,
+        sls.network_status AS status,
+        sls.rdata,
+        sl.serial_num as serialNum
+        FROM
+            caspain_test.`smart_lock_status` sls
+        LEFT JOIN caspain_test.smart_lock sl ON sl.id = sls.lock_id
+        where sl.serial_num=#{serialNum}
+
+    </select>
+
+    <!--集中式根据门锁编码查询门锁历史状态-->
+    <select id="findConcentrateLockHistoryStatus"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO">
+         SELECT
+       DATE_FORMAT(
+                sls.report_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) reportTime,
+        sls.network_status AS status,
+        sls.rdata,
+        sl.serial_num as serialNum
+        FROM
+            volga_test.`smart_lock_status` sls
+        LEFT JOIN volga_test.smart_lock sl ON sl.id = sls.lock_id
+        where sl.serial_num=#{serialNum}
+    </select>
+
 </mapper>
