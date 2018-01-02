@@ -141,8 +141,7 @@ public class YunDingCallBackController extends BaseController {
         Long time = apiRequestVO.getTime();
         //抄表成功
         if(amount > 0) {
-            //存入数据库
-            watermeterService.updataWaterLastAmount(apiRequestVO.getUuid(), amount, time);
+
             //更新或添加抄表记录
             //获取最近一次抄表时间
             Timestamp timestamp=watermeterService.findWatermeterMeterUpdatedAt(apiRequestVO.getUuid());
@@ -162,6 +161,8 @@ public class YunDingCallBackController extends BaseController {
                 watermeterRecordService.addWatermeterRecord(smartWatermeterRecord);
             }
 
+            //存入数据库
+            watermeterService.updataWaterLastAmount(apiRequestVO.getUuid(), amount, time);
             //查询水表在线状态
             Integer onOffStatus= watermeterService.findWatermeterOnOffStatusByUuid(apiRequestVO.getUuid());
             //水表状态离线
