@@ -67,7 +67,7 @@ public class WaterMeterController extends BaseController {
         int smartGatewayId = dt.getIntValue("gatewayId");
 
         //查询网关详情
-        WatermeterGatewayDetailVO watermeterGatewayDetailVO = watermeterService.findGatewaybyId(smartGatewayId);
+        WatermeterGatewayDetailVO watermeterGatewayDetailVO = watermeterService.findhmGatewaybyId(smartGatewayId);
         //查询网关绑定的水表
         List<HMWatermeterListVO> watermeterDetailVOS = watermeterService.findWatermetersByGatewayId(smartGatewayId);
 

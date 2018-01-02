@@ -81,7 +81,7 @@
 
     <!-- 分散式水表 -->
     <select id="findWatermetersByUserId" parameterType="int" resultMap="hmWatermeterListResultMap" >
-        SELECT r.id AS room_id,gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.area+h.building_num+h.floor_num+h.house_num AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
+        SELECT r.id AS room_id,gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,CONCAT(h.area,h.building_num,"栋",h.unit_num,"单元",h.house_num) AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
         FROM
         <include refid="smart_watermeter" /> AS w
         INNER JOIN
@@ -98,9 +98,16 @@
         ON  w.room_id= r.id AND h.id=r.house_id AND r.created_by_id = #{id} ;
     </select>
 
-    <!-- 查询网关by网关id -->
+    <!-- 查询集中式网关by网关id -->
     <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterGatewayDetailVO">
-        SELECT g.smart_gateway_id,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g WHERE smart_gateway_id =  #{id};
+        SELECT g.smart_gateway_id,a.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="apartment" /> AS a
+        ON g.apartment_id =a.id WHERE smart_gateway_id =  #{id};
+    </select>
+
+    <!-- 查询分散式网关by网关id -->
+    <select id="findhmGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterGatewayDetailVO">
+        SELECT g.smart_gateway_id,h.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="house" /> AS h
+        ON g.house_id =h.id WHERE smart_gateway_id =  #{id};
     </select>
 
     <!--查询分散式水表listby网关id-->

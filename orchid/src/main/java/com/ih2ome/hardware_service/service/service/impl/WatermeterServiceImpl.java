@@ -75,6 +75,17 @@ public class WatermeterServiceImpl implements WatermeterService {
         WatermeterGatewayDetailVO watermeterGatewayDetailVO = watermeterDao.findGatewaybySmartGatewayId(smartGatewayId);
         return watermeterGatewayDetailVO;
     }
+    /**
+     * 通过网关id查询网关详情
+     * @param smartGatewayId
+     * @return
+     */
+    @Override
+    public WatermeterGatewayDetailVO findhmGatewaybyId(int smartGatewayId) {
+        Log.info("通过网关id查询网关详情，网关smartGatewayId：{}",smartGatewayId);
+        WatermeterGatewayDetailVO watermeterGatewayDetailVO = watermeterDao.findhmGatewaybySmartGatewayId(smartGatewayId);
+        return watermeterGatewayDetailVO;
+    }
 
     /**
      * 通过网关id查询绑定的水表
