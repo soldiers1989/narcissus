@@ -30,7 +30,7 @@ public class LockPasswordVo extends BaseEntity implements Serializable {
     private String deletedById;
     //默认为0
     private String version = "0";
-    //是否被删除(默认为0)
+    //是否被删除(默认为0,0是未删除，1是已删除)
     private String isDelete = "0";
     //门锁密码
     private String password;

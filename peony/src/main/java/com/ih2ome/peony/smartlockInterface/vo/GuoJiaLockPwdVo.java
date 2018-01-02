@@ -11,6 +11,8 @@ import lombok.Data;
 public class GuoJiaLockPwdVo {
     //门锁编码
     private String lock_no;
+    //密码编号
+    private String pwd_no;
     //密码内容（密码）
     private String pwd_text;
     //密码有效期（起）

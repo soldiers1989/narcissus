@@ -27,4 +27,11 @@ public interface LockManagerService {
 
     //新增门锁密码
     void addPassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
+
+    //修改门锁密码
+    void updatePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
+
+    //删除门锁密码
+    void deletePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
+
 }

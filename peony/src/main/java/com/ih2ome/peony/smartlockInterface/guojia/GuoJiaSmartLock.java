@@ -122,4 +122,78 @@ public class GuoJiaSmartLock implements ISmartLock {
         }
         return result;
     }
+
+    /**
+     * 修改门锁密码
+     *
+     * @param lockPassword
+     * @return
+     */
+    @Override
+    public String updateLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
+        Log.info("修改密码");
+        Log.info("修改密码信息：" + lockPassword.toString());
+        GuoJiaLockPwdVo guoJiaLockPwdVo = new GuoJiaLockPwdVo();
+        Map<String, String> headers = GuoJiaSmartLockUtil.getHeaders();
+        guoJiaLockPwdVo.setLock_no(lockPassword.getSerialNum());
+        guoJiaLockPwdVo.setPwd_no(lockPassword.getPwdNo());
+        guoJiaLockPwdVo.setPwd_text(GuoJiaSmartLockUtil.desEncode(lockPassword.getPassword()));
+        guoJiaLockPwdVo.setValid_time_start(String.valueOf(DateUtils.stringToLong
+                (lockPassword.getEnableTime(), "yyyy-MM-dd hh:mm:ss")));
+        guoJiaLockPwdVo.setValid_time_end(String.valueOf(DateUtils.stringToLong
+                (lockPassword.getDisableTime(), "yyyy-MM-dd hh:mm:ss")));
+        guoJiaLockPwdVo.setExtra(lockPassword.getRemark());
+        String url = BASE_URL + "/pwd/update";
+        //请求第三方修改密码
+        String result = HttpClientUtil.doPostJson(url, JSONObject.toJSONString(guoJiaLockPwdVo), headers);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(result);
+        } catch (Exception e) {
+            Log.error("json格式解析错误", e);
+            throw new SmartLockException("json格式解析错误" + e.getMessage());
+        }
+        String rlt_code = resJson.getString("rlt_code");
+        if (!rlt_code.equals("HH0000")) {
+            String rlt_msg = resJson.get("rlt_msg").toString();
+            Log.error("第三方请求失败/n" + rlt_msg);
+            throw new SmartLockException("第三方请求失败/n" + rlt_msg);
+        }
+        return result;
+    }
+
+    /**
+     * 删除门锁密码
+     *
+     * @param lockPassword
+     * @return
+     */
+    @Override
+    public String deleteLockPassword(LockPasswordVo lockPassword) throws SmartLockException {
+        Log.info("删除密码");
+        Log.info("删除密码内容：" + lockPassword.toString());
+        GuoJiaLockPwdVo guoJiaLockPwdVo = new GuoJiaLockPwdVo();
+        Map<String, String> headers = GuoJiaSmartLockUtil.getHeaders();
+        //设置门锁编号
+        guoJiaLockPwdVo.setLock_no(lockPassword.getSerialNum());
+        //设置密码编号
+        guoJiaLockPwdVo.setPwd_no(lockPassword.getPwdNo());
+        String url = BASE_URL + "/pwd/delete";
+        //请求第三方删除密码
+        String result = HttpClientUtil.doPostJson(url, JSONObject.toJSONString(guoJiaLockPwdVo), headers);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(result);
+        } catch (Exception e) {
+            Log.error("json格式解析错误", e);
+            throw new SmartLockException("json格式解析错误" + e.getMessage());
+        }
+        String rlt_code = resJson.getString("rlt_code");
+        if (!rlt_code.equals("HH0000")) {
+            String rlt_msg = resJson.get("rlt_msg").toString();
+            Log.error("第三方请求失败/n" + rlt_msg);
+            throw new SmartLockException("第三方请求失败/n" + rlt_msg);
+        }
+        return result;
+    }
 }

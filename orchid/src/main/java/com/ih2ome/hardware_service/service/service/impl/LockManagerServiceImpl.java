@@ -80,23 +80,23 @@ public class LockManagerServiceImpl implements LockManagerService {
     //根据门锁编码查询门锁密码列表
     @Override
     public List<LockPasswordVo> getPwdList(LockRequestVo lockRequestVo) {
-        if(lockRequestVo==null){
+        if (lockRequestVo == null) {
             return null;
         }
-        String lockNo=lockRequestVo.getLockNo();
-        String type=lockRequestVo.getType();
-        List<LockPasswordVo> pwdList=null;
-        if(lockRequestVo.isInitPageRows()){
-            PageHelper.startPage(lockRequestVo.getPage(),lockRequestVo.getRows());
+        String lockNo = lockRequestVo.getLockNo();
+        String type = lockRequestVo.getType();
+        List<LockPasswordVo> pwdList = null;
+        if (lockRequestVo.isInitPageRows()) {
+            PageHelper.startPage(lockRequestVo.getPage(), lockRequestVo.getRows());
         }
         //判断是分散式
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
-           pwdList= lockManagerDao.findDispersedPwdList(lockNo);
+            pwdList = lockManagerDao.findDispersedPwdList(lockNo);
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
-            pwdList=lockManagerDao.findConcentratePwdList(lockNo);
+            pwdList = lockManagerDao.findConcentratePwdList(lockNo);
         }
-        for (LockPasswordVo lockPasswordVo :pwdList){
+        for (LockPasswordVo lockPasswordVo : pwdList) {
             lockPasswordVo.setStatus(LockStatusEnum.getByCode(lockPasswordVo.getStatus()));
             lockPasswordVo.setDigitPwdType(LockDigitPwdTypeEnum.getByCode(lockPasswordVo.getDigitPwdType()));
         }
@@ -115,14 +115,65 @@ public class LockManagerServiceImpl implements LockManagerService {
         if (!rlt_code.equals("HH0000")) {
             throw new SmartLockException("第三方添加密码失败");
         }
+        JSONObject jsonData = JSONObject.parseObject(resJson.get("data").toString());
+        //密码编号
+        String pwd_no = jsonData.getString("pwd_no");
+        lockPasswordVo.setPwdNo(pwd_no);
         //0代表集中式，1代表分散式
-        String type=lockPasswordVo.getType();
+        String type = lockPasswordVo.getType();
         //判断是分散式
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
             lockManagerDao.addDispersedPwd(lockPasswordVo);
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             lockManagerDao.addConcentratePwd(lockPasswordVo);
+        }
+    }
+
+    //修改门锁密码
+    @Transactional
+    @Override
+    public void updatePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
+        //请求果家第三方的修改接口
+        String result = iSmartLock.updateLockPassword(lockPasswordVo);
+        JSONObject resJson = JSONObject.parseObject(result);
+        String rlt_code = resJson.getString("rlt_code");
+        if (!rlt_code.equals("HH0000")) {
+            throw new SmartLockException("第三方修改密码失败");
+        }
+        JSONObject jsonData = JSONObject.parseObject(resJson.get("data").toString());
+        //0代表集中式，1代表分散式
+        String type = lockPasswordVo.getType();
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            lockManagerDao.updateDispersedPwd(lockPasswordVo);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            lockManagerDao.updateConcentratePwd(lockPasswordVo);
+        }
+
+    }
+
+    //删除门锁密码
+    @Transactional
+    @Override
+    public void deletePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
+        //请求果家第三方的删除密码接口
+        String result = iSmartLock.deleteLockPassword(lockPasswordVo);
+        JSONObject resJson = JSONObject.parseObject(result);
+        String rlt_code = resJson.getString("rlt_code");
+        if (!rlt_code.equals("HH0000")) {
+            throw new SmartLockException("第三方删除密码失败");
+        }
+        //0代表集中式，1代表分散式
+        String type = lockPasswordVo.getType();
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            lockManagerDao.deleteDispersedPwd(lockPasswordVo);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            lockManagerDao.deleteConcentratePwd(lockPasswordVo);
         }
     }
 

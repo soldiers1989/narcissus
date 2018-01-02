@@ -41,22 +41,22 @@ public class SmartLockController extends BaseController {
      * 门锁list
      *
      * @param apiRequestVO <pre>
-     *                                                                   lockListVo
-     *                                                                       serialNum 门锁编码
-     *                                                                       roomNo 房间编号
-     *                                                                       apartmentName 公寓名称
-     *                                                                       customerName 租客姓名
-     *                                                                       authUserName 房东电话
-     *                                                                       customerPhone 租客电话
-     *                                                                       provinceName 省名
-     *                                                                       cityName 市名
-     *                                                                       districtName 区名
-     *                                                                       areaName 小区名
-     *                                                                       status 状态
-     *                                                                       type 公寓类型（0集中，1分布）
-     *                                                                       page 页码(当前页)
-     *                                                                       rows 每页大小
-     *                                                             </pre>
+     *                                                                                                                                                                       lockListVo
+     *                                                                                                                                                                           serialNum 门锁编码
+     *                                                                                                                                                                           roomNo 房间编号
+     *                                                                                                                                                                           apartmentName 公寓名称
+     *                                                                                                                                                                           customerName 租客姓名
+     *                                                                                                                                                                           authUserName 房东电话
+     *                                                                                                                                                                           customerPhone 租客电话
+     *                                                                                                                                                                           provinceName 省名
+     *                                                                                                                                                                           cityName 市名
+     *                                                                                                                                                                           districtName 区名
+     *                                                                                                                                                                           areaName 小区名
+     *                                                                                                                                                                           status 状态
+     *                                                                                                                                                                           type 公寓类型（0集中，1分布）
+     *                                                                                                                                                                           page 页码(当前页)
+     *                                                                                                                                                                           rows 每页大小
+     *                                                                                                                                                                 </pre>
      * @return result
      * <pre>
      *              lockListVo
@@ -178,8 +178,81 @@ public class SmartLockController extends BaseController {
             String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
             return result;
         }
-        String result = structureSuccessResponseVO(null,new Date().toString(),"新增成功");
+        String result = structureSuccessResponseVO(null, new Date().toString(), "新增成功");
         return result;
     }
 
+    /**
+     * 修改门锁密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.PUT, produces = {"application/json"})
+    public String updatePassword(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        LockPasswordVo lockPasswordVo = JSONObject.parseObject(resData.toString(), LockPasswordVo.class);
+        try {
+            lockManagerService.updatePassword(lockPasswordVo);
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
+        } catch (ParseException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
+        }
+        String result = structureSuccessResponseVO(null, new Date().toString(), "修改成功");
+        return result;
+    }
+
+    /**
+     * 删除门锁密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/deletePassword", method = RequestMethod.PUT, produces = {"application/json"})
+    public String deletePassword(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        LockPasswordVo lockPasswordVo = JSONObject.parseObject(resData.toString(), LockPasswordVo.class);
+        try {
+            lockManagerService.deletePassword(lockPasswordVo);
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        } catch (ParseException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        }
+        String result = structureSuccessResponseVO(null, new Date().toString(), "删除成功");
+        return result;
+    }
 }

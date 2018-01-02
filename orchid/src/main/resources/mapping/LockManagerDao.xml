@@ -20,7 +20,9 @@
         enable_time,
         disable_time,
         remark,
-        message_content
+        message_content,
+        status,
+        pwd_no
     ) SELECT
         '0' AS version,
         '0' AS is_delete,
@@ -35,7 +37,9 @@
         #{enableTime} as enable_time,
         #{disableTime} as disable_time,
         #{remark} as remark,
-        #{messageContent} as message_content
+        #{messageContent} as message_content,
+        '1' as status,
+        #{pwdNo} as pwd_no
     FROM
         caspain_test.smart_lock
     WHERE
@@ -62,7 +66,9 @@
         enable_time,
         disable_time,
         remark,
-        message_content
+        message_content,
+        status,
+        pwd_no
     ) SELECT
         '0' AS version,
         '0' AS is_delete,
@@ -79,13 +85,87 @@
         #{enableTime} as enable_time,
         #{disableTime} as disable_time,
         #{remark} as remark,
-        #{messageContent} as message_content
+        #{messageContent} as message_content,
+        '1' as status,
+         #{pwdNo} as pwd_no
     FROM
         volga_test.smart_lock
     WHERE
         serial_num = #{serialNum};
     </insert>
 
+    <!--delete-->
+    <!--分散式删除密码-->
+    <update id="deleteDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        UPDATE caspain_test.smart_lock_password
+        SET is_delete = '1',
+         deleted_at = NOW(),
+         deleted_by_id = created_by_id
+        WHERE
+	     id = #{id};
+    </update>
+
+    <!--集中式删除密码-->
+    <update id="deleteConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        UPDATE volga_test.smart_lock_password
+        SET is_delete = '1',
+         deleted_at = NOW(),
+         deleted_by = created_by
+        WHERE
+	     id = #{id};
+    </update>
+
+
+    <!--update-->
+    <!--分散式修改门锁密码-->
+    <update id="updateDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        UPDATE caspain_test.smart_lock_password
+        <set>
+            <if test="password!=null and password.trim()!=''">
+                password=#{password},
+            </if>
+            <if test="enableTime!=null and enableTime.trim()!=''">
+                enable_time = #{enableTime},
+            </if>
+            <if test="disableTime!=null and disableTime.trim()!=''">
+                disable_time = #{disableTime},
+            </if>
+            <if test="remark!=null and remark.trim()!=''">
+                remark = #{remark},
+            </if>
+            <if test="messageContent!=null and messageContent!=''">
+                message_content = #{messageContent},
+            </if>
+            updated_at=NOW(),
+            updated_by_id =created_by_id
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--集中式修改门锁密码-->
+    <update id="updateConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        UPDATE volga_test.smart_lock_password
+        <set>
+            <if test="password!=null and password.trim()!=''">
+                password=#{password},
+            </if>
+            <if test="enableTime!=null and enableTime.trim()!=''">
+                enable_time = #{enableTime},
+            </if>
+            <if test="disableTime!=null and disableTime.trim()!=''">
+                disable_time = #{disableTime},
+            </if>
+            <if test="remark!=null and remark.trim()!=''">
+                remark = #{remark},
+            </if>
+            <if test="messageContent!=null and messageContent!=''">
+                message_content = #{messageContent},
+            </if>
+            updated_at=NOW(),
+            updated_by =created_by
+        </set>
+        where id=#{id}
+    </update>
 
     <!--select-->
     <!--分散式房源门锁列表（模糊查询）-->
@@ -291,6 +371,8 @@
     <!--分散式根据门锁编码查询密码列表-->
     <select id="findDispersedPwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
+            slp.id id,
+            slp.pwd_no pwdNo,
             sl.serial_num serial_num,
             DATE_FORMAT(
                 slp.enable_time,
@@ -327,6 +409,8 @@
     <!--集中式根据门锁编码查询密码列表-->
     <select id="findConcentratePwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
+            slp.id id,
+            slp.pwd_no pwdNo,
             sl.serial_num serial_num,
             DATE_FORMAT(
                 slp.enable_time,

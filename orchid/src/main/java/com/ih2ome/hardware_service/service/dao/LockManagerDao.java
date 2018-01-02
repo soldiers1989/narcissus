@@ -37,4 +37,16 @@ public interface LockManagerDao {
 
     //新增密码（集中式）
     void addConcentratePwd(LockPasswordVo lockPasswordVo);
+
+    //修改密码(分散式)
+    void updateDispersedPwd(LockPasswordVo lockPasswordVo);
+
+    //修改密码(集中式)
+    void updateConcentratePwd(LockPasswordVo lockPasswordVo);
+
+    //删除密码(分散式)
+    void deleteDispersedPwd(LockPasswordVo lockPasswordVo);
+
+    //删除密码(集中式)
+    void deleteConcentratePwd(LockPasswordVo lockPasswordVo);
 }

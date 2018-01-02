@@ -31,4 +31,18 @@ public interface ISmartLock {
      * @throws SmartLockException
      */
     public String addLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException;
+
+    /**
+     * 修改门锁密码
+     * @param lockPassword
+     * @return
+     */
+    public String updateLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException;
+
+    /**
+     * 删除门锁密码
+     * @param lockPassword
+     * @return
+     */
+    public String deleteLockPassword(LockPasswordVo lockPassword) throws SmartLockException;
 }
