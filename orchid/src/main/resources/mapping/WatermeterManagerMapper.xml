@@ -45,7 +45,6 @@
 
         <collection property="watermeterDetailVOS" javaType="List"
                     ofType="com.ih2ome.hardware_service.service.vo.GatewayWatermeterWebListVO" autoMapping="true">
-            <id column="uuid" property="uuid" />
         </collection>
     </resultMap>
 
@@ -57,6 +56,7 @@
     <select id="findJzWatermeterWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo" resultType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo">
         SELECT
         watermeter.smart_watermeter_id watermeter_id,
+        gateway.smart_gateway_id AS gateway_id,
         va.`name` apartmentName,
         cau.username authUserName,
         va.address houseAddress,
@@ -67,7 +67,7 @@
         watermeter.onoff_status communicationStatus,
         (watermeter.last_amount - watermeter.meter_amount) amount,
         gateway.uuid,
-        '集中式' `type`
+        '0' `type`
         FROM
         <include refid="smart_watermeter" /> watermeter left join
         <include refid="jzroom" /> vr on watermeter.room_id=vr.id LEFT JOIN
@@ -117,6 +117,7 @@
     <select id="findHmWatermeterWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo" resultType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo">
         SELECT
         watermeter.smart_watermeter_id watermeterId,
+        gateway.smart_gateway_id AS gateway_id,
         va.area apartmentName,
         cau.username authUserName,
         va.address houseAddress,
@@ -127,7 +128,7 @@
         watermeter.onoff_status communicationStatus,
         (watermeter.last_amount - watermeter.meter_amount) amount,
         gateway.uuid,
-        '分散式' `type`
+        '1' `type`
         FROM
         <include refid="smart_watermeter" /> watermeter left join
         <include refid="room" /> vr on watermeter.room_id=vr.id LEFT JOIN
@@ -193,7 +194,7 @@
     </select>
 
  <!-- 查询集中式水表详情byuuid -->
-    <select id="selectJzWatermeterDetailByUuid" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
+    <select id="selectJzWatermeterDetailByUuid" resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
         SELECT
         w.uuid,
         a.`name` AS house_name,
@@ -244,7 +245,7 @@
         gateway.onoff_status communicationStatus,
         gateway.updated_at ,
         gateway.install_time,
-        '分散式' `type`
+        '1' `type`
         FROM
         <include refid="smart_gateway" /> AS gateway
         LEFT JOIN <include refid="room" /> room ON gateway.room_id = room.id
@@ -294,7 +295,7 @@
         gateway.onoff_status communicationStatus,
         gateway.updated_at,
         gateway.install_time,
-        '集中式' `type`
+        '0' `type`
         FROM
         <include refid="smart_gateway" /> AS gateway
         LEFT JOIN <include refid="jzroom" /> room ON gateway.room_id = room.id

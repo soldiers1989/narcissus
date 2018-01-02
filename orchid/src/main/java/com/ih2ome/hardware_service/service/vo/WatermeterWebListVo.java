@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Data
 public class WatermeterWebListVo extends BaseEntity implements Serializable {
     private String watermeterId;//水表id
+    private String GatewayId;//网关id
     private String apartmentName;//公寓名称
     private String apartmentType;//公寓类型
     private String authUserName;//用户名(房东手机号)
