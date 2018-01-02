@@ -49,7 +49,7 @@
 
     <!--添加水表-->
     <insert id="addSmartGatewayBind" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind" >
-        insert into <include refid="smart_gateway_bind" />(smart_device_type,smart_gateway_id,smart_id)
+        insert into <include refid="smart_gateway_bind" />(smart_gateway_id,smart_device_type,smart_id)
         values(#{smartGatewayId},#{smartDeviceType},#{smartId})
     </insert>
 

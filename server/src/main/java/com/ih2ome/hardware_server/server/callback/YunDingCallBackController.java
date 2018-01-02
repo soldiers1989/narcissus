@@ -277,6 +277,7 @@ public class YunDingCallBackController extends BaseController {
 
         //创建水表
         watermeterService.createSmartWatermeter(smartWatermeter);
+        SmartGatewayBind smartGatewayBind =new SmartGatewayBind();
         //判断网关是否已存在
         int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
         if (gatewayId <= 0){
@@ -328,13 +329,15 @@ public class YunDingCallBackController extends BaseController {
 
             //添加网关
             gatewayService.addSmartGateway(smartGateway);
+            gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
         }
 
         //绑定网关
-        SmartGatewayBind smartGatewayBind =new SmartGatewayBind();
-        smartGatewayBind.setSmartDeviceType(2D);
+        smartGatewayBind.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER.getCode());
         smartGatewayBind.setSmartGatewayId(Long.valueOf(gatewayId));
-        smartGatewayBind.setSmartId((long) smartWatermeter.getSmartWatermeterId());
+        //查询水表id
+        int watermeterId=watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
+        smartGatewayBind.setSmartId((long) watermeterId);
         watermeterService.addSmartGatewayBind(smartGatewayBind);
     }
 

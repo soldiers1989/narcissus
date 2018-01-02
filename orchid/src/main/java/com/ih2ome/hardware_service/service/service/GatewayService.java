@@ -9,7 +9,7 @@ public interface GatewayService {
      * @param gateway_uuid
      * @return
      */
-    int findGatewayIdByUuid(String gateway_uuid);
+    Integer findGatewayIdByUuid(String gateway_uuid);
 
     /**
      * 添加网关
