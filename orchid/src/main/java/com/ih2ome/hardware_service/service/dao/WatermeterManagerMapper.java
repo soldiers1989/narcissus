@@ -73,4 +73,18 @@ public interface WatermeterManagerMapper extends MyMapper<Apartment>{
      * @return
      */
     GatewayWebDetailVO selectJzGatewayDetailbyGatewayId(int smartGatewayId);
+
+    /**
+     * 查询分散式网关详情下的水表list
+     * @param smartGatewayId
+     * @return
+     */
+    List<GatewayWatermeterWebListVO> selectHmGatewayWatermeterListByGatewayId(int smartGatewayId);
+
+    /**
+     * 查询分散式网关详情下的水表list
+     * @param smartGatewayId
+     * @return
+     */
+    List<GatewayWatermeterWebListVO> selectJzGatewayWatermeterListByGatewayId(int smartGatewayId);
 }

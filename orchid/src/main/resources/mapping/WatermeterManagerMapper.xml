@@ -42,10 +42,6 @@
     <!--网关详情VO-->
     <resultMap type="com.ih2ome.hardware_service.service.vo.GatewayWebDetailVO" id="GatewayDetailResultMap" autoMapping="true">
         <id column="smart_gateway_id" property="smartGatewayId" />
-
-        <collection property="watermeterDetailVOS" javaType="List"
-                    ofType="com.ih2ome.hardware_service.service.vo.GatewayWatermeterWebListVO" autoMapping="true">
-        </collection>
     </resultMap>
 
 
@@ -334,27 +330,44 @@
     <!--查询分散式网关详情by网关id-->
     <select id="selectHmGatewayDetailbyGatewayId" resultMap="GatewayDetailResultMap">
         SELECT
-            gateway.uuid,house.address AS install_adress,gateway.onoff_status,gateway.updated_at,gateway.created_at,gateway.brand,watermeter.uuid AS watermeter_uuid,room.`name` AS room_name
+          gateway.uuid,apartment.address AS install_adress,gateway.onoff_status,gateway.updated_at,gateway.created_at,gateway.brand
         FROM
         <include refid="smart_gateway" /> AS gateway
         LEFT JOIN <include refid="house" /> AS house ON gateway.house_id = house.id
-        LEFT JOIN <include refid="smart_gateway_bind" /> gateway_bind ON gateway_bind.smart_gateway_id=gateway.smart_gateway_id
-        LEFT JOIN <include refid="smart_watermeter" /> AS watermeter ON watermeter.smart_watermeter_id=gateway_bind.smart_id
-        LEFT JOIN <include refid="room" /> AS room ON watermeter.room_id=room.id
         WHERE gateway.smart_gateway_id=#{gatewayId}
     </select>
 
     <!--查询集中式网关详情by网关id-->
     <select id="selectJzGatewayDetailbyGatewayId" resultMap="GatewayDetailResultMap">
         SELECT
-            gateway.uuid,apartment.address AS install_adress,gateway.onoff_status,gateway.updated_at,gateway.created_at,gateway.brand,watermeter.uuid AS watermeter_uuid,room.`name` AS room_name
+            gateway.uuid,apartment.address AS install_adress,gateway.onoff_status,gateway.updated_at,gateway.created_at,gateway.brand
         FROM
         <include refid="smart_gateway" /> AS gateway
         LEFT JOIN <include refid="apartment" /> AS apartment ON gateway.apartment_id = apartment.id
-        LEFT JOIN <include refid="smart_gateway_bind" /> AS gateway_bind ON gateway_bind.smart_gateway_id=gateway.smart_gateway_id
-        LEFT JOIN <include refid="smart_watermeter" /> AS watermeter ON watermeter.smart_watermeter_id=gateway_bind.smart_id
-        LEFT JOIN <include refid="room" /> AS room ON watermeter.room_id=room.id
         WHERE gateway.smart_gateway_id=#{gatewayId}
     </select>
 
+    <!--查询分散式网关详情下的水表listby网关id-->
+    <select id="selectHmGatewayWatermeterListByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.GatewayWatermeterWebListVO">
+        SELECT
+        watermeter.uuid AS watermeter_uuid,room. NAME AS room_name
+        FROM
+        <include refid="smart_watermeter" /> AS watermeter
+        LEFT JOIN <include refid="smart_gateway_bind" /> AS gaterway_bind ON watermeter.smart_watermeter_id = gaterway_bind.smart_id
+        LEFT JOIN <include refid="room" /> AS room ON room.id = watermeter.room_id
+        WHERE
+        gaterway_bind.smart_gateway_id = #{gatewayId}
+    </select>
+
+    <!--查询集中式网关详情下的水表listby网关id-->
+    <select id="selectJzGatewayWatermeterListByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.GatewayWatermeterWebListVO">
+        SELECT
+        watermeter.uuid AS watermeter_uuid,room. NAME AS room_name
+        FROM
+        <include refid="smart_watermeter" /> AS watermeter
+        LEFT JOIN <include refid="smart_gateway_bind" /> AS gaterway_bind ON watermeter.smart_watermeter_id = gaterway_bind.smart_id
+        LEFT JOIN <include refid="jzroom" /> AS room ON room.id = watermeter.room_id
+        WHERE
+        gaterway_bind.smart_gateway_id = #{gatewayId}
+    </select>
 </mapper>

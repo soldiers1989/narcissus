@@ -147,10 +147,16 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
         Log.info("查询网关详情，smartGatewayId:{},type:{}",smartGatewayId,type);
         //分散式
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            return watermeterManagerMapper.selectHmGatewayDetailbyGatewayId(smartGatewayId);
+            GatewayWebDetailVO gatewayWebDetailVO = watermeterManagerMapper.selectHmGatewayDetailbyGatewayId(smartGatewayId);
+            List<GatewayWatermeterWebListVO> watermeterList=watermeterManagerMapper.selectHmGatewayWatermeterListByGatewayId(smartGatewayId);
+            gatewayWebDetailVO.setWatermeterList(watermeterList);
+            return gatewayWebDetailVO;
         } else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             //集中式
-            return watermeterManagerMapper.selectJzGatewayDetailbyGatewayId(smartGatewayId);
+            GatewayWebDetailVO gatewayWebDetailVO =watermeterManagerMapper.selectJzGatewayDetailbyGatewayId(smartGatewayId);
+            List<GatewayWatermeterWebListVO> watermeterList=watermeterManagerMapper.selectJzGatewayWatermeterListByGatewayId(smartGatewayId);
+            gatewayWebDetailVO.setWatermeterList(watermeterList);
+            return gatewayWebDetailVO;
         }else{
             return null;
         }
