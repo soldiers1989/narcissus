@@ -481,4 +481,159 @@
         where sl.serial_num=#{serialNum}
     </select>
 
+    <!--分散式根据门锁编码查询门锁操作记录-->
+    <select id="findDispersedLockOperateRecord"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO">
+        SELECT
+        slor.operator_mobile mobile,
+        DATE_FORMAT(
+            slor.operate_time,
+            '%Y-%m-%d %H:%i:%s'
+        ) operateTime,
+        CASE slor.operate_type
+        WHEN 'create' THEN
+            '新增密码'
+        WHEN 'modify' THEN
+            '修改密码'
+        WHEN 'delete' THEN
+            '删除密码'
+        END operateType
+        FROM
+            caspain_test.smart_lock_operation_record slor
+        LEFT JOIN caspain_test.smart_lock sl ON slor.lock_id = sl.id
+        WHERE
+            sl.serial_num = #{serialNum}
+        AND (
+            sl.is_delete != '1'
+            OR sl.is_delete IS NULL
+        )
+        AND (
+            slor.is_delete != '1'
+            OR slor.is_delete IS NULL
+        )
+    </select>
+
+    <!--集中式根据门锁编码查询门锁操作记录-->
+    <select id="findConcentrateLockOperateRecord"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO">
+      SELECT
+        slor.operator_mobile mobile,
+        DATE_FORMAT(
+            slor.operate_time,
+            '%Y-%m-%d %H:%i:%s'
+        ) operateTime,
+        CASE slor.operate_type
+        WHEN 'create' THEN
+            '新增密码'
+        WHEN 'modify' THEN
+            '修改密码'
+        WHEN 'delete' THEN
+            '删除密码'
+        END operateType
+        FROM
+            volga_test.smart_lock_operation_record slor
+        LEFT JOIN volga_test.smart_lock sl ON slor.lock_id = sl.id
+        WHERE
+            sl.serial_num = #{serialNum}
+        AND (
+            sl.is_delete != '1'
+            OR sl.is_delete IS NULL
+        )
+        AND (
+            slor.is_delete != '1'
+            OR slor.is_delete IS NULL
+        )
+    </select>
+
+    <!--分散式根据门锁编码查询开门记录-->
+    <select id="findDispersedLockOpenRecord"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO">
+        SELECT
+            slp.user_name userName,
+            slp.mobile mobile,
+            DATE_FORMAT(
+                slr.unlock_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) unlockTime,
+        	CASE slp.digit_pwd_type
+            WHEN '0' THEN
+                '房客密码'
+            WHEN '1' THEN
+                '保洁密码'
+            WHEN '2' THEN
+                '管理密码'
+            WHEN '3' THEN
+                '带看密码'
+            WHEN '4' THEN
+                '扩展密码'
+            ELSE
+                '其他密码'
+          END passwordType
+        FROM
+            caspain_test.`smart_lock_password` slp
+        LEFT JOIN caspain_test.smart_lock sl ON slp.lock_id = sl.id
+        LEFT JOIN caspain_test.smart_lock_record slr ON slr.lock_id = sl.id
+        WHERE
+            sl.serial_num =#{serialNum} and slp.pwd_no=slr.password_type
+        AND (
+            slp.is_delete != '1'
+            OR slp.is_delete IS NULL
+        )
+        AND (
+            sl.is_delete != '1'
+            OR sl.is_delete IS NULL
+        )
+        AND (
+            slr.is_delete != '1'
+            OR slr.is_delete IS NULL
+        )
+            </select>
+
+    <!--集中式根据门锁编码查询开门记录-->
+    <select id="findConcentrateLockOpenRecord"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO">
+        SELECT
+            slp.user_name userName,
+            slp.mobile mobile,
+            DATE_FORMAT(
+                slr.unlock_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) unlockTime,
+        	CASE slp.digit_pwd_type
+            WHEN '0' THEN
+                '房客密码'
+            WHEN '1' THEN
+                '保洁密码'
+            WHEN '2' THEN
+                '管理密码'
+            WHEN '3' THEN
+                '带看密码'
+            WHEN '4' THEN
+                '扩展密码'
+            ELSE
+                '其他密码'
+            END passwordType
+        FROM
+            volga_test.`smart_lock_password` slp
+        LEFT JOIN volga_test.smart_lock sl ON slp.lock_id = sl.id
+        LEFT JOIN volga_test.smart_lock_record slr ON slr.lock_id = sl.id
+        WHERE
+            sl.serial_num = #{serialNum} and slp.pwd_no=slr.password_type
+        AND (
+            slp.is_delete != '1'
+            OR slp.is_delete IS NULL
+        )
+        AND (
+            sl.is_delete != '1'
+            OR sl.is_delete IS NULL
+        )
+        AND (
+            slr.is_delete != '1'
+            OR slr.is_delete IS NULL
+        )
+    </select>
 </mapper>

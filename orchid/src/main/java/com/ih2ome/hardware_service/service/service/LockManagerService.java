@@ -1,10 +1,7 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO;
-import com.ih2ome.hardware_service.service.vo.LockInfoVo;
-import com.ih2ome.hardware_service.service.vo.LockListVo;
+import com.ih2ome.hardware_service.service.vo.*;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
-import com.ih2ome.hardware_service.service.vo.LockRequestVo;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 
 import java.text.ParseException;
@@ -27,14 +24,21 @@ public interface LockManagerService {
     List<LockPasswordVo> getPwdList(LockRequestVo lockRequestVo);
 
     //新增门锁密码
-    void addPassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
+    void addPassword(LockPasswordVo lockPasswordVo, String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
 
     //修改门锁密码
-    void updatePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
+    void updatePassword(LockPasswordVo lockPasswordVo, String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
 
     //删除门锁密码
     void deletePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
 
     //查询门锁的历史状态
     List<LockHistoryStatusVO> getLockHistoryList(LockHistoryStatusVO lockHistoryStatusVO);
+
+    //查询门锁的操作记录
+    List<LockOperateRecordVO> getLockOperateRecords(LockOperateRecordVO lockOperateRecordVO);
+
+    //查询门锁的开门记录
+    List<LockOpenRecordVO> getLockOpenRecords(LockOpenRecordVO lockOpenRecord);
+
 }

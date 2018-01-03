@@ -7,12 +7,11 @@ import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.enums.LockDigitPwdTypeEnum;
 import com.ih2ome.hardware_service.service.enums.LockStatusEnum;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
-import com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO;
-import com.ih2ome.hardware_service.service.vo.LockInfoVo;
-import com.ih2ome.hardware_service.service.vo.LockListVo;
+import com.ih2ome.hardware_service.service.vo.*;
+import com.ih2ome.peony.SMSInterface.SMSUtil;
+import com.ih2ome.peony.SMSInterface.enums.SMSCodeEnum;
 import com.ih2ome.peony.smartlockInterface.enums.GuoJiaLockStatusEnum;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
-import com.ih2ome.hardware_service.service.vo.LockRequestVo;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
@@ -106,9 +105,8 @@ public class LockManagerServiceImpl implements LockManagerService {
     }
 
     //新增门锁密码
-    @Transactional
     @Override
-    public void addPassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+    public void addPassword(LockPasswordVo lockPasswordVo,String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
         ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
         //请求果家第三方的新增密码接口
         String result = iSmartLock.addLockPassword(lockPasswordVo);
@@ -130,12 +128,20 @@ public class LockManagerServiceImpl implements LockManagerService {
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             lockManagerDao.addConcentratePwd(lockPasswordVo);
         }
+        JSONObject message = new JSONObject();
+        message.put("password",lockPasswordVo.getPassword());
+        message.put("startTime",lockPasswordVo.getEnableTime());
+        message.put("endTime",lockPasswordVo.getDisableTime());
+        boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
+        if(!bool){
+            throw new SmartLockException("短信发送失败");
+        }
+
     }
 
     //修改门锁密码
-    @Transactional
     @Override
-    public void updatePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+    public void updatePassword(LockPasswordVo lockPasswordVo,String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
         ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
         //请求果家第三方的修改接口
         String result = iSmartLock.updateLockPassword(lockPasswordVo);
@@ -154,6 +160,15 @@ public class LockManagerServiceImpl implements LockManagerService {
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             lockManagerDao.updateConcentratePwd(lockPasswordVo);
         }
+        JSONObject message = new JSONObject();
+        message.put("password",lockPasswordVo.getPassword());
+        message.put("startTime",lockPasswordVo.getEnableTime());
+        message.put("endTime",lockPasswordVo.getDisableTime());
+        boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
+        if(!bool){
+            throw new SmartLockException("短信发送失败");
+        }
+
 
     }
 
@@ -209,6 +224,49 @@ public class LockManagerServiceImpl implements LockManagerService {
             lockHistoryStatus.setStatus(GuoJiaLockStatusEnum.getByStatus(status));
         }
         return historyStatus;
+    }
+
+    //查询门锁的操作记录
+    @Override
+    public List<LockOperateRecordVO> getLockOperateRecords(LockOperateRecordVO lockOperateRecordVO) {
+        List<LockOperateRecordVO> operateRecords = null;
+        if (lockOperateRecordVO == null) {
+            return null;
+        }
+        String type = lockOperateRecordVO.getType();
+        if (lockOperateRecordVO.isInitPageRows()) {
+            PageHelper.startPage(lockOperateRecordVO.getPage(), lockOperateRecordVO.getRows());
+        }
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            operateRecords = lockManagerDao.findDispersedLockOperateRecord(lockOperateRecordVO);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            operateRecords = lockManagerDao.findConcentrateLockOperateRecord(lockOperateRecordVO);
+        }
+        return operateRecords;
+    }
+
+    //查询门锁的开门记录
+    @Override
+    public List<LockOpenRecordVO> getLockOpenRecords(LockOpenRecordVO lockOpenRecord) {
+        List<LockOpenRecordVO> openRecords = null;
+        if (lockOpenRecord == null) {
+            return null;
+        }
+        String type = lockOpenRecord.getType();
+        if (lockOpenRecord.isInitPageRows()) {
+            PageHelper.startPage(lockOpenRecord.getPage(), lockOpenRecord.getRows());
+        }
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            openRecords = lockManagerDao.findDispersedLockOpenRecord(lockOpenRecord);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            openRecords = lockManagerDao.findConcentrateLockOpenRecord(lockOpenRecord);
+        }
+        return openRecords;
+
     }
 
 }

@@ -1,8 +1,6 @@
 package com.ih2ome.hardware_service.service.dao;
 
-import com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO;
-import com.ih2ome.hardware_service.service.vo.LockInfoVo;
-import com.ih2ome.hardware_service.service.vo.LockListVo;
+import com.ih2ome.hardware_service.service.vo.*;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import org.springframework.stereotype.Repository;
 
@@ -56,4 +54,16 @@ public interface LockManagerDao {
 
     //查询门锁的历史状态(集中式)
     List<LockHistoryStatusVO> findConcentrateLockHistoryStatus(LockHistoryStatusVO lockHistoryStatusVO);
+
+    //查询门锁的操作记录(分散式)
+    List<LockOperateRecordVO> findDispersedLockOperateRecord(LockOperateRecordVO lockOperateRecordVO);
+
+    //查询门锁的操作记录(集中式)
+    List<LockOperateRecordVO> findConcentrateLockOperateRecord(LockOperateRecordVO lockOperateRecordVO);
+
+    //查询门锁的开门记录(分散式)
+    List<LockOpenRecordVO> findDispersedLockOpenRecord(LockOpenRecordVO lockOpenRecord);
+
+    //查询门锁的开门记录(集中式)
+    List<LockOpenRecordVO> findConcentrateLockOpenRecord(LockOpenRecordVO lockOpenRecord);
 }
