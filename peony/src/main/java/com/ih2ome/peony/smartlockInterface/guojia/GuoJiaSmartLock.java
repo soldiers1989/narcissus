@@ -7,10 +7,7 @@ import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.guojia.util.GuoJiaSmartLockUtil;
-import com.ih2ome.peony.smartlockInterface.vo.GuoJiaLockInfoVo;
-import com.ih2ome.peony.smartlockInterface.vo.GuoJiaLockPwdVo;
-import com.ih2ome.peony.smartlockInterface.vo.GuoJiaRegionVo;
-import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
+import com.ih2ome.peony.smartlockInterface.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +77,48 @@ public class GuoJiaSmartLock implements ISmartLock {
         System.out.println(guoJiaLockInfoVo.toString());
         return guoJiaLockInfoVo;
 
+    }
+
+    @Override
+    public GuoJiaGateWayVo getGuoJiaGateWayInfo(String gateNo) throws SmartLockException {
+        Log.info("获取网关信息");
+        Log.info("网关编码:" + gateNo);
+        GuoJiaGateWayVo guoJiaGateWayVo = new GuoJiaGateWayVo();
+        String url = BASE_URL + "/node/view";
+        Map<String, String> headers = GuoJiaSmartLockUtil.getHeaders();
+        JSONObject json = new JSONObject();
+        json.put("node_no", gateNo);
+        String result = HttpClientUtil.doPostJson(url, json, headers);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(result);
+        } catch (Exception e) {
+            Log.error("json格式解析错误", e);
+            throw new SmartLockException("json格式解析错误" + e.getMessage());
+        }
+        String rlt_code = resJson.getString("rlt_code");
+        if (!rlt_code.equals("HH0000")) {
+            String rlt_msg = resJson.get("rlt_msg").toString();
+            Log.error("第三方请求失败/n" + rlt_msg);
+            throw new SmartLockException("第三方请求失败/n" + rlt_msg);
+        }
+        JSONObject dataJson = JSONObject.parseObject(resJson.get("data").toString());
+        guoJiaGateWayVo.setNodeKind("node_kind");
+        guoJiaGateWayVo.setNodeNo("node_no");
+        guoJiaGateWayVo.setName("name");
+        guoJiaGateWayVo.setComuStatus("comu_status");
+        guoJiaGateWayVo.setComuStatusUpdateTime("comu_status_update_time");
+        guoJiaGateWayVo.setAddress("region");
+        guoJiaGateWayVo.setHouseCode("address");
+        guoJiaGateWayVo.setInstallTime("house_code");
+        guoJiaGateWayVo.setGuaranteeTimeStart("install_time");
+        guoJiaGateWayVo.setGuaranteeTimeEnd("guarantee_time_start");
+        guoJiaGateWayVo.setDescription("guarantee_time_end");
+        List<GuoJiaRegionVo> regionList = new ArrayList<GuoJiaRegionVo>();
+        JSONArray regionJson = dataJson.getJSONArray("region");
+        regionList = JSONObject.parseArray(regionJson.toString(), GuoJiaRegionVo.class);
+        guoJiaGateWayVo.setRegion(regionList);
+        return guoJiaGateWayVo;
     }
 
     /**

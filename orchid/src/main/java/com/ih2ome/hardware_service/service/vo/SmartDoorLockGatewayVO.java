@@ -28,5 +28,7 @@ public class SmartDoorLockGatewayVO extends BaseEntity implements Serializable {
     private String installState;//安装状态
     private String remark;//备注
     private String type;//集中式分散式
+    private String guaranteeTimeStart;//质保日期（起）
+    private String guaranteeTimeEnd;//质保日期（止）
 
 }

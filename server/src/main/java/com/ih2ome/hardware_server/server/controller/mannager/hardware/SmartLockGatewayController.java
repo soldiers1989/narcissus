@@ -2,11 +2,13 @@ package com.ih2ome.hardware_server.server.controller.mannager.hardware;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
 import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +62,26 @@ public class SmartLockGatewayController extends BaseController {
         String id = reqData.getString("id");
         Integer page = reqData.getInteger("page");
         Integer rows = reqData.getInteger("rows");
-        SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayService.getSmartDoorLockGatewayVOById(type,id);
+        SmartDoorLockGatewayVO smartDoorLockGatewayVO = null;
+        try {
+            smartDoorLockGatewayVO = smartLockGatewayService.getSmartDoorLockGatewayVOById(type,id);
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return res;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return res;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return res;
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return res;
+        }
         List <LockListVo> lockListVoList = smartLockGatewayService.getSmartDoorLockByGatewayId(id,type,page,rows);
         PageInfo <LockListVo> pageInfo = new PageInfo<>(lockListVoList);
         JSONObject responseJson = new JSONObject();
