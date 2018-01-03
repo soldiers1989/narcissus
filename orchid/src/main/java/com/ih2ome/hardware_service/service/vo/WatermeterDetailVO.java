@@ -9,6 +9,8 @@ import java.util.Date;
 @Data
 public class WatermeterDetailVO {
     private int smartWatermeterId;
+    private String uuid;//水表uuid
+    private String houseName;//房源名称
     private int meterType;//1是光电直读湿式冷水表,2是光电直读干式热水表
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     private Date createdAt;

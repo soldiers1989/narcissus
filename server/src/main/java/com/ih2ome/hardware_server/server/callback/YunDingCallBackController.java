@@ -168,7 +168,7 @@ public class YunDingCallBackController extends BaseController {
             //水表状态离线
             if (onOffStatus.equals(OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode())) {
                 //水表在线
-                watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), AlarmTypeEnum.YUN_DING_WATERMETER_EXCEPTION_TYPE_ON_LINE.getCode());
+                watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), OnOffStatusEnum.ON_OFF_STATUS_ENUM_ON_Line.getCode());
                 //添加异常上线记录
                 SmartMistakeInfo watermeterMistakeInfo =new SmartMistakeInfo();
                 watermeterMistakeInfo.setCreatedAt(new Timestamp(apiRequestVO.getTime()));
@@ -188,7 +188,7 @@ public class YunDingCallBackController extends BaseController {
             //watermeterMistakeInfo.setSn(apiRequestVO.getUuid());
             gatewayService.addSmartMistakeInfo(watermeterMistakeInfo);
             //水表离线
-            watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(),AlarmTypeEnum.YUN_DING_WATERMETER_EXCEPTION_TYPE_OFF_LINE.getCode());
+            watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
         }
     }
 
