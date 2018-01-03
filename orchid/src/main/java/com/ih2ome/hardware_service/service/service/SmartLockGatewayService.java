@@ -2,6 +2,7 @@ package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.hardware_service.service.vo.LockListVo;
 import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public interface SmartLockGatewayService {
     List<SmartDoorLockGatewayVO> gatewayList(SmartDoorLockGatewayVO smartDoorLockGatewayVO);
 
-    SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id);
+    SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException;
 
     List<LockListVo> getSmartDoorLockByGatewayId(String id, String type, Integer page, Integer rows);
 }

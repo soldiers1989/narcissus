@@ -2,6 +2,7 @@ package com.ih2ome.peony.smartlockInterface;
 
 
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.peony.smartlockInterface.vo.GuoJiaGateWayVo;
 import com.ih2ome.peony.smartlockInterface.vo.GuoJiaLockInfoVo;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 
@@ -22,6 +23,14 @@ public interface ISmartLock {
      * @return
      */
     public GuoJiaLockInfoVo getGuoJiaLockInfo(String lockNo) throws SmartLockException;
+
+    /**
+     * 根据网关编码获取网关基本信息
+     * @param gateNo
+     * @return
+     * @throws SmartLockException
+     */
+    public GuoJiaGateWayVo getGuoJiaGateWayInfo(String gateNo)throws SmartLockException;
 
     /**
      * 新增门锁密码

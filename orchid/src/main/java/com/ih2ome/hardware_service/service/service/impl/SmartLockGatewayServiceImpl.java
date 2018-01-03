@@ -6,6 +6,10 @@ import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
 import com.ih2ome.hardware_service.service.vo.LockListVo;
 import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
+import com.ih2ome.peony.smartlockInterface.ISmartLock;
+import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.peony.smartlockInterface.vo.GuoJiaGateWayVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,11 +43,20 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService {
     }
 
     @Override
-    public SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) {
+    public SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            return smartLockGatewayDao.getSmartDispersedDoorLockGatewayVOById(id);
+            SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getSmartDispersedDoorLockGatewayVOById(id);
+            GuoJiaGateWayVo guoJiaGateWayVo = iSmartLock.getGuoJiaGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
+            smartDoorLockGatewayVO.setGuaranteeTimeStart(guoJiaGateWayVo.getGuaranteeTimeStart());
+            smartDoorLockGatewayVO.setGuaranteeTimeEnd(guoJiaGateWayVo.getGuaranteeTimeEnd());
+            return smartDoorLockGatewayVO;
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            return smartLockGatewayDao.getConcentratSmartDoorLockGatewayVOById(id);
+            SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getConcentratSmartDoorLockGatewayVOById(id);
+            GuoJiaGateWayVo guoJiaGateWayVo = iSmartLock.getGuoJiaGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
+            smartDoorLockGatewayVO.setGuaranteeTimeStart(guoJiaGateWayVo.getGuaranteeTimeStart());
+            smartDoorLockGatewayVO.setGuaranteeTimeEnd(guoJiaGateWayVo.getGuaranteeTimeEnd());
+            return smartDoorLockGatewayVO;
         }else{
             return null;
         }
