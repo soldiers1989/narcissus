@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 public class SmartDoorLockGatewayVO extends BaseEntity implements Serializable {
-    private String gatewayId;//电表id
+    private String gatewayId;//网关id
     private String apartmentName;//公寓名称
     private String authUserName;//用户名
     private String provinceName;//省名
@@ -25,6 +25,8 @@ public class SmartDoorLockGatewayVO extends BaseEntity implements Serializable {
     private String gatewayCode;//网关编码
     private String communicationStatus;//通讯状态
     private String installDate;//安装时间
+    private String installState;//安装状态
+    private String remark;//备注
     private String type;//集中式分散式
 
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
+import com.ih2ome.hardware_service.service.vo.LockListVo;
 import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,36 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService {
             PageHelper.startPage(smartDoorLockGatewayVO.getPage(),smartDoorLockGatewayVO.getRows());
         }
         if(smartDoorLockGatewayVO.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
-            return smartLockGatewayDao.findDispersedAmmeter(smartDoorLockGatewayVO);
+            return smartLockGatewayDao.findDispersedGateway(smartDoorLockGatewayVO);
         }else if(smartDoorLockGatewayVO.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            return smartLockGatewayDao.findConcentratAmmeter(smartDoorLockGatewayVO);
+            return smartLockGatewayDao.findConcentratGateway(smartDoorLockGatewayVO);
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) {
+        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+            return smartLockGatewayDao.getSmartDispersedDoorLockGatewayVOById(id);
+        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            return smartLockGatewayDao.getConcentratSmartDoorLockGatewayVOById(id);
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public List<LockListVo> getSmartDoorLockByGatewayId(String id, String type, Integer page, Integer rows) {
+        if(page!= null && rows != null){
+            PageHelper.startPage(page,rows);
+        }else{
+            PageHelper.startPage(1,10);
+        }
+        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+            return smartLockGatewayDao.getDispersedSmartDoorLockByGatewayId(id);
+        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            return smartLockGatewayDao.getConcentratSmartDoorLockByGatewayId(id);
         }else{
             return null;
         }

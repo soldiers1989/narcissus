@@ -5,7 +5,10 @@ import com.github.pagehelper.PageInfo;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
+import com.ih2ome.hardware_service.service.vo.LockListVo;
 import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +27,15 @@ import java.util.List;
 @CrossOrigin
 public class SmartLockGatewayController extends BaseController {
 
+    private final Logger Log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     SmartLockGatewayService smartLockGatewayService;
 
+    /**
+     * 网关列表
+     * @param apiRequestVO
+     * @return
+     */
     @RequestMapping(value="/smartLockGateList",method = RequestMethod.POST,produces = {"application/json"})
     public String  smartLockGateList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject reqData=apiRequestVO.getDataRequestBodyVO().getDt();
@@ -35,6 +44,28 @@ public class SmartLockGatewayController extends BaseController {
         PageInfo <SmartDoorLockGatewayVO> pageInfo = new PageInfo<>(smartLockGatewayVOList);
         JSONObject responseJson = new JSONObject();
         responseJson.put("smartLockGatewayVOList",pageInfo);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+    /**
+     * 网关详情 该网关下门锁列表 嵌套页面  独立做分页
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/smartLockGateBaseInfo",method = RequestMethod.POST,produces = {"application/json"})
+    public String smartLockGateBaseInfo(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject reqData=apiRequestVO.getDataRequestBodyVO().getDt();
+        String type = reqData.getString("type");
+        String id = reqData.getString("id");
+        Integer page = reqData.getInteger("page");
+        Integer rows = reqData.getInteger("rows");
+        SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayService.getSmartDoorLockGatewayVOById(type,id);
+        List <LockListVo> lockListVoList = smartLockGatewayService.getSmartDoorLockByGatewayId(id,type,page,rows);
+        PageInfo <LockListVo> pageInfo = new PageInfo<>(lockListVoList);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("lockListVoList",pageInfo);
+        responseJson.put("smartDoorLockGatewayVO",smartDoorLockGatewayVO);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
