@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.hardware_service.service.vo.*;
+import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 
 import java.util.List;
 
@@ -63,4 +64,20 @@ public interface WatermeterManagerService {
      * @return
      */
     List<SynchronousHomeWebVo> findHomeSynchronousStatus(SynchronousHomeWebVo synchronousHomeWebVo);
+
+    /**
+     * 房间同步状态
+     * @param homeId
+     * @param type
+     * @return
+     */
+    List<HmRoomSyncVO> findRoomSynchronousStatus(int homeId, String type);
+
+    /**
+     * 同步房源
+     * @param homeAndRoomSyncVO
+     * @param type
+     * @return
+     */
+    HomeAndRoomSyncVO synchronousHomeAndRoom(HomeAndRoomSyncVO homeAndRoomSyncVO, String type) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException;
 }

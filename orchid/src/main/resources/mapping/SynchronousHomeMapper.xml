@@ -206,4 +206,12 @@
         FROM <include refid="room"/> room WHERE room.id=#{roomId}
     </select>
 
+    <!-- 查询集中式room信息byroomids -->
+    <select id="findHmRoomByRoomIds" resultMap="AddRoomVOResultMap">
+        SELECT id AS room_id,name AS room_name,room_desc AS room_description FROM <include refid="room" />  WHERE id IN
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")" >
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

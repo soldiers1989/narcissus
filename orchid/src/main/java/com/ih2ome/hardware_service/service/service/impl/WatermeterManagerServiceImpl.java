@@ -7,13 +7,16 @@ import com.ih2ome.hardware_service.service.dao.WatermeterMapper;
 import com.ih2ome.hardware_service.service.enums.HouseCatalogEnum;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
+import com.ih2ome.hardware_service.service.service.SynchronousHomeService;
 import com.ih2ome.hardware_service.service.service.WatermeterManagerService;
 import com.ih2ome.hardware_service.service.vo.*;
+import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +26,9 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
 
     @Autowired
     private WatermeterMapper watermeterMapper;
+
+    @Autowired
+    private SynchronousHomeService synchronousHomeService;
 
     private static final Logger Log = LoggerFactory.getLogger(WatermeterManagerServiceImpl.class);
     /**
@@ -194,6 +200,57 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
         }else{
             return null;
         }
+    }
+
+    /**
+     * 查询房间同步状态
+     * @param homeId
+     * @param type
+     * @return
+     */
+    @Override
+    public List<HmRoomSyncVO> findRoomSynchronousStatus(int homeId, String type) {
+        //分散式
+        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+            return watermeterManagerMapper.selectHmRoomSynchronousStatus(homeId);
+        } else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            //集中式
+            return watermeterManagerMapper.selectJzRoomSynchronousStatus(homeId);
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * 同步房源
+     * @param homeAndRoomSyncVO
+     * @param type
+     * @return
+     */
+    @Override
+    public HomeAndRoomSyncVO synchronousHomeAndRoom(HomeAndRoomSyncVO homeAndRoomSyncVO, String type) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException {
+        //分散式
+        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+            String res = synchronousHomeService.synchronousHousingByHmHomeIdRoomIds(homeAndRoomSyncVO.getHomeId(), homeAndRoomSyncVO.getRoomIds());
+            if (res.equals("success")) {
+                return homeAndRoomSyncVO;
+            }
+        } else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            //集中式
+            List<Integer> list=homeAndRoomSyncVO.getRoomIds();
+            int[] rooms = new int[list.size()];
+            for (int i=0;i<list.size();i++) {
+                rooms[i]=list.get(i);
+            }
+            String res = null;
+
+            res = synchronousHomeService.synchronousHousingByRooms(homeAndRoomSyncVO.getHomeId(), rooms);
+
+            if (res.equals("success")) {
+                return homeAndRoomSyncVO;
+            }
+        }
+        return null;
     }
 
 

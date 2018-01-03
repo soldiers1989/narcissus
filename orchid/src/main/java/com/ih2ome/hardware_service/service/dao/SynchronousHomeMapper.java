@@ -177,4 +177,11 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @return
      */
     AddRoomVO findhmRoomByRoomId(int roomId);
+
+    /**
+     * 查询分散式roombyroomids
+     * @param roomIds
+     * @return
+     */
+    List<AddRoomVO> findHmRoomByRoomIds(List<Integer> roomIds);
 }

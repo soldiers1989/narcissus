@@ -437,4 +437,18 @@
         </if>
     </select>
 
+    <!--查询分散式房间同步状态-->
+    <select id="selectHmRoomSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+        SELECT  room.id, room.`name`,room.house_id,room.synchronous
+        FROM <include refid="room" /> AS room
+        WHERE room.house_id = #{homeId}
+    </select>
+
+    <!--查询集中式房间同步状态-->
+    <select id="selectJzRoomSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+        SELECT  room.id, room.`name`,room.house_id,room.synchronous
+        FROM <include refid="jzroom" /> AS room
+        WHERE room.house_id = #{homeId}
+    </select>
+
 </mapper>

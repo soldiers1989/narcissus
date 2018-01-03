@@ -101,4 +101,18 @@ public interface WatermeterManagerMapper extends MyMapper<Apartment>{
      * @return
      */
     List<SynchronousHomeWebVo> selectJzHomeSynchronousStatus(SynchronousHomeWebVo synchronousHomeWebVo);
+
+    /**
+     * 查询分散式房源同步状态
+     * @param homeId
+     * @return
+     */
+    List<HmRoomSyncVO> selectHmRoomSynchronousStatus(int homeId);
+
+    /**
+     * 查询集中式房源同步状态
+     * @param homeId
+     * @return
+     */
+    List<HmRoomSyncVO> selectJzRoomSynchronousStatus(int homeId);
 }

@@ -4,17 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
 import com.ih2ome.hardware_service.service.service.SynchronousHomeService;
 import com.ih2ome.hardware_service.service.service.WatermeterManagerService;
 import com.ih2ome.hardware_service.service.vo.*;
+import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -187,14 +190,13 @@ public class WatermeterManagerController extends BaseController{
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="synchronoushousing/findhome",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/synchronoushousing/findhome",method = RequestMethod.POST,produces = {"application/json"})
     public String synchronousHousingFindHomes(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         SynchronousHomeWebVo synchronousHomeWebVo = resData.getObject("synchronousHomeWebVo",SynchronousHomeWebVo.class);
         List<SynchronousHomeWebVo> synchronousHomeWebVoList = watermeterManagerService.findHomeSynchronousStatus(synchronousHomeWebVo);
-        PageInfo<SynchronousHomeWebVo> pageInfo = new PageInfo<>(synchronousHomeWebVoList);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("synchronousHomeWebVoList",pageInfo);
+        responseJson.put("synchronousHomeWebVoList",synchronousHomeWebVoList);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
@@ -204,21 +206,67 @@ public class WatermeterManagerController extends BaseController{
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="synchronoushousing/findroom",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/synchronoushousing/findroom",method = RequestMethod.POST,produces = {"application/json"})
     public String synchronousHousingFindRooms(@RequestBody ApiRequestVO apiRequestVO) {
         //同步房源查询房间同步状态
-//        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-//        int homeId = dt.getIntValue("homeId");
-//        String type = dt.getString("type");
-//
-//        //房间同步状态
-//        GatewayWebDetailVO gatewayDetailVO = watermeterManagerService.findRoomSynchronousStatus(homeId,type);
-//
-//        JSONObject responseJson = new JSONObject();
-//        responseJson.put("gatewayDetailVO",gatewayDetailVO);
-//        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-//        return res;
-        return null;
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int homeId = dt.getIntValue("homeId");
+        String type = dt.getString("type");
+
+        //房间同步状态
+        List<HmRoomSyncVO> hmRoomSyncVOList = watermeterManagerService.findRoomSynchronousStatus(homeId,type);
+
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(hmRoomSyncVOList));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("hmRoomSyncVOList",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+    /**
+     * 同步房源
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/synchronoushousing",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousing(@RequestBody ApiRequestVO apiRequestVO) {
+        //同步房源查询房间同步状态
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        JSONArray jsonArray = dt.getJSONArray("homeAndRooms");
+        String type = dt.getString("type");
+        List<HomeAndRoomSyncVO> homeAndRoomSyncVOList=new ArrayList<>();
+        for (int i=0;i<jsonArray.size();i++){
+            String json = jsonArray.get(i).toString();
+            HomeAndRoomSyncVO homeAndRoomSyncVO = JSONObject.parseObject(json, HomeAndRoomSyncVO.class);
+            //房间同步
+            HomeAndRoomSyncVO homeAndRoom= null;
+            try {
+                homeAndRoom = watermeterManagerService.synchronousHomeAndRoom(homeAndRoomSyncVO,type);
+            } catch (ClassNotFoundException e) {
+                Log.error(e.getMessage(),e);
+                String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+                return res;
+            } catch (WatermeterException e) {
+                Log.error(e.getMessage(),e);
+                String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+                return res;
+            } catch (InstantiationException e) {
+                Log.error(e.getMessage(),e);
+                String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+                return res;
+            } catch (IllegalAccessException e) {
+                Log.error(e.getMessage(),e);
+                String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
+                return res;
+            }
+            homeAndRoomSyncVOList.add(homeAndRoom);
+        }
+
+        JSONArray jsonArray1 = JSONArray.parseArray(JSON.toJSONString(homeAndRoomSyncVOList));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("hmRoomSyncVOList",jsonArray1);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
     }
 
 }
