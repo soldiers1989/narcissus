@@ -187,20 +187,38 @@ public class WatermeterManagerController extends BaseController{
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/jz/synchronous_housing/FindjzHomeIsSynchronoused",method = RequestMethod.POST,produces = {"application/json"})
-    public String synchronousHousingFindJZHomesIsSynchronoused(@RequestBody ApiRequestVO apiRequestVO) {
-        //获取id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int userId = (int) dt.get("id");
-
-        List<HomeSyncVO> homeSyncVOS = null;
-
-        homeSyncVOS = synchronousHomeService.findHomeIsSynchronousedByUserId(userId);
-
+    @RequestMapping(value="synchronoushousing/findhome",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindHomes(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        SynchronousHomeWebVo synchronousHomeWebVo = resData.getObject("synchronousHomeWebVo",SynchronousHomeWebVo.class);
+        List<SynchronousHomeWebVo> synchronousHomeWebVoList = watermeterManagerService.findHomeSynchronousStatus(synchronousHomeWebVo);
+        PageInfo<SynchronousHomeWebVo> pageInfo = new PageInfo<>(synchronousHomeWebVoList);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("homeSyncVOS",homeSyncVOS);
+        responseJson.put("synchronousHomeWebVoList",pageInfo);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
+    }
+
+    /**
+     * 同步房源查询房间同步状态
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="synchronoushousing/findroom",method = RequestMethod.POST,produces = {"application/json"})
+    public String synchronousHousingFindRooms(@RequestBody ApiRequestVO apiRequestVO) {
+        //同步房源查询房间同步状态
+//        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+//        int homeId = dt.getIntValue("homeId");
+//        String type = dt.getString("type");
+//
+//        //房间同步状态
+//        GatewayWebDetailVO gatewayDetailVO = watermeterManagerService.findRoomSynchronousStatus(homeId,type);
+//
+//        JSONObject responseJson = new JSONObject();
+//        responseJson.put("gatewayDetailVO",gatewayDetailVO);
+//        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+//        return res;
+        return null;
     }
 
 }

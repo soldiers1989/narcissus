@@ -178,5 +178,23 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
         return exceptionVOList;
     }
 
+    /**
+     * 查询房源同步状态
+     * @param synchronousHomeWebVo
+     * @return
+     */
+    @Override
+    public List<SynchronousHomeWebVo> findHomeSynchronousStatus(SynchronousHomeWebVo synchronousHomeWebVo) {
+        //分散式
+        if(synchronousHomeWebVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
+            return watermeterManagerMapper.selectHmHomeSynchronousStatus(synchronousHomeWebVo);
+        } else if(synchronousHomeWebVo.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            //集中式
+            return watermeterManagerMapper.selectJzHomeSynchronousStatus(synchronousHomeWebVo);
+        }else{
+            return null;
+        }
+    }
+
 
 }

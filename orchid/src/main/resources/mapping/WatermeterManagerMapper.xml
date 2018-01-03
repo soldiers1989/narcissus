@@ -370,4 +370,71 @@
         WHERE
         gaterway_bind.smart_gateway_id = #{gatewayId}
     </select>
+
+    <!--查询分散式房源同步状态-->
+    <select id="selectHmHomeSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
+        SELECT
+        house.id AS home_id,
+        house.area AS home_Name,
+        house.synchronous,
+        '1' `type`
+        FROM
+        <include refid="house" /> house
+        LEFT JOIN  <include refid="auth_user" /> AS auth_user ON house.created_by_id = auth_user.id
+        WHERE
+        1 = 1
+        AND (
+        house.is_delete != '1'
+        OR house.is_delete IS NULL
+        )
+        <if test="homeName != '' and homeName != null">
+            AND house.`area` LIKE '%${homeName}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND va.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND va.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND va.area LIKE '%${areaName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND auth_user.username LIKE '%${authUserName}%'
+        </if>
+    </select>
+
+    <!--查询集中式房源同步状态-->
+    <select id="selectJzHomeSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
+        SELECT
+        apartment.id AS home_id,
+        apartment.name AS home_Name,
+        apartment.synchronous,
+        '1' `type`
+        FROM
+        <include refid="apartment" /> apartment
+        LEFT JOIN  <include refid="auth_user" /> AS auth_user ON apartment.created_by= auth_user.id
+        WHERE
+        1 = 1
+        AND (
+        apartment.is_delete != '1'
+        OR apartment.is_delete IS NULL
+        )
+        <if test="homeName != '' and homeName != null">
+            AND apartment.`name` LIKE '%${homeName}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND va.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND va.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND va.area LIKE '%${areaName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND auth_user.username LIKE '%${authUserName}%'
+        </if>
+    </select>
+
 </mapper>

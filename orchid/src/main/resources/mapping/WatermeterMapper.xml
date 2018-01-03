@@ -234,7 +234,7 @@
         ON g.smart_gateway_id=gb.smart_gateway_id
         LEFT JOIN <include refid="smart_watermeter"/> AS w
         ON w.smart_watermeter_id=gb.smart_id
-        WHERE g.created_by = #{id}
+        WHERE g.created_by = #{id} AND g.house_catalog = 1
         GROUP BY g.smart_gateway_id;
     </select>
 

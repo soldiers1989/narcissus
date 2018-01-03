@@ -56,4 +56,11 @@ public interface WatermeterManagerService {
      * @return
      */
     List<ExceptionVO> findGatewayException(ExceptionVO exceptionVO);
+
+    /**
+     * 房源同步状态
+     * @param synchronousHomeWebVo
+     * @return
+     */
+    List<SynchronousHomeWebVo> findHomeSynchronousStatus(SynchronousHomeWebVo synchronousHomeWebVo);
 }

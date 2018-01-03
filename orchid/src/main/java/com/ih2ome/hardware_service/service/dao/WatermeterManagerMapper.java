@@ -87,4 +87,18 @@ public interface WatermeterManagerMapper extends MyMapper<Apartment>{
      * @return
      */
     List<GatewayWatermeterWebListVO> selectJzGatewayWatermeterListByGatewayId(int smartGatewayId);
+
+    /**
+     * 查询分散式房源同步状态
+     * @param synchronousHomeWebVo
+     * @return
+     */
+    List<SynchronousHomeWebVo> selectHmHomeSynchronousStatus(SynchronousHomeWebVo synchronousHomeWebVo);
+
+    /**
+     * 查询集中式房源同步状态
+     * @param synchronousHomeWebVo
+     * @return
+     */
+    List<SynchronousHomeWebVo> selectJzHomeSynchronousStatus(SynchronousHomeWebVo synchronousHomeWebVo);
 }
