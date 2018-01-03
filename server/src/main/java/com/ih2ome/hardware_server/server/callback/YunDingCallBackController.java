@@ -114,12 +114,12 @@ public class YunDingCallBackController extends BaseController {
                 smartMistakeInfo.setSn(apiRequestVO.getUuid());
                 gatewayService.addSmartMistakeInfo(smartMistakeInfo);
                 //更改网关在线状态
-                gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_OFF_LINE.getCode());
+                gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
                 break;
             //水表网关在线事件
             case "waterGatewayOnlineAlarm" :
                 //更改网关在线离线状态
-                gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_ON_LINE.getCode());
+                gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_ON_Line.getCode());
                 break;
             //抄表读数同步
             case "watermeterAmountAsync" :
