@@ -372,7 +372,7 @@
     </select>
 
     <!--查询分散式房源同步状态-->
-    <select id="selectHmHomeSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
+    <select id="selectHmHomeSynchronousStatus" parameterType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
         SELECT
         house.id AS home_id,
         house.area AS home_Name,
@@ -391,13 +391,13 @@
             AND house.`area` LIKE '%${homeName}%'
         </if>
         <if test="cityName != '' and cityName != null">
-            AND va.city LIKE '%${cityName}%'
+            AND house.city LIKE '%${cityName}%'
         </if>
         <if test="districtName != '' and districtName != null">
-            AND va.district LIKE '%${districtName}%'
+            AND house.district LIKE '%${districtName}%'
         </if>
         <if test="areaName != '' and areaName != null">
-            AND va.area LIKE '%${areaName}%'
+            AND house.area LIKE '%${areaName}%'
         </if>
         <if test="authUserName != '' and authUserName != null">
             AND auth_user.username LIKE '%${authUserName}%'
@@ -405,12 +405,12 @@
     </select>
 
     <!--查询集中式房源同步状态-->
-    <select id="selectJzHomeSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
+    <select id="selectJzHomeSynchronousStatus" parameterType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
         SELECT
         apartment.id AS home_id,
         apartment.name AS home_Name,
         apartment.synchronous,
-        '1' `type`
+        '0' `type`
         FROM
         <include refid="apartment" /> apartment
         LEFT JOIN  <include refid="auth_user" /> AS auth_user ON apartment.created_by= auth_user.id
@@ -424,13 +424,13 @@
             AND apartment.`name` LIKE '%${homeName}%'
         </if>
         <if test="cityName != '' and cityName != null">
-            AND va.city LIKE '%${cityName}%'
+            AND apartment.city LIKE '%${cityName}%'
         </if>
         <if test="districtName != '' and districtName != null">
-            AND va.district LIKE '%${districtName}%'
+            AND apartment.district LIKE '%${districtName}%'
         </if>
         <if test="areaName != '' and areaName != null">
-            AND va.area LIKE '%${areaName}%'
+            AND apartment.area LIKE '%${areaName}%'
         </if>
         <if test="authUserName != '' and authUserName != null">
             AND auth_user.username LIKE '%${authUserName}%'
@@ -446,9 +446,9 @@
 
     <!--查询集中式房间同步状态-->
     <select id="selectJzRoomSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
-        SELECT  room.id, room.`name`,room.house_id,room.synchronous
+        SELECT  room.id, room.`name`,room.apartment_id AS house_id,room.synchronous
         FROM <include refid="jzroom" /> AS room
-        WHERE room.house_id = #{homeId}
+        WHERE room.apartment_id = #{homeId}
     </select>
 
 </mapper>
