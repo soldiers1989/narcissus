@@ -70,6 +70,7 @@ public class YunDingCallBackController extends BaseController {
     @RequestMapping(value="/callback/watermeter/yunding",method = RequestMethod.POST,produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<Object> watermeterAmountAsync(@RequestBody CallbackRequestVo apiRequestVO) {
+        System.out.println(apiRequestVO.toString());
         Log.info("水表回调接口,apiRequestVO：{}",apiRequestVO.toString());
         //校验签名
         String sign = apiRequestVO.getSign();

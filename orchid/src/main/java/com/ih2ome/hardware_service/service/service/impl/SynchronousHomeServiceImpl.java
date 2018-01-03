@@ -94,8 +94,12 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String errNo = resJson2.get("ErrNo").toString();
         //room_id不为空添加成功
         if (errNo.equals("0") ){
+            List<Integer> roomIds=new ArrayList<>();
+            for (AddRoomVO addRoomVO:addRoomVOS) {
+                roomIds.add(Integer.parseInt(addRoomVO.getRoom_id().substring(2)));
+            }
             //更新room为已同步
-            synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),addRoomVOS);
+            synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),roomIds);
             //更新floor为已同步
             //查询floorIds
             List<Integer> floorIds=synchronousHomeMapper.findFloorIdsByApartmentId(apartmentId);
@@ -191,9 +195,13 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 Log.error("添加room失败，"+msg);
                 return floorId+"：添加room失败，"+msg;
             }
+            List<Integer> roomIds=new ArrayList<>();
+            for (AddRoomVO addRoomVO:addRoomVOS) {
+                roomIds.add(Integer.parseInt(addRoomVO.getRoom_id().substring(2)));
+            }
 
                 //更新room为已同步
-                synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), addRoomVOS);
+                synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), roomIds);
                 //更新floor为已同步
                 synchronousHomeMapper.updataFloorSyncByFloorId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), floorId);
 
@@ -340,8 +348,12 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             String room_id = resJson2.get("room_id").toString();
             //room_id不为空添加成功
             if (room_id != null){
+                List<Integer> roomIds=new ArrayList<>();
+                for (AddRoomVO addRoomVO:addRoomVOS) {
+                    roomIds.add(Integer.parseInt(addRoomVO.getRoom_id().substring(2)));
+                }
                 //更新room为已同步
-                synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),addRoomVOS);
+                synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),roomIds);
             }
         }
         return "success";
@@ -455,8 +467,12 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             return "添加room失败，"+msg;
         }
 
+        List<Integer> roomIdsList=new ArrayList<>();
+        for (AddRoomVO addRoomVO:addRoomVOS) {
+            roomIdsList.add(Integer.parseInt(addRoomVO.getRoom_id().substring(2)));
+        }
         //更新room为已同步
-        synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), addRoomVOS);
+        synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), roomIdsList);
 
 
         return "success";
@@ -490,7 +506,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String homeId = HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+houseId;
 
         AddRoomVO addRoomVOS=synchronousHomeMapper.findhmRoomByRoomId(roomId);
-        String addRoomsRes = iWatermeter.addRoom(homeId, addRoomVOS.getRoom_id(),addRoomVOS.getRoom_name(),addRoomVOS.getRoom_description());
+        String addRoomsRes = iWatermeter.addRoom(homeId,HomeIdNameEnum.HOME_ID_NAME_HM + addRoomVOS.getRoom_id(),addRoomVOS.getRoom_name(),addRoomVOS.getRoom_description());
         JSONObject resJson = null;
 
         resJson = JSONObject.parseObject(addRoomsRes);
@@ -504,8 +520,13 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
         List<AddRoomVO> roomList=new ArrayList<>();
         roomList.add(addRoomVOS);
+
+        List<Integer> roomIdsList=new ArrayList<>();
+        for (AddRoomVO addRoomVO:roomList) {
+            roomIdsList.add(Integer.parseInt(addRoomVO.getRoom_id().substring(2)));
+        }
         //更新room为已同步
-        synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),roomList);
+        synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),roomIdsList);
 
         return "success";
     }
