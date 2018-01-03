@@ -157,22 +157,22 @@
 		</dependency>
 
 		<!--生产配置-->
-		<!--<dependency>-->
-		<!--<groupId>org.springframework.boot</groupId>-->
-		<!--<artifactId>spring-boot-starter-web</artifactId>-->
-	<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-			<!--<scope>provided</scope>-->
-		<!--</dependency>-->
+		<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!--生产配置-->
 	</dependencies>
 	<profiles>
 		<profile>
 			<id>dev</id>
 			<properties>
-				<proileActive>dev</proileActive>
+				<profileActive>dev</profileActive>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -181,13 +181,13 @@
 		<profile>
 			<id>test</id>
 			<properties>
-				<proileActive>test</proileActive>
+				<profileActive>test</profileActive>
 			</properties>
 		</profile>
 		<profile>
 			<id>prod</id>
 			<properties>
-				<proileActive>prod</proileActive>
+				<profileActive>prod</profileActive>
 			</properties>
 		</profile>
 	</profiles>
