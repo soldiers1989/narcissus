@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public enum  GuojiaOperateLogTypeEnum {
-    CREATE("create","创建"),DELETE("delete","删除"),MODIFY("modify","修改"),ENABLE("enable","允许"),DISABLE("disable","禁止");
+    CREATE("create","创建操作"),DELETE("delete","删除操作"),MODIFY("modify","修改操作"),ENABLE("enable","允许操作"),DISABLE("disable","禁止操作");
     String code;
     String operateName;
 
