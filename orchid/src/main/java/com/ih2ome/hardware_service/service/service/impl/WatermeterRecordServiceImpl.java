@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 
 @Service
 public class WatermeterRecordServiceImpl implements WatermeterRecordService {
@@ -35,5 +36,10 @@ public class WatermeterRecordServiceImpl implements WatermeterRecordService {
     public void addWatermeterRecord(SmartWatermeterRecord smartWatermeterRecord) {
         Log.info("添加抄表记录，smartWatermeterRecord：{}",smartWatermeterRecord.toString());
         watermeterRecordMapper.insertWatermeterRecord(smartWatermeterRecord);
+    }
+
+    @Override
+    public Timestamp findWatermeterMeterUpdatedAtByWatermeterId(Integer watermeterid) {
+        return watermeterRecordMapper.selectWatermeterMeterUpdatedAtByWatermeterId(watermeterid);
     }
 }

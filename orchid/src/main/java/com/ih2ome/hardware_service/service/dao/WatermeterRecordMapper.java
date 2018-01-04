@@ -4,6 +4,8 @@ import com.ih2ome.common.base.MyMapper;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+
 @Repository
 public interface WatermeterRecordMapper extends MyMapper<SmartWatermeterRecord> {
 
@@ -18,4 +20,6 @@ public interface WatermeterRecordMapper extends MyMapper<SmartWatermeterRecord> 
      * @param smartWatermeterRecord
      */
     void insertWatermeterRecord(SmartWatermeterRecord smartWatermeterRecord);
+
+    Timestamp selectWatermeterMeterUpdatedAtByWatermeterId(Integer watermeterid);
 }

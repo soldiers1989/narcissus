@@ -428,16 +428,16 @@ public class YunDingCallBackController extends BaseController {
 
     public static void main(String[] arge){
         Map<String,Object> map=new HashMap<>();
-        map.put("even","deviceInstall");
-        int time = (int) System.currentTimeMillis();
+        map.put("event","watermeterAmountAsync");
+        Long time = 1515028626190L;
         map.put("time",time);
-        map.put("uuid","454656");
-        map.put("old_uuid",45646465);
-        map.put("manufactory","cy");
-        map.put("home_id",5);
-        map.put("gateway_uuid",45);
-        map.put("room_id",23);
-        map.put("detail","");
+        map.put("uuid","00000171476818");
+        map.put("old_uuid",null);
+        map.put("manufactory","ym");
+        map.put("home_id","jz3670");
+        map.put("gateway_uuid","000000485915");
+        map.put("room_id","jz585921");
+        map.put("detail","{\"amount\":0}");
 
         System.out.println(time);
         String sign= getSign(map);
