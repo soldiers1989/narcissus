@@ -42,43 +42,8 @@ public class SmartLockController extends BaseController {
 
     /**
      * 门锁list
-     *
-     * @param apiRequestVO <pre>
-     *                                                                                                                                                                                                                                                                                                                                                           lockListVo
-     *                                                                                                                                                                                                                                                                                                                                                               serialNum 门锁编码
-     *                                                                                                                                                                                                                                                                                                                                                               roomNo 房间编号
-     *                                                                                                                                                                                                                                                                                                                                                               apartmentName 公寓名称
-     *                                                                                                                                                                                                                                                                                                                                                               customerName 租客姓名
-     *                                                                                                                                                                                                                                                                                                                                                               authUserName 房东电话
-     *                                                                                                                                                                                                                                                                                                                                                               customerPhone 租客电话
-     *                                                                                                                                                                                                                                                                                                                                                               provinceName 省名
-     *                                                                                                                                                                                                                                                                                                                                                               cityName 市名
-     *                                                                                                                                                                                                                                                                                                                                                               districtName 区名
-     *                                                                                                                                                                                                                                                                                                                                                               areaName 小区名
-     *                                                                                                                                                                                                                                                                                                                                                               status 状态
-     *                                                                                                                                                                                                                                                                                                                                                               type 公寓类型（0集中，1分布）
-     *                                                                                                                                                                                                                                                                                                                                                               page 页码(当前页)
-     *                                                                                                                                                                                                                                                                                                                                                               rows 每页大小
-     *                                                                                                                                                                                                                                                                                                                                                     </pre>
-     * @return result
-     * <pre>
-     *              lockListVo
-     *                apartmentName 公寓名称
-     *                apartmentType 公寓类型
-     *                authUserName 房东电话
-     *                customerName 租客姓名
-     *                customerPhone 租客电话,
-     *                getway 网关编码
-     *                houseAddress 房源地址
-     *                installTime 安装时间
-     *                lockId 门锁ID
-     *                providerName 厂商名称
-     *                remainingBattery 剩余电量
-     *                roomNo 房间编号
-     *                serialNum 门锁编码,
-     *                status通讯状态
-     * </pre>
-     * @link /mannager/smartLock/lockList
+     * @param apiRequestVO
+     * @return
      */
     @RequestMapping(value = "/lockList", method = RequestMethod.POST, produces = {"application/json"})
     public String lockList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -101,11 +66,11 @@ public class SmartLockController extends BaseController {
     @RequestMapping(value = "/lockInfo", method = RequestMethod.POST, produces = {"application/json"})
     public String lockInfo(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
-        String lockNo = resData.getString("lockNo");
+        String id = resData.getString("id");
         String type = resData.getString("type");
         LockInfoVo lockInfoVo = null;
         try {
-            lockInfoVo = lockManagerService.getLockInfoVo(lockNo, type);
+            lockInfoVo = lockManagerService.getLockInfoVo(id, type);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(), e);
             String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
@@ -142,7 +107,8 @@ public class SmartLockController extends BaseController {
         JSONObject responseJson = new JSONObject();
         List<LockPasswordVo> pwdList = null;
         pwdList = lockManagerService.getPwdList(lockRequestVo);
-        responseJson.put("lockpasswordListVo", pwdList);
+        PageInfo<LockPasswordVo> pageInfo = new PageInfo<>(pwdList);
+        responseJson.put("lockpasswordListVo", pageInfo);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
     }
@@ -272,7 +238,8 @@ public class SmartLockController extends BaseController {
         JSONObject responseJson = new JSONObject();
         List<LockHistoryStatusVO> lockStatusList = null;
         lockStatusList = lockManagerService.getLockHistoryList(lockHistoryStatusVO);
-        responseJson.put("lockpasswordListVo", lockStatusList);
+        PageInfo<LockHistoryStatusVO> pageInfo = new PageInfo<>(lockStatusList);
+        responseJson.put("lockStatusListVo", pageInfo);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
     }
@@ -290,7 +257,8 @@ public class SmartLockController extends BaseController {
         JSONObject responseJson = new JSONObject();
         List<LockOperateRecordVO> lockOperateRecords = null;
         lockOperateRecords = lockManagerService.getLockOperateRecords(lockOperateRecordVO);
-        responseJson.put("lockOperateRecords", lockOperateRecords);
+        PageInfo<LockOperateRecordVO> pageInfo = new PageInfo<>(lockOperateRecords);
+        responseJson.put("lockOperateRecords", pageInfo);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
     }
@@ -307,8 +275,8 @@ public class SmartLockController extends BaseController {
         LockOpenRecordVO lockOpenRecord = JSONObject.parseObject(resData.toString(), LockOpenRecordVO.class);
         JSONObject responseJson = new JSONObject();
         List<LockOpenRecordVO> lockOpenRecords = null;
-        lockOpenRecords = lockManagerService.getLockOpenRecords(lockOpenRecord);
-        responseJson.put("lockOpenRecords", lockOpenRecords);
+        PageInfo<LockOpenRecordVO> pageInfo = new PageInfo<>(lockOpenRecords);
+        responseJson.put("lockOpenRecords", pageInfo);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
     }

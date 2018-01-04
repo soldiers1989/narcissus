@@ -43,7 +43,7 @@
     FROM
         caspain_test.smart_lock
     WHERE
-        serial_num = #{serialNum};
+        id = #{id};
 
     </insert>
 
@@ -91,7 +91,7 @@
     FROM
         volga_test.smart_lock
     WHERE
-        serial_num = #{serialNum};
+        id = #{id};
     </insert>
 
     <!--delete-->
@@ -172,11 +172,12 @@
     <select id="findDispersedLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
             resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
         SELECT
-        csl.id lockId,
+        csl.id id,
+        cslg.id getwayId,
         ch.area apartmentName,
-        '1' apartmentType,
+        '1' type,
         cau.username authUserName,
-        ch.address houseAddress,
+        CONCAT(ch.address,ch.area ,ch.building_num+ch.unit_num+ch.floor_num ,ch.house_num) houseAddress,
         cr.`name` roomNo,
         crc.customer_name customerName,
         crc.customer_phone customerPhone,
@@ -250,9 +251,10 @@
     <select id="findConcentrateLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
             resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
         SELECT
-        vsl.id lockId,
+        vsl.id id,
+        vslg.id getwayId,
         va.`name` apartmentName,
-        '0' apartmentType,
+        '0' type,
         cau.username authUserName,
         va.address houseAddress,
         vr.`name` roomNo,
@@ -320,7 +322,7 @@
         </if>
     </select>
 
-    <!--分散式根据门锁编码查询门锁基本信息-->
+    <!--分散式根据门锁id查询门锁基本信息-->
     <select id="findDispersedLockByLockNo" resultType="com.ih2ome.hardware_service.service.vo.LockInfoVo">
     SELECT
     ch.address houseAddress,
@@ -341,10 +343,10 @@
     LEFT JOIN caspain_test.room cr ON csl.room_id = cr.id
     LEFT JOIN caspain_test.house ch ON cr.house_id = ch.id
     LEFT JOIN caspain_test.smart_lock_gateway cslg ON cslg.id = csl.gateway_id
-    WHERE  csl.serial_num=#{lockNo}
+    WHERE  csl.id=#{id}
     </select>
 
-    <!--集中式根据门锁编码查询门锁基本信息-->
+    <!--集中式根据门锁id查询门锁基本信息-->
     <select id="findConcentrateLockByLockNo" resultType="com.ih2ome.hardware_service.service.vo.LockInfoVo">
      SELECT
      va.address houseAddress,
@@ -365,7 +367,7 @@
     LEFT JOIN `volga_test`.room vr ON vsl.room_id = vr.id
     LEFT JOIN `volga_test`.apartment va ON vr.apartment_id = va.id
     LEFT JOIN volga_test.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
-    WHERE vsl.serial_num=#{lockNo}
+    WHERE vsl.id=#{id}
     </select>
 
     <!--分散式根据门锁编码查询密码列表-->
@@ -403,7 +405,7 @@
             slp.is_delete != '1'
             OR slp.is_delete IS NULL
         )
-           AND sl.serial_num = #{lockNo}
+           AND sl.id = #{id}
     </select>
 
     <!--集中式根据门锁编码查询密码列表-->
@@ -441,7 +443,7 @@
             slp.is_delete != '1'
             OR slp.is_delete IS NULL
         )
-           AND sl.serial_num = #{lockNo}
+           AND sl.id = #{id}
     </select>
 
     <!--分散式根据门锁编码查询门锁历史状态-->
@@ -459,7 +461,7 @@
         FROM
             caspain_test.`smart_lock_status` sls
         LEFT JOIN caspain_test.smart_lock sl ON sl.id = sls.lock_id
-        where sl.serial_num=#{serialNum}
+        where sl.id=#{id}
 
     </select>
 
@@ -478,7 +480,7 @@
         FROM
             volga_test.`smart_lock_status` sls
         LEFT JOIN volga_test.smart_lock sl ON sl.id = sls.lock_id
-        where sl.serial_num=#{serialNum}
+        where sl.id=#{id}
     </select>
 
     <!--分散式根据门锁编码查询门锁操作记录-->
@@ -503,7 +505,7 @@
             caspain_test.smart_lock_operation_record slor
         LEFT JOIN caspain_test.smart_lock sl ON slor.lock_id = sl.id
         WHERE
-            sl.serial_num = #{serialNum}
+            sl.id = #{id}
         AND (
             sl.is_delete != '1'
             OR sl.is_delete IS NULL
@@ -536,7 +538,7 @@
             volga_test.smart_lock_operation_record slor
         LEFT JOIN volga_test.smart_lock sl ON slor.lock_id = sl.id
         WHERE
-            sl.serial_num = #{serialNum}
+            sl.id = #{id}
         AND (
             sl.is_delete != '1'
             OR sl.is_delete IS NULL
@@ -577,7 +579,7 @@
         LEFT JOIN caspain_test.smart_lock sl ON slp.lock_id = sl.id
         LEFT JOIN caspain_test.smart_lock_record slr ON slr.lock_id = sl.id
         WHERE
-            sl.serial_num =#{serialNum} and slp.pwd_no=slr.password_type
+            sl.id =#{id} and slp.pwd_no=slr.password_type
         AND (
             slp.is_delete != '1'
             OR slp.is_delete IS NULL
@@ -622,7 +624,7 @@
         LEFT JOIN volga_test.smart_lock sl ON slp.lock_id = sl.id
         LEFT JOIN volga_test.smart_lock_record slr ON slr.lock_id = sl.id
         WHERE
-            sl.serial_num = #{serialNum} and slp.pwd_no=slr.password_type
+            sl.id = #{id} and slp.pwd_no=slr.password_type
         AND (
             slp.is_delete != '1'
             OR slp.is_delete IS NULL
@@ -636,4 +638,15 @@
             OR slr.is_delete IS NULL
         )
     </select>
+
+    <!--分散式根据主键id查询门锁编码-->
+    <select id="findDisSerialNumById" parameterType="string" resultType="string">
+        SELECT serial_num FROM caspain_test.smart_lock where id=#{id};
+    </select>
+
+    <!--集中式根据主键id查询门锁编码-->
+    <select id="findConSerialNumById" parameterType="string" resultType="string">
+        SELECT serial_num FROM volga_test.smart_lock where id=#{id};
+    </select>
+
 </mapper>

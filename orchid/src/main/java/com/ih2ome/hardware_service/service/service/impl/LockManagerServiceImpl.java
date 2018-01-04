@@ -57,17 +57,17 @@ public class LockManagerServiceImpl implements LockManagerService {
 
     //根据门锁编码查询门锁基本信息
     @Override
-    public LockInfoVo getLockInfoVo(String lockNo, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
+    public LockInfoVo getLockInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
         LockInfoVo lockInfoVo = null;
         //判断是分散式
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
-            lockInfoVo = lockManagerDao.findDispersedLockByLockNo(lockNo);
+            lockInfoVo = lockManagerDao.findDispersedLockByLockNo(id);
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
-            lockInfoVo = lockManagerDao.findConcentrateLockByLockNo(lockNo);
+            lockInfoVo = lockManagerDao.findConcentrateLockByLockNo(id);
         }
         ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
-        GuoJiaLockInfoVo guoJiaLockInfo = iSmartLock.getGuoJiaLockInfo(lockNo);
+        GuoJiaLockInfoVo guoJiaLockInfo = iSmartLock.getGuoJiaLockInfo(lockInfoVo.getSerialNum());
         Long guaranteeTimeStart = guoJiaLockInfo.getGuaranteeTimeStart();
         Long guaranteeTimeEnd = guoJiaLockInfo.getGuaranteeTimeEnd();
         Long comuStatusUpdateTime = guoJiaLockInfo.getComuStatusUpdateTime();
@@ -84,7 +84,7 @@ public class LockManagerServiceImpl implements LockManagerService {
         if (lockRequestVo == null) {
             return null;
         }
-        String lockNo = lockRequestVo.getLockNo();
+        String id = lockRequestVo.getId();
         String type = lockRequestVo.getType();
         List<LockPasswordVo> pwdList = null;
         if (lockRequestVo.isInitPageRows()) {
@@ -92,10 +92,10 @@ public class LockManagerServiceImpl implements LockManagerService {
         }
         //判断是分散式
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
-            pwdList = lockManagerDao.findDispersedPwdList(lockNo);
+            pwdList = lockManagerDao.findDispersedPwdList(id);
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
-            pwdList = lockManagerDao.findConcentratePwdList(lockNo);
+            pwdList = lockManagerDao.findConcentratePwdList(id);
         }
         for (LockPasswordVo lockPasswordVo : pwdList) {
             lockPasswordVo.setStatus(LockStatusEnum.getByCode(lockPasswordVo.getStatus()));
@@ -106,7 +106,17 @@ public class LockManagerServiceImpl implements LockManagerService {
 
     //新增门锁密码
     @Override
-    public void addPassword(LockPasswordVo lockPasswordVo,String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+    public void addPassword(LockPasswordVo lockPasswordVo, String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+        //0代表集中式，1代表分散式
+        String type = lockPasswordVo.getType();
+        String serialNum=null;
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+           serialNum=lockManagerDao.findDisSerialNumById(lockPasswordVo.getId());
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            serialNum=lockManagerDao.findConSerialNumById(lockPasswordVo.getId());
+        }
+        lockPasswordVo.setSerialNum(serialNum);
         ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
         //请求果家第三方的新增密码接口
         String result = iSmartLock.addLockPassword(lockPasswordVo);
@@ -119,8 +129,6 @@ public class LockManagerServiceImpl implements LockManagerService {
         //密码编号
         String pwd_no = jsonData.getString("pwd_no");
         lockPasswordVo.setPwdNo(pwd_no);
-        //0代表集中式，1代表分散式
-        String type = lockPasswordVo.getType();
         //判断是分散式
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
             lockManagerDao.addDispersedPwd(lockPasswordVo);
@@ -129,11 +137,11 @@ public class LockManagerServiceImpl implements LockManagerService {
             lockManagerDao.addConcentratePwd(lockPasswordVo);
         }
         JSONObject message = new JSONObject();
-        message.put("password",lockPasswordVo.getPassword());
-        message.put("startTime",lockPasswordVo.getEnableTime());
-        message.put("endTime",lockPasswordVo.getDisableTime());
+        message.put("password", lockPasswordVo.getPassword());
+        message.put("startTime", lockPasswordVo.getEnableTime());
+        message.put("endTime", lockPasswordVo.getDisableTime());
         boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
-        if(!bool){
+        if (!bool) {
             throw new SmartLockException("短信发送失败");
         }
 
@@ -141,7 +149,7 @@ public class LockManagerServiceImpl implements LockManagerService {
 
     //修改门锁密码
     @Override
-    public void updatePassword(LockPasswordVo lockPasswordVo,String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+    public void updatePassword(LockPasswordVo lockPasswordVo, String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
         ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
         //请求果家第三方的修改接口
         String result = iSmartLock.updateLockPassword(lockPasswordVo);
@@ -161,11 +169,11 @@ public class LockManagerServiceImpl implements LockManagerService {
             lockManagerDao.updateConcentratePwd(lockPasswordVo);
         }
         JSONObject message = new JSONObject();
-        message.put("password",lockPasswordVo.getPassword());
-        message.put("startTime",lockPasswordVo.getEnableTime());
-        message.put("endTime",lockPasswordVo.getDisableTime());
+        message.put("password", lockPasswordVo.getPassword());
+        message.put("startTime", lockPasswordVo.getEnableTime());
+        message.put("endTime", lockPasswordVo.getDisableTime());
         boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
-        if(!bool){
+        if (!bool) {
             throw new SmartLockException("短信发送失败");
         }
 
@@ -215,10 +223,10 @@ public class LockManagerServiceImpl implements LockManagerService {
         for (LockHistoryStatusVO lockHistoryStatus : historyStatus) {
             String status = lockHistoryStatus.getStatus();
             //如果当前状态是'电量低'
-            if(status.equals(GuoJiaLockStatusEnum.PUSH_LOCK_POWRE_LOW.getStatus())){
+            if (status.equals(GuoJiaLockStatusEnum.PUSH_LOCK_POWRE_LOW.getStatus())) {
                 JSONObject jsonData = JSONObject.parseObject(lockHistoryStatus.getRdata());
                 String power = jsonData.getString("power");
-                lockHistoryStatus.setStatus(GuoJiaLockStatusEnum.PUSH_LOCK_POWRE_LOW.getStatusName()+"("+power+"%)");
+                lockHistoryStatus.setStatus(GuoJiaLockStatusEnum.PUSH_LOCK_POWRE_LOW.getStatusName() + "(" + power + "%)");
                 continue;
             }
             lockHistoryStatus.setStatus(GuoJiaLockStatusEnum.getByStatus(status));

@@ -12,6 +12,6 @@ import lombok.Data;
 public class LockRequestVo extends BaseEntity  {
     //集中分散类型
     private String type;
-    //门锁编码
-    private String lockNo;
+
+    private String id;
 }
