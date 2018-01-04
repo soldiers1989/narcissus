@@ -145,13 +145,14 @@ public class YunDingCallBackController extends BaseController {
 
             //更新或添加抄表记录
             //获取最近一次抄表时间
-            Timestamp timestamp=watermeterService.findWatermeterMeterUpdatedAt(apiRequestVO.getUuid());
+            Integer watermeterid = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
+//            Timestamp timestamp=watermeterService.findWatermeterMeterUpdatedAt(apiRequestVO.getUuid());
+            Timestamp timestamp=watermeterRecordService.findWatermeterMeterUpdatedAtByWatermeterId(watermeterid);
             Timestamp nowTime = new Timestamp(time);
 
             SmartWatermeterRecord smartWatermeterRecord=new SmartWatermeterRecord();
             smartWatermeterRecord.setCreatedAt(nowTime);
             smartWatermeterRecord.setDeviceAmount(amount);
-            Integer watermeterid = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
             smartWatermeterRecord.setSmartWatermeterId(watermeterid);
             //判断是否为同一天
             if(isTheSameDate(timestamp,nowTime)){
