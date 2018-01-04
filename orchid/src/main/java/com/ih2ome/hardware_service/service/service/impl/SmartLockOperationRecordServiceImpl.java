@@ -28,9 +28,9 @@ public class SmartLockOperationRecordServiceImpl implements SmartLockOperationRe
         if(smartLockOperationRecordVO.getPage()!= null && smartLockOperationRecordVO.getRows() != null){
             PageHelper.startPage(smartLockOperationRecordVO.getPage(),smartLockOperationRecordVO.getRows());
         }
-        if(smartLockOperationRecordVO.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
+        if(smartLockOperationRecordVO.getApartmentType().equals(HouseStyleEnum.DISPERSED.getCode())){
             return smartLockOperationRecordDao.findDispersedSmartLockOperationRecordList(smartLockOperationRecordVO);
-        }else if(smartLockOperationRecordVO.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
+        }else if(smartLockOperationRecordVO.getApartmentType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
             return smartLockOperationRecordDao.findConcentratSmartLockOperationRecordList(smartLockOperationRecordVO);
         }else{
             return null;

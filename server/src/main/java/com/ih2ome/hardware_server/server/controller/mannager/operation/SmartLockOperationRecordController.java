@@ -6,6 +6,7 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockOperationRecordService;
 import com.ih2ome.hardware_service.service.vo.SmartLockOperationRecordVO;
+import com.ih2ome.peony.smartlockInterface.enums.GuojiaOperateLogTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class SmartLockOperationRecordController extends BaseController {
     @Autowired
     SmartLockOperationRecordService smartLockOperationRecordService;
 
-    @RequestMapping(value="/smartLockGateList",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/smartLockOperationRecordList",method = RequestMethod.POST,produces = {"application/json"})
     public String smartLockOperationRecordList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject reqData=apiRequestVO.getDataRequestBodyVO().getDt();
         SmartLockOperationRecordVO smartLockOperationRecordVO = reqData
@@ -41,6 +42,7 @@ public class SmartLockOperationRecordController extends BaseController {
         PageInfo <SmartLockOperationRecordVO> pageInfo = new PageInfo<>(smartLockOperationRecordVOList);
         JSONObject responseJson = new JSONObject();
         responseJson.put("smartLockOperationRecordVOList",pageInfo);
+        responseJson.put("GuojiaOperateLogTypeEnum", GuojiaOperateLogTypeEnum.enum2Json());
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }

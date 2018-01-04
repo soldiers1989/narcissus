@@ -6,6 +6,7 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockWarningService;
 import com.ih2ome.hardware_service.service.vo.SmartLockWarningVO;
+import com.ih2ome.peony.smartlockInterface.enums.GuoJiaLockStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,8 @@ public class SmartLockWarningController extends BaseController{
         List<SmartLockWarningVO> smartLockWarningVOList = smartLockWarningService.getSmartLockWarningList(smartLockWarningVO);
         PageInfo <SmartLockWarningVO> pageInfo = new PageInfo<>(smartLockWarningVOList);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("lockListVoList",pageInfo);
-        responseJson.put("smartLockWarningVOList",smartLockWarningVOList);
+        responseJson.put("smartLockWarningVOList",pageInfo);
+        responseJson.put("guoJiaLockStatusEnum", GuoJiaLockStatusEnum.enum2Json());
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }

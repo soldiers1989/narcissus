@@ -8,6 +8,7 @@
     <select id="findDispersedSmartLockOperationRecordList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockOperationRecordVO">
 SELECT
 	csl.id lockId,
+	cslg.id gatewayId,
 	ch.area apartmentName,
 	'1' apartmentType,
 	cau.username authUserName,
@@ -21,10 +22,13 @@ SELECT
 		csl.install_time,
 		'%Y.%m.%d %H:%i:%s'
 	) installTime,
-	cslg.gateway getway,
+	cslg.gateway gateway,
 	cslor.operator_name operator,
 	cslor.operate_type operateRecord,
-	cslor.operate_time operateTime
+	DATE_FORMAT(
+	  cslor.operate_time,
+	  '%Y.%m.%d %H:%i:%s'
+	) operateTime
 FROM
 	caspain_test.smart_lock csl
 LEFT JOIN caspain_test.smart_lock_operation_record cslor ON cslor.lock_id = csl.id
@@ -74,12 +78,16 @@ AND crc.`status` = 'active'
         <if test="areaName != '' and areaName != null">
             AND ch.area LIKE '%${areaName}%'
         </if>
+		<if test="communicationStatus != '' and communicationStatus != null">
+			AND cslg.`status` LIKE '%${communicationStatus}%'
+		</if>
     </select>
 
     <!--查询集中式操作列表-->
     <select id="findConcentratSmartLockOperationRecordList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockOperationRecordVO">
 SELECT
 	vsl.id lockId,
+	vslg.id gatewayId,
 	va.`name` apartmentName,
 	'0' apartmentType,
 	cau.username authUserName,
@@ -94,10 +102,13 @@ SELECT
 		vsl.install_time,
 		'%Y.%m.%d %H:%i:%s'
 	) installTime,
-	vslg.gateway getway,
+	vslg.gateway gateway,
 	vslor.operator_name operator,
 	vslor.operate_type operateRecord,
-	vslor.operate_time operateTime
+	DATE_FORMAT(
+	  vslor.operate_time,
+	  '%Y.%m.%d %H:%i:%s'
+	) operateTime
 FROM
 	`volga_test`.smart_lock vsl
 LEFT JOIN volga_test.smart_lock_operation_record vslor ON vslor.lock_id = vsl.id
@@ -149,8 +160,8 @@ AND vrc.`status` = 'active'
         <if test="areaName != '' and areaName != null">
             AND va.area LIKE '%${areaName}%'
         </if>
-        <if test="status != '' and status != null">
-            AND vsl.status LIKE '%${status}%'
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND vsl.status LIKE '%${communicationStatus}%'
         </if>
     </select>
 
