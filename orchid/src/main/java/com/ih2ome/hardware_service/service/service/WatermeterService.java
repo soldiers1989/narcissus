@@ -114,7 +114,7 @@ public interface WatermeterService {
      * @param amount
      * @param time
      */
-    void updataWaterLastAmount(String uuid, int amount, Long time);
+    void updataWaterLastAmount(String uuid, int amount, Timestamp time);
 
     /**
      * 集中式通过楼层Id查询水表详情
