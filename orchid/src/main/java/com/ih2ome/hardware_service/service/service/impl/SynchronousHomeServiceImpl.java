@@ -593,8 +593,12 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             String code = resJson2.get("ErrNo").toString();
             //room_id不为空添加成功
             if (code.equals("0")){
+                List<Integer> roomIdsList=new ArrayList<>();
+                for (AddRoomVO addRoomVO:addRoomVOS) {
+                    roomIdsList.add(Integer.parseInt(addRoomVO.getRoom_id().substring(2)));
+                }
                 //更新room为已同步
-                synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),addRoomVOS);
+                synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),roomIdsList);
             }else {
                 return "synchronousRoomfail";
             }
