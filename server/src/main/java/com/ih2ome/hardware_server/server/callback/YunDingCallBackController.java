@@ -149,7 +149,7 @@ public class YunDingCallBackController extends BaseController {
             Timestamp nowTime = new Timestamp(time);
 
             SmartWatermeterRecord smartWatermeterRecord=new SmartWatermeterRecord();
-            smartWatermeterRecord.setCreatedAt(new Date(time));
+            smartWatermeterRecord.setCreatedAt(nowTime);
             smartWatermeterRecord.setDeviceAmount(amount);
             Integer watermeterid = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
             smartWatermeterRecord.setSmartWatermeterId(watermeterid);
