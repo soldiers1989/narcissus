@@ -12,7 +12,7 @@
 	      va.address houseAddress,
 	      vslg.gateway gatewayCode,
 	      vslg.`status` communicationStatus,
-          vslg.install_time installDate,
+          DATE_FORMAT(vslg.install_time,'%Y.%m.%d %H:%i:%s') installDate,
 	      vslg.installed installState,
 	      '0' `type`
         FROM
@@ -48,6 +48,12 @@
         <if test="areaName != '' and areaName != null">
             AND va.`name` LIKE '%${areaName}%'
         </if>
+        <if test="gatewayCode != '' and gatewayCode != null">
+            AND vslg.gateway LIKE '%${gatewayCode}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND vslg.`status` LIKE '%${communicationStatus}%'
+        </if>
     </select>
     <!--查询分散式房源网关列表-->
     <select id="findDispersedGateway" parameterType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
@@ -58,7 +64,7 @@
         ch.address houseAddress,
         cslg.gateway gatewayCode,
         cslg.`status` communicationStatus,
-        cslg.install_time installDate,
+        DATE_FORMAT(cslg.install_time,'%Y.%m.%d %H:%i:%s') installDate,
         cslg.installed  installState,
         '1' `type`
         FROM
@@ -92,6 +98,12 @@
         </if>
         <if test="areaName != '' and areaName != null">
             AND ch.area LIKE '%${areaName}%'
+        </if>
+        <if test="gatewayCode != '' and gatewayCode != null">
+            AND cslg.gateway LIKE '%${gatewayCode}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND cslg.`status` LIKE '%${communicationStatus}%'
         </if>
 
     </select>
