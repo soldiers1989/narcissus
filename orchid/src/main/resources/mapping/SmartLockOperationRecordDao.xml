@@ -17,7 +17,7 @@ SELECT
 	crc.customer_name customerName,
 	crc.customer_phone customerPhone,
 	csl.serial_num serialNum,
-	csl.`status` STATUS,
+	csl.`status` communicationStatus,
 	DATE_FORMAT(
 		csl.install_time,
 		'%Y.%m.%d %H:%i:%s'
@@ -79,7 +79,7 @@ AND crc.`status` = 'active'
             AND ch.area LIKE '%${areaName}%'
         </if>
 		<if test="communicationStatus != '' and communicationStatus != null">
-			AND cslg.`status` LIKE '%${communicationStatus}%'
+			AND csl.`status` LIKE '%${communicationStatus}%'
 		</if>
     </select>
 
@@ -96,7 +96,7 @@ SELECT
 	vrc.customer_name customerName,
 	vrc.customer_phone customerPhone,
 	vsl.serial_num serialNum,
-	vsl.`status` STATUS,
+	vsl.`status` communicationStatus,
 	CONCAT(vsl.remaining_battery, '%') remainingBattery,
 	DATE_FORMAT(
 		vsl.install_time,
