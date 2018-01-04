@@ -141,7 +141,7 @@ public class YunDingCallBackController extends BaseController {
         Integer amount = (Integer) detail.get("amount");
         Long time = apiRequestVO.getTime();
         //抄表成功
-        if(amount > 0) {
+        if(amount >= 0) {
 
             //更新或添加抄表记录
             //获取最近一次抄表时间
