@@ -12,6 +12,8 @@ import java.io.Serializable;
  **/
 @Data
 public class LockOpenRecordVO extends BaseEntity implements Serializable {
+    //门锁ID
+    private String id;
     //门锁编号
     private String serialNum;
     //开门人姓名

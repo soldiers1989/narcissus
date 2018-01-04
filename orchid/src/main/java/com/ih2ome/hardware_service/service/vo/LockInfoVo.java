@@ -11,6 +11,8 @@ import java.io.Serializable;
  **/
 @Data
 public class LockInfoVo implements Serializable {
+    //门锁Id
+    private String id;
     //房源地址
     private String houseAddress;
     //房屋编号

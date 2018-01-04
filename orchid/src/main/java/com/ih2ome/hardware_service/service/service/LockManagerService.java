@@ -18,7 +18,7 @@ public interface LockManagerService {
     List<LockListVo> lockList(LockListVo lockListVo);
 
     //根据门锁编码查询门锁基本信息
-    LockInfoVo getLockInfoVo(String lockNo, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException;
+    LockInfoVo getLockInfoVo(String id, String type) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException;
 
     //根据门锁编码查询门锁密码列表
     List<LockPasswordVo> getPwdList(LockRequestVo lockRequestVo);

@@ -14,6 +14,7 @@ import java.io.Serializable;
  **/
 @Data
 public class LockOperateRecordVO extends BaseEntity implements Serializable {
+    private String id;
     //操作类型
     private String operateType;
     //操作时间

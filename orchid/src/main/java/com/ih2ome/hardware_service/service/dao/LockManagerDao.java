@@ -66,4 +66,11 @@ public interface LockManagerDao {
 
     //查询门锁的开门记录(集中式)
     List<LockOpenRecordVO> findConcentrateLockOpenRecord(LockOpenRecordVO lockOpenRecord);
+
+    //查询门锁编码（分散式）
+    String findDisSerialNumById(String id);
+
+    //查询门锁编码(集中式)
+    String findConSerialNumById(String id);
+
 }
