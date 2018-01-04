@@ -163,7 +163,7 @@ public class YunDingCallBackController extends BaseController {
             }
 
             //存入数据库
-            watermeterService.updataWaterLastAmount(apiRequestVO.getUuid(), amount, nowTime);
+            watermeterService.updataWaterLastAmount(apiRequestVO.getUuid(), amount, time);
             //查询水表在线状态
             Integer onOffStatus= watermeterService.findWatermeterOnOffStatusByUuid(apiRequestVO.getUuid());
             //水表状态离线

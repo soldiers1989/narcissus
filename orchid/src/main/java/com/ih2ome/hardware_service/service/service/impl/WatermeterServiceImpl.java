@@ -241,7 +241,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @param time
      */
     @Override
-    public void updataWaterLastAmount(String uuid, int amount, Timestamp time) {
+    public void updataWaterLastAmount(String uuid, int amount, Long time) {
         Log.info("更新水表读数,水表uuid:{},水表读数:{},更新时间：{}",uuid,amount,time);
         watermeterDao.updataWaterLastAmount(uuid, amount, time);
     }
