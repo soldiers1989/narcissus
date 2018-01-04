@@ -213,4 +213,11 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param meterAmount
      */
     void updataWatermeterMeterAmount(@Param("watermeterId") Integer watermeterId, @Param("meterAmount") Integer meterAmount);
+
+    /**
+     * 查询分散式网关详情
+     * @param smartGatewayId
+     * @return
+     */
+    WatermeterGatewayDetailVO findhmGatewaybySmartGatewayId(int smartGatewayId);
 }

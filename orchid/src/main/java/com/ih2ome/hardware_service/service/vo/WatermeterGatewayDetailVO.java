@@ -11,6 +11,7 @@ public class WatermeterGatewayDetailVO {
     //网关编码，房源名称，更新时间，绑定时间，绑定型号，所绑定的水表列表
     private int smartGatewayId;
     private int roomId;
+    private String houseName;
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     private Date updatedAt;
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)

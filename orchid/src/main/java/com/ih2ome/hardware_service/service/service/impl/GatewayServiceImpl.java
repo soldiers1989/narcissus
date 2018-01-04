@@ -22,7 +22,7 @@ public class GatewayServiceImpl implements GatewayService {
      * @return
      */
     @Override
-    public int findGatewayIdByUuid(String gateway_uuid) {
+    public Integer findGatewayIdByUuid(String gateway_uuid) {
         Log.info("查找网关id，网关gateway_uuid：{}",gateway_uuid);
         Integer res = gatewayMapper.selectGatewayIdByUuid(gateway_uuid);
         //没查到返回负数

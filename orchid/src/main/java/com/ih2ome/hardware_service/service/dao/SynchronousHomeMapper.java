@@ -59,7 +59,7 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @param roomSync
      * @param list
      */
-    void updataRoomSyncByRoomId(@Param("roomSync") Integer roomSync, @Param("list") List<AddRoomVO> list);
+    void updataRoomSyncByRoomId(@Param("roomSync") Integer roomSync, @Param("list") List<Integer> list);
 
     /**
      * 查询集中式房源同步信息
@@ -128,7 +128,7 @@ public interface SynchronousHomeMapper extends MyMapper<Apartment>{
      * @param roomSync
      * @param list
      */
-    void updataHmRoomSyncByRoomId(@Param("roomSync") Integer roomSync, @Param("list") List<AddRoomVO> list);
+    void updataHmRoomSyncByRoomId(@Param("roomSync") Integer roomSync, @Param("list") List<Integer> list);
 
     /**
      * 查询集中式公寓by公寓id

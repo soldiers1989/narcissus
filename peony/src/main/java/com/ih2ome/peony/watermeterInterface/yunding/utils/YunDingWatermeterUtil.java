@@ -102,14 +102,15 @@ public class YunDingWatermeterUtil {
      * @return
      */
     public static String getToken() throws WatermeterException {
-        String token = CacheUtils.getStr(TOKEN_KEY);
+//        String token = CacheUtils.getStr(TOKEN_KEY);
+        String token = null;
         //String uid = CacheUtils.getStr(UID_KEY);
         Map<String, Object> map = null;
         if (StringUtils.isBlank(token)) {
             map = getTokenByThrid();
             token = (String) map.get(TOKEN_KEY);
             Integer expires_time = (Integer) map.get(EXPRIES_TIME);
-            CacheUtils.set(TOKEN_KEY, token, ExpireTime.HALF_AN_HOUR);
+//            CacheUtils.set(TOKEN_KEY, token, ExpireTime.HALF_AN_HOUR);
             // CacheUtils.set(UID_KEY,uid,0);
         }
         //CacheUtils.set(TOKEN_KEY, token, 1);

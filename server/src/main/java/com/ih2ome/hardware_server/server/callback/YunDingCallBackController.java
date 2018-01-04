@@ -31,7 +31,7 @@ public class YunDingCallBackController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
-    private static String CALLBACK_PATH="http://rose.h2ome.cn/api"+"/callback/watermeter/yunding";
+    private static String CALLBACK_PATH="http://rose.ih2ome.cn/api"+"/callback/watermeter/yunding";
 
     @Autowired
     private WatermeterService watermeterService;
@@ -63,14 +63,15 @@ public class YunDingCallBackController extends BaseController {
     }
 
     /**
-     * 水表抄表回调接口
+     * 水表回调接口
      * @param apiRequestVO
      * @return
      */
     @RequestMapping(value="/callback/watermeter/yunding",method = RequestMethod.POST,produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<Object> watermeterAmountAsync(@RequestBody CallbackRequestVo apiRequestVO) {
-        Log.info("水表抄表回调接口,apiRequestVO：{}",apiRequestVO.toString());
+        System.out.println(apiRequestVO.toString());
+        Log.info("水表回调接口,apiRequestVO：{}",apiRequestVO.toString());
         //校验签名
         String sign = apiRequestVO.getSign();
         /*boolean flag=checkSign(sign,apiRequestVO);
@@ -141,15 +142,17 @@ public class YunDingCallBackController extends BaseController {
         Long time = apiRequestVO.getTime();
         //抄表成功
         if(amount >= 0) {
-            //获取最近一次抄表时间
-            Timestamp timestamp=watermeterService.findWatermeterMeterUpdatedAt(apiRequestVO.getUuid());
+
             //更新或添加抄表记录
+            //获取最近一次抄表时间
+            Integer watermeterid = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
+//            Timestamp timestamp=watermeterService.findWatermeterMeterUpdatedAt(apiRequestVO.getUuid());
+            Timestamp timestamp=watermeterRecordService.findWatermeterMeterUpdatedAtByWatermeterId(watermeterid);
             Timestamp nowTime = new Timestamp(time);
 
             SmartWatermeterRecord smartWatermeterRecord=new SmartWatermeterRecord();
-            smartWatermeterRecord.setCreatedAt(new Date(time));
+            smartWatermeterRecord.setCreatedAt(nowTime);
             smartWatermeterRecord.setDeviceAmount(amount);
-            Integer watermeterid = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
             smartWatermeterRecord.setSmartWatermeterId(watermeterid);
             //判断是否为同一天
             if(isTheSameDate(timestamp,nowTime)){
@@ -159,6 +162,7 @@ public class YunDingCallBackController extends BaseController {
                 //添加抄表记录
                 watermeterRecordService.addWatermeterRecord(smartWatermeterRecord);
             }
+
             //存入数据库
             watermeterService.updataWaterLastAmount(apiRequestVO.getUuid(), amount, time);
             //查询水表在线状态
@@ -166,7 +170,7 @@ public class YunDingCallBackController extends BaseController {
             //水表状态离线
             if (onOffStatus.equals(OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode())) {
                 //水表在线
-                watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), AlarmTypeEnum.YUN_DING_WATERMETER_EXCEPTION_TYPE_ON_LINE.getCode());
+                watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), OnOffStatusEnum.ON_OFF_STATUS_ENUM_ON_Line.getCode());
                 //添加异常上线记录
                 SmartMistakeInfo watermeterMistakeInfo =new SmartMistakeInfo();
                 watermeterMistakeInfo.setCreatedAt(new Timestamp(apiRequestVO.getTime()));
@@ -186,7 +190,7 @@ public class YunDingCallBackController extends BaseController {
             //watermeterMistakeInfo.setSn(apiRequestVO.getUuid());
             gatewayService.addSmartMistakeInfo(watermeterMistakeInfo);
             //水表离线
-            watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(),AlarmTypeEnum.YUN_DING_WATERMETER_EXCEPTION_TYPE_OFF_LINE.getCode());
+            watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
         }
     }
 
@@ -243,11 +247,12 @@ public class YunDingCallBackController extends BaseController {
 
         resJson = JSONObject.parseObject(watermeterInfo);
 
-        String info = (String) resJson.get("info");
+        String info =  resJson.getString("info");
         JSONObject jsonObject = JSONObject.parseObject(info);
         int meter_type = jsonObject.getIntValue("meter_type");
         int onoff = jsonObject.getIntValue("onoff");
-        Date meter_updated_at=detail.getDate("time");
+        Long time=detail.getLong("time");
+        Date meter_updated_at=new Date(System.currentTimeMillis());
 
 
         //绑定水表及水表网关设备事件
@@ -259,7 +264,7 @@ public class YunDingCallBackController extends BaseController {
         smartWatermeter.setUpdatedAt(created_at);
         smartWatermeter.setUpdatedBy(created_by);
         smartWatermeter.setDeletedAt(created_at);
-        smartWatermeter.setDeletedBy(created_by);
+        smartWatermeter.setDeletedBy(0L);
         smartWatermeter.setApartmentId(apartmentId);
         smartWatermeter.setFloorId(floorId);
         smartWatermeter.setHouseId(houseId);
@@ -275,6 +280,7 @@ public class YunDingCallBackController extends BaseController {
 
         //创建水表
         watermeterService.createSmartWatermeter(smartWatermeter);
+        SmartGatewayBind smartGatewayBind =new SmartGatewayBind();
         //判断网关是否已存在
         int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
         if (gatewayId <= 0){
@@ -282,10 +288,10 @@ public class YunDingCallBackController extends BaseController {
             SmartGateway smartGateway = new SmartGateway();
             smartGateway.setCreatedAt(new Date(System.currentTimeMillis()));
             smartGateway.setCreatedBy(created_by);
-//            smartGateway.setUpdatedAt(created_at);
-//            smartGateway.setUpdatedBy(created_by);
-//            smartGateway.setDeletedAt(created_at);
-//            smartGateway.setDeletedBy(created_by);
+            smartGateway.setUpdatedAt(created_at);
+            smartGateway.setUpdatedBy(0L);
+            smartGateway.setDeletedAt(created_at);
+            smartGateway.setDeletedBy(0L);
             try {
                 String waterGatewayInfo = iWatermeter.getWaterGatewayInfo(apiRequestVO.getGateway_uuid());
             } catch (WatermeterException e) {
@@ -293,7 +299,7 @@ public class YunDingCallBackController extends BaseController {
             }
             resJson = JSONObject.parseObject(watermeterInfo);
 
-            String gatewayInfo = (String) resJson.get("info");
+            String gatewayInfo = resJson.getString("info");
             JSONObject gatewayJsonObject = JSONObject.parseObject(gatewayInfo);
             String manufactory = gatewayJsonObject.getString("manufactory");
             int removed = gatewayJsonObject.getIntValue("removed");
@@ -319,20 +325,22 @@ public class YunDingCallBackController extends BaseController {
             smartGateway.setOnoffStatus(gatewayOnoff);
             //smartGateway.setRemark(null);
             smartGateway.setHouseCatalog(Long.valueOf(house_catalog));
-            smartGateway.setApartmentId(Long.valueOf(gatewayHome_id));
+            smartGateway.setApartmentId(Long.valueOf(gatewayHome_id.substring(2)));
             smartGateway.setFloor(floorId);
             smartGateway.setHouseId(houseId);
-            smartGateway.setRoomId(Long.valueOf(gatewayRoom_id));
+            smartGateway.setRoomId(Long.valueOf(gatewayRoom_id.substring(2)));
 
             //添加网关
             gatewayService.addSmartGateway(smartGateway);
+            gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
         }
 
         //绑定网关
-        SmartGatewayBind smartGatewayBind =new SmartGatewayBind();
-        smartGatewayBind.setSmartDeviceType(2D);
+        smartGatewayBind.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER.getCode());
         smartGatewayBind.setSmartGatewayId(Long.valueOf(gatewayId));
-        smartGatewayBind.setSmartId((long) smartWatermeter.getSmartWatermeterId());
+        //查询水表id
+        int watermeterId=watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
+        smartGatewayBind.setSmartId((long) watermeterId);
         watermeterService.addSmartGatewayBind(smartGatewayBind);
     }
 
@@ -420,16 +428,16 @@ public class YunDingCallBackController extends BaseController {
 
     public static void main(String[] arge){
         Map<String,Object> map=new HashMap<>();
-        map.put("even","deviceInstall");
-        int time = (int) System.currentTimeMillis();
+        map.put("event","watermeterAmountAsync");
+        Long time = 1515028626190L;
         map.put("time",time);
-        map.put("uuid","454656");
-        map.put("old_uuid",45646465);
-        map.put("manufactory","cy");
-        map.put("home_id",5);
-        map.put("gateway_uuid",45);
-        map.put("room_id",23);
-        map.put("detail","");
+        map.put("uuid","00000171476818");
+        map.put("old_uuid",null);
+        map.put("manufactory","ym");
+        map.put("home_id","jz3670");
+        map.put("gateway_uuid","000000485915");
+        map.put("room_id","jz585921");
+        map.put("detail","{\"amount\":0}");
 
         System.out.println(time);
         String sign= getSign(map);

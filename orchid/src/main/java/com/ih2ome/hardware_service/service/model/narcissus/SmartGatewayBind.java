@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class SmartGatewayBind implements Serializable{
 
   private Long smartGatewayId;
-  private Double smartDeviceType;
+  private Long smartDeviceType;
   private Long smartId;
 
 }

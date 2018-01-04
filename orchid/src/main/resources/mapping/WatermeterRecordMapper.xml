@@ -33,5 +33,8 @@
 
 
 <!--查-->
-
+    <!-- 查询最后抄表时间bywatermeterId -->
+    <select id="selectWatermeterMeterUpdatedAtByWatermeterId">
+        SELECT created_at FROM <include refid="smart_watermeter_record" /> WHERE smart_watermeter_id=#{watermeterId} ORDER BY created_at DESC limit 1
+    </select>
 </mapper>

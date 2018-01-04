@@ -223,4 +223,11 @@ public interface WatermeterService {
      * @param meterAmount
      */
     void updataWatermeterMeterAmount(Integer watermeterId, Integer meterAmount);
+
+    /**
+     * 查询分散式网关详情
+     * @param smartGatewayId
+     * @return
+     */
+    WatermeterGatewayDetailVO findhmGatewaybyId(int smartGatewayId);
 }
