@@ -173,7 +173,7 @@
             resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
         SELECT
         csl.id id,
-        cslg.id getwayId,
+        cslg.id gatewayId,
         ch.area apartmentName,
         '1' type,
         cau.username authUserName,
@@ -185,7 +185,7 @@
         csl.`status` status,
         csl.remaining_battery remainingBattery,
         DATE_FORMAT(csl.install_time,'%Y.%m.%d %H:%i:%s') installTime,
-        cslg.gateway getway,
+        cslg.gateway gateway,
         nsp.`name` providerName
         FROM
         caspain_test.smart_lock csl
@@ -252,7 +252,7 @@
             resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
         SELECT
         vsl.id id,
-        vslg.id getwayId,
+        vslg.id gatewayId,
         va.`name` apartmentName,
         '0' type,
         cau.username authUserName,
@@ -264,7 +264,7 @@
         vsl.`status` status,
         vsl.remaining_battery remainingBattery,
         DATE_FORMAT(vsl.install_time,'%Y.%m.%d %H:%i:%s') installTime,
-        vslg.gateway getway,
+        vslg.gateway gateway,
         nsp.`name` providerName
         FROM
         `volga_test`.smart_lock vsl
@@ -335,7 +335,7 @@
         '%Y.%m.%d %H:%i:%s'
     ) installTime,
     csl.remark remark,
-    cslg.gateway getway,
+    cslg.gateway gateway,
     nsp.`name` providerName
     FROM
     caspain_test.smart_lock csl
@@ -359,7 +359,7 @@
         '%Y.%m.%d %H:%i:%s'
     ) installTime,
      vsl.remark remark,
-     vslg.gateway getway,
+     vslg.gateway gateway,
      nsp.`name` providerName
     FROM
         `volga_test`.smart_lock vsl

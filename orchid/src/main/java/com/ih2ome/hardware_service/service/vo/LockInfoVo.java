@@ -30,7 +30,7 @@ public class LockInfoVo implements Serializable {
     //备注
     private String remark;
     //网关编码
-    private String getway;
+    private String gateway;
     //厂商
     private String providerName;
     //质保日期（起）

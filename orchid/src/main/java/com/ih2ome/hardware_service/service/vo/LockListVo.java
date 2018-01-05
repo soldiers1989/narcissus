@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 public class LockListVo extends BaseEntity implements Serializable{
     private String id;//门锁id
-    private String getwayId;//网关id
+    private String gatewayId;//网关id
     private String apartmentName;//公寓名称
     private String apartmentType;//公寓类型
     private String authUserName;//房东手机(即用户名)
