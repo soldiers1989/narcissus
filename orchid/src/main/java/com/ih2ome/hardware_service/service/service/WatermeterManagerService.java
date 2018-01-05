@@ -80,4 +80,13 @@ public interface WatermeterManagerService {
      * @return
      */
     HomeAndRoomSyncVO synchronousHomeAndRoom(HomeAndRoomSyncVO homeAndRoomSyncVO, String type) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException;
+
+    /**
+     * 查询room是否全同步
+     * @param homeId
+     * @param sync
+     * @param type
+     * @return
+     */
+    List<HmRoomSyncVO> selectHmRoomIsAllSynchronous(int homeId, int sync, String type);
 }

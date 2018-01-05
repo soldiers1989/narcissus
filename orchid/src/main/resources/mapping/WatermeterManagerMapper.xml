@@ -463,4 +463,32 @@
         </if>
     </select>
 
+    <!--查询分散式房间是否全同步-->
+    <select id="selectHmRoomIsAllSynchronous" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+        SELECT  room.id, room.`name`,room.house_id,room.synchronous
+        FROM <include refid="room" /> AS room
+        WHERE room.house_id = #{homeId}
+        <if test="synchronous = 0">
+            AND ( synchronous=0 OR synchronous IS NULL )
+        </if>
+        <if test="synchronous = 1">
+            AND  synchronous = 1
+        </if>
+        limit 1
+    </select>
+
+    <!--查询集中式房间是否全同步-->
+    <select id="selectJzRoomIsAllSynchronous" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+        SELECT  room.id, room.`name`,room.apartment_id,room.synchronous
+        FROM <include refid="jzroom" /> AS room
+        WHERE room.apartment_id = #{homeId}
+        <if test="synchronous = 0">
+            AND ( synchronous=0 OR synchronous IS NULL )
+        </if>
+        <if test="synchronous = 1">
+            AND  synchronous = 1
+        </if>
+        limit 1
+    </select>
+
 </mapper>
