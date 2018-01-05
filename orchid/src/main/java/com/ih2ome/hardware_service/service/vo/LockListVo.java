@@ -25,7 +25,7 @@ public class LockListVo extends BaseEntity implements Serializable{
     private String status;//通讯状态
     private String remainingBattery;//电池电量
     private String installTime;//安装时间
-    private String getway;//网关编码
+    private String gateway;//网关编码
     private String providerName;//厂商
     private String provinceName;//省名
     private String cityName;//市名
