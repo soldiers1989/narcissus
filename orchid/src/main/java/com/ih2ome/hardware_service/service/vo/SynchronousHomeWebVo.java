@@ -26,5 +26,5 @@ public class SynchronousHomeWebVo implements Serializable {
     private String houseAddress;//房源地址
     private String type;//集中式或分散式
 
-    private List<HmRoomSyncVO> hmRoomSyncVOList;//room同步状态
+//    private List<HmRoomSyncVO> hmRoomSyncVOList;//room同步状态
 }

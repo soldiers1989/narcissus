@@ -207,7 +207,6 @@ public class WatermeterManagerController extends BaseController{
                 synchronousHome.setHomeName(synchronousHomeWebVoList.get(i).getHomeName());
                 synchronousHome.setSynchronous(synchronousHomeWebVoList.get(i).getSynchronous());
                 synchronousHome.setType(synchronousHomeWebVoList.get(i).getType());
-                synchronousHome.setHmRoomSyncVOList(hmRoomSyncVOList);
                 synchronizedHomeList.add(synchronousHome);
             }
 
@@ -218,7 +217,6 @@ public class WatermeterManagerController extends BaseController{
                 synchronousHome2.setHomeName(synchronousHomeWebVoList.get(i).getHomeName());
                 synchronousHome2.setSynchronous(synchronousHomeWebVoList.get(i).getSynchronous());
                 synchronousHome2.setType(synchronousHomeWebVoList.get(i).getType());
-                synchronousHome2.setHmRoomSyncVOList(hmRoomSyncVOList2);
                 outofsyncHomeList.add(synchronousHome2);
             }
         }

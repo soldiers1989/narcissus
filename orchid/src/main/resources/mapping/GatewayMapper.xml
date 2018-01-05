@@ -28,7 +28,7 @@
     <!-- 添加网关异常 -->
     <insert id="addSmartMistakeInfo" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo">
         insert into <include refid="smart_exception" />(created_at,smart_device_type,uuid,sn,exception_type)
-        values(#{createdAt},#{smartDeviceType},#{uuid},#{sn},#{exceptionType},)
+        values(#{createdAt},#{smartDeviceType},#{uuid},#{sn},#{exceptionType})
     </insert>
 <!-- 改 -->
     <!-- 更新网关uuid -->
