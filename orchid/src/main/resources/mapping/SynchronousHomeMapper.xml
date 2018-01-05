@@ -58,7 +58,7 @@
     <update id="updataRoomSyncByRoomId"  >
         UPDATE <include refid="jzroom" /> SET synchronous=#{roomSync} WHERE id IN
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >
-            #{item.room_id}
+            #{item}
         </foreach>
     </update>
 
@@ -80,11 +80,11 @@
         UPDATE <include refid="house" /> SET synchronous=#{homeSync} WHERE id = #{houseId}
     </update>
 
-    <!-- 更新集中式room为已同步byApartmentId -->
+    <!-- 更新分散式room为已同步byApartmentId -->
     <update id="updataHmRoomSyncByRoomId"  >
         UPDATE <include refid="room" /> SET synchronous=#{roomSync} WHERE id IN
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >
-            #{item.room_id}
+            #{item}
         </foreach>
     </update>
 
