@@ -74,10 +74,10 @@ public class YunDingCallBackController extends BaseController {
         Log.info("水表回调接口,apiRequestVO：{}",apiRequestVO.toString());
         //校验签名
         String sign = apiRequestVO.getSign();
-       /* boolean flag=checkSign(sign,apiRequestVO);
+        boolean flag=checkSign(sign,apiRequestVO);
         if(!flag){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
-        }*/
+        }
         String event = apiRequestVO.getEvent();
         IWatermeter iWatermeter = getIWatermeter();
         switch (event){
@@ -393,7 +393,7 @@ public class YunDingCallBackController extends BaseController {
         map.put("home_id",apiRequestVO.getHome_id());
         map.put("gateway_uuid",apiRequestVO.getGateway_uuid());
         map.put("room_id",apiRequestVO.getRoom_id());
-        map.put("detail",apiRequestVO.getDetail());
+        map.put("detail",apiRequestVO.getDetail().toString());
 
         String sign1 = getSign(map);
         return sign.equals(sign1);
