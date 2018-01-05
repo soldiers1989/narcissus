@@ -105,17 +105,7 @@ public class YunDingCallBackController extends BaseController {
                 break;
              //水表网关离线事件
             case "waterGatewayOfflineAlarm" :
-                //添加网关异常
-                SmartMistakeInfo smartMistakeInfo =new SmartMistakeInfo();
-
-                smartMistakeInfo.setCreatedAt(new Timestamp(apiRequestVO.getTime()));
-                smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER_GATEWAY.getCode());
-                smartMistakeInfo.setExceptionType(String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_OFF_LINE.getCode()));
-                smartMistakeInfo.setUuid(apiRequestVO.getUuid());
-                smartMistakeInfo.setSn(apiRequestVO.getUuid());
-                gatewayService.addSmartMistakeInfo(smartMistakeInfo);
-                //更改网关在线状态
-                gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
+                waterGatewayOnOfflineAlarm(apiRequestVO);
                 break;
             //水表网关在线事件
             case "waterGatewayOnlineAlarm" :
@@ -128,6 +118,27 @@ public class YunDingCallBackController extends BaseController {
                 break;
         }
         return ResponseEntity.ok().body("ok");
+    }
+
+    /**
+     * 水表网关离线上线事件
+     * @param apiRequestVO
+     */
+    private void waterGatewayOnOfflineAlarm(CallbackRequestVo apiRequestVO) {
+        //添加网关异常
+        SmartMistakeInfo smartMistakeInfo =new SmartMistakeInfo();
+        smartMistakeInfo.setCreatedAt(new Timestamp(apiRequestVO.getTime()));
+        smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER_GATEWAY.getCode());
+        smartMistakeInfo.setExceptionType(String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_OFF_LINE.getCode()));
+        smartMistakeInfo.setUuid(apiRequestVO.getUuid());
+        smartMistakeInfo.setSn(apiRequestVO.getUuid());
+        gatewayService.addSmartMistakeInfo(smartMistakeInfo);
+        //更改网关在线状态
+        gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
+
+        //添加水表异常
+        //查询水表id
+        //List<Integer> watermeterIds = watermeterService.findWatermeterIdByGatewayUuid(apiRequestVO.getUuid());
     }
 
     /**
