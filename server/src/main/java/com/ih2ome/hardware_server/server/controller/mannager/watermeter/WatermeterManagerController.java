@@ -199,19 +199,28 @@ public class WatermeterManagerController extends BaseController{
         List<SynchronousHomeWebVo> outofsyncHomeList =new ArrayList<>();
         //已同步的房源
         List<SynchronousHomeWebVo> synchronizedHomeList =new ArrayList<>();
-        for (SynchronousHomeWebVo synchronousHomeWebVo1:synchronousHomeWebVoList) {
-            List<HmRoomSyncVO> hmRoomSyncVOList = watermeterManagerService.findRoomSynchronousStatus(Integer.parseInt(synchronousHomeWebVo1.getHomeId()),1,synchronousHomeWebVo1.getType());
-            if (hmRoomSyncVOList.size()>0){
-                synchronousHomeWebVo1.setHmRoomSyncVOList(hmRoomSyncVOList);
-                synchronizedHomeList.add(synchronousHomeWebVo1);
-            }
-            //synchronousHomeWebVo1.setHmRoomSyncVOList(null);
-            List<HmRoomSyncVO> hmRoomSyncVOList2 = watermeterManagerService.findRoomSynchronousStatus(Integer.parseInt(synchronousHomeWebVo1.getHomeId()),0,synchronousHomeWebVo1.getType());
-            if (hmRoomSyncVOList2.size()>0){
-                synchronousHomeWebVo1.setHmRoomSyncVOList(hmRoomSyncVOList2);
-                outofsyncHomeList.add(synchronousHomeWebVo1);
+        for (int i=0;i<synchronousHomeWebVoList.size();i++) {
+            List<HmRoomSyncVO> hmRoomSyncVOList = watermeterManagerService.findRoomSynchronousStatus(Integer.parseInt(synchronousHomeWebVoList.get(i).getHomeId()), 1, synchronousHomeWebVoList.get(i).getType());
+            if (hmRoomSyncVOList.size() > 0) {
+                SynchronousHomeWebVo synchronousHome = new SynchronousHomeWebVo();
+                synchronousHome.setHomeId(synchronousHomeWebVoList.get(i).getHomeId());
+                synchronousHome.setHomeName(synchronousHomeWebVoList.get(i).getHomeName());
+                synchronousHome.setSynchronous(synchronousHomeWebVoList.get(i).getSynchronous());
+                synchronousHome.setType(synchronousHomeWebVoList.get(i).getType());
+                synchronousHome.setHmRoomSyncVOList(hmRoomSyncVOList);
+                synchronizedHomeList.add(synchronousHome);
             }
 
+            List<HmRoomSyncVO> hmRoomSyncVOList2 = watermeterManagerService.findRoomSynchronousStatus(Integer.parseInt(synchronousHomeWebVoList.get(i).getHomeId()),0,synchronousHomeWebVoList.get(i).getType());
+            if (hmRoomSyncVOList2.size()>0){
+                SynchronousHomeWebVo synchronousHome2 = new SynchronousHomeWebVo();
+                synchronousHome2.setHomeId(synchronousHomeWebVoList.get(i).getHomeId());
+                synchronousHome2.setHomeName(synchronousHomeWebVoList.get(i).getHomeName());
+                synchronousHome2.setSynchronous(synchronousHomeWebVoList.get(i).getSynchronous());
+                synchronousHome2.setType(synchronousHomeWebVoList.get(i).getType());
+                synchronousHome2.setHmRoomSyncVOList(hmRoomSyncVOList2);
+                outofsyncHomeList.add(synchronousHome2);
+            }
         }
         JSONObject responseJson = new JSONObject();
         responseJson.put("outofsyncHomeList",outofsyncHomeList);
