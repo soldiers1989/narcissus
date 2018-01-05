@@ -275,6 +275,7 @@ public class SmartLockController extends BaseController {
         LockOpenRecordVO lockOpenRecord = JSONObject.parseObject(resData.toString(), LockOpenRecordVO.class);
         JSONObject responseJson = new JSONObject();
         List<LockOpenRecordVO> lockOpenRecords = null;
+        lockOpenRecords=lockManagerService.getLockOpenRecords(lockOpenRecord);
         PageInfo<LockOpenRecordVO> pageInfo = new PageInfo<>(lockOpenRecords);
         responseJson.put("lockOpenRecords", pageInfo);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
