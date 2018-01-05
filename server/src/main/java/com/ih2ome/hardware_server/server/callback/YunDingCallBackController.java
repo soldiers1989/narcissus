@@ -421,7 +421,6 @@ public class YunDingCallBackController extends BaseController {
         }
         String stringA=str.substring(0,str.length()-1);
         String stringSignTemp=CALLBACK_PATH + stringA;
-        System.out.println(stringSignTemp);
         String sign= DigestUtils.md5DigestAsHex(stringSignTemp.getBytes());
         return sign;
     }
