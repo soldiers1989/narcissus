@@ -17,10 +17,42 @@
         <encoder>
             <pattern>
                 <!-- 设置日志输出格式 -->
-                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n
+                %highlight{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n
             </pattern>
         </encoder>
     </appender>
+
+    <appender name="peony" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_peony.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="hardware_service" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_hardware_service.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="hardware_server" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_hardware_server.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="dao" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_dao_sql.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="http" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_dir}/%d{yyyy-MM-dd}/%d{yyyy-MM-dd}_http.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- root级别 DEBUG -->
     <root>
         <!-- 打印debug级别日志及以上级别日志 -->
@@ -29,110 +61,25 @@
         <appender-ref ref="console"/>
     </root>
 
-
-    <!-- com.ih2ome -->
-    <!-- peony -->
-    <appender name="peony" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/peony/%d{yyyy-MM-dd}_peony.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <logger name="com.ih2ome.peony" level="DEBUG" additivity="false">
+    <logger name="com.ih2ome.peony" level="INFO" additivity="false">
         <appender-ref ref="peony"/>
-        <!-- <appender-ref ref="console"/> -->
+        <appender-ref ref="console"/>
     </logger>
-
-    <!-- service -->
-    <appender name="hardware_service" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/hardware_service/%d{yyyy-MM-dd}_hardware_service.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <logger name="com.ih2ome.hardware_service" level="DEBUG" additivity="false">
+    <logger name="com.ih2ome.hardware_service" level="INFO" additivity="false">
         <appender-ref ref="hardware_service"/>
-        <!-- <appender-ref ref="console"/> -->
+        <appender-ref ref="console"/>
     </logger>
-
-    <!-- server -->
-    <appender name="hardware_server" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/hardware_server/%d{yyyy-MM-dd}_hardware_server.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <logger name="com.ih2ome.hardware_server" level="DEBUG" additivity="false">
+    <logger name="com.ih2ome.hardware_server" level="INFO" additivity="false">
         <appender-ref ref="hardware_server"/>
-        <!-- <appender-ref ref="console"/> -->
+        <appender-ref ref="console"/>
     </logger>
-
-    <!-- dao -->
-    <appender name="dao" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/dao_sql/%d{yyyy-MM-dd}_dao_sql.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
     <logger name="com.ih2ome.hardware_service.service.dao" level="DEBUG" additivity="false">
         <appender-ref ref="dao"/>
-        <!-- <appender-ref ref="console"/> -->
+        <appender-ref ref="console"/>
     </logger>
-
-
-    <!-- thirdpatry -->
-    <!-- com.alibaba.druid -->
-    <appender name="druid" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/druid/%d{yyyy-MM-dd}_druid.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <logger name="com.alibaba.druid" level="DEBUG" additivity="false">
-        <appender-ref ref="druid"/>
-    </logger>
-    <logger name="druid.sql" level="DEBUG" additivity="false">
-        <appender-ref ref="druid"/>
-    </logger>
-
-    <!-- org.apache.http -->
-    <appender name="http" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/http/%d{yyyy-MM-dd}_http.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
     <logger name="org.apache.http" level="DEBUG" additivity="false">
         <appender-ref ref="http"/>
+        <appender-ref ref="console"/>
     </logger>
-
-    <!-- org.mybatis -->
-    <appender name="mybatis" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/mybatis/%d{yyyy-MM-dd}_mybatis.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <logger name="org.mybatis" level="DEBUG" additivity="false">
-        <appender-ref ref="mybatis"/>
-    </logger>
-    <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
-        <appender-ref ref="mybatis"/>
-    </logger>
-    <logger name="org.mybatis" level="DEBUG" additivity="false">
-        <appender-ref ref="mybatis"/>
-    </logger>
-
-    <!-- org.springframework -->
-    <appender name="springframework" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/springframework/%d{yyyy-MM-dd}_springframework.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <logger name="org.springframework" level="DEBUG" additivity="false">
-        <appender-ref ref="springframework"/>
-    </logger>
-
 
 </configuration>
