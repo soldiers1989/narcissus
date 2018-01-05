@@ -442,10 +442,10 @@
         SELECT  room.id, room.`name`,room.house_id,room.synchronous
         FROM <include refid="room" /> AS room
         WHERE room.house_id = #{homeId}
-        <if test="synchronous = 0">
+        <if test="synchronous == 0">
             AND ( synchronous=0 OR synchronous IS NULL )
         </if>
-        <if test="synchronous = 1">
+        <if test="synchronous == 1">
             AND  synchronous = 1
         </if>
     </select>
@@ -468,10 +468,10 @@
         SELECT  room.id, room.`name`,room.house_id,room.synchronous
         FROM <include refid="room" /> AS room
         WHERE room.house_id = #{homeId}
-        <if test="synchronous = 0">
+        <if test="synchronous == 0">
             AND ( synchronous=0 OR synchronous IS NULL )
         </if>
-        <if test="synchronous = 1">
+        <if test="synchronous == 1">
             AND  synchronous = 1
         </if>
         limit 1
@@ -482,10 +482,10 @@
         SELECT  room.id, room.`name`,room.apartment_id,room.synchronous
         FROM <include refid="jzroom" /> AS room
         WHERE room.apartment_id = #{homeId}
-        <if test="synchronous = 0">
+        <if test="synchronous == 0">
             AND ( synchronous=0 OR synchronous IS NULL )
         </if>
-        <if test="synchronous = 1">
+        <if test="synchronous == 1">
             AND  synchronous = 1
         </if>
         limit 1
