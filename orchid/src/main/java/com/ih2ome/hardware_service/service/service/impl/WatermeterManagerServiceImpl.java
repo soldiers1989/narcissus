@@ -266,5 +266,25 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
         return null;
     }
 
+    /**
+     * 查询room是否全同步
+     * @param homeId
+     * @param sync
+     * @param type
+     * @return
+     */
+    @Override
+    public List<HmRoomSyncVO> selectHmRoomIsAllSynchronous(int homeId, int sync, String type) {
+        //分散式
+        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+            return watermeterManagerMapper.selectHmRoomIsAllSynchronous(homeId,sync);
+        } else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+            //集中式
+            return watermeterManagerMapper.selectJzRoomIsAllSynchronous(homeId,sync);
+        }else{
+            return null;
+        }
+    }
+
 
 }

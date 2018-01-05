@@ -200,7 +200,7 @@ public class WatermeterManagerController extends BaseController{
         //已同步的房源
         List<SynchronousHomeWebVo> synchronizedHomeList =new ArrayList<>();
         for (int i=0;i<synchronousHomeWebVoList.size();i++) {
-            List<HmRoomSyncVO> hmRoomSyncVOList = watermeterManagerService.findRoomSynchronousStatus(Integer.parseInt(synchronousHomeWebVoList.get(i).getHomeId()), 1, synchronousHomeWebVoList.get(i).getType());
+            List<HmRoomSyncVO> hmRoomSyncVOList = watermeterManagerService.selectHmRoomIsAllSynchronous(Integer.parseInt(synchronousHomeWebVoList.get(i).getHomeId()), 1, synchronousHomeWebVoList.get(i).getType());
             if (hmRoomSyncVOList.size() > 0) {
                 SynchronousHomeWebVo synchronousHome = new SynchronousHomeWebVo();
                 synchronousHome.setHomeId(synchronousHomeWebVoList.get(i).getHomeId());
@@ -210,7 +210,7 @@ public class WatermeterManagerController extends BaseController{
                 synchronizedHomeList.add(synchronousHome);
             }
 
-            List<HmRoomSyncVO> hmRoomSyncVOList2 = watermeterManagerService.findRoomSynchronousStatus(Integer.parseInt(synchronousHomeWebVoList.get(i).getHomeId()),0,synchronousHomeWebVoList.get(i).getType());
+            List<HmRoomSyncVO> hmRoomSyncVOList2 = watermeterManagerService.selectHmRoomIsAllSynchronous(Integer.parseInt(synchronousHomeWebVoList.get(i).getHomeId()),0,synchronousHomeWebVoList.get(i).getType());
             if (hmRoomSyncVOList2.size()>0){
                 SynchronousHomeWebVo synchronousHome2 = new SynchronousHomeWebVo();
                 synchronousHome2.setHomeId(synchronousHomeWebVoList.get(i).getHomeId());
