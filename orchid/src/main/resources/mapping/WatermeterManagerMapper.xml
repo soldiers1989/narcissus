@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.WatermeterManagerMapper">
+    <!-- 数据库表名 -->
+    <sql id="smart_watermeter">narcissus_test.smart_watermeter</sql>
+    <sql id="smart_gateway_bind">narcissus_test.smart_gateway_bind</sql>
+    <sql id="smart_gateway">narcissus_test.smart_gateway</sql>
+    <sql id="smart_watermeter_record">narcissus_test.smart_watermeter_record</sql>
+    <sql id="smart_exception">narcissus_test.smart_mistake_info</sql>
+    <sql id="house">caspain_test.house</sql>
+    <sql id="room">caspain_test.room</sql>
+    <sql id="room_contract">caspain_test.room_contract</sql>
+    <sql id="apartment">volga_test.apartment</sql>
+    <sql id="floor">volga_test.floor</sql>
+    <sql id="jzroom">volga_test.room</sql>
+    <sql id="jzroom_contract">volga_test.room_contract</sql>
+    <sql id="jz_area">volga_test.area</sql>
+    <sql id="area">caspain_test.area</sql>
+    <sql id="auth_user">caspain_test.auth_user</sql>
+
+    <!--配置resultMap -->
+    <!--!分散式水表列表VO-->
+    <resultMap type="com.ih2ome.hardware_service.service.vo.HMWatermeterListVO" id="hmWatermeterListResultMap" autoMapping="true">
+        <id column="room_id" property="roomId" />
+
+        <collection property="watermeterDetailVOS" javaType="List"
+                    ofType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" autoMapping="true">
+            <id column="smart_watermeter_id" property="smartWatermeterId" />
+        </collection>
+    </resultMap>
+
+    <!--集中式水表列表VO-->
+    <resultMap type="com.ih2ome.hardware_service.service.vo.JZWatermeterDetailVO" id="jzWatermeterListResultMap" autoMapping="true">
+        <id column="room_id" property="roomId" />
+
+        <collection property="watermeterDetailVOS" javaType="List"
+                    ofType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" autoMapping="true">
+            <id column="smart_watermeter_id" property="smartWatermeterId" />
+        </collection>
+    </resultMap>
+
+    <!--网关详情VO-->
+    <resultMap type="com.ih2ome.hardware_service.service.vo.GatewayWebDetailVO" id="GatewayDetailResultMap" autoMapping="true">
+        <id column="smart_gateway_id" property="smartGatewayId" />
+    </resultMap>
+
+
+
+<!--查-->
+    <!--查询集中式web水表list-->
+    <!-- 条件：公寓id，水表uuid，房东手机号（username），租客姓名，租客电话， -->
+    <select id="findJzWatermeterWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo" resultType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo">
+        SELECT
+        watermeter.smart_watermeter_id watermeter_id,
+        gateway.smart_gateway_id AS gateway_id,
+        va.`name` apartmentName,
+        cau.username authUserName,
+        va.address houseAddress,
+        vr.`name` roomNo,
+        vrc.customer_name customerName,
+        vrc.customer_phone customerPhone,
+        watermeter.uuid deviceName,
+        watermeter.onoff_status communicationStatus,
+        (watermeter.last_amount - watermeter.meter_amount) amount,
+        gateway.uuid,
+        '0' `type`
+        FROM
+        <include refid="smart_watermeter" /> watermeter left join
+        <include refid="jzroom" /> vr on watermeter.room_id=vr.id LEFT JOIN
+        <include refid="apartment" /> va on vr.apartment_id=va.id LEFT JOIN
+        <include refid="jzroom_contract" /> vrc on vrc.room_id=vr.id
+        LEFT JOIN <include refid="jz_area" /> varea on va.area=varea.id
+        LEFT JOIN <include refid="auth_user" /> cau on vrc.created_by = cau.id
+        LEFT JOIN <include refid="smart_gateway_bind" /> gateway_bind ON gateway_bind.smart_id=watermeter.smart_watermeter_id
+        LEFT JOIN <include refid="smart_gateway" /> gateway ON gateway.smart_gateway_id=gateway_bind.smart_gateway_id
+        WHERE
+        1 = 1
+        AND (va.is_delete != '1' or va.is_delete is null)
+        AND (vr.is_delete != '1' or vr.is_delete is null)
+        AND (vrc.is_delete != '1' or vrc.is_delete is  null)
+        AND watermeter.house_catalog = 2
+        <if test="apartmentName != '' and apartmentName != null">
+            AND va.`name` LIKE '%${apartmentName}%'
+        </if>
+        <if test="deviceName != '' and deviceName != null">
+            AND watermeter.uuid LIKE '%${deviceName}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND vrc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND vrc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND va.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND va.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND va.area LIKE '%${areaName}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND watermeter.onoff_status LIKE '%${communicationStatus}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+    </select>
+
+    <!--查询分散式web水表list-->
+    <!-- 条件：公寓id，水表uuid，房东手机号（username），租客姓名，租客电话， -->
+    <select id="findHmWatermeterWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo" resultType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo">
+        SELECT
+        watermeter.smart_watermeter_id watermeterId,
+        gateway.smart_gateway_id AS gateway_id,
+        va.area apartmentName,
+        cau.username authUserName,
+        va.address houseAddress,
+        vr.`name` roomNo,
+        vrc.customer_name customerName,
+        vrc.customer_phone customerPhone,
+        watermeter.uuid deviceName,
+        watermeter.onoff_status communicationStatus,
+        (watermeter.last_amount - watermeter.meter_amount) amount,
+        gateway.uuid,
+        '1' `type`
+        FROM
+        <include refid="smart_watermeter" /> watermeter left join
+        <include refid="room" /> vr on watermeter.room_id=vr.id LEFT JOIN
+        <include refid="house" /> va on vr.house_id=va.id LEFT JOIN
+        <include refid="room_contract" /> vrc on vrc.room_id=vr.id
+        LEFT JOIN <include refid="area" /> varea on va.area=varea.id
+        LEFT JOIN <include refid="auth_user" /> cau on watermeter.created_by = cau.id
+        LEFT JOIN <include refid="smart_gateway_bind" /> gateway_bind ON gateway_bind.smart_id=watermeter.smart_watermeter_id
+        LEFT JOIN <include refid="smart_gateway" /> gateway ON gateway.smart_gateway_id=gateway_bind.smart_gateway_id
+        WHERE
+        1 = 1
+        AND (va.is_delete != '1' or va.is_delete is null)
+        AND (vr.is_delete != '1' or vr.is_delete is null)
+        AND (vrc.is_delete != '1' or vrc.is_delete is  null)
+        AND watermeter.house_catalog = 1
+        <if test="apartmentName != '' and apartmentName != null">
+            AND va.`area` LIKE '%${apartmentName}%'
+        </if>
+        <if test="deviceName != '' and deviceName != null">
+            AND watermeter.uuid LIKE '%${deviceName}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND vrc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND vrc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND va.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND va.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND va.area LIKE '%${areaName}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND watermeter.onoff_status LIKE '%${communicationStatus}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+    </select>
+
+    <!-- 查询分散式水表详情byuuid -->
+    <select id="selectHmWatermeterDetailByUuid" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
+        SELECT w.uuid,CONCAT(h.area,h.building_num,unit_num) AS home_name,h.floor_num AS floor_name,h.house_num AS room_name,w.meter_type,w.created_at,w.meter_updated_at,(w.last_amount-w.meter_amount) AS amount,w.onoff_status,g.uuid AS gateway_uuid
+        FROM
+        <include refid="smart_watermeter" /> AS w
+        INNER JOIN
+        <include refid="smart_gateway_bind" /> AS gb
+        ON w.smart_watermeter_id = gb.smart_id
+		INNER JOIN
+        <include refid="smart_gateway" /> AS g
+		ON g.smart_gateway_id=gb.smart_gateway_id
+        INNER JOIN
+        <include refid="house" /> AS h
+        ON w.house_id= h.id
+        INNER JOIN
+        <include refid="room" /> AS r
+        ON  w.room_id= r.id AND h.id=r.house_id
+		WHERE w.uuid=#{uuid}
+    </select>
+
+ <!-- 查询集中式水表详情byuuid -->
+    <select id="selectJzWatermeterDetailByUuid" resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
+        SELECT
+        w.uuid,
+        a.`name` AS house_name,
+        f.`name` AS floor_name,
+        r.`name` AS room_name,
+        w.meter_type,
+        w.created_at,
+        w.meter_updated_at,
+        w.last_amount,
+        w.meter_amount,
+        w.onoff_status,
+        g.uuid AS gateway_uuid
+        FROM
+        <include refid="smart_watermeter" /> AS w
+        Left JOIN <include refid="smart_gateway_bind" /> AS gb ON w.smart_watermeter_id = gb.smart_id
+        Left JOIN <include refid="smart_gateway" /> AS g ON g.smart_gateway_id = gb.smart_gateway_id
+        Left JOIN <include refid="apartment" /> AS a ON w.apartment_id = a.id
+        Left JOIN <include refid="floor" /> AS f ON w.floor_id=f.id
+        Left JOIN <include refid="jzroom" /> AS r ON  w.room_id=r.id
+        AND a.id = r.apartment_id
+        WHERE w.uuid=#{uuid}
+    </select>
+
+    <!--查询水表抄表记录by水表id-->
+    <select id="selectWatermeterRecordByWatermeterIdAndTime" resultType="com.ih2ome.hardware_service.service.vo.WatermeterRecordManagerVO">
+        SELECT
+        wr.created_at,
+        wr.device_amount,
+        wr.smart_watermeter_id
+        FROM
+        <include refid="smart_watermeter_record"/>  wr
+        WHERE
+        smart_watermeter_id = #{smartWatermeterId}
+        AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
+    </select>
+
+    <!--查询分散式web网关list-->
+    <!-- 条件：公寓id，网关uuid，房东手机号（username），租客姓名，租客电话， -->
+    <select id="findHmGatewayWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.GatewayWebListVo" resultType="com.ih2ome.hardware_service.service.vo.GatewayWebListVo">
+        SELECT
+        gateway.smart_gateway_id smartGatewayId,
+        house.area apartmentName,
+        auth_user.username authUserName,
+        house.address houseAddress,
+        room.`name` roomNo,
+        gateway.operator,
+        gateway.uuid,
+        gateway.onoff_status communicationStatus,
+        gateway.updated_at ,
+        gateway.install_time,
+        '1' `type`
+        FROM
+        <include refid="smart_gateway" /> AS gateway
+        LEFT JOIN <include refid="room" /> room ON gateway.room_id = room.id
+        LEFT JOIN <include refid="house" /> house ON gateway.house_id = house.id
+        LEFT JOIN <include refid="room_contract" /> room_contract ON room_contract.room_id = room.id
+        LEFT JOIN <include refid="auth_user" /> auth_user ON auth_user.id = gateway.created_by
+        WHERE
+        1 = 1
+        AND gateway.house_catalog = 1
+        AND (house.is_delete != '1' or house.is_delete is null)
+        AND (room.is_delete != '1' or room.is_delete is null)
+        AND (room_contract.is_delete != '1' or room_contract.is_delete is  null)
+        <if test="apartmentName != '' and apartmentName != null">
+            AND house.`name` LIKE '%${apartmentName}%'
+        </if>
+        <if test="gatewayUuid != '' and gatewayUuid != null">
+            AND gateway.uuid LIKE '%${gatewayUuid}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND house.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND house.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND house.area LIKE '%${areaName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND gateway.onoff_status LIKE '%${communicationStatus}%'
+        </if>
+    </select>
+
+    <!--查询集中式web网关list-->
+    <!-- 条件：公寓id，网关uuid，地址，房东手机号（username） -->
+    <select id="findJzGatewayWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.GatewayWebListVo" resultType="com.ih2ome.hardware_service.service.vo.GatewayWebListVo">
+        SELECT
+        gateway.smart_gateway_id smartGatewayId,
+        apartment.`name` apartmentName,
+        auth_user.username authUserName,
+        apartment.address houseAddress,
+        room.`name` roomNo,
+        gateway.operator,
+        gateway.uuid,
+        gateway.onoff_status communicationStatus,
+        gateway.updated_at,
+        gateway.install_time,
+        '0' `type`
+        FROM
+        <include refid="smart_gateway" /> AS gateway
+        LEFT JOIN <include refid="jzroom" /> room ON gateway.room_id = room.id
+        LEFT JOIN <include refid="apartment" /> apartment ON gateway.apartment_id = apartment.id
+        LEFT JOIN <include refid="jzroom_contract" /> room_contract ON room_contract.room_id = room.id
+        LEFT JOIN <include refid="auth_user" /> auth_user ON auth_user.id = gateway.created_by
+        WHERE
+        1 = 1
+        AND gateway.house_catalog = 2
+        AND (apartment.is_delete != '1' or apartment.is_delete is null)
+        AND (room.is_delete != '1' or room.is_delete is null)
+        AND (room_contract.is_delete != '1' or room_contract.is_delete is  null)
+        <if test="apartmentName != '' and apartmentName != null">
+            AND house.`area` LIKE '%${apartmentName}%'
+        </if>
+        <if test="gatewayUuid != '' and gatewayUuid != null">
+            AND gateway.uuid LIKE '%${gatewayUuid}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND house.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND house.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND house.area LIKE '%${areaName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND gateway.onoff_status LIKE '%${communicationStatus}%'
+        </if>
+    </select>
+
+    <!--查询分散式网关详情by网关id-->
+    <select id="selectHmGatewayDetailbyGatewayId" resultMap="GatewayDetailResultMap">
+        SELECT
+          gateway.uuid,apartment.address AS install_adress,gateway.onoff_status,gateway.updated_at,gateway.created_at,gateway.brand
+        FROM
+        <include refid="smart_gateway" /> AS gateway
+        LEFT JOIN <include refid="house" /> AS house ON gateway.house_id = house.id
+        WHERE gateway.smart_gateway_id=#{gatewayId}
+    </select>
+
+    <!--查询集中式网关详情by网关id-->
+    <select id="selectJzGatewayDetailbyGatewayId" resultMap="GatewayDetailResultMap">
+        SELECT
+            gateway.uuid,apartment.address AS install_adress,gateway.onoff_status,gateway.updated_at,gateway.created_at,gateway.brand
+        FROM
+        <include refid="smart_gateway" /> AS gateway
+        LEFT JOIN <include refid="apartment" /> AS apartment ON gateway.apartment_id = apartment.id
+        WHERE gateway.smart_gateway_id=#{gatewayId}
+    </select>
+
+    <!--查询分散式网关详情下的水表listby网关id-->
+    <select id="selectHmGatewayWatermeterListByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.GatewayWatermeterWebListVO">
+        SELECT
+        watermeter.uuid AS watermeter_uuid,room. NAME AS room_name
+        FROM
+        <include refid="smart_watermeter" /> AS watermeter
+        LEFT JOIN <include refid="smart_gateway_bind" /> AS gaterway_bind ON watermeter.smart_watermeter_id = gaterway_bind.smart_id
+        LEFT JOIN <include refid="room" /> AS room ON room.id = watermeter.room_id
+        WHERE
+        gaterway_bind.smart_gateway_id = #{gatewayId}
+    </select>
+
+    <!--查询集中式网关详情下的水表listby网关id-->
+    <select id="selectJzGatewayWatermeterListByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.GatewayWatermeterWebListVO">
+        SELECT
+        watermeter.uuid AS watermeter_uuid,room. NAME AS room_name
+        FROM
+        <include refid="smart_watermeter" /> AS watermeter
+        LEFT JOIN <include refid="smart_gateway_bind" /> AS gaterway_bind ON watermeter.smart_watermeter_id = gaterway_bind.smart_id
+        LEFT JOIN <include refid="jzroom" /> AS room ON room.id = watermeter.room_id
+        WHERE
+        gaterway_bind.smart_gateway_id = #{gatewayId}
+    </select>
+
+    <!--查询分散式房源同步状态-->
+    <select id="selectHmHomeSynchronousStatus" parameterType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
+        SELECT
+        house.id AS home_id,
+        house.area AS home_Name,
+        house.synchronous,
+        '1' `type`
+        FROM
+        <include refid="house" /> house
+        LEFT JOIN  <include refid="auth_user" /> AS auth_user ON house.created_by_id = auth_user.id
+        WHERE
+        1 = 1
+        AND (
+        house.is_delete != '1'
+        OR house.is_delete IS NULL
+        )
+        <if test="homeName != '' and homeName != null">
+            AND house.`area` LIKE '%${homeName}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND house.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND house.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND house.area LIKE '%${areaName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND auth_user.username LIKE '%${authUserName}%'
+        </if>
+    </select>
+
+    <!--查询集中式房源同步状态-->
+    <select id="selectJzHomeSynchronousStatus" parameterType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
+        SELECT
+        apartment.id AS home_id,
+        apartment.name AS home_Name,
+        apartment.synchronous,
+        '0' `type`
+        FROM
+        <include refid="apartment" /> apartment
+        LEFT JOIN  <include refid="auth_user" /> AS auth_user ON apartment.created_by= auth_user.id
+        WHERE
+        1 = 1
+        AND (
+        apartment.is_delete != '1'
+        OR apartment.is_delete IS NULL
+        )
+        <if test="homeName != '' and homeName != null">
+            AND apartment.`name` LIKE '%${homeName}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND apartment.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND apartment.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND apartment.area LIKE '%${areaName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND auth_user.username LIKE '%${authUserName}%'
+        </if>
+    </select>
+
+    <!--查询分散式房间同步状态-->
+    <select id="selectHmRoomSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+        SELECT  room.id, room.`name`,room.house_id,room.synchronous
+        FROM <include refid="room" /> AS room
+        WHERE room.house_id = #{homeId}
+        <if test="synchronous = 0">
+            AND ( synchronous=0 OR synchronous IS NULL )
+        </if>
+        <if test="synchronous = 1">
+            AND  synchronous = 1
+        </if>
+    </select>
+
+    <!--查询集中式房间同步状态-->
+    <select id="selectJzRoomSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+        SELECT  room.id, room.`name`,room.apartment_id AS house_id,room.synchronous
+        FROM <include refid="jzroom" /> AS room
+        WHERE room.apartment_id = #{homeId}
+        <if test="synchronous == 0">
+            AND ( synchronous=0 OR synchronous IS NULL )
+        </if>
+        <if test="synchronous == 1">
+            AND  synchronous = 1
+        </if>
+    </select>
+
+</mapper>

@@ -15,10 +15,7 @@ import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/watermeter")
+@CrossOrigin
 public class SynchronousHomeController  extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
@@ -38,7 +36,7 @@ public class SynchronousHomeController  extends BaseController {
 
 
     /**
-     * 集中式同步房源整栋
+     * 集中式同步房源整栋 B3
      * @param apiRequestVO
      * @return
      */
@@ -83,7 +81,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 同步房源一层一层同步
+     * 同步房源一层一层同步 B4-2
      * @param apiRequestVO
      * @return
      */
@@ -128,7 +126,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 查询集中式房源s同步状态
+     * 查询集中式房源s同步状态 B3-1
      * @param apiRequestVO
      * @return
      */
@@ -149,7 +147,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 查询集中式房源floors同步状态
+     * 查询集中式房源floors同步状态 B4-1
      * @param apiRequestVO
      * @return
      */
@@ -234,7 +232,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 分散式用户房源
+     * 分散式用户房源 D3
      * @param apiRequestVO
      * @return
      */
@@ -252,7 +250,7 @@ public class SynchronousHomeController  extends BaseController {
     }
 
     /**
-     * 分散式用户房源同步
+     * 分散式用户房源同步 D10
      * @param apiRequestVO
      * @return
      */

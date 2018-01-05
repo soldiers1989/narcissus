@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Common">
+    <!-- 数据库表名 -->
+    <sql id="smart_watermeter">narcissus_test.smart_watermeter</sql>
+    <sql id="smart_gateway_bind">narcissus_test.smart_gateway_bind</sql>
+    <sql id="smart_gateway">narcissus_test.smart_gateway</sql>
+    <sql id="smart_watermeter_record">narcissus_test.smart_watermeter_record</sql>
+    <sql id="smart_mistake">narcissus_test.smart_mistake_info</sql>
+    <sql id="house">caspain_test.house</sql>
+    <sql id="room">caspain_test.room</sql>
+    <sql id="apartment">volga_test.apartment</sql>
+    <sql id="floor">volga_test.floor</sql>
+    <sql id="jzroom">volga_test.room</sql>
+
+</mapper>

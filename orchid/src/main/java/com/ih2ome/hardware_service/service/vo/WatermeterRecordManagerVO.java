@@ -9,9 +9,19 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class ExceptionVO extends BaseEntity implements Serializable{
+public class WatermeterRecordManagerVO extends BaseEntity implements Serializable {
+    //水表设备表ID
+    private int smartWatermeterId;
+    //查询条件开始时间
+    private Date startTime;
+    //查询条件结束时间
+    private Date endTime;
+
+    //抄表时间
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
-    private int daviceId;
     private Date createdAt;
-    private String exceptionType;//异常类型
+    //设备读数
+    private int deviceAmount;
+    //当天用水量
+    private int dayAmount;
 }
