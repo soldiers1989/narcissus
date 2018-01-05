@@ -6,6 +6,7 @@
     <select id="findDispersedSmartLockWarningList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockWarningVO">
       SELECT
 	csl.id lockId,
+	cslg.id gatewayId,
 	ch.area apartmentName,
 	'1' apartmentType,
 	cau.username authUserName,
@@ -79,6 +80,7 @@ AND crc.`status` = 'active'
     <select id="findConcentratSmartLockWarningList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockWarningVO">
 SELECT
 	vsl.id lockId,
+	vslg.id gatewayId,
 	va.`name` apartmentName,
 	'0' apartmentType,
 	cau.username authUserName,
