@@ -393,7 +393,7 @@ public class YunDingCallBackController extends BaseController {
         map.put("home_id",apiRequestVO.getHome_id());
         map.put("gateway_uuid",apiRequestVO.getGateway_uuid());
         map.put("room_id",apiRequestVO.getRoom_id());
-        map.put("detail",apiRequestVO.getDetail().toString());
+        map.put("detail",JSONObject.toJSONString(apiRequestVO.getDetail()));
 
         String sign1 = getSign(map);
         return sign.equals(sign1);
