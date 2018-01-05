@@ -183,7 +183,7 @@
         crc.customer_phone customerPhone,
         csl.serial_num serialNum,
         csl.`status` status,
-        CONCAT(csl.remaining_battery,'%') remainingBattery,
+        csl.remaining_battery remainingBattery,
         DATE_FORMAT(csl.install_time,'%Y.%m.%d %H:%i:%s') installTime,
         cslg.gateway getway,
         nsp.`name` providerName
@@ -262,7 +262,7 @@
         vrc.customer_phone customerPhone,
         vsl.serial_num serialNum,
         vsl.`status` status,
-        CONCAT(vsl.remaining_battery,'%') remainingBattery,
+        vsl.remaining_battery remainingBattery,
         DATE_FORMAT(vsl.install_time,'%Y.%m.%d %H:%i:%s') installTime,
         vslg.gateway getway,
         nsp.`name` providerName
@@ -329,7 +329,7 @@
     cr.`name` roomNo,
     csl.serial_num serialNum,
     csl.`status` ,
-    CONCAT(csl.remaining_battery, '%') remainingBattery,
+   csl.remaining_battery remainingBattery,
     DATE_FORMAT(
         csl.install_time,
         '%Y.%m.%d %H:%i:%s'
@@ -353,7 +353,7 @@
      vr.`name` roomNo,
      vsl.serial_num serialNum,
      vsl.`status` status,
-     CONCAT(vsl.remaining_battery, '%') remainingBattery,
+     vsl.remaining_battery remainingBattery,
      DATE_FORMAT(
         vsl.install_time,
         '%Y.%m.%d %H:%i:%s'
