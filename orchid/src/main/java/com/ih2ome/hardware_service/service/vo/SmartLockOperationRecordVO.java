@@ -24,7 +24,7 @@ public class SmartLockOperationRecordVO extends BaseEntity implements Serializab
     private String customerName;//租客姓名
     private String customerPhone;//租客电话
     private String serialNum;//门锁编码
-    private String status;//通讯状态
+    private String communicationStatus;//通讯状态
     private String remainingBattery;//电池电量
     private String gateway;//网关编码
     private String provinceName;//省名

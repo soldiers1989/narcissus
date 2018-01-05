@@ -28,9 +28,9 @@ public class SmartLockWarningServiceImpl implements SmartLockWarningService {
         if(smartLockWarningVO.getPage()!= null && smartLockWarningVO.getRows() != null){
             PageHelper.startPage(smartLockWarningVO.getPage(),smartLockWarningVO.getRows());
         }
-        if(smartLockWarningVO.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
+        if(smartLockWarningVO.getApartmentType().equals(HouseStyleEnum.DISPERSED.getCode())){
             return smartLockWarningDao.findDispersedSmartLockWarningList(smartLockWarningVO);
-        }else if(smartLockWarningVO.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
+        }else if(smartLockWarningVO.getApartmentType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
             return smartLockWarningDao.findConcentratSmartLockWarningList(smartLockWarningVO);
         }else{
             return null;

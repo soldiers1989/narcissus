@@ -1,5 +1,7 @@
 package com.ih2ome.peony.smartlockInterface.enums;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * 果家推送事件类型
  *
@@ -58,5 +60,13 @@ public enum GuoJiaLockStatusEnum {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    public static JSONObject enum2Json(){
+        JSONObject jsonObject = new JSONObject();
+        for (GuoJiaLockStatusEnum guoJiaLockStatusEnum : GuoJiaLockStatusEnum.values()) {
+            jsonObject.put(guoJiaLockStatusEnum.getStatus(),guoJiaLockStatusEnum.getStatusName());
+        }
+        return jsonObject;
     }
 }

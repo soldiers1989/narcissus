@@ -24,7 +24,7 @@ public class SmartLockWarningVO extends BaseEntity implements Serializable {
     private String customerName;//租客姓名
     private String customerPhone;//租客电话
     private String serialNum;//门锁编码
-    private String status;//通讯状态
+    private String communicationStatus;//通讯状态
     private String remainingBattery;//电池电量
     private String warningType;//警告类型
     private String installTime;//安装时间

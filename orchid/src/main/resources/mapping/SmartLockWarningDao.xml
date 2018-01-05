@@ -14,12 +14,12 @@
 	crc.customer_name customerName,
 	crc.customer_phone customerPhone,
 	csl.serial_num serialNum,
-	csl.`status` STATUS,
+	csl.`status` communicationStatus,
 	DATE_FORMAT(
 		csl.install_time,
 		'%Y.%m.%d %H:%i:%s'
 	) installTime,
-	cslg.gateway getway,
+	cslg.gateway gateway,
 	CONCAT(csl.remaining_battery, '%') remainingBattery,
 	csls.network_status warningType
 FROM
@@ -71,6 +71,9 @@ AND crc.`status` = 'active'
         <if test="areaName != '' and areaName != null">
             AND ch.area LIKE '%${areaName}%'
         </if>
+		<if test="communicationStatus != '' and communicationStatus != null">
+			AND csl.`status` LIKE '%${communicationStatus}%'
+		</if>
     </select>
     <!--查找集中式报警信息-->
     <select id="findConcentratSmartLockWarningList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockWarningVO">
@@ -84,13 +87,13 @@ SELECT
 	vrc.customer_name customerName,
 	vrc.customer_phone customerPhone,
 	vsl.serial_num serialNum,
-	vsl.`status` STATUS,
+	vsl.`status` communicationStatus,
 	CONCAT(vsl.remaining_battery, '%') remainingBattery,
 	DATE_FORMAT(
 		vsl.install_time,
 		'%Y.%m.%d %H:%i:%s'
 	) installTime,
-	vslg.gateway getway,
+	vslg.gateway gateway,
 	vsls.network_status warningType
 FROM
 	`volga_test`.smart_lock vsl
@@ -143,8 +146,8 @@ AND vrc.`status` = 'active'
         <if test="areaName != '' and areaName != null">
             AND va.area LIKE '%${areaName}%'
         </if>
-        <if test="status != '' and status != null">
-            AND vsl.status LIKE '%${status}%'
+        <if test="communicationStatus != '' and communicationStatus != null">
+            AND vsl.status LIKE '%${communicationStatus}%'
         </if>
     </select>
 
