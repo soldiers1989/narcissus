@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.utils.*;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -137,6 +138,20 @@ public class GuoJiaSmartLockUtil {
             sb.append(tmp);
         }
         return sb.toString();
+    }
+
+    /**
+     * 时间戳转时间
+     * @param s
+     * @return
+     */
+    public static String stampToDate(String s){
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long lt = new Long(s);
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
     }
 }
 

@@ -121,7 +121,8 @@
                 IFNULL(ch.address, '')
             ) houseAddress,
             cslg.install_time installDate,
-            cslg.remark remark
+            cslg.remark remark,
+            cslg.gateway gatewayCode
         FROM
             caspain_test.smart_lock_gateway cslg
         LEFT JOIN caspain_test.house ch ON cslg.house_id = ch.id
@@ -151,7 +152,8 @@
                     IFNULL(va.address, '')
                 ) houseAddress,
                 vslg.install_time installDate,
-                vslg.remark remark
+                vslg.remark remark,
+                vslg.gateway gatewayCode
             FROM
                 `volga_test`.smart_lock_gateway vslg
             LEFT JOIN `volga_test`.floor vf ON vslg.floor_id = vf.id
@@ -171,7 +173,7 @@
     </select>
 
     <!--分散式根据网关查询门锁-->
-    <select id="getDispersedSmartDoorLockByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
+    <select id="getDispersedSmartDoorLockByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
         SELECT
             csl.id lockId,
             ch.area apartmentName,
@@ -218,7 +220,7 @@
         AND cslg.id = #{id}
     </select>
     <!--集中式根据网关查询门锁-->
-    <select id="getConcentratSmartDoorLockByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
+    <select id="getConcentratSmartDoorLockByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
 SELECT
 	vsl.id lockId,
 	va.`name` apartmentName,
@@ -256,9 +258,9 @@ AND (
 AND (
 	vrc.is_delete != '1'
 	OR vrc.is_delete IS NULL
-)v
+)
 AND vrc.`status` = 'active'
-AND slg.id = #{id}
+AND vslg.id = #{id}
     </select>
 
 </mapper>
