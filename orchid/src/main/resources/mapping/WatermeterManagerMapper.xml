@@ -442,6 +442,12 @@
         SELECT  room.id, room.`name`,room.house_id,room.synchronous
         FROM <include refid="room" /> AS room
         WHERE room.house_id = #{homeId}
+        <if test="synchronous = 0">
+            AND ( synchronous=0 OR synchronous IS NULL )
+        </if>
+        <if test="synchronous = 1">
+            AND  synchronous = 1
+        </if>
     </select>
 
     <!--查询集中式房间同步状态-->
@@ -449,6 +455,12 @@
         SELECT  room.id, room.`name`,room.apartment_id AS house_id,room.synchronous
         FROM <include refid="jzroom" /> AS room
         WHERE room.apartment_id = #{homeId}
+        <if test="synchronous == 0">
+            AND ( synchronous=0 OR synchronous IS NULL )
+        </if>
+        <if test="synchronous == 1">
+            AND  synchronous = 1
+        </if>
     </select>
 
 </mapper>

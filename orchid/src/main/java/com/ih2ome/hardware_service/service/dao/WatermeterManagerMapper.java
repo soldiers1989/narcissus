@@ -3,6 +3,7 @@ package com.ih2ome.hardware_service.service.dao;
 import com.ih2ome.common.base.MyMapper;
 import com.ih2ome.hardware_service.service.model.volga.Apartment;
 import com.ih2ome.hardware_service.service.vo.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -105,14 +106,16 @@ public interface WatermeterManagerMapper extends MyMapper<Apartment>{
     /**
      * 查询分散式房源同步状态
      * @param homeId
+     * @param synchronous
      * @return
      */
-    List<HmRoomSyncVO> selectHmRoomSynchronousStatus(int homeId);
+    List<HmRoomSyncVO> selectHmRoomSynchronousStatus(@Param("homeId") int homeId,@Param("synchronous") int synchronous);
 
     /**
      * 查询集中式房源同步状态
      * @param homeId
+     * @param synchronous
      * @return
      */
-    List<HmRoomSyncVO> selectJzRoomSynchronousStatus(int homeId);
+    List<HmRoomSyncVO> selectJzRoomSynchronousStatus(@Param("homeId") int homeId,@Param("synchronous") int synchronous);
 }

@@ -4,6 +4,7 @@ import com.ih2ome.common.base.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <br>
@@ -24,4 +25,6 @@ public class SynchronousHomeWebVo implements Serializable {
     private String areaName;//小区名
     private String houseAddress;//房源地址
     private String type;//集中式或分散式
+
+    private List<HmRoomSyncVO> hmRoomSyncVOList;//room同步状态
 }

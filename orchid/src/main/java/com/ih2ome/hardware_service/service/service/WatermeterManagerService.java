@@ -68,10 +68,10 @@ public interface WatermeterManagerService {
     /**
      * 房间同步状态
      * @param homeId
-     * @param type
-     * @return
+     * @param syncStatus
+     *@param type  @return
      */
-    List<HmRoomSyncVO> findRoomSynchronousStatus(int homeId, String type);
+    List<HmRoomSyncVO> findRoomSynchronousStatus(int homeId, int syncStatus, String type);
 
     /**
      * 同步房源

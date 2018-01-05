@@ -195,8 +195,27 @@ public class WatermeterManagerController extends BaseController{
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         SynchronousHomeWebVo synchronousHomeWebVo = resData.getObject("synchronousHomeWebVo",SynchronousHomeWebVo.class);
         List<SynchronousHomeWebVo> synchronousHomeWebVoList = watermeterManagerService.findHomeSynchronousStatus(synchronousHomeWebVo);
+        //未同步完的房源
+        List<SynchronousHomeWebVo> outofsyncHomeList =new ArrayList<>();
+        //已同步的房源
+        List<SynchronousHomeWebVo> synchronizedHomeList =new ArrayList<>();
+        for (SynchronousHomeWebVo synchronousHomeWebVo1:synchronousHomeWebVoList) {
+            List<HmRoomSyncVO> hmRoomSyncVOList = watermeterManagerService.findRoomSynchronousStatus(Integer.parseInt(synchronousHomeWebVo1.getHomeId()),1,synchronousHomeWebVo1.getType());
+            if (hmRoomSyncVOList.size()>0){
+                synchronousHomeWebVo1.setHmRoomSyncVOList(hmRoomSyncVOList);
+                synchronizedHomeList.add(synchronousHomeWebVo1);
+            }
+            //synchronousHomeWebVo1.setHmRoomSyncVOList(null);
+            List<HmRoomSyncVO> hmRoomSyncVOList2 = watermeterManagerService.findRoomSynchronousStatus(Integer.parseInt(synchronousHomeWebVo1.getHomeId()),0,synchronousHomeWebVo1.getType());
+            if (hmRoomSyncVOList2.size()>0){
+                synchronousHomeWebVo1.setHmRoomSyncVOList(hmRoomSyncVOList2);
+                outofsyncHomeList.add(synchronousHomeWebVo1);
+            }
+
+        }
         JSONObject responseJson = new JSONObject();
-        responseJson.put("synchronousHomeWebVoList",synchronousHomeWebVoList);
+        responseJson.put("outofsyncHomeList",outofsyncHomeList);
+        responseJson.put("synchronizedHomeList",synchronizedHomeList);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
@@ -211,10 +230,11 @@ public class WatermeterManagerController extends BaseController{
         //同步房源查询房间同步状态
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int homeId = dt.getIntValue("homeId");
+        int synchronous = dt.getIntValue("synchronous");
         String type = dt.getString("type");
 
         //房间同步状态
-        List<HmRoomSyncVO> hmRoomSyncVOList = watermeterManagerService.findRoomSynchronousStatus(homeId,type);
+        List<HmRoomSyncVO> hmRoomSyncVOList = watermeterManagerService.findRoomSynchronousStatus(homeId,synchronous,type);
 
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(hmRoomSyncVOList));
         JSONObject responseJson = new JSONObject();
@@ -259,6 +279,7 @@ public class WatermeterManagerController extends BaseController{
                 String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"同步失败"+e.getMessage());
                 return res;
             }
+
             homeAndRoomSyncVOList.add(homeAndRoom);
         }
 
