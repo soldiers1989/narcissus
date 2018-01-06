@@ -164,7 +164,7 @@
         <dependency>
             <groupId>com.ih2ome</groupId>
             <artifactId>lotus</artifactId>
-            <version>0.1.8</version>
+            <version>0.1.11</version>
         </dependency>
 
         <!--生产配置-->
