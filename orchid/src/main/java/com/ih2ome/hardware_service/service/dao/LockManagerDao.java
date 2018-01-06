@@ -79,4 +79,9 @@ public interface LockManagerDao {
     //根据门锁密码Id查询密码详情(集中式)
     LockPasswordVo findConcentrateLockPassword(String id);
 
+    //根据门锁密码Id查询门锁编码和密码编号(分散式)
+    LockPasswordVo findDispersedLockIdAndPwdNo(String lockPasswordVo);
+
+    //根据门锁密码Id查询门锁编码和密码编号(集中式)
+    LockPasswordVo findConcentrateLockIdAndPwdNo(String lockPasswordVo);
 }

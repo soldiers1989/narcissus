@@ -245,7 +245,7 @@
         <if test="status != '' and status != null">
             AND csl.status LIKE '%${status}%'
         </if>
-        order by updated_at desc
+        order by csl.updated_at desc
     </select>
 
     <!--集中式房源门锁列表（模糊查询）-->
@@ -321,7 +321,7 @@
         <if test="status != '' and status != null">
             AND vsl.status LIKE '%${status}%'
         </if>
-        order by updated_at desc
+        order by vsl.updated_at desc
     </select>
 
     <!--分散式根据门锁id查询门锁基本信息-->
@@ -409,6 +409,7 @@
             OR slp.is_delete IS NULL
         )
            AND sl.id = #{id}
+            order by slp.updated_at desc
     </select>
 
     <!--集中式根据门锁编码查询密码列表-->
@@ -448,6 +449,7 @@
             OR slp.is_delete IS NULL
         )
            AND sl.id = #{id}
+            order by slp.updated_at desc
     </select>
 
     <!--分散式根据门锁编码查询门锁历史状态-->
@@ -466,7 +468,7 @@
             caspain_test.`smart_lock_status` sls
         LEFT JOIN caspain_test.smart_lock sl ON sl.id = sls.lock_id
         where sl.id=#{id}
-
+        order by sls.updated_at desc
     </select>
 
     <!--集中式根据门锁编码查询门锁历史状态-->
@@ -485,6 +487,7 @@
             volga_test.`smart_lock_status` sls
         LEFT JOIN volga_test.smart_lock sl ON sl.id = sls.lock_id
         where sl.id=#{id}
+         order by sls.updated_at desc
     </select>
 
     <!--分散式根据门锁编码查询门锁操作记录-->
@@ -518,6 +521,7 @@
             slor.is_delete != '1'
             OR slor.is_delete IS NULL
         )
+         order by slor.updated_at desc
     </select>
 
     <!--集中式根据门锁编码查询门锁操作记录-->
@@ -551,6 +555,7 @@
             slor.is_delete != '1'
             OR slor.is_delete IS NULL
         )
+         order by slor.updated_at desc
     </select>
 
     <!--分散式根据门锁编码查询开门记录-->
@@ -596,7 +601,8 @@
             slr.is_delete != '1'
             OR slr.is_delete IS NULL
         )
-            </select>
+         order by slr.updated_at desc
+     </select>
 
     <!--集中式根据门锁编码查询开门记录-->
     <select id="findConcentrateLockOpenRecord"
@@ -641,6 +647,7 @@
             slr.is_delete != '1'
             OR slr.is_delete IS NULL
         )
+         order by slr.updated_at desc
     </select>
 
     <!--分散式根据主键id查询门锁编码-->
@@ -690,4 +697,29 @@
 	    volga_test.`smart_lock_password`
 	    WHERE  id=#{id}
     </select>
+
+    <!--分散式根据密码id查询门锁编码和密码编号-->
+    <select id="findDispersedLockIdAndPwdNo" parameterType="string"
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+            slp.pwd_no,
+            sl.serial_num
+        FROM
+            caspain_test.smart_lock_password slp
+        LEFT JOIN caspain_test.smart_lock sl ON slp.lock_id = sl.id
+        where slp.is_delete!='1' and sl.is_delete!='1' AND slp.id=#{id}
+    </select>
+
+    <!--集中式根据密码id查询门锁编码和密码编号-->
+    <select id="findConcentrateLockIdAndPwdNo" parameterType="string"
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+            slp.pwd_no,
+            sl.serial_num
+        FROM
+            smart_lock_password slp
+        LEFT JOIN volga_test.smart_lock sl ON slp.lock_id = sl.id
+        where slp.is_delete!='1' and sl.is_delete!='1' and slp.id=#{id}
+    </select>
+
 </mapper>

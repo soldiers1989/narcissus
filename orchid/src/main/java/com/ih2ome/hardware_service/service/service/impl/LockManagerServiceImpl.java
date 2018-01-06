@@ -150,6 +150,15 @@ public class LockManagerServiceImpl implements LockManagerService {
     //修改门锁密码
     @Override
     public void updatePassword(LockPasswordVo lockPasswordVo, String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+        //0代表集中式，1代表分散式
+        String type = lockPasswordVo.getType();
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            lockPasswordVo=lockManagerDao.findDispersedLockIdAndPwdNo(lockPasswordVo.getId());
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            lockPasswordVo=lockManagerDao.findConcentrateLockIdAndPwdNo(lockPasswordVo.getId());
+        }
         ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
         //请求果家第三方的修改接口
         String result = iSmartLock.updateLockPassword(lockPasswordVo);
@@ -159,8 +168,6 @@ public class LockManagerServiceImpl implements LockManagerService {
             throw new SmartLockException("第三方修改密码失败");
         }
         JSONObject jsonData = JSONObject.parseObject(resJson.get("data").toString());
-        //0代表集中式，1代表分散式
-        String type = lockPasswordVo.getType();
         //判断是分散式
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
             lockManagerDao.updateDispersedPwd(lockPasswordVo);
