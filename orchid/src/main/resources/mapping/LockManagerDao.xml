@@ -655,10 +655,14 @@
     <select id="findDispersedLockPassword" parameterType="string"
             resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
+             id,
             `password`,
             mobile,
             enable_time,
-            disable_time
+            disable_time,
+            user_name,
+            remark,
+            message_content
         FROM
 	    caspain_test.`smart_lock_password`
 	    WHERE  id=#{id}
@@ -668,10 +672,14 @@
     <select id="findConcentrateLockPassword" parameterType="string"
             resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
+            id ,
             `password`,
             mobile,
             enable_time,
-            disable_time
+            disable_time,
+            user_name,
+            remark,
+            message_content
         FROM
 	    volga_test.`smart_lock_password`
 	    WHERE  id=#{id}

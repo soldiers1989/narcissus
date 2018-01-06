@@ -48,4 +48,6 @@ public interface LockManagerService {
     //获得短信内容
     String getMessage(LockRequestVo params);
 
+    //获取密码详情
+    LockPasswordVo getPasswordInfo(String id, String type);
 }

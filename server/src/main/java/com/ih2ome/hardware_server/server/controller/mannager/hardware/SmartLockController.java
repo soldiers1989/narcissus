@@ -114,6 +114,22 @@ public class SmartLockController extends BaseController {
         return result;
     }
 
+    /**
+     * 根据密码id获取密码详情
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/passwordInfo", method = RequestMethod.POST, produces = {"application/json"})
+    public String getPasswordInfo(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String id = resData.getString("id");
+        String type = resData.getString("type");
+        LockPasswordVo lockPasswordVo=lockManagerService.getPasswordInfo(id,type);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("passwordInfoVo", lockPasswordVo);
+        String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+        return result;
+    }
 
     /**
      * 新增门锁密码

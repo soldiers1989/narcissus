@@ -320,4 +320,18 @@ public class LockManagerServiceImpl implements LockManagerService {
         return messageContent;
     }
 
+    //获取密码详情
+    @Override
+    public LockPasswordVo getPasswordInfo(String id, String type) {
+        LockPasswordVo lockPasswordVo = null;
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            lockPasswordVo = lockManagerDao.findDispersedLockPassword(id);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            lockPasswordVo = lockManagerDao.findConcentrateLockPassword(id);
+        }
+        return lockPasswordVo;
+    }
+
 }
