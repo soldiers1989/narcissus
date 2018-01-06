@@ -702,6 +702,7 @@
     <select id="findDispersedLockIdAndPwdNo" parameterType="string"
             resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
+             slp.id,
             slp.pwd_no,
             sl.serial_num
         FROM
@@ -714,6 +715,7 @@
     <select id="findConcentrateLockIdAndPwdNo" parameterType="string"
             resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
+            slp.id,
             slp.pwd_no,
             sl.serial_num
         FROM
