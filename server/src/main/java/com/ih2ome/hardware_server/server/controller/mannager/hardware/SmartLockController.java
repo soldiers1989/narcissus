@@ -302,6 +302,22 @@ public class SmartLockController extends BaseController {
             return result;
         }
 
+    }
 
+    /**
+     * 获取短信内容
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/getMessage", method = RequestMethod.POST, produces = {"application/json"})
+    public String getMessage(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        LockRequestVo params = JSONObject.parseObject(resData.toString(), LockRequestVo.class);
+        String messageContent = lockManagerService.getMessage(params);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("messageContent", messageContent);
+        String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+        return result;
     }
 }

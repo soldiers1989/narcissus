@@ -45,4 +45,7 @@ public interface LockManagerService {
     //发送短信
     Boolean sendMessage(LockRequestVo params, String baseUrl);
 
+    //获得短信内容
+    String getMessage(LockRequestVo params);
+
 }

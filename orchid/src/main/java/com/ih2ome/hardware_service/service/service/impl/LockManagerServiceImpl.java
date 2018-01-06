@@ -300,4 +300,24 @@ public class LockManagerServiceImpl implements LockManagerService {
 
     }
 
+    //获得短信内容
+    @Override
+    public String getMessage(LockRequestVo params) {
+        LockPasswordVo lockPasswordVo = null;
+        String type = params.getType();
+        //获取密码Id
+        String id = params.getId();
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            lockPasswordVo = lockManagerDao.findDispersedLockPassword(id);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            lockPasswordVo = lockManagerDao.findConcentrateLockPassword(id);
+        }
+        String messageContent = "［水滴管家]欢迎入住,您的开门密码是" + lockPasswordVo.getPassword() +
+                "，有效期自" + lockPasswordVo.getEnableTime() +
+                "至" + lockPasswordVo.getDisableTime() + "止，在门锁按键输入“密码+#”后，便可开门。";
+        return messageContent;
+    }
+
 }
