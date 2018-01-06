@@ -659,6 +659,7 @@
         SELECT
              id,
             `password`,
+            digit_pwd_type,
             password_type,
             mobile,
             enable_time,
@@ -683,7 +684,8 @@
             disable_time,
             user_name,
             remark,
-            message_content
+            message_content,
+            digit_pwd_type
         FROM
 	    volga_test.`smart_lock_password`
 	    WHERE  id=#{id}
