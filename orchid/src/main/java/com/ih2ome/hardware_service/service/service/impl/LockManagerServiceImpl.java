@@ -279,11 +279,11 @@ public class LockManagerServiceImpl implements LockManagerService {
 
     //发送短信
     @Override
-    public Boolean sendMessage(LockRequestVo params,String baseUrl) {
+    public Boolean sendMessage(LockRequestVo params, String baseUrl) {
         String type = params.getType();
         LockPasswordVo lockPasswordVo = null;
         //获取密码Id
-        String id=params.getId();
+        String id = params.getId();
         //判断是分散式
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
             lockPasswordVo = lockManagerDao.findDispersedLockPassword(id);
