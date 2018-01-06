@@ -109,12 +109,12 @@ public class LockManagerServiceImpl implements LockManagerService {
     public void addPassword(LockPasswordVo lockPasswordVo, String baseUrl) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
         //0代表集中式，1代表分散式
         String type = lockPasswordVo.getType();
-        String serialNum=null;
+        String serialNum = null;
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
-           serialNum=lockManagerDao.findDisSerialNumById(lockPasswordVo.getId());
+            serialNum = lockManagerDao.findDisSerialNumById(lockPasswordVo.getId());
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
-            serialNum=lockManagerDao.findConSerialNumById(lockPasswordVo.getId());
+            serialNum = lockManagerDao.findConSerialNumById(lockPasswordVo.getId());
         }
         lockPasswordVo.setSerialNum(serialNum);
         ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
@@ -136,14 +136,14 @@ public class LockManagerServiceImpl implements LockManagerService {
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             lockManagerDao.addConcentratePwd(lockPasswordVo);
         }
-        JSONObject message = new JSONObject();
-        message.put("password", lockPasswordVo.getPassword());
-        message.put("startTime", lockPasswordVo.getEnableTime());
-        message.put("endTime", lockPasswordVo.getDisableTime());
-        boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
-        if (!bool) {
-            throw new SmartLockException("短信发送失败");
-        }
+//        JSONObject message = new JSONObject();
+//        message.put("password", lockPasswordVo.getPassword());
+//        message.put("startTime", lockPasswordVo.getEnableTime());
+//        message.put("endTime", lockPasswordVo.getDisableTime());
+//        boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
+//        if (!bool) {
+//            throw new SmartLockException("短信发送失败");
+//        }
 
     }
 
@@ -168,14 +168,14 @@ public class LockManagerServiceImpl implements LockManagerService {
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             lockManagerDao.updateConcentratePwd(lockPasswordVo);
         }
-        JSONObject message = new JSONObject();
-        message.put("password", lockPasswordVo.getPassword());
-        message.put("startTime", lockPasswordVo.getEnableTime());
-        message.put("endTime", lockPasswordVo.getDisableTime());
-        boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
-        if (!bool) {
-            throw new SmartLockException("短信发送失败");
-        }
+//        JSONObject message = new JSONObject();
+//        message.put("password", lockPasswordVo.getPassword());
+//        message.put("startTime", lockPasswordVo.getEnableTime());
+//        message.put("endTime", lockPasswordVo.getDisableTime());
+//        boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
+//        if (!bool) {
+//            throw new SmartLockException("短信发送失败");
+//        }
 
 
     }
@@ -274,6 +274,29 @@ public class LockManagerServiceImpl implements LockManagerService {
             openRecords = lockManagerDao.findConcentrateLockOpenRecord(lockOpenRecord);
         }
         return openRecords;
+
+    }
+
+    //发送短信
+    @Override
+    public Boolean sendMessage(LockRequestVo params,String baseUrl) {
+        String type = params.getType();
+        LockPasswordVo lockPasswordVo = null;
+        //获取密码Id
+        String id=params.getId();
+        //判断是分散式
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            lockPasswordVo = lockManagerDao.findDispersedLockPassword(id);
+            //判断是集中式
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            lockPasswordVo = lockManagerDao.findConcentrateLockPassword(id);
+        }
+        JSONObject message = new JSONObject();
+        message.put("password", lockPasswordVo.getPassword());
+        message.put("startTime", lockPasswordVo.getEnableTime());
+        message.put("endTime", lockPasswordVo.getDisableTime());
+        boolean bool = SMSUtil.sendTemplateText(baseUrl, SMSCodeEnum.ADD_OR_UPDATE_DOOR_LOCK_PASSWORD.getName(), lockPasswordVo.getMobile(), message, 0);
+        return bool;
 
     }
 

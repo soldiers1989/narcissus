@@ -649,4 +649,29 @@
         SELECT serial_num FROM volga_test.smart_lock where id=#{id};
     </select>
 
+    <!--分散式根据主键id查询密码详情-->
+    <select id="findDispersedLockPassword" parameterType="string"
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+            `password`,
+            mobile,
+            enable_time,
+            disable_time
+        FROM
+	    caspain_test.`smart_lock_password`
+	    WHERE  id=#{id}
+    </select>
+
+    <!--集中式根据主键id查询密码详情-->
+    <select id="findConcentrateLockPassword" parameterType="string"
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+            `password`,
+            mobile,
+            enable_time,
+            disable_time
+        FROM
+	    volga_test.`smart_lock_password`
+	    WHERE  id=#{id}
+    </select>
 </mapper>

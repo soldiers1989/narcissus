@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.hardware_service.service.vo.*;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
@@ -40,5 +41,8 @@ public interface LockManagerService {
 
     //查询门锁的开门记录
     List<LockOpenRecordVO> getLockOpenRecords(LockOpenRecordVO lockOpenRecord);
+
+    //发送短信
+    Boolean sendMessage(LockRequestVo params, String baseUrl);
 
 }

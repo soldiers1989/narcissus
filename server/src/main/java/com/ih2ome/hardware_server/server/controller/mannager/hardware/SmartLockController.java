@@ -42,6 +42,7 @@ public class SmartLockController extends BaseController {
 
     /**
      * 门锁list
+     *
      * @param apiRequestVO
      * @return
      */
@@ -125,7 +126,7 @@ public class SmartLockController extends BaseController {
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         LockPasswordVo lockPasswordVo = JSONObject.parseObject(resData.toString(), LockPasswordVo.class);
         try {
-            lockManagerService.addPassword(lockPasswordVo,baseUrl);
+            lockManagerService.addPassword(lockPasswordVo, baseUrl);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(), e);
             String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
@@ -162,7 +163,7 @@ public class SmartLockController extends BaseController {
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         LockPasswordVo lockPasswordVo = JSONObject.parseObject(resData.toString(), LockPasswordVo.class);
         try {
-            lockManagerService.updatePassword(lockPasswordVo,baseUrl);
+            lockManagerService.updatePassword(lockPasswordVo, baseUrl);
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(), e);
             String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
@@ -275,11 +276,32 @@ public class SmartLockController extends BaseController {
         LockOpenRecordVO lockOpenRecord = JSONObject.parseObject(resData.toString(), LockOpenRecordVO.class);
         JSONObject responseJson = new JSONObject();
         List<LockOpenRecordVO> lockOpenRecords = null;
-        lockOpenRecords=lockManagerService.getLockOpenRecords(lockOpenRecord);
+        lockOpenRecords = lockManagerService.getLockOpenRecords(lockOpenRecord);
         PageInfo<LockOpenRecordVO> pageInfo = new PageInfo<>(lockOpenRecords);
         responseJson.put("lockOpenRecords", pageInfo);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
     }
 
+    /**
+     * 发送短信
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/sendMessage", method = RequestMethod.POST, produces = {"application/json"})
+    public String sendMessage(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        LockRequestVo params = JSONObject.parseObject(resData.toString(), LockRequestVo.class);
+        Boolean bool = lockManagerService.sendMessage(params, baseUrl);
+        if (bool) {
+            String result = structureSuccessResponseVO(null, new Date().toString(), "发送短信成功");
+            return result;
+        } else {
+            String result = structureSuccessResponseVO(null, new Date().toString(), "发送短信失败");
+            return result;
+        }
+
+
+    }
 }
