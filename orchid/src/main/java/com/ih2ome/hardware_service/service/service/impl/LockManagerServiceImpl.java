@@ -37,6 +37,7 @@ public class LockManagerServiceImpl implements LockManagerService {
     private LockManagerDao lockManagerDao;
 
     //门锁列表
+    @Override
     public List<LockListVo> lockList(LockListVo lockListVo) {
         if (lockListVo == null) {
             return null;
