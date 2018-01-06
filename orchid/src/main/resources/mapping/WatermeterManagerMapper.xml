@@ -224,7 +224,10 @@
         <include refid="smart_watermeter_record"/>  wr
         WHERE
         smart_watermeter_id = #{smartWatermeterId}
-        AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
+        <if test="startTime != '' and startTime != null and endTime != '' and endTime != null">
+            AND created_at between #{startTime} and #{endTime}
+        </if>
+        ORDER BY created_at DESC
     </select>
 
     <!--查询分散式web网关list-->
