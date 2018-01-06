@@ -314,7 +314,7 @@ public class SmartLockController extends BaseController {
             String result = structureSuccessResponseVO(null, new Date().toString(), "发送短信成功");
             return result;
         } else {
-            String result = structureSuccessResponseVO(null, new Date().toString(), "发送短信失败");
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "发送短信失败");
             return result;
         }
 

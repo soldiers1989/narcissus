@@ -245,6 +245,7 @@
         <if test="status != '' and status != null">
             AND csl.status LIKE '%${status}%'
         </if>
+        order by updated_at desc
     </select>
 
     <!--集中式房源门锁列表（模糊查询）-->
@@ -320,6 +321,7 @@
         <if test="status != '' and status != null">
             AND vsl.status LIKE '%${status}%'
         </if>
+        order by updated_at desc
     </select>
 
     <!--分散式根据门锁id查询门锁基本信息-->
@@ -657,6 +659,7 @@
         SELECT
              id,
             `password`,
+            password_type,
             mobile,
             enable_time,
             disable_time,
@@ -673,6 +676,7 @@
             resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
             id ,
+            password_type,
             `password`,
             mobile,
             enable_time,
