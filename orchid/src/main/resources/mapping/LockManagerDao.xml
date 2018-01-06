@@ -373,6 +373,7 @@
     <!--分散式根据门锁编码查询密码列表-->
     <select id="findDispersedPwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
+            '1' type,
             slp.id id,
             slp.pwd_no pwdNo,
             sl.serial_num serial_num,
@@ -411,6 +412,7 @@
     <!--集中式根据门锁编码查询密码列表-->
     <select id="findConcentratePwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
+            '0' type,
             slp.id id,
             slp.pwd_no pwdNo,
             sl.serial_num serial_num,
