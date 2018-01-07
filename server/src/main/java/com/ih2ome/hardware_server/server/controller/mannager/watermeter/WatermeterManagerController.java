@@ -121,9 +121,9 @@ public class WatermeterManagerController extends BaseController{
     public String watermeterException(@RequestBody ApiRequestVO apiRequestVO){
         //获取水表id
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
-        ExceptionVO exceptionVO = resData.getObject("exceptionVO", ExceptionVO.class);
+        ExceptionWebVO exceptionVO = resData.getObject("exceptionVO", ExceptionWebVO.class);
 
-        List<ExceptionVO> exceptionVOS= watermeterManagerService.findWatermeterException(exceptionVO);
+        List<ExceptionWebVO> exceptionVOS= watermeterManagerService.findWatermeterException(exceptionVO);
         JSONObject responseJson = new JSONObject();
         responseJson.put("exceptionVOS",exceptionVOS);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
@@ -177,8 +177,8 @@ public class WatermeterManagerController extends BaseController{
     public String gatewayException(@RequestBody ApiRequestVO apiRequestVO){
         //获取水表id
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
-        ExceptionVO exceptionVO = resData.getObject("exceptionVO", ExceptionVO.class);
-        List<ExceptionVO> exceptionVOS= watermeterManagerService.findGatewayException(exceptionVO);
+        ExceptionWebVO exceptionVO = resData.getObject("exceptionVO", ExceptionWebVO.class);
+        List<ExceptionWebVO> exceptionVOS= watermeterManagerService.findGatewayException(exceptionVO);
         JSONObject responseJson = new JSONObject();
         responseJson.put("exceptionVOS",exceptionVOS);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");

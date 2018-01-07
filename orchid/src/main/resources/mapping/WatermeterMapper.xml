@@ -265,6 +265,12 @@
         SELECT device_amount FROM <include refid="smart_watermeter_record" /> WHERE TO_DAYS(created_at) =TO_DAYS(last_day(date_sub(now(),interval 1 month))) AND smart_watermeter_id = #{watermeterId}
     </select>
 
-
+    <!-- 查询水表idBygatewayuuid -->
+    <select id="selectWatermeterIdByGatewayUuid" resultType="java.lang.Integer">
+        SELECT watermeter.smart_watermeter_id FROM smart_gateway AS gateway
+        INNER JOIN smart_gateway_bind AS bind ON gateway.smart_gateway_id=bind.smart_gateway_id
+        INNER JOIN smart_watermeter AS watermeter ON bind.smart_id=watermeter.smart_watermeter_id
+        WHERE gateway.uuid=#{uuid}
+  </select>
 
 </mapper>

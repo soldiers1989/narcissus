@@ -17,9 +17,9 @@ public class WatermeterManagerDetailVO {
     //产品类型1是光电直读湿式冷水表,2是光电直读干式热水表
     private int meterType;
     //绑定时间
-    private Date createdAt;
+    private String createdAt;
     //更新时间
-    private Date meterUpdatedAt;
+    private String meterUpdatedAt;
     //最近抄表读数
     private int lastAmount;
     //月初水量

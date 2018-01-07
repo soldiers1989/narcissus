@@ -135,4 +135,10 @@ public interface WatermeterManagerMapper extends MyMapper<Apartment>{
      */
     List<HmRoomSyncVO> selectJzRoomIsAllSynchronous(@Param("homeId") int homeId,@Param("synchronous") int synchronous);
 
+    /**
+     * 查询网关异常记录
+     * @param daviceId
+     * @return
+     */
+    List<ExceptionWebVO> findwebWatermeterGatewayExceptionByGatewayId(int daviceId);
 }
