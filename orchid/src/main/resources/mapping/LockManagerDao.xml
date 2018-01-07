@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.LockManagerDao">
+
+    <!--add-->
+    <!--分散式新增门锁密码-->
+    <insert id="addDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    INSERT INTO caspain_test.smart_lock_password (
+        version,
+        is_delete,
+        created_at,
+        created_by_id,
+        lock_id,
+        digit_pwd_type,
+        password_type,
+        user_name,
+        mobile,
+        password,
+        enable_time,
+        disable_time,
+        remark,
+        message_content,
+        status,
+        pwd_no
+    ) SELECT
+        '0' AS version,
+        '0' AS is_delete,
+        NOW() AS created_at,
+        created_by_id,
+        id AS look_id,
+        #{digitPwdType} AS digit_pwd_type,
+        #{passwordType} AS password_type,
+        #{userName} AS user_name,
+        #{mobile} AS mobile,
+        #{password} AS password,
+        #{enableTime} as enable_time,
+        #{disableTime} as disable_time,
+        #{remark} as remark,
+        #{messageContent} as message_content,
+        '1' as status,
+        #{pwdNo} as pwd_no
+    FROM
+        caspain_test.smart_lock
+    WHERE
+        id = #{id};
+
+    </insert>
+
+    <!--集中式新增门锁密码-->
+    <insert id="addConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+      INSERT INTO volga_test.smart_lock_password (
+        version,
+        is_delete,
+        created_at,
+        created_by,
+        updated_by,
+        deleted_by,
+        lock_id,
+        digit_pwd_type,
+        password_type,
+        user_name,
+        mobile,
+        PASSWORD,
+        enable_time,
+        disable_time,
+        remark,
+        message_content,
+        status,
+        pwd_no
+    ) SELECT
+        '0' AS version,
+        '0' AS is_delete,
+        NOW() AS created_at,
+        created_by,
+        '0' as updated_by,
+        '0' as deleted_by,
+         id AS look_id,
+        #{digitPwdType} AS digit_pwd_type,
+        #{passwordType} AS password_type,
+        #{userName} AS user_name,
+        #{mobile} AS mobile,
+        #{password} AS password,
+        #{enableTime} as enable_time,
+        #{disableTime} as disable_time,
+        #{remark} as remark,
+        #{messageContent} as message_content,
+        '1' as status,
+         #{pwdNo} as pwd_no
+    FROM
+        volga_test.smart_lock
+    WHERE
+        id = #{id};
+    </insert>
+
+    <!--delete-->
+    <!--分散式删除密码-->
+    <update id="deleteDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        UPDATE caspain_test.smart_lock_password
+        SET is_delete = '1',
+         deleted_at = NOW(),
+         deleted_by_id = created_by_id
+        WHERE
+	     id = #{id};
+    </update>
+
+    <!--集中式删除密码-->
+    <update id="deleteConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        UPDATE volga_test.smart_lock_password
+        SET is_delete = '1',
+         deleted_at = NOW(),
+         deleted_by = created_by
+        WHERE
+	     id = #{id};
+    </update>
+
+
+    <!--update-->
+    <!--分散式修改门锁密码-->
+    <update id="updateDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        UPDATE caspain_test.smart_lock_password
+        <set>
+            <if test="password!=null and password.trim()!=''">
+                password=#{password},
+            </if>
+            <if test="enableTime!=null and enableTime.trim()!=''">
+                enable_time = #{enableTime},
+            </if>
+            <if test="disableTime!=null and disableTime.trim()!=''">
+                disable_time = #{disableTime},
+            </if>
+            <if test="remark!=null and remark.trim()!=''">
+                remark = #{remark},
+            </if>
+            <if test="messageContent!=null and messageContent!=''">
+                message_content = #{messageContent},
+            </if>
+            updated_at=NOW(),
+            updated_by_id =created_by_id
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--集中式修改门锁密码-->
+    <update id="updateConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        UPDATE volga_test.smart_lock_password
+        <set>
+            <if test="password!=null and password.trim()!=''">
+                password=#{password},
+            </if>
+            <if test="enableTime!=null and enableTime.trim()!=''">
+                enable_time = #{enableTime},
+            </if>
+            <if test="disableTime!=null and disableTime.trim()!=''">
+                disable_time = #{disableTime},
+            </if>
+            <if test="remark!=null and remark.trim()!=''">
+                remark = #{remark},
+            </if>
+            <if test="messageContent!=null and messageContent!=''">
+                message_content = #{messageContent},
+            </if>
+            updated_at=NOW(),
+            updated_by =created_by
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--select-->
+    <!--分散式房源门锁列表（模糊查询）-->
+    <select id="findDispersedLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
+            resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
+        SELECT
+        csl.id id,
+        cslg.id gatewayId,
+        ch.area apartmentName,
+        '1' type,
+        cau.username authUserName,
+        CONCAT(ch.address,ch.area ,ch.building_num+ch.unit_num+ch.floor_num ,ch.house_num) houseAddress,
+        cr.`name` roomNo,
+        crc.customer_name customerName,
+        crc.customer_phone customerPhone,
+        csl.serial_num serialNum,
+        csl.`status` status,
+        csl.remaining_battery remainingBattery,
+        DATE_FORMAT(csl.install_time,'%Y.%m.%d %H:%i:%s') installTime,
+        cslg.gateway gateway,
+        nsp.`name` providerName
+        FROM
+        caspain_test.smart_lock csl
+        LEFT JOIN narcissus_test.smart_provider nsp ON nsp.smart_provider_ID = csl.smart_provider_ID
+        LEFT JOIN caspain_test.room cr ON csl.room_id = cr.id
+        LEFT JOIN caspain_test.smart_lock_gateway cslg ON cslg.id = csl.gateway_id
+        LEFT JOIN caspain_test.house ch ON cr.house_id = ch.id
+        LEFT JOIN caspain_test.room_contract crc ON crc.room_id = cr.id
+        LEFT JOIN caspain_test.auth_user cau ON crc.created_by_id = cau.id
+        WHERE
+        1 = 1
+        AND (
+        csl.is_delete != '1'
+        OR csl.is_delete IS NULL
+        )
+        AND (
+        ch.is_delete != '1'
+        OR ch.is_delete IS NULL
+        )
+        AND (
+        cr.is_delete != '1'
+        OR cr.is_delete IS NULL
+        )
+        AND (
+        crc.is_delete != '1'
+        OR crc.is_delete IS NULL
+        )
+        AND (
+        cslg.is_delete != '1'
+        OR cslg.is_delete IS NULL
+        )
+        AND crc.`status` = 'active'
+        <if test="serialNum != '' and serialNum != null">
+            AND csl.serial_num = '${serialNum}'
+        </if>
+        <if test="roomNo != '' and roomNo != null">
+            AND cr.name LIKE '%${roomNo}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND crc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND crc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND ch.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND ch.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND ch.area LIKE '%${areaName}%'
+        </if>
+        <if test="status != '' and status != null">
+            AND csl.status LIKE '%${status}%'
+        </if>
+        order by csl.updated_at desc
+    </select>
+
+    <!--集中式房源门锁列表（模糊查询）-->
+    <select id="findConcentrateLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
+            resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
+        SELECT
+        vsl.id id,
+        vslg.id gatewayId,
+        va.`name` apartmentName,
+        '0' type,
+        cau.username authUserName,
+        va.address houseAddress,
+        vr.`name` roomNo,
+        vrc.customer_name customerName,
+        vrc.customer_phone customerPhone,
+        vsl.serial_num serialNum,
+        vsl.`status` status,
+        vsl.remaining_battery remainingBattery,
+        DATE_FORMAT(vsl.install_time,'%Y.%m.%d %H:%i:%s') installTime,
+        vslg.gateway gateway,
+        nsp.`name` providerName
+        FROM
+        `volga_test`.smart_lock vsl
+        LEFT JOIN narcissus_test.smart_provider nsp ON nsp.smart_provider_ID = vsl.smart_provider_ID
+        LEFT JOIN volga_test.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
+        LEFT JOIN `volga_test`.room vr ON vsl.room_id = vr.id
+        LEFT JOIN `volga_test`.apartment va ON vr.apartment_id = va.id
+        LEFT JOIN `volga_test`.room_contract vrc ON vrc.room_id = vr.id
+        LEFT JOIN caspain_test.auth_user cau ON vrc.created_by = cau.id
+        WHERE
+        1 = 1
+        AND (
+        vsl.is_delete != '1'
+        OR vsl.is_delete IS NULL
+        )
+        AND (
+        va.is_delete != '1'
+        OR va.is_delete IS NULL
+        )
+        AND (
+        vr.is_delete != '1'
+        OR vr.is_delete IS NULL
+        )
+        AND (
+        vrc.is_delete != '1'
+        OR vrc.is_delete IS NULL
+        )
+        and vrc.`status`='active'
+        <if test="serialNum != '' and serialNum != null">
+            AND vsl.serial_num = '${serialNum}'
+        </if>
+        <if test="roomNo != '' and roomNo != null">
+            AND vr.name LIKE '%${roomNo}%'
+        </if>
+        <if test="customerName != '' and customerName != null">
+            AND vrc.customer_name LIKE '%${customerName}%'
+        </if>
+        <if test="authUserName != '' and authUserName != null">
+            AND cau.username LIKE '%${authUserName}%'
+        </if>
+        <if test="customerPhone != '' and customerPhone != null">
+            AND vrc.customer_phone LIKE '%${customerPhone}%'
+        </if>
+        <if test="cityName != '' and cityName != null">
+            AND va.city LIKE '%${cityName}%'
+        </if>
+        <if test="districtName != '' and districtName != null">
+            AND va.district LIKE '%${districtName}%'
+        </if>
+        <if test="areaName != '' and areaName != null">
+            AND va.area LIKE '%${areaName}%'
+        </if>
+        <if test="status != '' and status != null">
+            AND vsl.status LIKE '%${status}%'
+        </if>
+        order by vsl.updated_at desc
+    </select>
+
+    <!--分散式根据门锁id查询门锁基本信息-->
+    <select id="findDispersedLockByLockNo" resultType="com.ih2ome.hardware_service.service.vo.LockInfoVo">
+    SELECT
+    ch.address houseAddress,
+    cr.`name` roomNo,
+    csl.serial_num serialNum,
+    csl.`status` ,
+   csl.remaining_battery remainingBattery,
+    DATE_FORMAT(
+        csl.install_time,
+        '%Y.%m.%d %H:%i:%s'
+    ) installTime,
+    csl.remark remark,
+    cslg.gateway gateway,
+    nsp.`name` providerName
+    FROM
+    caspain_test.smart_lock csl
+    LEFT JOIN narcissus_test.smart_provider nsp ON nsp.smart_provider_ID = csl.smart_provider_ID
+    LEFT JOIN caspain_test.room cr ON csl.room_id = cr.id
+    LEFT JOIN caspain_test.house ch ON cr.house_id = ch.id
+    LEFT JOIN caspain_test.smart_lock_gateway cslg ON cslg.id = csl.gateway_id
+    WHERE  csl.id=#{id}
+    </select>
+
+    <!--集中式根据门锁id查询门锁基本信息-->
+    <select id="findConcentrateLockByLockNo" resultType="com.ih2ome.hardware_service.service.vo.LockInfoVo">
+     SELECT
+     va.address houseAddress,
+     vr.`name` roomNo,
+     vsl.serial_num serialNum,
+     vsl.`status` status,
+     vsl.remaining_battery remainingBattery,
+     DATE_FORMAT(
+        vsl.install_time,
+        '%Y.%m.%d %H:%i:%s'
+    ) installTime,
+     vsl.remark remark,
+     vslg.gateway gateway,
+     nsp.`name` providerName
+    FROM
+        `volga_test`.smart_lock vsl
+    LEFT JOIN narcissus_test.smart_provider nsp ON nsp.smart_provider_ID = vsl.smart_provider_ID
+    LEFT JOIN `volga_test`.room vr ON vsl.room_id = vr.id
+    LEFT JOIN `volga_test`.apartment va ON vr.apartment_id = va.id
+    LEFT JOIN volga_test.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
+    WHERE vsl.id=#{id}
+    </select>
+
+    <!--分散式根据门锁编码查询密码列表-->
+    <select id="findDispersedPwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+            '1' type,
+            slp.id id,
+            slp.pwd_no pwdNo,
+            sl.serial_num serial_num,
+            DATE_FORMAT(
+                slp.enable_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) enable_time,
+            DATE_FORMAT(
+                slp.disable_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) disable_time,
+            slp.digit_pwd_type,
+            slp.`status`,
+            CASE
+        WHEN slp.password_type = 0 THEN
+            '密码'
+        ELSE
+            '门卡'
+        END password_type,
+         slp.user_name,
+         slp.mobile,
+         slp.`password`,
+         slp.remark
+        FROM
+            caspain_test.`smart_lock_password` slp,
+            caspain_test.smart_lock sl
+        WHERE
+            slp.lock_id = sl.id
+        AND (
+            slp.is_delete != '1'
+            OR slp.is_delete IS NULL
+        )
+           AND sl.id = #{id}
+            order by slp.updated_at desc
+    </select>
+
+    <!--集中式根据门锁编码查询密码列表-->
+    <select id="findConcentratePwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+            '0' type,
+            slp.id id,
+            slp.pwd_no pwdNo,
+            sl.serial_num serial_num,
+            DATE_FORMAT(
+                slp.enable_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) enable_time,
+            DATE_FORMAT(
+                slp.disable_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) disable_time,
+            slp.digit_pwd_type,
+            slp.`status`,
+            CASE
+        WHEN slp.password_type = 0 THEN
+            '密码'
+        ELSE
+            '门卡'
+        END password_type,
+         slp.user_name,
+         slp.mobile,
+         slp.`password`,
+         slp.remark
+        FROM
+            volga_test.`smart_lock_password` slp,
+            volga_test.smart_lock sl
+        WHERE
+            slp.lock_id = sl.id
+        AND (
+            slp.is_delete != '1'
+            OR slp.is_delete IS NULL
+        )
+           AND sl.id = #{id}
+            order by slp.updated_at desc
+    </select>
+
+    <!--分散式根据门锁编码查询门锁历史状态-->
+    <select id="findDispersedLockHistoryStatus"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO">
+      SELECT
+       DATE_FORMAT(
+                sls.report_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) reportTime,
+        sls.network_status AS status,
+        sls.rdata,
+        sl.serial_num as serialNum
+        FROM
+            caspain_test.`smart_lock_status` sls
+        LEFT JOIN caspain_test.smart_lock sl ON sl.id = sls.lock_id
+        where sl.id=#{id}
+        order by sls.updated_at desc
+    </select>
+
+    <!--集中式根据门锁编码查询门锁历史状态-->
+    <select id="findConcentrateLockHistoryStatus"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO">
+         SELECT
+       DATE_FORMAT(
+                sls.report_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) reportTime,
+        sls.network_status AS status,
+        sls.rdata,
+        sl.serial_num as serialNum
+        FROM
+            volga_test.`smart_lock_status` sls
+        LEFT JOIN volga_test.smart_lock sl ON sl.id = sls.lock_id
+        where sl.id=#{id}
+         order by sls.updated_at desc
+    </select>
+
+    <!--分散式根据门锁编码查询门锁操作记录-->
+    <select id="findDispersedLockOperateRecord"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO">
+        SELECT
+        slor.operator_mobile mobile,
+        DATE_FORMAT(
+            slor.operate_time,
+            '%Y-%m-%d %H:%i:%s'
+        ) operateTime,
+        CASE slor.operate_type
+        WHEN 'create' THEN
+            '新增密码'
+        WHEN 'modify' THEN
+            '修改密码'
+        WHEN 'delete' THEN
+            '删除密码'
+        END operateType
+        FROM
+            caspain_test.smart_lock_operation_record slor
+        LEFT JOIN caspain_test.smart_lock sl ON slor.lock_id = sl.id
+        WHERE
+            sl.id = #{id}
+        AND (
+            sl.is_delete != '1'
+            OR sl.is_delete IS NULL
+        )
+        AND (
+            slor.is_delete != '1'
+            OR slor.is_delete IS NULL
+        )
+         order by slor.updated_at desc
+    </select>
+
+    <!--集中式根据门锁编码查询门锁操作记录-->
+    <select id="findConcentrateLockOperateRecord"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO">
+      SELECT
+        slor.operator_mobile mobile,
+        DATE_FORMAT(
+            slor.operate_time,
+            '%Y-%m-%d %H:%i:%s'
+        ) operateTime,
+        CASE slor.operate_type
+        WHEN 'create' THEN
+            '新增密码'
+        WHEN 'modify' THEN
+            '修改密码'
+        WHEN 'delete' THEN
+            '删除密码'
+        END operateType
+        FROM
+            volga_test.smart_lock_operation_record slor
+        LEFT JOIN volga_test.smart_lock sl ON slor.lock_id = sl.id
+        WHERE
+            sl.id = #{id}
+        AND (
+            sl.is_delete != '1'
+            OR sl.is_delete IS NULL
+        )
+        AND (
+            slor.is_delete != '1'
+            OR slor.is_delete IS NULL
+        )
+         order by slor.updated_at desc
+    </select>
+
+    <!--分散式根据门锁编码查询开门记录-->
+    <select id="findDispersedLockOpenRecord"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO">
+        SELECT
+            slp.user_name userName,
+            slp.mobile mobile,
+            DATE_FORMAT(
+                slr.unlock_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) unlockTime,
+        	CASE slp.digit_pwd_type
+            WHEN '0' THEN
+                '房客密码'
+            WHEN '1' THEN
+                '保洁密码'
+            WHEN '2' THEN
+                '管理密码'
+            WHEN '3' THEN
+                '带看密码'
+            WHEN '4' THEN
+                '扩展密码'
+            ELSE
+                '其他密码'
+          END passwordType
+        FROM
+            caspain_test.`smart_lock_password` slp
+        LEFT JOIN caspain_test.smart_lock sl ON slp.lock_id = sl.id
+        LEFT JOIN caspain_test.smart_lock_record slr ON slr.lock_id = sl.id
+        WHERE
+            sl.id =#{id} and slp.pwd_no=slr.password_type
+        AND (
+            slp.is_delete != '1'
+            OR slp.is_delete IS NULL
+        )
+        AND (
+            sl.is_delete != '1'
+            OR sl.is_delete IS NULL
+        )
+        AND (
+            slr.is_delete != '1'
+            OR slr.is_delete IS NULL
+        )
+         order by slr.updated_at desc
+     </select>
+
+    <!--集中式根据门锁编码查询开门记录-->
+    <select id="findConcentrateLockOpenRecord"
+            parameterType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO"
+            resultType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO">
+        SELECT
+            slp.user_name userName,
+            slp.mobile mobile,
+            DATE_FORMAT(
+                slr.unlock_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) unlockTime,
+        	CASE slp.digit_pwd_type
+            WHEN '0' THEN
+                '房客密码'
+            WHEN '1' THEN
+                '保洁密码'
+            WHEN '2' THEN
+                '管理密码'
+            WHEN '3' THEN
+                '带看密码'
+            WHEN '4' THEN
+                '扩展密码'
+            ELSE
+                '其他密码'
+            END passwordType
+        FROM
+            volga_test.`smart_lock_password` slp
+        LEFT JOIN volga_test.smart_lock sl ON slp.lock_id = sl.id
+        LEFT JOIN volga_test.smart_lock_record slr ON slr.lock_id = sl.id
+        WHERE
+            sl.id = #{id} and slp.pwd_no=slr.password_type
+        AND (
+            slp.is_delete != '1'
+            OR slp.is_delete IS NULL
+        )
+        AND (
+            sl.is_delete != '1'
+            OR sl.is_delete IS NULL
+        )
+        AND (
+            slr.is_delete != '1'
+            OR slr.is_delete IS NULL
+        )
+         order by slr.updated_at desc
+    </select>
+
+    <!--分散式根据主键id查询门锁编码-->
+    <select id="findDisSerialNumById" parameterType="string" resultType="string">
+        SELECT serial_num FROM caspain_test.smart_lock where id=#{id};
+    </select>
+
+    <!--集中式根据主键id查询门锁编码-->
+    <select id="findConSerialNumById" parameterType="string" resultType="string">
+        SELECT serial_num FROM volga_test.smart_lock where id=#{id};
+    </select>
+
+    <!--分散式根据主键id查询密码详情-->
+    <select id="findDispersedLockPassword" parameterType="string"
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+             id,
+            `password`,
+            digit_pwd_type,
+            password_type,
+            mobile,
+            enable_time,
+            disable_time,
+            user_name,
+            remark,
+            message_content
+        FROM
+	    caspain_test.`smart_lock_password`
+	    WHERE  id=#{id}
+    </select>
+
+    <!--集中式根据主键id查询密码详情-->
+    <select id="findConcentrateLockPassword" parameterType="string"
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+            id ,
+            password_type,
+            `password`,
+            mobile,
+            enable_time,
+            disable_time,
+            user_name,
+            remark,
+            message_content,
+            digit_pwd_type
+        FROM
+	    volga_test.`smart_lock_password`
+	    WHERE  id=#{id}
+    </select>
+
+    <!--分散式根据密码id查询门锁编码和密码编号-->
+    <select id="findDispersedLockIdAndPwdNo" parameterType="string"
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+             slp.id,
+            slp.pwd_no,
+            sl.serial_num
+        FROM
+            caspain_test.smart_lock_password slp
+        LEFT JOIN caspain_test.smart_lock sl ON slp.lock_id = sl.id
+        where slp.is_delete!='1' and sl.is_delete!='1' AND slp.id=#{id}
+    </select>
+
+    <!--集中式根据密码id查询门锁编码和密码编号-->
+    <select id="findConcentrateLockIdAndPwdNo" parameterType="string"
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+        SELECT
+            slp.id,
+            slp.pwd_no,
+            sl.serial_num
+        FROM
+            smart_lock_password slp
+        LEFT JOIN volga_test.smart_lock sl ON slp.lock_id = sl.id
+        where slp.is_delete!='1' and sl.is_delete!='1' and slp.id=#{id}
+    </select>
+
+</mapper>
