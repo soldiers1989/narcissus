@@ -111,8 +111,8 @@ SELECT
 	) operateTime
 FROM
 	`volga_test`.smart_lock vsl
-LEFT JOIN volga_test.smart_lock_operation_record vslor ON vslor.lock_id = vsl.id
-LEFT JOIN volga_test.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
+LEFT JOIN `volga_test`.smart_lock_operation_record vslor ON vslor.lock_id = vsl.id
+LEFT JOIN `volga_test`.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
 LEFT JOIN `volga_test`.room vr ON vsl.room_id = vr.id
 LEFT JOIN `volga_test`.apartment va ON vr.apartment_id = va.id
 LEFT JOIN `volga_test`.room_contract vrc ON vrc.room_id = vr.id
