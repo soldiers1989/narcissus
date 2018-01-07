@@ -226,5 +226,5 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param uuid
      * @return
      */
-    List<Integer> selectWatermeterIdByGatewayUuid(String uuid);
+    List<String> selectWatermeterIdByGatewayUuid(String uuid);
 }

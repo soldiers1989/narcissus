@@ -236,5 +236,5 @@ public interface WatermeterService {
      * @param uuid
      * @return
      */
-    List<Integer> findWatermeterIdByGatewayUuid(String uuid);
+    List<String> findWatermeterIdByGatewayUuid(String uuid);
 }

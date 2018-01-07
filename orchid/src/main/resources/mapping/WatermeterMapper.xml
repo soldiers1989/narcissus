@@ -266,7 +266,7 @@
     </select>
 
     <!-- 查询水表idBygatewayuuid -->
-    <select id="selectWatermeterIdByGatewayUuid" resultType="java.lang.Integer">
+    <select id="selectWatermeterIdByGatewayUuid" resultType="java.lang.String">
         SELECT watermeter.smart_watermeter_id FROM smart_gateway AS gateway
         INNER JOIN smart_gateway_bind AS bind ON gateway.smart_gateway_id=bind.smart_gateway_id
         INNER JOIN smart_watermeter AS watermeter ON bind.smart_id=watermeter.smart_watermeter_id

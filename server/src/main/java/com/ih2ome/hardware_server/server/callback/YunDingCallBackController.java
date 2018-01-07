@@ -12,6 +12,7 @@ import com.ih2ome.hardware_service.service.service.*;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.sun.xml.internal.ws.api.model.ExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,12 +106,11 @@ public class YunDingCallBackController extends BaseController {
                 break;
              //水表网关离线事件
             case "waterGatewayOfflineAlarm" :
-                waterGatewayOnOfflineAlarm(apiRequestVO);
+                waterGatewayOnOfflineAlarm(apiRequestVO,OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
                 break;
             //水表网关在线事件
             case "waterGatewayOnlineAlarm" :
-                //更改网关在线离线状态
-                gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_ON_Line.getCode());
+                waterGatewayOnOfflineAlarm(apiRequestVO,OnOffStatusEnum.ON_OFF_STATUS_ENUM_ON_Line.getCode());
                 break;
             //抄表读数同步
             case "watermeterAmountAsync" :
@@ -124,21 +124,40 @@ public class YunDingCallBackController extends BaseController {
      * 水表网关离线上线事件
      * @param apiRequestVO
      */
-    private void waterGatewayOnOfflineAlarm(CallbackRequestVo apiRequestVO) {
+    private void waterGatewayOnOfflineAlarm(CallbackRequestVo apiRequestVO ,int onOffStatus) {
+        String exceptionType = null;
+        //离线
+        if (onOffStatus==OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()){
+            exceptionType=String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_OFF_LINE.getCode());
+        }else {
+            exceptionType=String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_ON_LINE.getCode());
+        }
         //添加网关异常
         SmartMistakeInfo smartMistakeInfo =new SmartMistakeInfo();
         smartMistakeInfo.setCreatedAt(new Timestamp(apiRequestVO.getTime()));
         smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER_GATEWAY.getCode());
-        smartMistakeInfo.setExceptionType(String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_OFF_LINE.getCode()));
+        smartMistakeInfo.setExceptionType(exceptionType);
         smartMistakeInfo.setUuid(apiRequestVO.getUuid());
         smartMistakeInfo.setSn(apiRequestVO.getUuid());
         gatewayService.addSmartMistakeInfo(smartMistakeInfo);
         //更改网关在线状态
-        gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
+        gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),onOffStatus);
 
         //添加水表异常
         //查询水表id
-        //List<Integer> watermeterIds = watermeterService.findWatermeterIdByGatewayUuid(apiRequestVO.getUuid());
+        List<String> watermeterUuids = watermeterService.findWatermeterIdByGatewayUuid(apiRequestVO.getUuid());
+        for (String uuid:watermeterUuids
+             ) {
+            SmartMistakeInfo smartMistakeInfo2 =new SmartMistakeInfo();
+            smartMistakeInfo2.setCreatedAt(new Timestamp(apiRequestVO.getTime()));
+            smartMistakeInfo2.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER.getCode());
+            smartMistakeInfo2.setExceptionType(exceptionType);
+            smartMistakeInfo2.setUuid(uuid);
+            smartMistakeInfo2.setSn("");
+            gatewayService.addSmartMistakeInfo(smartMistakeInfo);
+            //添加水表离线
+            watermeterService.updataWatermerterOnoffStatus(uuid,onOffStatus);
+        }
     }
 
     /**

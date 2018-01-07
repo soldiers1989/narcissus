@@ -93,7 +93,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public List<Integer> findWatermeterIdByGatewayUuid(String uuid) {
+    public List<String> findWatermeterIdByGatewayUuid(String uuid) {
         return watermeterDao.selectWatermeterIdByGatewayUuid(uuid);
     }
 
