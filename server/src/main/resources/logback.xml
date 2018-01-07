@@ -46,7 +46,7 @@
     </appender>
     <logger name="com.ih2ome.peony" level="DEBUG" additivity="false">
         <appender-ref ref="peony"/>
-        <!-- <appender-ref ref="console"/> -->
+         <appender-ref ref="console"/>
     </logger>
 
     <!-- service -->
@@ -60,7 +60,7 @@
     </appender>
     <logger name="com.ih2ome.hardware_service" level="DEBUG" additivity="false">
         <appender-ref ref="hardware_service"/>
-        <!-- <appender-ref ref="console"/> -->
+         <appender-ref ref="console"/>
     </logger>
 
     <!-- server -->
@@ -74,7 +74,7 @@
     </appender>
     <logger name="com.ih2ome.hardware_server" level="DEBUG" additivity="false">
         <appender-ref ref="hardware_server"/>
-        <!-- <appender-ref ref="console"/> -->
+         <appender-ref ref="console"/>
     </logger>
 
     <!-- dao -->
@@ -88,7 +88,7 @@
     </appender>
     <logger name="com.ih2ome.hardware_service.service.dao" level="DEBUG" additivity="false">
         <appender-ref ref="dao"/>
-        <!-- <appender-ref ref="console"/> -->
+         <appender-ref ref="console"/>
     </logger>
 
 
@@ -107,6 +107,7 @@
     </logger>
     <logger name="druid.sql" level="DEBUG" additivity="false">
         <appender-ref ref="druid"/>
+        <appender-ref ref="console"/>
     </logger>
 
     <!-- org.apache.http -->
@@ -120,6 +121,7 @@
     </appender>
     <logger name="org.apache.http" level="DEBUG" additivity="false">
         <appender-ref ref="http"/>
+        <appender-ref ref="console"/>
     </logger>
 
     <!-- org.mybatis -->
@@ -133,12 +135,15 @@
     </appender>
     <logger name="org.mybatis" level="DEBUG" additivity="false">
         <appender-ref ref="mybatis"/>
+        <appender-ref ref="console"/>
     </logger>
     <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
         <appender-ref ref="mybatis"/>
+        <appender-ref ref="console"/>
     </logger>
     <logger name="org.mybatis" level="DEBUG" additivity="false">
         <appender-ref ref="mybatis"/>
+        <appender-ref ref="console"/>
     </logger>
 
     <!-- org.springframework -->
@@ -152,6 +157,7 @@
     </appender>
     <logger name="org.springframework" level="DEBUG" additivity="false">
         <appender-ref ref="springframework"/>
+        <appender-ref ref="console"/>
     </logger>
 
 </configuration>
