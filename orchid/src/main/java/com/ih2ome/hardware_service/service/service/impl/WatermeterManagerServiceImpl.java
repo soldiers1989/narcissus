@@ -94,6 +94,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
                 }
                 int dayAmount=watermeterRecordManagerVOList.get(i).getDeviceAmount()-meterAmount;
                 watermeterRecordManagerVOList.get(i).setDayAmount(dayAmount);
+                watermeterRecordManagerVOList.get(i).setRows(watermeterRecordManagerVO.getRows());
             }
         }
 
