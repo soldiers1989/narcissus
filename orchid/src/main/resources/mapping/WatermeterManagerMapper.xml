@@ -500,7 +500,7 @@
     </select>
 
     <!--水表异常记录by水表id-->
-    <select id="findwebWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
+    <select id="findwebWatermeterExceptionByWatermeterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
     </select>
 

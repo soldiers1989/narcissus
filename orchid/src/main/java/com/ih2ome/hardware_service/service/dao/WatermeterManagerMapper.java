@@ -141,4 +141,11 @@ public interface WatermeterManagerMapper extends MyMapper<Apartment>{
      * @return
      */
     List<ExceptionWebVO> findwebWatermeterGatewayExceptionByGatewayId(int daviceId);
+
+    /**
+     * 查询水表异常记录
+     * @param daviceId
+     * @return
+     */
+    List<ExceptionWebVO> findwebWatermeterExceptionByWatermeterId(int daviceId);
 }

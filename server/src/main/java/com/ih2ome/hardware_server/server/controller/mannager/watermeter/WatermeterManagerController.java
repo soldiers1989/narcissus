@@ -125,9 +125,9 @@ public class WatermeterManagerController extends BaseController{
         ExceptionWebVO exceptionVO = resData.getObject("exceptionVO", ExceptionWebVO.class);
 
         List<ExceptionWebVO> exceptionVOS= watermeterManagerService.findWatermeterException(exceptionVO);
-
+        PageInfo<ExceptionWebVO> pageInfo = new PageInfo<>(exceptionVOS);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("exceptionVOS",exceptionVOS);
+        responseJson.put("exceptionVOS",pageInfo);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }

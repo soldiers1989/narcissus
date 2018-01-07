@@ -112,7 +112,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
         if(exceptionVO.getPage()!= null && exceptionVO.getRows() != null){
             PageHelper.startPage(exceptionVO.getPage(),exceptionVO.getRows());
         }
-        List<ExceptionWebVO> exceptionVOList = watermeterManagerMapper.findwebWatermeterGatewayExceptionByGatewayId(exceptionVO.getDaviceId());
+        List<ExceptionWebVO> exceptionVOList = watermeterManagerMapper.findwebWatermeterExceptionByWatermeterId(exceptionVO.getDaviceId());
 
         return exceptionVOList;
     }
