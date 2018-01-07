@@ -105,9 +105,10 @@ public class WatermeterManagerController extends BaseController{
         WatermeterRecordManagerVO watermeterRecordManagerVO = resData.getObject("watermeterRecordManagerVO", WatermeterRecordManagerVO.class);
         //通过水表id查询水表读数列表
         List<WatermeterRecordManagerVO> watermeterRecordManagerVOList= watermeterManagerService.findWatermeterRecordByWatermeterIdAndTime(watermeterRecordManagerVO);
+        PageInfo<WatermeterRecordManagerVO> pageInfo = new PageInfo<>(watermeterRecordManagerVOList);
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(watermeterRecordManagerVOList));
         JSONObject responseJson = new JSONObject();
-        responseJson.put("watermeterRecordManagerVOList",jsonArray);
+        responseJson.put("watermeterRecordManagerVOList",pageInfo);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
@@ -124,6 +125,7 @@ public class WatermeterManagerController extends BaseController{
         ExceptionWebVO exceptionVO = resData.getObject("exceptionVO", ExceptionWebVO.class);
 
         List<ExceptionWebVO> exceptionVOS= watermeterManagerService.findWatermeterException(exceptionVO);
+
         JSONObject responseJson = new JSONObject();
         responseJson.put("exceptionVOS",exceptionVOS);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
@@ -161,7 +163,6 @@ public class WatermeterManagerController extends BaseController{
 
         //查询网关详情
         GatewayWebDetailVO gatewayDetailVO = watermeterManagerService.findGatewayDetailbyId(smartGatewayId,type);
-
         JSONObject responseJson = new JSONObject();
         responseJson.put("gatewayDetailVO",gatewayDetailVO);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
@@ -179,8 +180,9 @@ public class WatermeterManagerController extends BaseController{
         JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
         ExceptionWebVO exceptionVO = resData.getObject("exceptionVO", ExceptionWebVO.class);
         List<ExceptionWebVO> exceptionVOS= watermeterManagerService.findGatewayException(exceptionVO);
+        PageInfo<ExceptionWebVO> pageInfo = new PageInfo<>(exceptionVOS);
         JSONObject responseJson = new JSONObject();
-        responseJson.put("exceptionVOS",exceptionVOS);
+        responseJson.put("exceptionVOS",pageInfo);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
