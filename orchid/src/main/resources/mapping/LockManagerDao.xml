@@ -89,7 +89,7 @@
         '1' as status,
          #{pwdNo} as pwd_no
     FROM
-        volga_test.smart_lock
+        `volga_test`.smart_lock
     WHERE
         id = #{id};
     </insert>
@@ -107,7 +107,7 @@
 
     <!--集中式删除密码-->
     <update id="deleteConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
-        UPDATE volga_test.smart_lock_password
+        UPDATE `volga_test`.smart_lock_password
         SET is_delete = '1',
          deleted_at = NOW(),
          deleted_by = created_by
@@ -144,7 +144,7 @@
 
     <!--集中式修改门锁密码-->
     <update id="updateConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
-        UPDATE volga_test.smart_lock_password
+        UPDATE `volga_test`.smart_lock_password
         <set>
             <if test="password!=null and password.trim()!=''">
                 password=#{password},
@@ -270,7 +270,7 @@
         FROM
         `volga_test`.smart_lock vsl
         LEFT JOIN narcissus_test.smart_provider nsp ON nsp.smart_provider_ID = vsl.smart_provider_ID
-        LEFT JOIN volga_test.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
+        LEFT JOIN `volga_test`.smart_lock_gateway vslg ON vslg.id = vsl.gateway_id
         LEFT JOIN `volga_test`.room vr ON vsl.room_id = vr.id
         LEFT JOIN `volga_test`.apartment va ON vr.apartment_id = va.id
         LEFT JOIN `volga_test`.room_contract vrc ON vrc.room_id = vr.id
@@ -440,8 +440,8 @@
          slp.`password`,
          slp.remark
         FROM
-            volga_test.`smart_lock_password` slp,
-            volga_test.smart_lock sl
+            `volga_test`.smart_lock_password slp,
+            `volga_test`.smart_lock sl
         WHERE
             slp.lock_id = sl.id
         AND (
@@ -484,8 +484,8 @@
         sls.rdata,
         sl.serial_num as serialNum
         FROM
-            volga_test.`smart_lock_status` sls
-        LEFT JOIN volga_test.smart_lock sl ON sl.id = sls.lock_id
+            `volga_test`.smart_lock_status sls
+        LEFT JOIN `volga_test`.smart_lock sl ON sl.id = sls.lock_id
         where sl.id=#{id}
          order by sls.updated_at desc
     </select>
@@ -543,8 +543,8 @@
             '删除密码'
         END operateType
         FROM
-            volga_test.smart_lock_operation_record slor
-        LEFT JOIN volga_test.smart_lock sl ON slor.lock_id = sl.id
+            `volga_test`.smart_lock_operation_record slor
+        LEFT JOIN `volga_test`.smart_lock sl ON slor.lock_id = sl.id
         WHERE
             sl.id = #{id}
         AND (
@@ -630,9 +630,9 @@
                 '其他密码'
             END passwordType
         FROM
-            volga_test.`smart_lock_password` slp
-        LEFT JOIN volga_test.smart_lock sl ON slp.lock_id = sl.id
-        LEFT JOIN volga_test.smart_lock_record slr ON slr.lock_id = sl.id
+            `volga_test`.smart_lock_password slp
+        LEFT JOIN `volga_test`.smart_lock sl ON slp.lock_id = sl.id
+        LEFT JOIN `volga_test`.smart_lock_record slr ON slr.lock_id = sl.id
         WHERE
             sl.id = #{id} and slp.pwd_no=slr.password_type
         AND (
@@ -657,7 +657,7 @@
 
     <!--集中式根据主键id查询门锁编码-->
     <select id="findConSerialNumById" parameterType="string" resultType="string">
-        SELECT serial_num FROM volga_test.smart_lock where id=#{id};
+        SELECT serial_num FROM `volga_test`.smart_lock where id=#{id};
     </select>
 
     <!--分散式根据主键id查询密码详情-->
@@ -694,7 +694,7 @@
             message_content,
             digit_pwd_type
         FROM
-	    volga_test.`smart_lock_password`
+	    `volga_test`.smart_lock_password
 	    WHERE  id=#{id}
     </select>
 
@@ -720,7 +720,7 @@
             sl.serial_num
         FROM
             smart_lock_password slp
-        LEFT JOIN volga_test.smart_lock sl ON slp.lock_id = sl.id
+        LEFT JOIN `volga_test`.smart_lock sl ON slp.lock_id = sl.id
         where slp.is_delete!='1' and sl.is_delete!='1' and slp.id=#{id}
     </select>
 
