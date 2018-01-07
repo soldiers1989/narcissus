@@ -224,10 +224,10 @@
         <include refid="smart_watermeter_record"/>  wr
         WHERE
         smart_watermeter_id = #{smartWatermeterId}
-        <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+        <if test="startTime != '' and startTime != null and endTime != '' and endTime != null">
             AND created_at between #{startTime} and #{endTime}
         </if>
-         ORDER BY created_at DESC
+        ORDER BY created_at DESC
     </select>
 
     <!--查询分散式web网关list-->
@@ -333,7 +333,7 @@
     <!--查询分散式网关详情by网关id-->
     <select id="selectHmGatewayDetailbyGatewayId" resultMap="GatewayDetailResultMap">
         SELECT
-          gateway.uuid,house.address AS install_adress,gateway.onoff_status,gateway.updated_at,gateway.created_at,gateway.brand
+          gateway.uuid,apartment.address AS install_adress,gateway.onoff_status,gateway.updated_at,gateway.created_at,gateway.brand
         FROM
         <include refid="smart_gateway" /> AS gateway
         LEFT JOIN <include refid="house" /> AS house ON gateway.house_id = house.id
@@ -494,14 +494,5 @@
         limit 1
     </select>
 
-    <!--水表异常记录by水表id-->
-    <select id="findwebWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
-        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
-    </select>
-
-    <!--网关异常记录by网关id-->
-    <select id="findwebWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
-        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
-    </select>
 
 </mapper>
