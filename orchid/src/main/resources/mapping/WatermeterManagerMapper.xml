@@ -494,5 +494,14 @@
         limit 1
     </select>
 
+    <!--网关异常记录by网关id-->
+    <select id="findwebWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
+        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
+    </select>
+
+    <!--水表异常记录by水表id-->
+    <select id="findwebWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
+        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
+    </select>
 
 </mapper>

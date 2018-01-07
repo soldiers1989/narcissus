@@ -111,7 +111,7 @@
     <!--查询room信息byhouseid-->
     <select id="findRoomByHouseId" parameterType="int" resultMap="AddRoomVOResultMap">
         SELECT room.id AS room_id,room.name AS room_name,room.room_desc AS room_description
-        FROM <include refid="room"/> room WHERE room.house_id = #{id}
+        FROM <include refid="room"/> room WHERE room.house_id = #{id} AND (synchronous IS NULL OR synchronous=0)
     </select>
 
     <!--查询room信息byApartmentId-->
