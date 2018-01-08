@@ -90,4 +90,10 @@ public interface WatermeterManagerService {
      */
     List<HmRoomSyncVO> selectHmRoomIsAllSynchronous(int homeId, int sync, String type);
 
+    /**
+     * 查询水表抄表记录by时间段（无分页）
+     * @param watermeterRecordManagerVO
+     * @return
+     */
+    List<WatermeterRecordManagerVO> findWatermeterRecordByWatermeterIdAndTime2(WatermeterRecordManagerVO watermeterRecordManagerVO);
 }

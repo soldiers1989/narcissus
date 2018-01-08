@@ -48,4 +48,10 @@ spring:
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=${publicKey}
 
+    #短信配置
+    sms:
+      baseUrl: http://localhost:5312
+
+
+
 

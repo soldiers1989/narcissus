@@ -287,5 +287,32 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
         }
     }
 
+    /**
+     * 查询水表查表记录by时间段+分页
+     * @param watermeterRecordManagerVO
+     * @return
+     */
+    @Override
+    public List<WatermeterRecordManagerVO> findWatermeterRecordByWatermeterIdAndTime2(WatermeterRecordManagerVO watermeterRecordManagerVO) {
+        Log.info("查询水表查表记录by时间段，watermeterRecordManagerVO:{}",watermeterRecordManagerVO.toString());
+
+        List<WatermeterRecordManagerVO> watermeterRecordManagerVOList=watermeterManagerMapper.selectWatermeterRecordByWatermeterIdAndTime(watermeterRecordManagerVO);
+
+        if(!watermeterRecordManagerVOList.isEmpty() || watermeterRecordManagerVOList != null) {
+            for (int i = 0; i < watermeterRecordManagerVOList.size(); i++) {
+                int meterAmount = 0;
+                if(i==watermeterRecordManagerVOList.size()-1){
+                    meterAmount=0;
+                }else {
+                    meterAmount = watermeterRecordManagerVOList.get(i+1).getDeviceAmount();
+                }
+                int dayAmount=watermeterRecordManagerVOList.get(i).getDeviceAmount()-meterAmount;
+                watermeterRecordManagerVOList.get(i).setDayAmount(dayAmount);
+                watermeterRecordManagerVOList.get(i).setRows(watermeterRecordManagerVO.getRows());
+            }
+        }
+
+        return watermeterRecordManagerVOList;
+    }
 
 }
