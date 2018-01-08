@@ -220,4 +220,11 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @return
      */
     WatermeterGatewayDetailVO findhmGatewaybySmartGatewayId(int smartGatewayId);
+
+    /**
+     * 查询水表idBygateway
+     * @param uuid
+     * @return
+     */
+    List<String> selectWatermeterIdByGatewayUuid(String uuid);
 }

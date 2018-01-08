@@ -34,7 +34,7 @@ public interface WatermeterManagerService {
      * @param exceptionVO
      * @return
      */
-    List<ExceptionVO> findWatermeterException(ExceptionVO exceptionVO);
+    List<ExceptionWebVO> findWatermeterException(ExceptionWebVO exceptionVO);
 
     /**
      * 网关list
@@ -56,7 +56,7 @@ public interface WatermeterManagerService {
      * @param exceptionVO
      * @return
      */
-    List<ExceptionVO> findGatewayException(ExceptionVO exceptionVO);
+    List<ExceptionWebVO> findGatewayException(ExceptionWebVO exceptionVO);
 
     /**
      * 房源同步状态
@@ -89,4 +89,5 @@ public interface WatermeterManagerService {
      * @return
      */
     List<HmRoomSyncVO> selectHmRoomIsAllSynchronous(int homeId, int sync, String type);
+
 }

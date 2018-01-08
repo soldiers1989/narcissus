@@ -230,4 +230,11 @@ public interface WatermeterService {
      * @return
      */
     WatermeterGatewayDetailVO findhmGatewaybyId(int smartGatewayId);
+
+    /**
+     * 查询水表idBygatewayId
+     * @param uuid
+     * @return
+     */
+    List<String> findWatermeterIdByGatewayUuid(String uuid);
 }

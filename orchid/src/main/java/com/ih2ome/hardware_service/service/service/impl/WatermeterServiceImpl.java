@@ -88,6 +88,16 @@ public class WatermeterServiceImpl implements WatermeterService {
     }
 
     /**
+     * 查询水表idbygatewayId
+     * @param uuid
+     * @return
+     */
+    @Override
+    public List<String> findWatermeterIdByGatewayUuid(String uuid) {
+        return watermeterDao.selectWatermeterIdByGatewayUuid(uuid);
+    }
+
+    /**
      * 通过网关id查询绑定的水表
      * @param smartGatewayId
      * @return

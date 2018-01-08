@@ -2,21 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.WatermeterManagerMapper">
     <!-- 数据库表名 -->
-    <sql id="smart_watermeter">narcissus_test.smart_watermeter</sql>
-    <sql id="smart_gateway_bind">narcissus_test.smart_gateway_bind</sql>
-    <sql id="smart_gateway">narcissus_test.smart_gateway</sql>
-    <sql id="smart_watermeter_record">narcissus_test.smart_watermeter_record</sql>
-    <sql id="smart_exception">narcissus_test.smart_mistake_info</sql>
-    <sql id="house">caspain_test.house</sql>
-    <sql id="room">caspain_test.room</sql>
-    <sql id="room_contract">caspain_test.room_contract</sql>
-    <sql id="apartment">volga_test.apartment</sql>
-    <sql id="floor">volga_test.floor</sql>
-    <sql id="jzroom">volga_test.room</sql>
-    <sql id="jzroom_contract">volga_test.room_contract</sql>
-    <sql id="jz_area">volga_test.area</sql>
-    <sql id="area">caspain_test.area</sql>
-    <sql id="auth_user">caspain_test.auth_user</sql>
+    <sql id="smart_watermeter">`narcissus_test`.smart_watermeter</sql>
+    <sql id="smart_gateway_bind">`narcissus_test`.smart_gateway_bind</sql>
+    <sql id="smart_gateway">`narcissus_test`.smart_gateway</sql>
+    <sql id="smart_watermeter_record">`narcissus_test`.smart_watermeter_record</sql>
+    <sql id="smart_exception">`narcissus_test`.smart_mistake_info</sql>
+    <sql id="house">`caspain_test`.house</sql>
+    <sql id="room">`caspain_test`.room</sql>
+    <sql id="room_contract">`caspain_test`.room_contract</sql>
+    <sql id="apartment">`volga_test`.apartment</sql>
+    <sql id="floor">`volga_test`.floor</sql>
+    <sql id="jzroom">`volga_test`.room</sql>
+    <sql id="jzroom_contract">`volga_test`.room_contract</sql>
+    <sql id="jz_area">`volga_test`.area</sql>
+    <sql id="area">`caspain_test`.area</sql>
+    <sql id="auth_user">`caspain_test`.auth_user</sql>
 
     <!--配置resultMap -->
     <!--!分散式水表列表VO-->
@@ -170,7 +170,7 @@
     </select>
 
     <!-- 查询分散式水表详情byuuid -->
-    <select id="selectHmWatermeterDetailByUuid" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
+    <select id="selectHmWatermeterDetailByUuid"  resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
         SELECT w.uuid,CONCAT(h.area,h.building_num,unit_num) AS home_name,h.floor_num AS floor_name,h.house_num AS room_name,w.meter_type,w.created_at,w.meter_updated_at,(w.last_amount-w.meter_amount) AS amount,w.onoff_status,g.uuid AS gateway_uuid
         FROM
         <include refid="smart_watermeter" /> AS w
@@ -224,7 +224,10 @@
         <include refid="smart_watermeter_record"/>  wr
         WHERE
         smart_watermeter_id = #{smartWatermeterId}
-        AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
+        <if test="startTime != '' and startTime != null and endTime != '' and endTime != null">
+            AND created_at between #{startTime} and #{endTime}
+        </if>
+        ORDER BY created_at DESC
     </select>
 
     <!--查询分散式web网关list-->
@@ -489,6 +492,16 @@
             AND  synchronous = 1
         </if>
         limit 1
+    </select>
+
+    <!--网关异常记录by网关id-->
+    <select id="findwebWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
+        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
+    </select>
+
+    <!--水表异常记录by水表id-->
+    <select id="findwebWatermeterExceptionByWatermeterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
+        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
     </select>
 
 </mapper>

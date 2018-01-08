@@ -94,6 +94,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
                 }
                 int dayAmount=watermeterRecordManagerVOList.get(i).getDeviceAmount()-meterAmount;
                 watermeterRecordManagerVOList.get(i).setDayAmount(dayAmount);
+                watermeterRecordManagerVOList.get(i).setRows(watermeterRecordManagerVO.getRows());
             }
         }
 
@@ -106,12 +107,12 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      *  @return
      */
     @Override
-    public List<ExceptionVO> findWatermeterException(ExceptionVO exceptionVO) {
+    public List<ExceptionWebVO> findWatermeterException(ExceptionWebVO exceptionVO) {
         Log.info("水表异常记录，exceptionVO:{}",exceptionVO.toString());
         if(exceptionVO.getPage()!= null && exceptionVO.getRows() != null){
             PageHelper.startPage(exceptionVO.getPage(),exceptionVO.getRows());
         }
-        List<ExceptionVO> exceptionVOList = watermeterMapper.findWatermeterExceptionByWaterId(exceptionVO.getDaviceId());
+        List<ExceptionWebVO> exceptionVOList = watermeterManagerMapper.findwebWatermeterExceptionByWatermeterId(exceptionVO.getDaviceId());
 
         return exceptionVOList;
     }
@@ -170,12 +171,12 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      * @return
      */
     @Override
-    public List<ExceptionVO> findGatewayException(ExceptionVO exceptionVO) {
+    public List<ExceptionWebVO> findGatewayException(ExceptionWebVO exceptionVO) {
         Log.info("查询网关异常记录，exceptionVO:{}",exceptionVO.toString());
         if(exceptionVO.getPage()!= null && exceptionVO.getRows() != null){
             PageHelper.startPage(exceptionVO.getPage(),exceptionVO.getRows());
         }
-        List<ExceptionVO> exceptionVOList = watermeterMapper.findWatermeterGatewayExceptionByGatewayId(exceptionVO.getDaviceId());
+        List<ExceptionWebVO> exceptionVOList = watermeterManagerMapper.findwebWatermeterGatewayExceptionByGatewayId(exceptionVO.getDaviceId());
 
         return exceptionVOList;
     }

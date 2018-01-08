@@ -11,15 +11,14 @@ import java.util.Date;
 @Data
 public class WatermeterRecordManagerVO extends BaseEntity implements Serializable {
     //水表设备表ID
-    private int smartWatermeterId;
+    private String smartWatermeterId;
     //查询条件开始时间
-    private Date startTime;
+    private String startTime;
     //查询条件结束时间
-    private Date endTime;
+    private String endTime;
 
     //抄表时间
-    @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
-    private Date createdAt;
+    private String createdAt;
     //设备读数
     private int deviceAmount;
     //当天用水量

@@ -13,8 +13,8 @@ public class GatewayWebDetailVO implements Serializable{
     private String uuid;
     private String installAdress;
     private String onoffStatus;
-    private Date updatedAt;
-    private Date createdAt;
+    private String updatedAt;
+    private String createdAt;
     private String brand;//厂商 （品牌名称）
     private int type;//分散式集中式
 
