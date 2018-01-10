@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -252,9 +253,9 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
         } else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             //集中式
             List<Integer> list=homeAndRoomSyncVO.getRoomIds();
-            int[] rooms = new int[list.size()];
+            List<Integer> rooms = new ArrayList<>();
             for (int i=0;i<list.size();i++) {
-                rooms[i]=list.get(i);
+                rooms.add(list.get(i));
             }
             String res = null;
 
