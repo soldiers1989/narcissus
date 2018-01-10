@@ -164,7 +164,39 @@
         <dependency>
             <groupId>com.ih2ome</groupId>
             <artifactId>lotus</artifactId>
-            <version>0.1.8</version>
+            <version>0.1.10</version>
+        </dependency>
+
+        <!-- 生成Excel文件 -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-examples</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-excelant</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>3.9</version>
         </dependency>
 
         <!--生产配置-->
@@ -183,7 +215,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <proileActive>dev</proileActive>
+                <profileActive>dev</profileActive>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -192,13 +224,13 @@
         <profile>
             <id>test</id>
             <properties>
-                <proileActive>test</proileActive>
+                <profileActive>test</profileActive>
             </properties>
         </profile>
         <profile>
             <id>prod</id>
             <properties>
-                <proileActive>prod</proileActive>
+                <profileActive>prod</profileActive>
             </properties>
         </profile>
     </profiles>
