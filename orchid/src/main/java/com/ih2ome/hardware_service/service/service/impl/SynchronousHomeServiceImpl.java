@@ -302,7 +302,11 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         Log.info("分散式同步房源,房源houseId：{}",houseId);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         //同步房源home
-        synchronousHome(houseId,HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode(),iWatermeter);
+        String homeReslut = synchronousHome(houseId, HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode(), iWatermeter);
+        //如果房源同步失败
+        if(!homeReslut.equals("success")){
+            return homeReslut;
+        }
         //添加room
         //查询所有roombyhouseid
         List<AddRoomVO> addRoomVOS=synchronousHomeMapper.findRoomByHouseId(houseId);
@@ -329,42 +333,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             }
         }
         return "success";
-    }
-
-    /**
-     * 同步房源home
-     * @param houseId
-     * @param i
-     * @param iWatermeter
-     */
-    private String synchronousHome(int houseId, int i, IWatermeter iWatermeter) throws WatermeterException {
-        String homeId=HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+houseId;
-        ///房源home是否已同步
-        String state = iWatermeter.findHomeState(homeId);
-        JSONObject jsonObject=null;
-
-        jsonObject = JSONObject.parseObject(state);
-
-        Object result = jsonObject.get("result");
-        String res =null;
-        if (result == null) {
-            AddHomeVo addHomeVo = synchronousHomeMapper.findHouseByHouseId(houseId);
-            addHomeVo.setHome_id(HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+addHomeVo.getHome_id());
-            addHomeVo.setHome_type(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode());
-            addHomeVo.setCountry("中国");
-            //添加房源
-            res = iWatermeter.addHome(addHomeVo);
-            JSONObject resJson = JSONObject.parseObject(res);
-            String code = resJson.get("ErrNo").toString();
-            if(!code.equals("0")){
-                String msg = resJson.get("ErrMsg").toString();
-                Log.error("添加房源失败/n"+msg);
-                return "添加房源失败/n"+msg;
-            }
-            //更新房源为已同步至云丁
-            synchronousHomeMapper.updateHouseSyncByHouseId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),houseId);
-        }
-        return homeId;
     }
 
     /**
@@ -410,7 +378,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      * @throws InstantiationException
      */
     @Override
-    public String synchronousHousingByRooms(int apartmentId, int[] roomIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
+    public String synchronousHousingByRooms(int apartmentId, List<Integer> roomIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
         Log.info("集中式同步房源,公寓apartmentId:{},房间roomIds：{}",apartmentId,roomIds);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
         String homeId=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+apartmentId;
@@ -482,7 +450,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         //更新room为已同步
         synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), roomIdsList);
 
-
         return "success";
     }
 
@@ -511,9 +478,16 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         if (houseId==null){
             return "房间查询不到";
         }
+        //同步房源home
+        String synchResult = synchronousHome(houseId, HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode(), iWatermeter);
+        //如果房源同步失败,返回失败原因
+        if(!synchResult.equals("success")){
+            return synchResult;
+        }
         String homeId = HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+houseId;
 
         AddRoomVO addRoomVOS=synchronousHomeMapper.findhmRoomByRoomId(roomId);
+        //同步room
         String addRoomsRes = iWatermeter.addRoom(homeId,HomeIdNameEnum.HOME_ID_NAME_HM + addRoomVOS.getRoom_id(),addRoomVOS.getRoom_name(),addRoomVOS.getRoom_description());
         JSONObject resJson = null;
 
@@ -522,8 +496,8 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("添加room失败，{}",msg);
-            return "添加room失败，"+msg;
+            Log.error("同步room失败，{}",msg);
+            return "同步room失败，"+msg;
         }
 
         List<AddRoomVO> roomList=new ArrayList<>();
@@ -548,67 +522,129 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     public String synchronousHousingByHmHomeIdRoomIds(int houseId, List<Integer> roomIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
         Log.info("分散式同步房间,房源homeId：{},房间roomIds：{}",houseId,roomIds.toArray());
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-        String homeId=HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+houseId;
-        //房源home是否已同步
-        String state = iWatermeter.findHomeState(homeId);
-        JSONObject jsonObject=null;
-
-        jsonObject = JSONObject.parseObject(state);
-
-        Object result = jsonObject.get("result");
-        String res =null;
-        if (result == null) {
-            AddHomeVo addHomeVo = synchronousHomeMapper.findHouseByHouseId(houseId);
-            addHomeVo.setHome_id(HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+addHomeVo.getHome_id());
-            addHomeVo.setHome_type(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode());
-            addHomeVo.setCountry("中国");
-            //添加房源
-            res = iWatermeter.addHome(addHomeVo);
-
-            JSONObject resJson = null;
-            try {
-                resJson = JSONObject.parseObject(res);
-            }catch (Exception e){
-                Log.error("json格式解析错误",e);
-                throw new WatermeterException("json格式解析错误"+e.getMessage());
-            }
-
-            String code = resJson.get("ErrNo").toString();
-            if(!code.equals("0")){
-                String msg = resJson.get("ErrMsg").toString();
-                Log.error("添加房源失败/n"+msg);
-                return "添加房源失败/n"+msg;
-            }
-            //更新房源为已同步至云丁
-            synchronousHomeMapper.updateHouseSyncByHouseId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),houseId);
+        //同步房源home
+        String homeReslut = synchronousRooms(houseId,roomIds,HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode(), iWatermeter);
+        //如果房源同步失败,返回失败原因
+        if(!homeReslut.equals("success")){
+            return homeReslut;
         }
+        return "success";
+    }
 
+
+    /**
+     * 同步房源rooms
+     * @param houseId
+     * @param roomIds
+     * @param type
+     * @param iWatermeter
+     * @return
+     * @throws WatermeterException
+     */
+    public String synchronousRooms(int houseId,List<Integer> roomIds, int type, IWatermeter iWatermeter) throws WatermeterException {
+        //同步房源home
+        String homeId=null;
+        if (type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()) {
+            homeId = HomeIdNameEnum.HOME_ID_NAME_HM.getCode() + houseId;
+        }else {
+            homeId = HomeIdNameEnum.HOME_ID_NAME_JZ.getCode() + houseId;
+        }
+        //房源home是否已同步
+        String synchResult = synchronousHome(houseId, HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode(), iWatermeter);
+        //如果房源同步失败,返回失败原因
+        if(!synchResult.equals("success")){
+            return synchResult;
+        }
         //添加room
         //查询所有roombyhouseid
-        List<AddRoomVO> addRoomVOS=synchronousHomeMapper.findHmRoomByRoomIds(roomIds);
+        List<AddRoomVO> addRoomVOS =null;
+        if (type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()) {
+            addRoomVOS = synchronousHomeMapper.findHmRoomByRoomIds(roomIds);
+        }else {
+            addRoomVOS = synchronousHomeMapper.findRoomByRoomIds(roomIds);
+        }
         List<AddRoomVO> addRoomVOSList =new ArrayList<>();
         if (addRoomVOS != null) {
             for (AddRoomVO addRoomVO : addRoomVOS
                     ) {
-                addRoomVO.setRoom_id(HomeIdNameEnum.HOME_ID_NAME_HM.getCode() + addRoomVO.getRoom_id());
+                if (type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()) {
+                    addRoomVO.setRoom_id(HomeIdNameEnum.HOME_ID_NAME_HM.getCode() + addRoomVO.getRoom_id());
+                }else {
+                    addRoomVO.setRoom_id(HomeIdNameEnum.HOME_ID_NAME_JZ.getCode() + addRoomVO.getRoom_id());
+                }
                 addRoomVOSList.add(addRoomVO);
             }
 
-
-            String addRoomsRes = iWatermeter.addRooms("hm"+houseId,addRoomVOSList);
+            //添加rooms
+            String addRoomsRes = iWatermeter.addRooms(homeId,addRoomVOSList);
 
             JSONObject resJson2 = JSONObject.parseObject(addRoomsRes);
             String code = resJson2.get("ErrNo").toString();
-            //room_id不为空添加成功
+            //添加成功
             if (code.equals("0")){
                 List<Integer> roomIdsList=new ArrayList<>();
                 for (AddRoomVO addRoomVO:addRoomVOS) {
                     roomIdsList.add(Integer.parseInt(addRoomVO.getRoom_id().substring(2)));
                 }
-                //更新room为已同步
-                synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),roomIdsList);
+                if (type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()) {
+                    //更新room为已同步
+                    synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), roomIdsList);
+                }else {
+                    //更新room为已同步
+                    synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), roomIdsList);
+                }
             }else {
                 return "synchronousRoomfail";
+            }
+        }
+        return "success";
+    }
+
+    /**
+     * 同步房源home
+     * @param houseId
+     * @param type
+     * @param iWatermeter
+     */
+    private String synchronousHome(int houseId, int type, IWatermeter iWatermeter) throws WatermeterException {
+        String homeId=null;
+        if (type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()) {
+            homeId = HomeIdNameEnum.HOME_ID_NAME_HM.getCode() + houseId;
+        }else {
+            homeId = HomeIdNameEnum.HOME_ID_NAME_JZ.getCode() + houseId;
+        }
+        ///房源home是否已同步
+        String state = iWatermeter.findHomeState(homeId);
+        JSONObject jsonObject= JSONObject.parseObject(state);
+        Object result = jsonObject.get("result");
+        String res =null;
+        //房源未同步
+        if (result == null) {
+            AddHomeVo addHomeVo = null;
+            if (type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()){
+                addHomeVo = synchronousHomeMapper.findHouseByHouseId(houseId);
+                addHomeVo.setHome_id(HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+addHomeVo.getHome_id());
+                addHomeVo.setHome_type(HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode());
+            }else {
+                addHomeVo = synchronousHomeMapper.findHouseByApartmentId(houseId);
+                addHomeVo.setHome_id(HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+addHomeVo.getHome_id());
+                addHomeVo.setHome_type(HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode());
+            }
+            addHomeVo.setCountry("中国");
+            //添加房源
+            res = iWatermeter.addHome(addHomeVo);
+            JSONObject resJson = JSONObject.parseObject(res);
+            String code = resJson.get("ErrNo").toString();
+            if(!code.equals("0")){
+                String msg = resJson.get("ErrMsg").toString();
+                Log.error("添加房源失败：{}",msg);
+                return "添加房源失败："+msg;
+            }
+            if (type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()) {
+                //更新房源为已同步至云丁
+                synchronousHomeMapper.updateHouseSyncByHouseId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), houseId);
+            }else {
+                synchronousHomeMapper.updateHomeSyncByApartmentId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),houseId);
             }
         }
         return "success";

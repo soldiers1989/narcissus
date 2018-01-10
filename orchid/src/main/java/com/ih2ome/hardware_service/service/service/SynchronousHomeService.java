@@ -103,7 +103,7 @@ public interface SynchronousHomeService {
      * @param roomId
      * @return
      */
-    String synchronousHousingByRooms(int homeId, int[] roomId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+    String synchronousHousingByRooms(int homeId, List<Integer> roomId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
     /**
      * 查询分散式为同步房间

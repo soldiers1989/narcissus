@@ -184,7 +184,7 @@
     <!-- 查询集中式room信息byroomids -->
     <select id="findRoomByRoomIds" resultMap="AddRoomVOResultMap">
         SELECT id AS room_id,name AS room_name,room_desc AS room_description FROM <include refid="jzroom" />  WHERE id IN
-        <foreach collection="array" item="item" index="index" open="(" separator="," close=")" >
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >
             #{item}
         </foreach>
     </select>
