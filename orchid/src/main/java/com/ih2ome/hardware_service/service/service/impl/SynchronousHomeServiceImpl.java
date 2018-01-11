@@ -92,7 +92,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
         JSONObject resJson2 = JSONObject.parseObject(addRoomsRes);
         String errNo = resJson2.get("ErrNo").toString();
-        //room_id不为空添加成功
+        //添加成功
         if (errNo.equals("0") ){
             List<Integer> roomIds=new ArrayList<>();
             for (AddRoomVO addRoomVO:addRoomVOS) {
@@ -319,7 +319,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             }
 
 
-            String addRoomsRes = iWatermeter.addRooms("hm"+houseId,addRoomVOSList);
+            String addRoomsRes = iWatermeter.addRooms(HomeIdNameEnum.HOME_ID_NAME_HM.getCode()+houseId,addRoomVOSList);
 
             JSONObject resJson = JSONObject.parseObject(addRoomsRes);
             String code = resJson.get("ErrNo").toString();
@@ -381,75 +381,12 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     public String synchronousHousingByRooms(int apartmentId, List<Integer> roomIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException {
         Log.info("集中式同步房源,公寓apartmentId:{},房间roomIds：{}",apartmentId,roomIds);
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-        String homeId=HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+apartmentId;
         //房源home是否已同步
-        String state = iWatermeter.findHomeState(homeId);
-        JSONObject jsonObject=null;
-
-        jsonObject = JSONObject.parseObject(state);
-
-
-        Object result = jsonObject.get("result");
-        String res =null;
-        if (result == null) {
-            //查询home信息
-            AddHomeVo addHomeVo = synchronousHomeMapper.findHouseByApartmentId(apartmentId);
-            addHomeVo.setHome_type(HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode());
-            addHomeVo.setCountry("中国");
-            //jz区分集中式和分散式的homeId
-            addHomeVo.setHome_id(HomeIdNameEnum.HOME_ID_NAME_JZ.getCode()+addHomeVo.getHome_id());
-            //添加房源
-            res = iWatermeter.addHome(addHomeVo);
-
-            JSONObject resJson = null;
-
-            resJson = JSONObject.parseObject(res);
-
-            String code = resJson.get("ErrNo").toString();
-            if(!code.equals("0")){
-                String msg = resJson.get("ErrMsg").toString();
-                Log.error("添加房源失败，{}",msg);
-                throw new WatermeterException("添加房源失败，"+msg);
-            }
-            //更新房源为已同步至云丁
-            synchronousHomeMapper.updateHomeSyncByApartmentId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),apartmentId);
+        String homeReslut = synchronousRooms(apartmentId,roomIds,HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode(), iWatermeter);
+        //如果房源同步失败,返回失败原因
+        if(!homeReslut.equals("success")){
+            return homeReslut;
         }
-
-
-        //添加room
-        //查询所有roombyFloorId
-        List<AddRoomVO> addRoomVOS=synchronousHomeMapper.findRoomByRoomIds(roomIds);
-        //list非空判断
-        if(addRoomVOS==null || addRoomVOS.isEmpty()) {
-            return "房源下没有找到房间";
-        }
-
-        List<AddRoomVO> addRoomVOSList =new ArrayList<>();
-        for (AddRoomVO addRoomVO : addRoomVOS ) {
-            addRoomVO.setRoom_id(HomeIdNameEnum.HOME_ID_NAME_JZ.getCode() + addRoomVO.getRoom_id());
-            addRoomVOSList.add(addRoomVO);
-        }
-
-        String addRoomsRes = iWatermeter.addRooms(homeId, addRoomVOSList);
-        JSONObject resJson = null;
-
-        resJson = JSONObject.parseObject(addRoomsRes);
-
-        String code = resJson.get("ErrNo").toString();
-        //返回code，0正常，非0异常
-        if(!code.equals("0")){
-            String msg = resJson.get("ErrMsg").toString();
-            Log.error("添加room失败，{}",msg);
-            return "添加room失败，"+msg;
-        }
-
-        List<Integer> roomIdsList=new ArrayList<>();
-        for (AddRoomVO addRoomVO:addRoomVOS) {
-            roomIdsList.add(Integer.parseInt(addRoomVO.getRoom_id().substring(2)));
-        }
-        //更新room为已同步
-        synchronousHomeMapper.updataRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(), roomIdsList);
-
         return "success";
     }
 
