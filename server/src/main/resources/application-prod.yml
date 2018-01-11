@@ -52,5 +52,5 @@ sms:
   baseUrl: http://xs1:5312
 #基础信息配置
 sso:
-  host: narcissus.ih2ome.cn:80
+  host: http://narcissus.ih2ome.cn:80/api
 
