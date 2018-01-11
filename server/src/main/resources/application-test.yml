@@ -50,4 +50,7 @@ spring:
 #短信配置
 sms:
   baseUrl: http://10.0.9.203:5312
+#基础信息配置
+sso:
+  host: narcissus.ih2ome.cn:80
 

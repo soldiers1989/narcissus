@@ -156,6 +156,13 @@
             <version>0.1.11</version>
         </dependency>
 
+        <!--jodd支持-->
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-core</artifactId>
+			<version>3.4.8</version>
+		</dependency>
+
 		<!--生产配置-->
 		<dependency>
 		<groupId>org.springframework.boot</groupId>
