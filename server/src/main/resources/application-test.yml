@@ -52,5 +52,5 @@ sms:
   baseUrl: http://10.0.9.203:5312
 #基础信息配置
 sso:
-  host: http://sso.ih2ome.cn/sso
+  host: http://narcissus.ih2ome.cn/sso
 
