@@ -8,9 +8,9 @@
     <!-- 动态日志级别 -->
     <jmxConfigurator/>
     <!-- 定义日志文件 输出位置 -->
-    <property name="log_dir" value="C:/test" />
+    <!--<property name="log_dir" value="C:/test" />-->
 
-    <!--<property name="log_dir" value="/app/logs/peony"/>-->
+    <property name="log_dir" value="/app/logs/peony"/>
 
 
     <!-- ConsoleAppender 控制台输出日志 -->
