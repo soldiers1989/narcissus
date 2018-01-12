@@ -251,7 +251,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     }
 
     /**
-     * 查询分散式房源是否已同步byhomeIds
+     * Z
      * @param userid
      * @return
      */

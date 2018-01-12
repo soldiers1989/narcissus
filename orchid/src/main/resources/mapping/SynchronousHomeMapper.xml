@@ -134,7 +134,7 @@
 
     <!--查询分散式式房源同步信息byUserid  -->
     <select id="findHouseIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
-        SELECT  house.id, CONCAT(house.area,house.building_num,"栋",house.unit_num,"单元",house.house_num) AS name,house.synchronous
+        SELECT  house.id, CONCAT(house.area,house.building_num,"栋",house.unit_num,"单元",house.floor_num,"楼",house.house_num,"室") AS name,house.synchronous
         FROM <include refid="house" /> AS house
         INNER JOIN <include refid="room" /> room
         ON house.id=room.house_id
@@ -241,7 +241,7 @@
 
     <!--查询集中式room已全部或未全部同步的房源-->
     <select id="findApartmentAllSynchronousedByUserId" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
-        SELECT  apartment.id, apartment.`name`,apartment.synchronous
+        SELECT  apartment.id, apartment.`name`,#{synchronous} AS synchronous
         FROM <include refid="apartment" /> AS apartment
         INNER JOIN <include refid="jzroom" /> room
         ON apartment.id=room.apartment_id
