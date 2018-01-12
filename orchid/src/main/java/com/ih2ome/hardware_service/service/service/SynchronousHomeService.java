@@ -127,6 +127,13 @@ public interface SynchronousHomeService {
     String synchronousHousingByHmHomeIdRoomIds(int homeId, List<Integer> roomIds) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
     /**
+     * 查询roomIdsByfloorIds
+     * @param floorList
+     * @return
+     */
+    List<Integer> findRoomIdsByfloorIds(List<Integer> floorList);
+
+    /**
      * 查询公寓id和nameby用户id
      * @param id
      * @return

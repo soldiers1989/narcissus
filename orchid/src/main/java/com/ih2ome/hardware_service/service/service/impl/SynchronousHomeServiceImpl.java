@@ -330,6 +330,8 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 }
                 //更新room为已同步
                 synchronousHomeMapper.updataHmRoomSyncByRoomId(HomeSyncEnum.HOME_SYNC_YUNDING.getCode(),roomIds);
+            }else if(code.equals("14001")){
+                return "房源已同步";
             }
         }
         return "success";

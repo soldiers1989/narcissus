@@ -189,6 +189,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public List<SynchronousHomeWebVo> findHomeSynchronousStatus(SynchronousHomeWebVo synchronousHomeWebVo) {
+        Log.info("查询房源同步状态，synchronousHomeWebVo:{}",synchronousHomeWebVo.toString());
         //分散式
         if(synchronousHomeWebVo.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
             return watermeterManagerMapper.selectHmHomeSynchronousStatus(synchronousHomeWebVo);
@@ -208,12 +209,13 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public List<HmRoomSyncVO> findRoomSynchronousStatus(int homeId, int syncStatus, String type) {
+        Log.info("查询房源同步状态，homeId:{},syncStatus:{},type:{}",homeId,syncStatus,type);
         //分散式
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             return watermeterManagerMapper.selectHmRoomSynchronousStatus(homeId,syncStatus);
         } else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             //集中式
-            return watermeterManagerMapper.selectJzRoomSynchronousStatus(homeId,syncStatus);
+            return watermeterManagerMapper.selectJzFloorSynchronousStatus(homeId,syncStatus);
         }else{
             return null;
         }
@@ -227,6 +229,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public HomeAndRoomSyncVO synchronousHomeAndRoom(HomeAndRoomSyncVO homeAndRoomSyncVO, String type) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException {
+        Log.info("同步房源，homeAndRoomSyncVO:{},type:{}",homeAndRoomSyncVO.toString(),type);
         //如果没有选房间
         List<Integer> roomIds = homeAndRoomSyncVO.getRoomIds();
         if (roomIds == null || roomIds.isEmpty()){
@@ -252,14 +255,10 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
             }
         } else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             //集中式
-            List<Integer> list=homeAndRoomSyncVO.getRoomIds();
-            List<Integer> rooms = new ArrayList<>();
-            for (int i=0;i<list.size();i++) {
-                rooms.add(list.get(i));
-            }
-            String res = null;
-
-            res = synchronousHomeService.synchronousHousingByRooms(homeAndRoomSyncVO.getHomeId(), rooms);
+            List<Integer> floorList=homeAndRoomSyncVO.getRoomIds();
+            //通过楼层查询roomIDs
+            List<Integer> rooms=synchronousHomeService.findRoomIdsByfloorIds(floorList);
+            String res = synchronousHomeService.synchronousHousingByRooms(homeAndRoomSyncVO.getHomeId(), rooms);
 
             if (res.equals("success")) {
                 return homeAndRoomSyncVO;
@@ -277,6 +276,7 @@ public class WatermeterManagerServiceImpl implements WatermeterManagerService {
      */
     @Override
     public List<HmRoomSyncVO> selectHmRoomIsAllSynchronous(int homeId, int sync, String type) {
+        Log.info("查询房源同步状态，homeId:{},sync:{},type:{}",homeId,sync,type);
         //分散式
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             return watermeterManagerMapper.selectHmRoomIsAllSynchronous(homeId,sync);
