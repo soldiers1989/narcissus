@@ -1,14 +1,9 @@
 package com.ih2ome.hardware_server.server.config;
 
-import com.ih2ome.hardware_server.server.filter.SsoValidateFilter;
 import com.ih2ome.hardware_server.server.interceptor.OperateLogInterceptor;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import javax.servlet.Filter;
 
 /**
  * <br>
@@ -30,24 +25,24 @@ public class MyWebAppConfigurer  extends WebMvcConfigurerAdapter {
 
 
 
-    @Bean("ssoValidateFilter")
-    public Filter ssoValidateFilter() {
-        return new SsoValidateFilter();
-    }
-
-    /**
-     * token过滤器
-     * @return
-     */
-    @Bean
-    public FilterRegistrationBean ssoValidateFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(ssoValidateFilter());
-        registration.addUrlPatterns("/mannager/*","/watermeter/manager/*","/ammeter/*");
-        registration.addInitParameter("notFilterDir","user/login/login");
-        registration.setName("ssoValidateFilter");
-        return registration;
-    }
+//    @Bean("ssoValidateFilter")
+//    public Filter ssoValidateFilter() {
+//        return new SsoValidateFilter();
+//    }
+//
+//    /**
+//     * token过滤器
+//     * @return
+//     */
+//    @Bean
+//    public FilterRegistrationBean ssoValidateFilterRegistration() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setFilter(ssoValidateFilter());
+//        registration.addUrlPatterns("/mannager/*","/watermeter/manager/*","/ammeter/*");
+//        registration.addInitParameter("notFilterDir","user/login/login");
+//        registration.setName("ssoValidateFilter");
+//        return registration;
+//    }
 
 
 //    @Bean("characterEncodingFilter")
