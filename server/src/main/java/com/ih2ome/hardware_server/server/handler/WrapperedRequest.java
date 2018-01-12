@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_server.server.handler;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -37,6 +38,21 @@ public class WrapperedRequest extends HttpServletRequestWrapper {
     @Override
     public ServletInputStream getInputStream() throws IOException {
         return new ServletInputStream() {
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+
+            @Override
+            public boolean isReady() {
+                return false;
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+
+            }
+
             private InputStream in = new ByteArrayInputStream(
                     requestBody.getBytes(req.getCharacterEncoding()));
 
