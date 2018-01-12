@@ -80,12 +80,12 @@ public class WrapperedResponse extends HttpServletResponseWrapper {
             bos.write(b, 0, b.length);
         }
 
-        @Override
+
         public boolean isReady() {
             return false;
         }
 
-        @Override
+
         public void setWriteListener(WriteListener writeListener) {
 
         }
