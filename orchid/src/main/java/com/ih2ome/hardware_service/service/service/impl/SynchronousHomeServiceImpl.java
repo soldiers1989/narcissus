@@ -470,6 +470,16 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         return "success";
     }
 
+    /**
+     * 查询集中式roomIdsbyFloorIds
+     * @param floorList
+     * @return
+     */
+    @Override
+    public List<Integer> findRoomIdsByfloorIds(List<Integer> floorList) {
+        return synchronousHomeMapper.selectRoomIdsByfloorIds(floorList);
+    }
+
 
     /**
      * 同步房源rooms
