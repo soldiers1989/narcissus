@@ -403,7 +403,7 @@
             AND house.area LIKE '%${areaName}%'
         </if>
         <if test="authUserName != '' and authUserName != null">
-            AND auth_user.username LIKE '%${authUserName}%'
+            AND auth_user.username = '${authUserName}'
         </if>
     </select>
 
@@ -436,7 +436,7 @@
             AND apartment.area LIKE '%${areaName}%'
         </if>
         <if test="authUserName != '' and authUserName != null">
-            AND auth_user.username LIKE '%${authUserName}%'
+            AND auth_user.username = '${authUserName}'
         </if>
     </select>
 
