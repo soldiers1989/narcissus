@@ -9,7 +9,8 @@ package com.ih2ome.hardware_service.service.enums;
  */
 public enum HomeSyncEnum {
 
-   HOME_SYNC_YUNDING("云丁", 1);
+   HOME_SYNC_YUNDING("云丁", 1),
+    HOME_SYNC_UNSYNC("未同步", 0) ;
 
 
 

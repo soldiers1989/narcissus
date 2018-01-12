@@ -242,7 +242,12 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     @Override
     public List<HomeSyncVO> findHomeIsSynchronousedByUserId(int userid) {
         Log.info("查询集中式房源是否已同步,用户userid：{}",userid);
-        return synchronousHomeMapper.findApartmentIsSynchronousedByUserId(userid);
+        //查询集中式room已全部同步的房源
+        List<HomeSyncVO> homeSyncVOList=synchronousHomeMapper.findApartmentAllSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_YUNDING.getCode());
+        //查询集中式room未全部同步的房源
+        List<HomeSyncVO> homeSyncVOList1=synchronousHomeMapper.findApartmentAllSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_UNSYNC.getCode());
+        homeSyncVOList1.addAll(homeSyncVOList);
+        return homeSyncVOList1;
     }
 
     /**
@@ -253,7 +258,12 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     @Override
     public List<HomeSyncVO> findHmHomeIsSynchronousedByUserId(int userid) {
         Log.info("查询分散式房源是否已同步,用户id：{}",userid);
-        return synchronousHomeMapper.findHouseIsSynchronousedByUserId(userid);
+        //查询分散式房源room已全部同步的房源
+        List<HomeSyncVO> homeSyncVOList=synchronousHomeMapper.findHouseIsSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_YUNDING.getCode());
+        //查询分散式房源room未全部同步的房源
+        List<HomeSyncVO> homeSyncVOList1=synchronousHomeMapper.findHouseIsSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_UNSYNC.getCode());
+        homeSyncVOList1.addAll(homeSyncVOList);
+        return homeSyncVOList1;
     }
 
     /**
@@ -356,7 +366,10 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     @Override
     public List<HomeSyncVO> findFloorsIsSynchronousedByApartmentId(int apartmentId) {
         Log.info("集中式查询floor同步状态,公寓apartmentId：{}",apartmentId);
-        return synchronousHomeMapper.selectFloorsIsSynchronousedByApartmentId(apartmentId);
+        List<HomeSyncVO> homeSyncVOList = synchronousHomeMapper.selectFloorsIsSynchronousedByApartmentId(apartmentId, HomeSyncEnum.HOME_SYNC_YUNDING.getCode());
+        List<HomeSyncVO> homeSyncVOList1 = synchronousHomeMapper.selectFloorsIsSynchronousedByApartmentId(apartmentId, HomeSyncEnum.HOME_SYNC_UNSYNC.getCode());
+        homeSyncVOList1.addAll(homeSyncVOList);
+        return homeSyncVOList1;
     }
 
     /**

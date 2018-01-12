@@ -457,13 +457,13 @@
     <select id="selectJzFloorSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
         SELECT  floor.id, floor.`name`,floor.apartment_id AS house_id
         FROM <include refid="floor" /> AS floor
-        INNER JOIN volga_test.room room
-        ON floor.id=room.floor_id
+        INNER JOIN <include refid="jzroom" /> room
+        ON floor.id = room.floor_id
         <if test="synchronous == 0">
-            AND ( synchronous=0 OR synchronous IS NULL )
+            AND ( room.synchronous=0 OR room.synchronous IS NULL )
         </if>
         <if test="synchronous == 1">
-            AND  synchronous = 1
+            AND  room.synchronous = 1
         </if>
         WHERE floor.apartment_id = #{homeId} GROUP BY floor.id
     </select>

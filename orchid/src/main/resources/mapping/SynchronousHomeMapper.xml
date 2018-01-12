@@ -134,8 +134,17 @@
 
     <!--查询分散式式房源同步信息byUserid  -->
     <select id="findHouseIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
-        SELECT id,CONCAT(house.area,house.building_num,"栋",house.unit_num,"单元",house.house_num) AS name,synchronous
-        FROM <include refid="house"/> house WHERE created_by_id = #{userId}
+        SELECT  house.id, CONCAT(house.area,house.building_num,"栋",house.unit_num,"单元",house.house_num) AS name,house.synchronous
+        FROM <include refid="house" /> AS house
+        INNER JOIN <include refid="room" /> room
+        ON house.id=room.house_id
+        <if test="synchronous == 0">
+            AND ( room.synchronous=0 OR room.synchronous IS NULL )
+        </if>
+        <if test="synchronous == 1">
+            AND  room.synchronous = 1
+        </if>
+        WHERE house.created_by_id = #{userId} GROUP BY house.id
     </select>
 
     <!--查询楼层idsByApartmentId-->
@@ -169,11 +178,19 @@
     </select>
 
     <!--查询集中式floor同步信息byapartmentid-->
-    <select id="selectFloorsIsSynchronousedByApartmentId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
-        SELECT id,floor.name,synchronous
-        FROM <include refid="floor"/> floor WHERE floor.apartment_id=#{apartmentId}
+    <select id="selectFloorsIsSynchronousedByApartmentId" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+        SELECT  floor.id, floor.`name`,floor.apartment_id AS house_id
+        FROM <include refid="floor" /> AS floor
+        INNER JOIN <include refid="jzroom" /> room
+        ON floor.id = room.floor_id
+        <if test="synchronous == 0">
+            AND ( room.synchronous=0 OR room.synchronous IS NULL )
+        </if>
+        <if test="synchronous == 1">
+            AND  room.synchronous = 1
+        </if>
+        WHERE floor.apartment_id = #{homeId} GROUP BY floor.id
     </select>
-
 
     <!--查询集中式未同步rooms信息byapartmentid-->
     <select id="selectRoomsIsSynchronousedByApartmentId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
@@ -220,6 +237,21 @@
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >
             #{item}
         </foreach>
+    </select>
+
+    <!--查询集中式room已全部或未全部同步的房源-->
+    <select id="findApartmentAllSynchronousedByUserId" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+        SELECT  apartment.id, apartment.`name`,apartment.synchronous
+        FROM <include refid="apartment" /> AS apartment
+        INNER JOIN <include refid="jzroom" /> room
+        ON apartment.id=room.apartment_id
+        <if test="synchronous == 0">
+            AND ( room.synchronous=0 OR room.synchronous IS NULL )
+        </if>
+        <if test="synchronous == 1">
+            AND  room.synchronous = 1
+        </if>
+        WHERE apartment.created_by = #{userId} GROUP BY apartment.id
     </select>
 
 </mapper>
