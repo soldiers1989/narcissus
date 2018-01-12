@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_server.server.handler;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.*;
@@ -79,5 +80,14 @@ public class WrapperedResponse extends HttpServletResponseWrapper {
             bos.write(b, 0, b.length);
         }
 
+        @Override
+        public boolean isReady() {
+            return false;
+        }
+
+        @Override
+        public void setWriteListener(WriteListener writeListener) {
+
+        }
     }
 }
