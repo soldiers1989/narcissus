@@ -134,17 +134,18 @@
 
     <!--查询分散式式房源同步信息byUserid  -->
     <select id="findHouseIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
-        SELECT  house.id, CONCAT(house.area,house.building_num,"栋",house.unit_num,"单元",house.floor_num,"楼",house.house_num,"室") AS name,house.synchronous
+        SELECT  house.id, CONCAT(house.area,house.building_num,"栋",house.unit_num,"单元",house.floor_num,"楼",house.house_num,"室") AS name,#{synchronous} AS synchronous
         FROM <include refid="house" /> AS house
         INNER JOIN <include refid="room" /> room
         ON house.id=room.house_id
+        WHERE house.created_by_id = #{userId}
         <if test="synchronous == 0">
             AND ( room.synchronous=0 OR room.synchronous IS NULL )
         </if>
         <if test="synchronous == 1">
             AND  room.synchronous = 1
         </if>
-        WHERE house.created_by_id = #{userId} GROUP BY house.id
+        GROUP BY house.id
     </select>
 
     <!--查询楼层idsByApartmentId-->
@@ -179,17 +180,18 @@
 
     <!--查询集中式floor同步信息byapartmentid-->
     <select id="selectFloorsIsSynchronousedByApartmentId" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
-        SELECT  floor.id, floor.`name`,floor.apartment_id AS house_id
+        SELECT  floor.id, floor.`name`,floor.apartment_id AS house_id,#{synchronous} AS synchronous
         FROM <include refid="floor" /> AS floor
         INNER JOIN <include refid="jzroom" /> room
         ON floor.id = room.floor_id
+        WHERE floor.apartment_id = #{homeId}
         <if test="synchronous == 0">
             AND ( room.synchronous=0 OR room.synchronous IS NULL )
         </if>
         <if test="synchronous == 1">
             AND  room.synchronous = 1
         </if>
-        WHERE floor.apartment_id = #{homeId} GROUP BY floor.id
+        GROUP BY floor.id
     </select>
 
     <!--查询集中式未同步rooms信息byapartmentid-->
@@ -245,13 +247,14 @@
         FROM <include refid="apartment" /> AS apartment
         INNER JOIN <include refid="jzroom" /> room
         ON apartment.id=room.apartment_id
+        WHERE apartment.created_by = #{userId}
         <if test="synchronous == 0">
             AND ( room.synchronous=0 OR room.synchronous IS NULL )
         </if>
         <if test="synchronous == 1">
             AND  room.synchronous = 1
         </if>
-        WHERE apartment.created_by = #{userId} GROUP BY apartment.id
+        GROUP BY apartment.id
     </select>
 
 </mapper>

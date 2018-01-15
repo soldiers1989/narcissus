@@ -459,13 +459,14 @@
         FROM <include refid="floor" /> AS floor
         INNER JOIN <include refid="jzroom" /> room
         ON floor.id = room.floor_id
+        WHERE floor.apartment_id = #{homeId}
         <if test="synchronous == 0">
             AND ( room.synchronous=0 OR room.synchronous IS NULL )
         </if>
         <if test="synchronous == 1">
             AND  room.synchronous = 1
         </if>
-        WHERE floor.apartment_id = #{homeId} GROUP BY floor.id
+        GROUP BY floor.id
     </select>
 
     <!--查询分散式房间是否全同步-->
