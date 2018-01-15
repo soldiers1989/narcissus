@@ -26,11 +26,12 @@ public interface ISmartLock {
 
     /**
      * 根据网关编码获取网关基本信息
+     *
      * @param gateNo
      * @return
      * @throws SmartLockException
      */
-    public GuoJiaGateWayVo getGuoJiaGateWayInfo(String gateNo)throws SmartLockException;
+    public GuoJiaGateWayVo getGuoJiaGateWayInfo(String gateNo) throws SmartLockException;
 
     /**
      * 新增门锁密码
@@ -43,6 +44,7 @@ public interface ISmartLock {
 
     /**
      * 修改门锁密码
+     *
      * @param lockPassword
      * @return
      */
@@ -50,6 +52,7 @@ public interface ISmartLock {
 
     /**
      * 删除门锁密码
+     *
      * @param lockPassword
      * @return
      */
