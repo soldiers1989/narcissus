@@ -246,17 +246,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         List<HomeSyncVO> homeSyncVOList=synchronousHomeMapper.findApartmentAllSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_YUNDING.getCode());
         //查询集中式room未全部同步的房源
         List<HomeSyncVO> homeSyncVOList1=synchronousHomeMapper.findApartmentAllSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_UNSYNC.getCode());
-        for (HomeSyncVO homeSyncVO:homeSyncVOList) {
-            homeSyncVO.setSynchronous(0);
-            if (!homeSyncVOList1.contains(homeSyncVO)){
-                homeSyncVO.setSynchronous(1);
-                homeSyncVOList1.add(homeSyncVO);
-            }
-
-
-        }
-//        homeSyncVOList1.addAll(homeSyncVOList);
-        return homeSyncVOList1;
+        return addList(homeSyncVOList,homeSyncVOList1);
     }
 
     /**
@@ -271,8 +261,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         List<HomeSyncVO> homeSyncVOList=synchronousHomeMapper.findHouseIsSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_YUNDING.getCode());
         //查询分散式房源room未全部同步的房源
         List<HomeSyncVO> homeSyncVOList1=synchronousHomeMapper.findHouseIsSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_UNSYNC.getCode());
-        homeSyncVOList1.addAll(homeSyncVOList);
-        return homeSyncVOList1;
+        return addList(homeSyncVOList,homeSyncVOList1);
     }
 
     /**
@@ -377,8 +366,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         Log.info("集中式查询floor同步状态,公寓apartmentId：{}",apartmentId);
         List<HomeSyncVO> homeSyncVOList = synchronousHomeMapper.selectFloorsIsSynchronousedByApartmentId(apartmentId, HomeSyncEnum.HOME_SYNC_YUNDING.getCode());
         List<HomeSyncVO> homeSyncVOList1 = synchronousHomeMapper.selectFloorsIsSynchronousedByApartmentId(apartmentId, HomeSyncEnum.HOME_SYNC_UNSYNC.getCode());
-        homeSyncVOList1.addAll(homeSyncVOList);
-        return homeSyncVOList1;
+        return addList(homeSyncVOList,homeSyncVOList1);
     }
 
     /**
@@ -619,6 +607,23 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             }
         }
         return "success";
+    }
+
+    /**
+     * 合并同步和未同步房源的list
+     * @param homeSyncVOList
+     * @param homeSyncVOList1
+     * @return
+     */
+    public List<HomeSyncVO> addList(List<HomeSyncVO> homeSyncVOList,List<HomeSyncVO> homeSyncVOList1){
+        for (HomeSyncVO homeSyncVO:homeSyncVOList) {
+            homeSyncVO.setSynchronous(0);
+            if (!homeSyncVOList1.contains(homeSyncVO)){
+                homeSyncVO.setSynchronous(1);
+                homeSyncVOList1.add(homeSyncVO);
+            }
+        }
+        return homeSyncVOList1;
     }
 
 
