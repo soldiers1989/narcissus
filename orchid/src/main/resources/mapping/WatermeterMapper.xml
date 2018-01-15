@@ -100,13 +100,13 @@
 
     <!-- 查询集中式网关by网关id -->
     <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterGatewayDetailVO">
-        SELECT g.smart_gateway_id,a.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="apartment" /> AS a
+        SELECT g.smart_gateway_id,g.uuid,a.name AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="apartment" /> AS a
         ON g.apartment_id =a.id WHERE smart_gateway_id =  #{id};
     </select>
 
     <!-- 查询分散式网关by网关id -->
     <select id="findhmGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterGatewayDetailVO">
-        SELECT g.smart_gateway_id,h.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="house" /> AS h
+        SELECT g.smart_gateway_id,g.uuid,h.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="house" /> AS h
         ON g.house_id =h.id WHERE smart_gateway_id =  #{id};
     </select>
 
