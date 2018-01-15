@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
  * create by 2017/10/30
  * @Emial Lucius.li@ixiaoshuidi.com
  */
-/*@SpringBootApplication
+@SpringBootApplication
 @ComponentScan(basePackages = {"com.ih2ome"})
 public class ShuidiApplication extends SpringBootServletInitializer {
  @Override
@@ -23,8 +23,9 @@ public class ShuidiApplication extends SpringBootServletInitializer {
  public static void main(String[] args) {
   SpringApplication.run(ShuidiApplication.class, args);
  }
-}*/
+}
 
+/*
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.ih2ome"})
 public class ShuidiApplication{
@@ -32,4 +33,4 @@ public class ShuidiApplication{
  public static void main(String[] args) {
   SpringApplication.run(ShuidiApplication.class, args);
  }
-}
+}*/
