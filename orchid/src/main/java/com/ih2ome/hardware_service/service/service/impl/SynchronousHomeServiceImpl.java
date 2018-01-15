@@ -246,7 +246,16 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         List<HomeSyncVO> homeSyncVOList=synchronousHomeMapper.findApartmentAllSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_YUNDING.getCode());
         //查询集中式room未全部同步的房源
         List<HomeSyncVO> homeSyncVOList1=synchronousHomeMapper.findApartmentAllSynchronousedByUserId(userid,HomeSyncEnum.HOME_SYNC_UNSYNC.getCode());
-        homeSyncVOList1.addAll(homeSyncVOList);
+        for (HomeSyncVO homeSyncVO:homeSyncVOList) {
+            homeSyncVO.setSynchronous(0);
+            if (!homeSyncVOList1.contains(homeSyncVO)){
+                homeSyncVO.setSynchronous(1);
+                homeSyncVOList1.add(homeSyncVO);
+            }
+
+
+        }
+//        homeSyncVOList1.addAll(homeSyncVOList);
         return homeSyncVOList1;
     }
 

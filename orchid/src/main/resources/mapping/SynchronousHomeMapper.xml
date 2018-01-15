@@ -235,7 +235,7 @@
 
     <!-- 查询集中式roomIds信息byfloorids -->
     <select id="selectRoomIdsByfloorIds" resultType="java.lang.Integer">
-        SELECT id  FROM <include refid="room" />  WHERE floor_id IN
+        SELECT id  FROM <include refid="jzroom" />  WHERE floor_id IN
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >
             #{item}
         </foreach>
