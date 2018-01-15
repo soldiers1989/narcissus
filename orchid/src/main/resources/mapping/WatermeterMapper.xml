@@ -267,9 +267,9 @@
 
     <!-- 查询水表idBygatewayuuid -->
     <select id="selectWatermeterIdByGatewayUuid" resultType="java.lang.String">
-        SELECT watermeter.uuid FROM smart_gateway AS gateway
-        INNER JOIN smart_gateway_bind AS bind ON gateway.smart_gateway_id=bind.smart_gateway_id
-        INNER JOIN smart_watermeter AS watermeter ON bind.smart_id=watermeter.smart_watermeter_id
+        SELECT watermeter.uuid FROM <include refid="smart_gateway" /> AS gateway
+        INNER JOIN <include refid="smart_gateway_bind" /> AS bind ON gateway.smart_gateway_id=bind.smart_gateway_id
+        INNER JOIN <include refid="smart_watermeter" /> AS watermeter ON bind.smart_id=watermeter.smart_watermeter_id
         WHERE gateway.uuid=#{uuid}
   </select>
 
