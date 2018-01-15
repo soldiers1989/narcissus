@@ -20,4 +20,47 @@ public class MyWebAppConfigurer  extends WebMvcConfigurerAdapter {
         registry.addInterceptor(new OperateLogInterceptor()).addPathPatterns("/**");
         super.addInterceptors(registry);
     }
+
+
+
+
+
+//    @Bean("ssoValidateFilter")
+//    public Filter ssoValidateFilter() {
+//        return new SsoValidateFilter();
+//    }
+//
+//    /**
+//     * token过滤器
+//     * @return
+//     */
+//    @Bean
+//    public FilterRegistrationBean ssoValidateFilterRegistration() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setFilter(ssoValidateFilter());
+//        registration.addUrlPatterns("/mannager/*","/watermeter/manager/*","/ammeter/*");
+//        registration.addInitParameter("notFilterDir","user/login/login");
+//        registration.setName("ssoValidateFilter");
+//        return registration;
+//    }
+
+
+//    @Bean("characterEncodingFilter")
+//    public Filter characterEncodingFilter(){
+//        return new CharacterEncodingFilter();
+//    }
+
+    /**
+     * 字符编码过滤器
+     * @return
+     */
+//    @Bean
+//    public FilterRegistrationBean characterEncodingRegistration() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setFilter(characterEncodingFilter());
+//        registration.addUrlPatterns("/*");
+//        registration.addInitParameter("encoding", "UTF-8");
+//        registration.addInitParameter("forceEncoding","true");
+//        return registration;
+//    }
 }

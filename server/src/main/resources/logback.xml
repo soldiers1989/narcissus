@@ -157,7 +157,7 @@
     </appender>
     <logger name="org.springframework" level="DEBUG" additivity="false">
         <appender-ref ref="springframework"/>
-        <!-- <appender-ref ref="console"/>-->
+       <!-- <appender-ref ref="console"/>-->
     </logger>
 
 
