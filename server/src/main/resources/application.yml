@@ -3,8 +3,15 @@ spring:
     active: @profileActive@
     application:
         name: shuidi
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
 server:
   port: 80
+  tomcat:
+    uri-encoding: UTF-8
 # mybatis config
 mybatis:
   typeAliasesPackage: com.ih2home.hardware_service.service.model
