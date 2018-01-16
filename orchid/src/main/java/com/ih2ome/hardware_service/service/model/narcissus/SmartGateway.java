@@ -31,7 +31,7 @@ public class SmartGateway implements Serializable{
   private String remark;
   private Long houseCatalog;
   private Long apartmentId;
-  private int floor;
+  private Integer floor;
   private Long houseId;
   private Long roomId;
 

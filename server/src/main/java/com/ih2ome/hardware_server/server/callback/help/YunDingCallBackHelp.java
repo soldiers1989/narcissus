@@ -167,19 +167,21 @@ public class YunDingCallBackHelp {
      */
     public void deviceInstallEvent(CallbackRequestVo apiRequestVO) throws WatermeterException {
         IWatermeter iWatermeter = getIWatermeter();
+        //获取参数
         String uuid = apiRequestVO.getUuid();
         Object detailObj =  apiRequestVO.getDetail();
         String s = JSONObject.toJSONString(detailObj);
         JSONObject detail=JSONObject.parseObject(s);
-
         String home_id =apiRequestVO.getHome_id();
         String str = home_id.substring(0,2);
+
         Integer house_catalog=null;
         Long houseId=null;
         Long apartmentId=null;
         Integer floorId=null;
         Long room_id= Long.parseLong(apiRequestVO.getRoom_id().substring(2));
         Long created_by=null;
+
         switch (str){
             case "hm":
                 //1:分散式 caspain
@@ -203,51 +205,16 @@ public class YunDingCallBackHelp {
         Date updated_at=created_at;
         Date deleted_at=created_at;
 
-        JSONObject resJson = null;
+        //获取事件类型
+        String type = String.valueOf(detail.get("type"));
 
-        String watermeterInfo = null;
+        //网关安装
+        if(type.equals("7")){
+            int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
+            //判断网关是否已存在
+            if (gatewayId <= 0){
 
-        watermeterInfo = iWatermeter.getWatermeterInfo(uuid, apiRequestVO.getManufactory());
-
-        resJson = JSONObject.parseObject(watermeterInfo);
-
-        String info =  resJson.getString("info");
-        JSONObject jsonObject = JSONObject.parseObject(info);
-        int meter_type = jsonObject.getIntValue("meter_type");
-        int onoff = jsonObject.getIntValue("onoff");
-        Long time=detail.getLong("time");
-        Date meter_updated_at=new Date(System.currentTimeMillis());
-
-
-        //绑定水表及水表网关设备事件
-
-        SmartWatermeter smartWatermeter = new SmartWatermeter();
-
-        smartWatermeter.setCreatedAt(new Date(System.currentTimeMillis()));
-        smartWatermeter.setCreatedBy(created_by);
-        smartWatermeter.setUpdatedAt(created_at);
-        smartWatermeter.setUpdatedBy(created_by);
-        smartWatermeter.setDeletedAt(created_at);
-        smartWatermeter.setDeletedBy(0L);
-        smartWatermeter.setApartmentId(apartmentId);
-        smartWatermeter.setFloorId(floorId);
-        smartWatermeter.setHouseId(houseId);
-        smartWatermeter.setRoomId(room_id);
-        smartWatermeter.setHouseCatalog(house_catalog);
-        smartWatermeter.setMeterType(meter_type);
-        smartWatermeter.setUuid(uuid);
-        smartWatermeter.setOnoffStatus(onoff);
-        smartWatermeter.setLastAmount(0L);
-        smartWatermeter.setMeterAmount(0L);
-        smartWatermeter.setMeterUpdatedAt(meter_updated_at);
-        smartWatermeter.setManufactory(apiRequestVO.getManufactory());
-
-        //创建水表
-        watermeterService.createSmartWatermeter(smartWatermeter);
-        SmartGatewayBind smartGatewayBind =new SmartGatewayBind();
-        //判断网关是否已存在
-        int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
-        if (gatewayId <= 0){
+            }
             //添加网关
             SmartGateway smartGateway = new SmartGateway();
             smartGateway.setCreatedAt(new Date(System.currentTimeMillis()));
@@ -256,12 +223,10 @@ public class YunDingCallBackHelp {
             smartGateway.setUpdatedBy(0L);
             smartGateway.setDeletedAt(created_at);
             smartGateway.setDeletedBy(0L);
-            try {
-                String waterGatewayInfo = iWatermeter.getWaterGatewayInfo(apiRequestVO.getGateway_uuid());
-            } catch (WatermeterException e) {
-                Log.error("获取水表网关信息失败",e);
-            }
-            resJson = JSONObject.parseObject(watermeterInfo);
+            //查询网关信息
+            String waterGatewayInfo = iWatermeter.getWaterGatewayInfo(apiRequestVO.getGateway_uuid());
+
+            JSONObject resJson = JSONObject.parseObject(waterGatewayInfo);
 
             String gatewayInfo = resJson.getString("info");
             JSONObject gatewayJsonObject = JSONObject.parseObject(gatewayInfo);
@@ -296,17 +261,59 @@ public class YunDingCallBackHelp {
 
             //添加网关
             gatewayService.addSmartGateway(smartGateway);
-            gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
-        }
 
-        //绑定网关
-        smartGatewayBind.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER.getCode());
-        smartGatewayBind.setSmartGatewayId(Long.valueOf(gatewayId));
-        //查询水表id
-        int watermeterId=watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
-        smartGatewayBind.setSmartId((long) watermeterId);
-        watermeterService.addSmartGatewayBind(smartGatewayBind);
+        }else if(type.equals("8")){
+            //创建水表
+            SmartWatermeter smartWatermeter = new SmartWatermeter();
+            //获取水表amount
+            String amount = String.valueOf(detail.get("amount"));
+            //查询水表信息
+            String watermeterInfo = iWatermeter.getWatermeterInfo(uuid, apiRequestVO.getManufactory());
+
+            JSONObject resJson = JSONObject.parseObject(watermeterInfo);
+
+            String info =  resJson.getString("info");
+            JSONObject jsonObject = JSONObject.parseObject(info);
+            int meter_type = jsonObject.getIntValue("meter_type");
+            int onoff = jsonObject.getIntValue("onoff");
+            Long time=detail.getLong("time");
+            Date meter_updated_at=new Date(System.currentTimeMillis());
+
+            smartWatermeter.setCreatedAt(new Date(System.currentTimeMillis()));
+            smartWatermeter.setCreatedBy(created_by);
+            smartWatermeter.setUpdatedAt(created_at);
+            smartWatermeter.setUpdatedBy(created_by);
+            smartWatermeter.setDeletedAt(created_at);
+            smartWatermeter.setDeletedBy(0L);
+            smartWatermeter.setApartmentId(apartmentId);
+            smartWatermeter.setFloorId(floorId);
+            smartWatermeter.setHouseId(houseId);
+            smartWatermeter.setRoomId(room_id);
+            smartWatermeter.setHouseCatalog(house_catalog);
+            smartWatermeter.setMeterType(meter_type);
+            smartWatermeter.setUuid(uuid);
+            smartWatermeter.setOnoffStatus(onoff);
+            smartWatermeter.setLastAmount(Long.valueOf(amount));
+            smartWatermeter.setMeterAmount(Long.valueOf(amount));
+            smartWatermeter.setMeterUpdatedAt(meter_updated_at);
+            smartWatermeter.setManufactory(apiRequestVO.getManufactory());
+
+            //创建水表
+            watermeterService.createSmartWatermeter(smartWatermeter);
+
+            //绑定水表及水表网关设备事件
+            SmartGatewayBind smartGatewayBind =new SmartGatewayBind();
+            smartGatewayBind.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER.getCode());
+            //查询网关id
+            int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
+            smartGatewayBind.setSmartGatewayId(Long.valueOf(gatewayId));
+            //查询水表id
+            int watermeterId=watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
+            smartGatewayBind.setSmartId((long) watermeterId);
+            watermeterService.addSmartGatewayBind(smartGatewayBind);
+        }
     }
+
 
     /**
      * 判断两个时间戳(Timestamp)是否在同一天
