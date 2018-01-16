@@ -76,5 +76,14 @@ public class GatewayServiceImpl implements GatewayService {
         gatewayMapper.updataGatewayOnoffStatusByUuid(uuid,code);
     }
 
+    /**
+     * 更新网关
+     * @param smartGateway
+     */
+    @Override
+    public void updataSmartGateway(SmartGateway smartGateway) {
+        gatewayMapper.updataSmartGateway(smartGateway);
+    }
+
 
 }

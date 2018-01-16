@@ -210,11 +210,6 @@ public class YunDingCallBackHelp {
 
         //网关安装
         if(type.equals("7")){
-            int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
-            //判断网关是否已存在
-            if (gatewayId <= 0){
-
-            }
             //添加网关
             SmartGateway smartGateway = new SmartGateway();
             smartGateway.setCreatedAt(new Date(System.currentTimeMillis()));
@@ -259,8 +254,15 @@ public class YunDingCallBackHelp {
             smartGateway.setHouseId(houseId);
             smartGateway.setRoomId(Long.valueOf(gatewayRoom_id.substring(2)));
 
-            //添加网关
-            gatewayService.addSmartGateway(smartGateway);
+            //查询网关id
+            Integer gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
+            if(gatewayId == null){
+                //添加网关
+                gatewayService.addSmartGateway(smartGateway);
+            }else {
+                //更新网关
+                gatewayService.updataSmartGateway(smartGateway);
+            }
 
         }else if(type.equals("8")){
             //创建水表
@@ -305,7 +307,7 @@ public class YunDingCallBackHelp {
             SmartGatewayBind smartGatewayBind =new SmartGatewayBind();
             smartGatewayBind.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER.getCode());
             //查询网关id
-            int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
+            Integer gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getGateway_uuid());
             smartGatewayBind.setSmartGatewayId(Long.valueOf(gatewayId));
             //查询水表id
             int watermeterId=watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
