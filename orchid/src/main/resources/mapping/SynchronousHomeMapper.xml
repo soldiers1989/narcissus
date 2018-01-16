@@ -179,8 +179,8 @@
     </select>
 
     <!--查询集中式floor同步信息byapartmentid-->
-    <select id="selectFloorsIsSynchronousedByApartmentId" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
-        SELECT  floor.id, floor.`name`,floor.apartment_id AS house_id,#{synchronous} AS synchronous
+    <select id="selectFloorsIsSynchronousedByApartmentId" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+        SELECT  floor.id, floor.`name`,#{synchronous} AS synchronous
         FROM <include refid="floor" /> AS floor
         INNER JOIN <include refid="jzroom" /> room
         ON floor.id = room.floor_id
