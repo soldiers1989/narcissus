@@ -179,7 +179,7 @@
     </select>
 
     <!--查询水表抄表记录by水表id-->
-    <select id="findWatermeterRecordByWatermeterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord">
+    <select id="findWatermeterRecordByWatermeterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.entity.narcissus.SmartWatermeterRecord">
         SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} ORDER BY created_at DESC
     </select>
 

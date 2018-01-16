@@ -1,8 +1,8 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.ih2ome.hardware_service.service.dao.GatewayMapper;
-import com.ih2ome.hardware_service.service.model.narcissus.SmartGateway;
-import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
+import com.ih2ome.hardware_service.service.entity.narcissus.SmartGateway;
+import com.ih2ome.hardware_service.service.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.service.GatewayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

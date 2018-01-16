@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
+
+import com.ih2ome.hardware_service.service.entity.narcissus.SmartWatermeterRecord;
 
 import java.sql.Timestamp;
 

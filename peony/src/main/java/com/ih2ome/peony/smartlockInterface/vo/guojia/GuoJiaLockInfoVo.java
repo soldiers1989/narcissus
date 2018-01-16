@@ -1,6 +1,7 @@
 package com.ih2ome.peony.smartlockInterface.vo.guojia;
 
 
+import com.ih2ome.peony.smartlockInterface.vo.LockInfoVO;
 import lombok.Data;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  * @email sky.li@ixiaoshuidi.com
  **/
 @Data
-public class GuoJiaLockInfoVo {
+public class GuoJiaLockInfoVo extends LockInfoVO {
     //门锁分类
     private String lockKind;
     //门锁编码

@@ -77,8 +77,5 @@ public class YunDingSmartLockUtil {
         return token;
     }
 
-//    public static void main(String[] args) throws SmartLockException {
-//        getTokenByThrid();
-//    }
 
 }

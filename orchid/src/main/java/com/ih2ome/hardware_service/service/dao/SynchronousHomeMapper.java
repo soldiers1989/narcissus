@@ -1,8 +1,10 @@
 package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.model.volga.Apartment;
-import com.ih2ome.hardware_service.service.vo.*;
+import com.ih2ome.hardware_service.service.entity.volga.Apartment;
+import com.ih2ome.hardware_service.service.vo.ApartmentVO;
+import com.ih2ome.hardware_service.service.vo.HomeSyncVO;
+import com.ih2ome.hardware_service.service.vo.HouseVO;
 import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
 import com.ih2ome.peony.watermeterInterface.vo.AddRoomVO;
 import org.apache.ibatis.annotations.Param;

@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
 import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
@@ -9,10 +10,11 @@ import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.peony.smartlockInterface.vo.guojia.GuoJiaGateWayVo;
+import com.ih2ome.peony.smartlockInterface.vo.GatewayInfoVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -43,19 +45,20 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService {
     }
 
     @Override
-    public SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
+    public SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
+        String dateType = "yyyy-mm-dd";
         ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getSmartDispersedDoorLockGatewayVOById(id);
-            GuoJiaGateWayVo guoJiaGateWayVo = iSmartLock.getGuoJiaGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
-            smartDoorLockGatewayVO.setGuaranteeTimeStart(guoJiaGateWayVo.getGuaranteeTimeStart());
-            smartDoorLockGatewayVO.setGuaranteeTimeEnd(guoJiaGateWayVo.getGuaranteeTimeEnd());
+            GatewayInfoVO gateWayInfoVo = iSmartLock.getGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
+            smartDoorLockGatewayVO.setGuaranteeTimeStart(DateUtils.longToString(gateWayInfoVo.getGuaranteeTimeStart(),dateType));
+            smartDoorLockGatewayVO.setGuaranteeTimeEnd(DateUtils.longToString(gateWayInfoVo.getGuaranteeTimeEnd(),dateType));
             return smartDoorLockGatewayVO;
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getConcentratSmartDoorLockGatewayVOById(id);
-            GuoJiaGateWayVo guoJiaGateWayVo = iSmartLock.getGuoJiaGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
-            smartDoorLockGatewayVO.setGuaranteeTimeStart(guoJiaGateWayVo.getGuaranteeTimeStart());
-            smartDoorLockGatewayVO.setGuaranteeTimeEnd(guoJiaGateWayVo.getGuaranteeTimeEnd());
+            GatewayInfoVO gateWayInfoVo = iSmartLock.getGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
+            smartDoorLockGatewayVO.setGuaranteeTimeStart(DateUtils.longToString(gateWayInfoVo.getGuaranteeTimeStart(),dateType));
+            smartDoorLockGatewayVO.setGuaranteeTimeEnd(DateUtils.longToString(gateWayInfoVo.getGuaranteeTimeEnd(),dateType));
             return smartDoorLockGatewayVO;
         }else{
             return null;

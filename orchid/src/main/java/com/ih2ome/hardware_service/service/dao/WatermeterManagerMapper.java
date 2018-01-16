@@ -1,7 +1,8 @@
 package com.ih2ome.hardware_service.service.dao;
 
+
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.model.volga.Apartment;
+import com.ih2ome.hardware_service.service.entity.volga.Apartment;
 import com.ih2ome.hardware_service.service.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WatermeterManagerMapper extends MyMapper<Apartment>{
+public interface WatermeterManagerMapper extends MyMapper<Apartment> {
 
     /**
      * 查找集中式水表list

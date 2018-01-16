@@ -7,6 +7,8 @@ import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.guojia.util.GuoJiaSmartLockUtil;
+import com.ih2ome.peony.smartlockInterface.vo.GatewayInfoVO;
+import com.ih2ome.peony.smartlockInterface.vo.LockInfoVO;
 import com.ih2ome.peony.smartlockInterface.vo.guojia.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,7 @@ public class GuoJiaSmartLock implements ISmartLock {
      * @return
      */
     @Override
-    public GuoJiaLockInfoVo getGuoJiaLockInfo(String lockNo) throws SmartLockException {
+    public LockInfoVO getLockInfo(String lockNo) throws SmartLockException {
         Log.info("获取门锁信息");
         Log.info("门锁编码:" + lockNo);
         GuoJiaLockInfoVo guoJiaLockInfoVo = new GuoJiaLockInfoVo();
@@ -80,7 +82,7 @@ public class GuoJiaSmartLock implements ISmartLock {
     }
 
     @Override
-    public GuoJiaGateWayVo getGuoJiaGateWayInfo(String gateNo) throws SmartLockException {
+    public GatewayInfoVO getGateWayInfo(String gateNo) throws SmartLockException {
         Log.info("获取网关信息");
         Log.info("网关编码:" + gateNo);
         GuoJiaGateWayVo guoJiaGateWayVo = new GuoJiaGateWayVo();
