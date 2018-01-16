@@ -205,7 +205,7 @@
 
     <!--查询floorIdByroomId-->
     <select id="selectHouseCreatedByByHouseId" resultType="java.lang.Integer">
-        SELECT house.created_by
+        SELECT house.created_by_id
         FROM <include refid="house"/> house WHERE house.id = #{id}
     </select>
 
