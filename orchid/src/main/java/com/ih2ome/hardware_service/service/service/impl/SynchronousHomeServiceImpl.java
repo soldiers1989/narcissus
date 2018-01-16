@@ -503,13 +503,16 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     public String synchronousRooms(int houseId,List<Integer> roomIds, int type, IWatermeter iWatermeter) throws WatermeterException {
         //同步房源home
         String homeId=null;
+        String synchResult =null;
         if (type == HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode()) {
             homeId = HomeIdNameEnum.HOME_ID_NAME_HM.getCode() + houseId;
+            //房源home是否已同步
+            synchResult = synchronousHome(houseId, HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode(), iWatermeter);
         }else {
             homeId = HomeIdNameEnum.HOME_ID_NAME_JZ.getCode() + houseId;
+            //房源home是否已同步
+            synchResult = synchronousHome(houseId, HouseCatalogEnum.HOUSE_CATALOG_ENUM_VOLGA.getCode(), iWatermeter);
         }
-        //房源home是否已同步
-        String synchResult = synchronousHome(houseId, HouseCatalogEnum.HOUSE_CATALOG_ENUM_CASPAIN.getCode(), iWatermeter);
         //如果房源同步失败,返回失败原因
         if(!synchResult.equals("success")){
             return synchResult;

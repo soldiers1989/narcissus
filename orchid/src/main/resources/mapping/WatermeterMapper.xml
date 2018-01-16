@@ -204,7 +204,7 @@
     </select>
 
     <!--查询floorIdByroomId-->
-    <select id="selectHouseCreatedByByHouseId" parameterType="int" resultType="java.lang.Integer">
+    <select id="selectHouseCreatedByByHouseId" resultType="java.lang.Integer">
         SELECT house.created_by
         FROM <include refid="house"/> house WHERE house.id = #{id}
     </select>
