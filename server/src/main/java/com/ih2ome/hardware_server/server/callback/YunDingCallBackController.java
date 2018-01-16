@@ -64,11 +64,8 @@ public class YunDingCallBackController extends BaseController {
                 gatewayService.updataGatewayUuid(apiRequestVO.getUuid(),apiRequestVO.getOld_uuid(),apiRequestVO.getTime(),apiRequestVO.getManufactory());
                 break;
             case "deviceUninstall" :
-                //解绑水表设备事件
-                //查询网关id
-                int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getUuid());
-                //网关绑定中删除watermeterId
-                gatewayBindService.deleteGatewayBindByGatewayId(gatewayId);
+                //设备解绑事件
+                yunDingCallBackHelp.deviceUninstall(apiRequestVO);
                 break;
             case "waterGatewayOfflineAlarm" :
                 //水表网关离线事件

@@ -415,4 +415,28 @@ public class YunDingCallBackHelp {
         //String sign= this.getSign(map);
        // System.out.println(sign);
     }
+
+    /**
+     * 设备解绑事件
+     * @param apiRequestVO
+     */
+    public void deviceUninstall(CallbackRequestVo apiRequestVO) {
+        Object detailObj =  apiRequestVO.getDetail();
+        String s = JSONObject.toJSONString(detailObj);
+        JSONObject detail=JSONObject.parseObject(s);
+        String type = String.valueOf(detail.get("type"));
+        //水表网关解绑事件
+        if(type.equals("7")) {
+            //查询网关id
+            int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getUuid());
+            //网关绑定中删除watermeterId
+            gatewayBindService.deleteGatewayBindByGatewayId(gatewayId);
+        }else if(type.equals("8")){
+            //查询水表id
+            Integer watemeterId = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
+            //解绑水表
+            gatewayBindService.deleteGatewayBindByWatermeterId(watemeterId);
+        }
+
+    }
 }
