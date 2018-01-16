@@ -219,7 +219,7 @@ public class YunDingCallBackHelp {
             smartGateway.setDeletedAt(created_at);
             smartGateway.setDeletedBy(0L);
             //查询网关信息
-            String waterGatewayInfo = iWatermeter.getWaterGatewayInfo(apiRequestVO.getGateway_uuid());
+            String waterGatewayInfo = iWatermeter.getWaterGatewayInfo(apiRequestVO.getUuid());
 
             JSONObject resJson = JSONObject.parseObject(waterGatewayInfo);
 
