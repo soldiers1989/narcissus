@@ -9,7 +9,7 @@ import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.peony.smartlockInterface.vo.GuoJiaGateWayVo;
+import com.ih2ome.peony.smartlockInterface.vo.guojia.GuoJiaGateWayVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

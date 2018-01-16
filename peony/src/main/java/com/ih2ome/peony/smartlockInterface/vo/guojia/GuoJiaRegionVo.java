@@ -1,4 +1,4 @@
-package com.ih2ome.peony.smartlockInterface.vo;
+package com.ih2ome.peony.smartlockInterface.vo.guojia;
 
 import lombok.Data;
 
