@@ -56,5 +56,21 @@ public interface ISmartLock {
      * @param lockPassword
      * @return
      */
-    public String deleteLockPassword(LockPasswordVo lockPassword) throws SmartLockException;
+    public String deleteLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException;
+
+    /**
+     * 冻结门锁密码
+     *
+     * @param lockPassword
+     * @return
+     */
+    public String frozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException;
+
+    /**
+     * 解冻门锁密码
+     *
+     * @param lockPassword
+     * @return
+     */
+    public String unfrozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException;
 }

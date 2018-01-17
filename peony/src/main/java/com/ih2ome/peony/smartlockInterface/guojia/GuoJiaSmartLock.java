@@ -239,4 +239,15 @@ public class GuoJiaSmartLock implements ISmartLock {
         }
         return result;
     }
+
+    @Override
+    public String frozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
+        throw new SmartLockException("该厂商不支持此操作");
+
+    }
+
+    @Override
+    public String unfrozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
+        throw new SmartLockException("该厂商不支持此操作");
+    }
 }
