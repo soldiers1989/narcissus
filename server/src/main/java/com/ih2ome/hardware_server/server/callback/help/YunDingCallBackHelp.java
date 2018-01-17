@@ -238,8 +238,8 @@ public class YunDingCallBackHelp {
             smartGateway.setSn(apiRequestVO.getUuid());
             smartGateway.setUuid(apiRequestVO.getUuid());
             //smartGateway.setModel(null);
-            smartGateway.setModelName("watermeterGateway");
-            smartGateway.setName("watermeter");
+            smartGateway.setModelName("gateway");
+            smartGateway.setName("watermeterGateway");
             smartGateway.setInstallTime(ctime);
             smartGateway.setInstallName("");
             smartGateway.setInstallMobile("");
