@@ -1,7 +1,10 @@
 package com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding;
 
+import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import lombok.Data;
+
+import java.text.ParseException;
 
 /**
  * @author Sky
@@ -41,7 +44,7 @@ public class YunDingLockPasswordVO {
         lockPasswordVo.setMobile(yunDingLockPasswordVO.getPhonenumber());
         lockPasswordVo.setPassword(yunDingLockPasswordVO.getPassword());
         Long permissionBegin=Long.valueOf(yunDingLockPasswordVO.getPermissionBegin())*1000L;
-        String permissionBeginFormatStr=DateUtils.longToString(permissionBegin, "yyyy-MM-dd HH:mm:ss");
+        String permissionBeginFormatStr= DateUtils.longToString(permissionBegin, "yyyy-MM-dd HH:mm:ss");
         lockPasswordVo.setEnableTime(permissionBeginFormatStr);
         Long permissionEnd=Long.valueOf(yunDingLockPasswordVO.getPermissionEnd())*1000L;
         String permissionEndFormatStr=DateUtils.longToString(permissionEnd, "yyyy-MM-dd HH:mm:ss");
