@@ -3,14 +3,14 @@ package com.ih2ome.hardware_service.service.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
-import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
-import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
-import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirm;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.peony.smartlockInterface.vo.GatewayInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -51,14 +51,14 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService {
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getSmartDispersedDoorLockGatewayVOById(id);
             GatewayInfoVO gateWayInfoVo = iSmartLock.getGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
-            smartDoorLockGatewayVO.setGuaranteeTimeStart(DateUtils.longToString(gateWayInfoVo.getGuaranteeTimeStart(),dateType));
-            smartDoorLockGatewayVO.setGuaranteeTimeEnd(DateUtils.longToString(gateWayInfoVo.getGuaranteeTimeEnd(),dateType));
+            smartDoorLockGatewayVO.setGuaranteeTimeStart(gateWayInfoVo.getGuaranteeTimeStart());
+            smartDoorLockGatewayVO.setGuaranteeTimeEnd(gateWayInfoVo.getGuaranteeTimeEnd());
             return smartDoorLockGatewayVO;
         }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
             SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getConcentratSmartDoorLockGatewayVOById(id);
             GatewayInfoVO gateWayInfoVo = iSmartLock.getGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
-            smartDoorLockGatewayVO.setGuaranteeTimeStart(DateUtils.longToString(gateWayInfoVo.getGuaranteeTimeStart(),dateType));
-            smartDoorLockGatewayVO.setGuaranteeTimeEnd(DateUtils.longToString(gateWayInfoVo.getGuaranteeTimeEnd(),dateType));
+            smartDoorLockGatewayVO.setGuaranteeTimeStart(gateWayInfoVo.getGuaranteeTimeStart());
+            smartDoorLockGatewayVO.setGuaranteeTimeEnd(gateWayInfoVo.getGuaranteeTimeEnd());
             return smartDoorLockGatewayVO;
         }else{
             return null;

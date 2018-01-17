@@ -4,7 +4,7 @@
 
     <!--add-->
     <!--分散式新增门锁密码-->
-    <insert id="addDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo"
+    <insert id="addDispersedPwd" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     INSERT INTO caspain_test.smart_lock_password (
         version,
@@ -48,7 +48,7 @@
     </insert>
 
     <!--集中式新增门锁密码-->
-    <insert id="addConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo"
+    <insert id="addConcentratePwd" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
       INSERT INTO volga_test.smart_lock_password (
         version,
@@ -96,7 +96,7 @@
 
     <!--delete-->
     <!--分散式删除密码-->
-    <update id="deleteDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+    <update id="deleteDispersedPwd" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         UPDATE caspain_test.smart_lock_password
         SET is_delete = '1',
          deleted_at = NOW(),
@@ -106,7 +106,7 @@
     </update>
 
     <!--集中式删除密码-->
-    <update id="deleteConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+    <update id="deleteConcentratePwd" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         UPDATE `volga_test`.smart_lock_password
         SET is_delete = '1',
          deleted_at = NOW(),
@@ -118,7 +118,7 @@
 
     <!--update-->
     <!--分散式修改门锁密码-->
-    <update id="updateDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+    <update id="updateDispersedPwd" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         UPDATE caspain_test.smart_lock_password
         <set>
             <if test="password!=null and password.trim()!=''">
@@ -143,7 +143,7 @@
     </update>
 
     <!--集中式修改门锁密码-->
-    <update id="updateConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+    <update id="updateConcentratePwd" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         UPDATE `volga_test`.smart_lock_password
         <set>
             <if test="password!=null and password.trim()!=''">
@@ -169,8 +169,8 @@
 
     <!--select-->
     <!--分散式房源门锁列表（模糊查询）-->
-    <select id="findDispersedLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
-            resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
+    <select id="findDispersedLock" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo">
         SELECT
         csl.id id,
         cslg.id gatewayId,
@@ -249,8 +249,8 @@
     </select>
 
     <!--集中式房源门锁列表（模糊查询）-->
-    <select id="findConcentrateLock" parameterType="com.ih2ome.hardware_service.service.vo.LockListVo"
-            resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
+    <select id="findConcentrateLock" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo">
         SELECT
         vsl.id id,
         vslg.id gatewayId,
@@ -325,7 +325,7 @@
     </select>
 
     <!--分散式根据门锁id查询门锁基本信息-->
-    <select id="findDispersedLockByLockNo" resultType="com.ih2ome.hardware_service.service.vo.LockInfoVo">
+    <select id="findDispersedLockByLockNo" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo">
     SELECT
     ch.address houseAddress,
     cr.`name` roomNo,
@@ -349,7 +349,7 @@
     </select>
 
     <!--集中式根据门锁id查询门锁基本信息-->
-    <select id="findConcentrateLockByLockNo" resultType="com.ih2ome.hardware_service.service.vo.LockInfoVo">
+    <select id="findConcentrateLockByLockNo" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo">
      SELECT
      va.address houseAddress,
      vr.`name` roomNo,
@@ -373,7 +373,7 @@
     </select>
 
     <!--分散式根据门锁编码查询密码列表-->
-    <select id="findDispersedPwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+    <select id="findDispersedPwdList" resultType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         SELECT
             '1' type,
             slp.id id,
@@ -413,7 +413,7 @@
     </select>
 
     <!--集中式根据门锁编码查询密码列表-->
-    <select id="findConcentratePwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+    <select id="findConcentratePwdList" resultType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         SELECT
             '0' type,
             slp.id id,
@@ -454,8 +454,8 @@
 
     <!--分散式根据门锁编码查询门锁历史状态-->
     <select id="findDispersedLockHistoryStatus"
-            parameterType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO"
-            resultType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO">
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockHistoryStatusVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockHistoryStatusVO">
       SELECT
        DATE_FORMAT(
                 sls.report_time,
@@ -473,8 +473,8 @@
 
     <!--集中式根据门锁编码查询门锁历史状态-->
     <select id="findConcentrateLockHistoryStatus"
-            parameterType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO"
-            resultType="com.ih2ome.hardware_service.service.vo.LockHistoryStatusVO">
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockHistoryStatusVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockHistoryStatusVO">
          SELECT
        DATE_FORMAT(
                 sls.report_time,
@@ -492,8 +492,8 @@
 
     <!--分散式根据门锁编码查询门锁操作记录-->
     <select id="findDispersedLockOperateRecord"
-            parameterType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO"
-            resultType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO">
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockOperateRecordVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockOperateRecordVO">
         SELECT
         slor.operator_mobile mobile,
         DATE_FORMAT(
@@ -526,8 +526,8 @@
 
     <!--集中式根据门锁编码查询门锁操作记录-->
     <select id="findConcentrateLockOperateRecord"
-            parameterType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO"
-            resultType="com.ih2ome.hardware_service.service.vo.LockOperateRecordVO">
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockOperateRecordVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockOperateRecordVO">
       SELECT
         slor.operator_mobile mobile,
         DATE_FORMAT(
@@ -560,8 +560,8 @@
 
     <!--分散式根据门锁编码查询开门记录-->
     <select id="findDispersedLockOpenRecord"
-            parameterType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO"
-            resultType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO">
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockOpenRecordVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockOpenRecordVO">
         SELECT
             slp.user_name userName,
             slp.mobile mobile,
@@ -606,8 +606,8 @@
 
     <!--集中式根据门锁编码查询开门记录-->
     <select id="findConcentrateLockOpenRecord"
-            parameterType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO"
-            resultType="com.ih2ome.hardware_service.service.vo.LockOpenRecordVO">
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockOpenRecordVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockOpenRecordVO">
         SELECT
             slp.user_name userName,
             slp.mobile mobile,
@@ -662,7 +662,7 @@
 
     <!--分散式根据主键id查询密码详情-->
     <select id="findDispersedLockPassword" parameterType="string"
-            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+            resultType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         SELECT
              id,
             `password`,
@@ -681,7 +681,7 @@
 
     <!--集中式根据主键id查询密码详情-->
     <select id="findConcentrateLockPassword" parameterType="string"
-            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+            resultType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         SELECT
             id ,
             password_type,
@@ -700,7 +700,7 @@
 
     <!--分散式根据密码id查询门锁编码和密码编号-->
     <select id="findDispersedLockIdAndPwdNo" parameterType="string"
-            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+            resultType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         SELECT
              slp.id,
             slp.pwd_no,
@@ -713,7 +713,7 @@
 
     <!--集中式根据密码id查询门锁编码和密码编号-->
     <select id="findConcentrateLockIdAndPwdNo" parameterType="string"
-            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
+            resultType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
         SELECT
             slp.id,
             slp.pwd_no,

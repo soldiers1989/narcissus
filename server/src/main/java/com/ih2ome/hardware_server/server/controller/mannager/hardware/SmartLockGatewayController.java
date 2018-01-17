@@ -6,14 +6,15 @@ import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
-import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -78,6 +79,10 @@ public class SmartLockGatewayController extends BaseController {
             String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
             return res;
         } catch (SmartLockException e) {
+            Log.error(e.getMessage(),e);
+            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
+            return res;
+        } catch (ParseException e) {
             Log.error(e.getMessage(),e);
             String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"查询失败");
             return res;

@@ -5,7 +5,7 @@ import com.ih2ome.common.base.MyMapper;
 import com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
-import com.ih2ome.hardware_service.service.vo.*;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

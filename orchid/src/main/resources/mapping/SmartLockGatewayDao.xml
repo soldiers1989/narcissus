@@ -4,7 +4,7 @@
 
     <!--INSERT-->
     <!--查询集中式房源网关列表-->
-    <select id="findConcentratGateway" parameterType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
+    <select id="findConcentratGateway" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO">
         SELECT
 	      vslg.id gatewayId,
 	      va.`name` apartmentName,
@@ -56,7 +56,7 @@
         </if>
     </select>
     <!--查询分散式房源网关列表-->
-    <select id="findDispersedGateway" parameterType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
+    <select id="findDispersedGateway" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO">
         SELECT
         cslg.id gatewayId,
         ch.area apartmentName,
@@ -109,7 +109,7 @@
     </select>
 
     <!--查询分散式房源网关信息-->
-    <select id="getSmartDispersedDoorLockGatewayVOById" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
+    <select id="getSmartDispersedDoorLockGatewayVOById" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO">
         SELECT
             cslg.id gatewayId,
             cslg.`status` communicationStatus,
@@ -140,7 +140,7 @@
         AND cslg.id = #{id}
     </select>
     <!--查询集中式房源网关信息-->
-    <select id="getConcentratSmartDoorLockGatewayVOById" resultType="com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO">
+    <select id="getConcentratSmartDoorLockGatewayVOById" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO">
             SELECT
                 vslg.id gatewayId,
                 vslg.`status` communicationStatus,
@@ -173,7 +173,7 @@
     </select>
 
     <!--分散式根据网关查询门锁-->
-    <select id="getDispersedSmartDoorLockByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
+    <select id="getDispersedSmartDoorLockByGatewayId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo">
         SELECT
             csl.id lockId,
             ch.area apartmentName,
@@ -220,7 +220,7 @@
         AND cslg.id = #{id}
     </select>
     <!--集中式根据网关查询门锁-->
-    <select id="getConcentratSmartDoorLockByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.LockListVo">
+    <select id="getConcentratSmartDoorLockByGatewayId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo">
 SELECT
 	vsl.id lockId,
 	va.`name` apartmentName,

@@ -7,10 +7,12 @@ import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.guojia.util.GuoJiaSmartLockUtil;
-import com.ih2ome.peony.smartlockInterface.vo.GatewayInfoVO;
-import com.ih2ome.peony.smartlockInterface.vo.LockInfoVO;
-import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
-import com.ih2ome.peony.smartlockInterface.vo.guojia.*;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.guojia.GuoJiaGateWayVo;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.guojia.GuoJiaLockInfoVo;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.guojia.GuoJiaRegionVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +37,7 @@ public class GuoJiaSmartLock implements ISmartLock {
      * @return
      */
     @Override
-    public LockInfoVO getLockInfo(String lockNo) throws SmartLockException {
+    public LockVO getLockInfo(String lockNo) throws SmartLockException {
         Log.info("获取门锁信息");
         Log.info("门锁编码:" + lockNo);
         GuoJiaLockInfoVo guoJiaLockInfoVo = new GuoJiaLockInfoVo();
@@ -121,7 +123,7 @@ public class GuoJiaSmartLock implements ISmartLock {
         JSONArray regionJson = dataJson.getJSONArray("region");
         regionList = JSONObject.parseArray(regionJson.toString(), GuoJiaRegionVo.class);
         guoJiaGateWayVo.setRegion(regionList);
-        return guoJiaGateWayVo;
+        return guoJiaGateWayVo.third2Standard();
     }
 
     /**

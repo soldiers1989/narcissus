@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 
 import java.text.ParseException;

@@ -4,7 +4,7 @@
 
     <!--insert-->
     <!--分散式保存分摊结果-->
-    <insert id="addDeviceRecordWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+    <insert id="addDeviceRecordWithDispersed" parameterType="com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo">
         INSERT INTO caspain_test.smart_device_record (
         created_at,
         updated_at,
@@ -26,7 +26,7 @@
         )
     </insert>
     <!--集中式保存分摊结果-->
-    <insert id="addDeviceRecordWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+    <insert id="addDeviceRecordWithConcentrated" parameterType="com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo">
         INSERT INTO `volga_test`.smart_device_record (
         created_at,
         updated_at,
@@ -99,7 +99,7 @@
     </update>
 
     <!--分散式电表更新-->
-    <update id="updateAmmeterWithDispersed" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+    <update id="updateAmmeterWithDispersed" parameterType="com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo">
         UPDATE caspain_test.smart_device ctsd
         SET ctsd.last_num = #{allPower},
         ctsd.updated_at = NOW(),
@@ -110,7 +110,7 @@
         ctsd.id = #{id}
     </update>
     <!--集中式电表更新-->
-    <update id="updateAmmeterWithConcentrated" parameterType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+    <update id="updateAmmeterWithConcentrated" parameterType="com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo">
         UPDATE `volga_test`.smart_device vtsdm
         SET vtsdm.last_num = #{allPower},
         vtsdm.updated_at = NOW(),
@@ -123,7 +123,7 @@
 
     <!--select-->
     <!--分散式房源电表列表（模糊查询）-->
-    <select id="findDispersedAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
+    <select id="findDispersedAmmeter" parameterType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterMannagerVo" resultType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterMannagerVo">
         SELECT
         csd.id ammeterId,
         ch.area apartmentName,
@@ -197,7 +197,7 @@
     </select>
 
     <!--集中式房源电表列表（模糊查询）-->
-    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo">
+    <select id="findConcentratAmmeter" parameterType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterMannagerVo" resultType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterMannagerVo">
         SELECT
         vsd.id ammeterId,
         va.`name` apartmentName,
@@ -272,20 +272,20 @@
     </select>
 
     <!--分散式根据电表id获取电表-->
-    <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
+    <select id="getDeviceByIdWithDispersed"  resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.DeviceIdAndNameVo">
       select * from caspain_test.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--分散式根据第三方获取电表-->
-    <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
+    <select id="getDeviceBySerialIdWithDispersed"  resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.DeviceIdAndNameVo">
         select * from caspain_test.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
     <!--集中式根据电表id获取电表-->
-    <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
+    <select id="getDeviceByIdWithConcentrated"  resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.DeviceIdAndNameVo">
         select * from `volga_test`.smart_device sd where sd.id=#{id} and sd.bind='1'
     </select>
     <!--集中式根据第三方获取电表-->
-    <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo">
+    <select id="getDeviceBySerialIdWithConcentrated"  resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.DeviceIdAndNameVo">
         select * from `volga_test`.smart_device sd where sd.master=#{serialId} and sd.bind='1'
     </select>
 
@@ -300,7 +300,7 @@
 
 
     <!--获取分散式电表详情-->
-    <select id="getDeviceInfoWithDispersed" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+    <select id="getDeviceInfoWithDispersed" resultType="com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo">
         SELECT
 	    csd.id id,
 	    csd.uuid uuid,
@@ -359,7 +359,7 @@
 	order by csd.updated_at desc
     </select>
     <!--获取集中式电表列表-->
-    <select id="getDeviceInfoWithConcentrated" resultType="com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo">
+    <select id="getDeviceInfoWithConcentrated" resultType="com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo">
                 (
 	SELECT
 		vsd.id id,

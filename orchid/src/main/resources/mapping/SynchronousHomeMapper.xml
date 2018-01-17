@@ -17,30 +17,30 @@
     <sql id="auth_user">`caspain_test`.auth_user</sql>
 
     <!--配置一个resultMap -->
-    <resultMap type="com.ih2ome.hardware_service.service.vo.ApartmentVO" id="apartmentResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.ApartmentVO" id="apartmentResultMap" autoMapping="true">
         <id column="id" property="id" />
 
         <collection property="floorVOS" javaType="List"
-                    ofType="com.ih2ome.hardware_service.service.vo.FloorVO" autoMapping="true">
+                    ofType="com.ih2ome.sunflower.vo.pageVo.watermeter.FloorVO" autoMapping="true">
             <id column="floor_id" property="floorId" />
         </collection>
     </resultMap>
 
     <!--配置一个公寓部分resultMap-->
-    <resultMap type="com.ih2ome.hardware_service.service.vo.ApartmentVO" id="apartmentResultMap2" >
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.ApartmentVO" id="apartmentResultMap2" >
         <id column="id" property="id" />
         <result column="name" property="name" />
     </resultMap>
 
     <!--配置一个AddHomeVo resultMap-->
-    <resultMap type="com.ih2ome.peony.watermeterInterface.vo.AddHomeVo" id="addHomeVoResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.vo.thirdVo.watermeter.AddHomeVo" id="addHomeVoResultMap" autoMapping="true">
         <id column="home_id" property="home_id" />
         <result column="home_type" property="home_type" />
         <result column="home_name" property="home_name" />
     </resultMap>
 
     <!--配置一个AddRoomVo resultMap-->
-    <resultMap type="com.ih2ome.peony.watermeterInterface.vo.AddRoomVO" id="AddRoomVOResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.vo.thirdVo.watermeter.AddRoomVO" id="AddRoomVOResultMap" autoMapping="true">
         <id column="room_id" property="room_id" />
         <result column="room_name" property="room_name" />
         <result column="room_description" property="room_description" />
@@ -127,13 +127,13 @@
     </select>
 
     <!--查询集中式房源同步信息byUserid-->
-    <select id="findApartmentIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+    <select id="findApartmentIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO">
         SELECT id,apartment.name,synchronous
         FROM <include refid="apartment"/> apartment WHERE created_by = #{userId}
     </select>
 
     <!--查询分散式式房源同步信息byUserid  -->
-    <select id="findHouseIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+    <select id="findHouseIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO">
         SELECT id,CONCAT(house.area,house.building_num,"栋",house.unit_num,"单元",house.house_num) AS name,synchronous
         FROM <include refid="house"/> house WHERE created_by_id = #{userId}
     </select>
@@ -144,7 +144,7 @@
     </select>
 
     <!--查询分散式用户房源by用户id-->
-    <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HouseVO">
+    <select id="findHouseByUserId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HouseVO">
         SELECT h.id,h.area,h.building_num,h.house_num,h.synchronous FROM <include refid="house"/> h WHERE h.created_by_id= #{id}
     </select>
 
@@ -169,14 +169,14 @@
     </select>
 
     <!--查询集中式floor同步信息byapartmentid-->
-    <select id="selectFloorsIsSynchronousedByApartmentId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+    <select id="selectFloorsIsSynchronousedByApartmentId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO">
         SELECT id,floor.name,synchronous
         FROM <include refid="floor"/> floor WHERE floor.apartment_id=#{apartmentId}
     </select>
 
 
     <!--查询集中式未同步rooms信息byapartmentid-->
-    <select id="selectRoomsIsSynchronousedByApartmentId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+    <select id="selectRoomsIsSynchronousedByApartmentId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO">
         SELECT id,jzroom.name,synchronous
         FROM <include refid="jzroom"/> jzroom WHERE jzroom.apartment_id=#{apartmentId} AND ( jzroom.synchronous=0 OR jzroom.synchronous IS NULL )
     </select>
@@ -195,7 +195,7 @@
     </select>
 
     <!--查询分散式未同步rooms信息byuserid-->
-    <select id="selectHmRoomsIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+    <select id="selectHmRoomsIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO">
         SELECT room.id,room.name,room.synchronous
         FROM <include refid="room"/> room WHERE room.house_id=#{userId} AND ( room.synchronous=0 OR room.synchronous IS NULL )
     </select>

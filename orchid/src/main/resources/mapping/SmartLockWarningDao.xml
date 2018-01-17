@@ -3,7 +3,7 @@
 <mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockWarningDao">
     <!--SELECT-->
     <!--查找分散式报警信息-->
-    <select id="findDispersedSmartLockWarningList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockWarningVO">
+    <select id="findDispersedSmartLockWarningList" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockWarningVO">
       SELECT
 	csl.id lockId,
 	cslg.id gatewayId,
@@ -77,7 +77,7 @@ AND crc.`status` = 'active'
 		</if>
     </select>
     <!--查找集中式报警信息-->
-    <select id="findConcentratSmartLockWarningList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockWarningVO">
+    <select id="findConcentratSmartLockWarningList" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockWarningVO">
 SELECT
 	vsl.id lockId,
 	vslg.id gatewayId,

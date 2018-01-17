@@ -2,9 +2,9 @@ package com.ih2ome.peony.smartlockInterface;
 
 
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.peony.smartlockInterface.vo.GatewayInfoVO;
-import com.ih2ome.peony.smartlockInterface.vo.LockInfoVO;
-import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 
 import java.text.ParseException;
 
@@ -22,7 +22,7 @@ public interface ISmartLock {
      * @param lockNo
      * @return
      */
-    public LockInfoVO getLockInfo(String lockNo) throws SmartLockException;
+    public LockVO getLockInfo(String lockNo) throws SmartLockException;
 
     /**
      * 根据网关编码获取网关基本信息

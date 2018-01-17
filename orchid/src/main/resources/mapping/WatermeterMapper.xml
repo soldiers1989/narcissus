@@ -18,21 +18,21 @@
 
     <!--配置resultMap -->
     <!--分散式水表列表VO-->
-    <resultMap type="com.ih2ome.hardware_service.service.vo.HMWatermeterListVO" id="hmWatermeterListResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.HMWatermeterListVO" id="hmWatermeterListResultMap" autoMapping="true">
         <id column="room_id" property="roomId" />
 
         <collection property="watermeterDetailVOS" javaType="List"
-                    ofType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" autoMapping="true">
+                    ofType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterDetailVO" autoMapping="true">
             <id column="smart_watermeter_id" property="smartWatermeterId" />
         </collection>
     </resultMap>
 
     <!--集中式水表列表VO-->
-    <resultMap type="com.ih2ome.hardware_service.service.vo.JZWatermeterDetailVO" id="jzWatermeterListResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterDetailVO" id="jzWatermeterListResultMap" autoMapping="true">
         <id column="room_id" property="roomId" />
 
         <collection property="watermeterDetailVOS" javaType="List"
-                    ofType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" autoMapping="true">
+                    ofType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterDetailVO" autoMapping="true">
             <id column="smart_watermeter_id" property="smartWatermeterId" />
         </collection>
     </resultMap>
@@ -99,13 +99,13 @@
     </select>
 
     <!-- 查询集中式网关by网关id -->
-    <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterGatewayDetailVO">
+    <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterGatewayDetailVO">
         SELECT g.smart_gateway_id,a.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="apartment" /> AS a
         ON g.apartment_id =a.id WHERE smart_gateway_id =  #{id};
     </select>
 
     <!-- 查询分散式网关by网关id -->
-    <select id="findhmGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterGatewayDetailVO">
+    <select id="findhmGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterGatewayDetailVO">
         SELECT g.smart_gateway_id,h.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="house" /> AS h
         ON g.house_id =h.id WHERE smart_gateway_id =  #{id};
     </select>
@@ -165,7 +165,7 @@
     </select>
 
     <!--查询集中式公寓下的网关by公寓id-->
-    <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.JZWatermeterGatewayVO" >
+    <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterGatewayVO" >
         SELECT g.smart_gateway_id,a.name AS house_name,g.uuid,g.onoff_status, COUNT(DISTINCT gb.smart_id) AS watermeter_num,SUM(CASE w.onoff_status WHEN 1 THEN 1 ELSE 0 END ) AS watermeter_on_line_num
         FROM <include refid="smart_gateway"/> AS g
         LEFT JOIN <include refid="smart_gateway_bind"/> AS gb
@@ -189,17 +189,17 @@
     </select>
 
     <!--水表异常记录by水表id-->
-    <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionVO">
+    <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
     </select>
 
     <!--网关异常记录by网关id-->
-    <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionVO">
+    <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
     </select>
 
     <!--查询水表抄表参数by水表id-->
-    <select id="findWatermeterRecordParamsByWatermeterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.WatermeterRecordParamsVo">
+    <select id="findWatermeterRecordParamsByWatermeterId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterRecordParamsVo">
         SELECT watermeter.uuid,watermeter.manufactory FROM <include refid="smart_watermeter"/> watermeter WHERE watermeter.smart_watermeter_id = #{id}
     </select>
 
@@ -228,7 +228,7 @@
     </select>
 
     <!-- 查询水表所有的uuidAndManufactory -->
-    <select id="selectWatermeterUuidAndManufactory" resultType="com.ih2ome.hardware_service.service.vo.UuidAndManufactoryVO">
+    <select id="selectWatermeterUuidAndManufactory" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.UuidAndManufactoryVO">
         SELECT uuid,manufactory FROM <include refid="smart_watermeter"/>
     </select>
 
@@ -239,7 +239,7 @@
 
 
     <!--查询分散式下的网关byUserid-->
-    <select id="selectGatewaysByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.JZWatermeterGatewayVO" >
+    <select id="selectGatewaysByUserId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterGatewayVO" >
         SELECT g.smart_gateway_id,g.uuid,g.onoff_status, COUNT(DISTINCT gb.smart_id) AS watermeter_num,SUM(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num
         FROM <include refid="smart_gateway"/> AS g
         LEFT JOIN <include refid="smart_gateway_bind"/> AS gb

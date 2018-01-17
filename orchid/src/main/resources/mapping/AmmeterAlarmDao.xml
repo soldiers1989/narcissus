@@ -46,7 +46,7 @@
 
 
     <!--集中式房源电表报警信息列表（模糊查询）-->
-    <select id="findDispersedAmmeterAlarm" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo">
+    <select id="findDispersedAmmeterAlarm" parameterType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterAlarmVo" resultType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterAlarmVo">
         SELECT
         csd.id ammeterId,
         ch.area apartmentName,
@@ -125,7 +125,7 @@
     </select>
 
     <!--分散式房源电表报警信息列表（模糊查询）-->
-    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo">
+    <select id="findConcentratAmmeter" parameterType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterAlarmVo" resultType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterAlarmVo">
         SELECT
         vsd.id ammeterId,
         va.`name` apartmentName,

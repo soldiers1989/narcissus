@@ -1,6 +1,6 @@
 package com.ih2ome.hardware_service.service.dao;
 
-import com.ih2ome.hardware_service.service.vo.SmartLockOperationRecordVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockOperationRecordVO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

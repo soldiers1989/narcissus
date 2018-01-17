@@ -1,8 +1,8 @@
 package com.ih2ome.peony.ammeterInterface;
 
-import com.ih2ome.peony.ammeterInterface.enums.PayMod;
+import com.ih2ome.sunflower.vo.thirdVo.ammeter.enums.PayMod;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
-import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
+import com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo;
 
 import java.util.List;
 import java.util.Map;

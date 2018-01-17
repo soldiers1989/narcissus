@@ -1,6 +1,6 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.vo.SmartLockOperationRecordVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockOperationRecordVO;
 
 import java.util.List;
 

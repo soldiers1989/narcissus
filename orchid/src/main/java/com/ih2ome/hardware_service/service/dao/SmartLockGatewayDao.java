@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.dao;
 
-import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.ih2ome.hardware_service.service.dao;
 
-import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
-import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
-import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
+import com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterMannagerVo;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.DeviceIdAndNameVo;
+import com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
