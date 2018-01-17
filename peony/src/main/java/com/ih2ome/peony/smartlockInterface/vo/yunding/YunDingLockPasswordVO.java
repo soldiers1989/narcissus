@@ -1,7 +1,10 @@
 package com.ih2ome.peony.smartlockInterface.vo.yunding;
 
+import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import lombok.Data;
+
+import java.text.ParseException;
 
 /**
  * @author Sky
@@ -33,25 +36,31 @@ public class YunDingLockPasswordVO {
     //密码有效期结束(单位S)
     private String permissionEnd;
 
-    public static LockPasswordVo toH2ome(YunDingLockPasswordVO yunDingLockPasswordVO) {
+    public static LockPasswordVo toH2ome(YunDingLockPasswordVO yunDingLockPasswordVO) throws ParseException {
         LockPasswordVo lockPasswordVo = new LockPasswordVo();
         lockPasswordVo.setUuid(yunDingLockPasswordVO.getUuid());
         lockPasswordVo.setPwdNo(yunDingLockPasswordVO.getPasswordId());
         lockPasswordVo.setMobile(yunDingLockPasswordVO.getPhonenumber());
         lockPasswordVo.setPassword(yunDingLockPasswordVO.getPassword());
-        lockPasswordVo.setEnableTime(String.valueOf(Long.valueOf(yunDingLockPasswordVO.getPermissionBegin()) * 1000));
-        lockPasswordVo.setDisableTime(String.valueOf(Long.valueOf(yunDingLockPasswordVO.getPermissionEnd()) * 1000));
+        Long permissionBegin=Long.valueOf(yunDingLockPasswordVO.getPermissionBegin())*1000L;
+        String permissionBeginFormatStr=DateUtils.longToString(permissionBegin, "yyyy-MM-dd HH:mm:ss");
+        lockPasswordVo.setEnableTime(permissionBeginFormatStr);
+        Long permissionEnd=Long.valueOf(yunDingLockPasswordVO.getPermissionEnd())*1000L;
+        String permissionEndFormatStr=DateUtils.longToString(permissionEnd, "yyyy-MM-dd HH:mm:ss");
+        lockPasswordVo.setDisableTime(permissionEndFormatStr);
         return lockPasswordVo;
     }
 
-    public static YunDingLockPasswordVO fromH2ome(LockPasswordVo lockPasswordVo) {
+    public static YunDingLockPasswordVO fromH2ome(LockPasswordVo lockPasswordVo) throws ParseException {
         YunDingLockPasswordVO yunDingLockPasswordVO = new YunDingLockPasswordVO();
         yunDingLockPasswordVO.setUuid(lockPasswordVo.getUuid());
         yunDingLockPasswordVO.setPasswordId(lockPasswordVo.getPwdNo());
         yunDingLockPasswordVO.setPhonenumber(lockPasswordVo.getMobile());
         yunDingLockPasswordVO.setPassword(lockPasswordVo.getPassword());
-        yunDingLockPasswordVO.setPermissionBegin(String.valueOf(Long.valueOf(lockPasswordVo.getEnableTime()) / 1000));
-        yunDingLockPasswordVO.setPermissionEnd(String.valueOf(Long.valueOf(lockPasswordVo.getDisableTime()) / 1000));
-        return null;
+        Long permissionBeginLong = Long.valueOf(DateUtils.stringToLong(lockPasswordVo.getEnableTime(), "yyyy-MM-dd HH:mm:ss"))/1000L;
+        yunDingLockPasswordVO.setPermissionBegin(String.valueOf(permissionBeginLong));
+        Long permissionEndLong = Long.valueOf(DateUtils.stringToLong(lockPasswordVo.getDisableTime(), "yyyy-MM-dd HH:mm:ss"))/1000L;
+        yunDingLockPasswordVO.setPermissionEnd(String.valueOf(permissionEndLong));
+        return yunDingLockPasswordVO;
     }
 }
