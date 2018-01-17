@@ -3,7 +3,7 @@
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao">
     <!--- insert -->
     <!--添加报警规则-->
-    <insert id="addAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.entity.narcissus.SmartAlarmRule">
+    <insert id="addAmmeterAlarmRules" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule">
         INSERT INTO narcissus_test.smart_alarm_rule (report_name,report_param,switch_status) VALUES(#{reportName},#{reportParam},#{switchStatus});
     </insert>
     <!--添加报警信息-->
@@ -22,7 +22,7 @@
     </delete>
 
     <!--更新电表报警规则-->
-    <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.entity.narcissus.SmartAlarmRule">
+    <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule">
         UPDATE narcissus_test.smart_alarm_rule nsar
           SET
         <trim prefix="set" suffixOverrides=",">
@@ -35,12 +35,12 @@
 
 
     <!--获取所有有效电表报警规则-->
-    <select id="getAllSmartAlarmRules" resultType="com.ih2ome.hardware_service.service.entity.narcissus.SmartAlarmRule">
+    <select id="getAllSmartAlarmRules" resultType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule">
         select * FROM  narcissus_test.smart_alarm_rule nsar WHERE nsar.switch_status='0'
     </select>
 
     <!--根据报警类型查找报警规则 -->
-    <select id="getByReportName" parameterType="com.ih2ome.hardware_service.service.entity.narcissus.SmartAlarmRule" resultType="com.ih2ome.hardware_service.service.entity.narcissus.SmartAlarmRule">
+    <select id="getByReportName" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule" resultType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule">
         SELECT * from narcissus_test.smart_alarm_rule nsar where nsar.report_name=#{reportName} and nsar.switch_status='0'
     </select>
 

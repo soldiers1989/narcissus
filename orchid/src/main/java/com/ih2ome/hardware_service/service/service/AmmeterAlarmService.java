@@ -1,8 +1,8 @@
 package com.ih2ome.hardware_service.service.service;
 
 
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartAlarmRule;
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartMistakeInfo;
+import com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule;
+import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 

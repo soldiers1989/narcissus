@@ -2,7 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartWatermeterRecord;
+import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;

@@ -461,7 +461,7 @@ UNION
     </select>
 
     <!--获取分散式电表主表-->
-    <select id="getMasterAmmeter" resultType="com.ih2ome.hardware_service.service.entity.caspain.SmartDevice">
+    <select id="getMasterAmmeter" resultType="com.ih2ome.sunflower.entity.caspain.SmartDevice">
       SELECT ctsdm.* from caspain_test.smart_device ctsdm,caspain_test.smart_device ctsds where ctsds.master=ctsdm.serial_id and ctsds.id=#{id} and ctsdm.bind='1' and ctsds.bind='1'
     </select>
 

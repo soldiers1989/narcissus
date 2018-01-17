@@ -2,8 +2,8 @@ package com.ih2ome.hardware_service.service.dao;
 
 
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartGateway;
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartMistakeInfo;
+import com.ih2ome.sunflower.entity.narcissus.SmartGateway;
+import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

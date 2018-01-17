@@ -54,7 +54,7 @@ public interface AmmeterMannagerDao{
 
     AmmeterInfoVo getDeviceInfoWithConcentrated(@Param("id")String id);
 
-    com.ih2ome.hardware_service.service.entity.caspain.SmartDevice getMasterAmmeter(@Param("id")String id);
+    com.ih2ome.sunflower.entity.caspain.SmartDevice getMasterAmmeter(@Param("id")String id);
 
     List<String>getAmmeterByMaster(@Param("id")String id);
 

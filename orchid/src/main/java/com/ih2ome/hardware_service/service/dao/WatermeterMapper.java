@@ -2,9 +2,9 @@ package com.ih2ome.hardware_service.service.dao;
 
 
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartGatewayBind;
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartWatermeter;
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartWatermeterRecord;
+import com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind;
+import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
+import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
 import com.ih2ome.hardware_service.service.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

@@ -2,7 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.entity.volga.Apartment;
+import com.ih2ome.sunflower.entity.volga.Apartment;
 import com.ih2ome.hardware_service.service.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

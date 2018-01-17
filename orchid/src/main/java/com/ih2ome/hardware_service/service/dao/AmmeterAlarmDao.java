@@ -1,8 +1,8 @@
 package com.ih2ome.hardware_service.service.dao;
 
 
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartAlarmRule;
-import com.ih2ome.hardware_service.service.entity.narcissus.SmartMistakeInfo;
+import com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule;
+import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
