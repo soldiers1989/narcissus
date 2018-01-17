@@ -235,8 +235,8 @@ public class YunDingCallBackHelp {
             String gatewayRoom_id = gatewayJsonObject.getString("room_id");
 
             //smartGateway.setMac(null);
-            smartGateway.setSn(apiRequestVO.getGateway_uuid());
-            smartGateway.setUuid(apiRequestVO.getGateway_uuid());
+            smartGateway.setSn(apiRequestVO.getUuid());
+            smartGateway.setUuid(apiRequestVO.getUuid());
             //smartGateway.setModel(null);
             smartGateway.setModelName("watermeterGateway");
             smartGateway.setName("watermeter");
