@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.hardware_service.service.vo.*;
-import com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo;
+import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

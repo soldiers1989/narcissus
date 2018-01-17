@@ -4,7 +4,7 @@
 
     <!--add-->
     <!--分散式新增门锁密码-->
-    <insert id="addDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo"
+    <insert id="addDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     INSERT INTO caspain_test.smart_lock_password (
         version,
@@ -48,7 +48,7 @@
     </insert>
 
     <!--集中式新增门锁密码-->
-    <insert id="addConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo"
+    <insert id="addConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
       INSERT INTO volga_test.smart_lock_password (
         version,
@@ -96,7 +96,7 @@
 
     <!--delete-->
     <!--分散式删除密码-->
-    <update id="deleteDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+    <update id="deleteDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         UPDATE caspain_test.smart_lock_password
         SET is_delete = '1',
          deleted_at = NOW(),
@@ -106,7 +106,7 @@
     </update>
 
     <!--集中式删除密码-->
-    <update id="deleteConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+    <update id="deleteConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         UPDATE `volga_test`.smart_lock_password
         SET is_delete = '1',
          deleted_at = NOW(),
@@ -118,7 +118,7 @@
 
     <!--update-->
     <!--分散式修改门锁密码-->
-    <update id="updateDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+    <update id="updateDispersedPwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         UPDATE caspain_test.smart_lock_password
         <set>
             <if test="password!=null and password.trim()!=''">
@@ -143,7 +143,7 @@
     </update>
 
     <!--集中式修改门锁密码-->
-    <update id="updateConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+    <update id="updateConcentratePwd" parameterType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         UPDATE `volga_test`.smart_lock_password
         <set>
             <if test="password!=null and password.trim()!=''">
@@ -373,7 +373,7 @@
     </select>
 
     <!--分散式根据门锁编码查询密码列表-->
-    <select id="findDispersedPwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+    <select id="findDispersedPwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
             '1' type,
             slp.id id,
@@ -413,7 +413,7 @@
     </select>
 
     <!--集中式根据门锁编码查询密码列表-->
-    <select id="findConcentratePwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+    <select id="findConcentratePwdList" resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
             '0' type,
             slp.id id,
@@ -662,7 +662,7 @@
 
     <!--分散式根据主键id查询密码详情-->
     <select id="findDispersedLockPassword" parameterType="string"
-            resultType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
              id,
             `password`,
@@ -681,7 +681,7 @@
 
     <!--集中式根据主键id查询密码详情-->
     <select id="findConcentrateLockPassword" parameterType="string"
-            resultType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
             id ,
             password_type,
@@ -700,7 +700,7 @@
 
     <!--分散式根据密码id查询门锁编码和密码编号-->
     <select id="findDispersedLockIdAndPwdNo" parameterType="string"
-            resultType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
              slp.id,
             slp.pwd_no,
@@ -713,7 +713,7 @@
 
     <!--集中式根据密码id查询门锁编码和密码编号-->
     <select id="findConcentrateLockIdAndPwdNo" parameterType="string"
-            resultType="com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo">
+            resultType="com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo">
         SELECT
             slp.id,
             slp.pwd_no,

@@ -9,6 +9,7 @@ import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.guojia.util.GuoJiaSmartLockUtil;
 import com.ih2ome.peony.smartlockInterface.vo.GatewayInfoVO;
 import com.ih2ome.peony.smartlockInterface.vo.LockInfoVO;
+import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import com.ih2ome.peony.smartlockInterface.vo.guojia.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,20 +135,20 @@ public class GuoJiaSmartLock implements ISmartLock {
     public String addLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         Log.info("新增密码");
         Log.info("新增密码信息：" + lockPassword.toString());
-        GuoJiaLockPwdVo guoJiaLockPwdVo = new GuoJiaLockPwdVo();
         Map<String, String> headers = GuoJiaSmartLockUtil.getHeaders();
-        guoJiaLockPwdVo.setLock_no(lockPassword.getSerialNum());
-        guoJiaLockPwdVo.setPwd_text(GuoJiaSmartLockUtil.desEncode(lockPassword.getPassword()));
-        guoJiaLockPwdVo.setValid_time_start(String.valueOf(DateUtils.stringToLong
+        JSONObject pwdJson = new JSONObject();
+        pwdJson.put("lock_no", lockPassword.getSerialNum());
+        pwdJson.put("pwd_text", GuoJiaSmartLockUtil.desEncode(lockPassword.getPassword()));
+        pwdJson.put("valid_time_start", String.valueOf(DateUtils.stringToLong
                 (lockPassword.getEnableTime(), "yyyy-MM-dd hh:mm:ss")));
-        guoJiaLockPwdVo.setValid_time_end(String.valueOf(DateUtils.stringToLong
+        pwdJson.put("valid_time_end", String.valueOf(DateUtils.stringToLong
                 (lockPassword.getDisableTime(), "yyyy-MM-dd hh:mm:ss")));
-        guoJiaLockPwdVo.setPwd_user_name(lockPassword.getUserName());
-        guoJiaLockPwdVo.setPwd_user_mobile(lockPassword.getMobile());
-        guoJiaLockPwdVo.setDescription(lockPassword.getRemark());
+        pwdJson.put("pwd_user_name", lockPassword.getUserName());
+        pwdJson.put("pwd_user_mobile", lockPassword.getMobile());
+        pwdJson.put("description", lockPassword.getRemark());
         String url = BASE_URL + "/pwd/add";
         //请求第三方保存密码
-        String result = HttpClientUtil.doPostJson(url, JSONObject.toJSONString(guoJiaLockPwdVo), headers);
+        String result = HttpClientUtil.doPostJson(url, pwdJson, headers);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(result);
@@ -174,19 +175,20 @@ public class GuoJiaSmartLock implements ISmartLock {
     public String updateLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         Log.info("修改密码");
         Log.info("修改密码信息：" + lockPassword.toString());
-        GuoJiaLockPwdVo guoJiaLockPwdVo = new GuoJiaLockPwdVo();
         Map<String, String> headers = GuoJiaSmartLockUtil.getHeaders();
-        guoJiaLockPwdVo.setLock_no(lockPassword.getSerialNum());
-        guoJiaLockPwdVo.setPwd_no(lockPassword.getPwdNo());
-        guoJiaLockPwdVo.setPwd_text(GuoJiaSmartLockUtil.desEncode(lockPassword.getPassword()));
-        guoJiaLockPwdVo.setValid_time_start(String.valueOf(DateUtils.stringToLong
+        JSONObject pwdJson = new JSONObject();
+        pwdJson.put("lock_no", lockPassword.getSerialNum());
+        pwdJson.put("pwd_no", lockPassword.getPwdNo());
+        pwdJson.put("pwd_text", GuoJiaSmartLockUtil.desEncode(lockPassword.getPassword()));
+        pwdJson.put("valid_time_start", String.valueOf(DateUtils.stringToLong
                 (lockPassword.getEnableTime(), "yyyy-MM-dd hh:mm:ss")));
-        guoJiaLockPwdVo.setValid_time_end(String.valueOf(DateUtils.stringToLong
+        pwdJson.put("valid_time_end", String.valueOf(DateUtils.stringToLong
                 (lockPassword.getDisableTime(), "yyyy-MM-dd hh:mm:ss")));
-        guoJiaLockPwdVo.setExtra(lockPassword.getRemark());
+        pwdJson.put("extra", lockPassword.getRemark());
+
         String url = BASE_URL + "/pwd/update";
         //请求第三方修改密码
-        String result = HttpClientUtil.doPostJson(url, JSONObject.toJSONString(guoJiaLockPwdVo), headers);
+        String result = HttpClientUtil.doPostJson(url, pwdJson, headers);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(result);
@@ -213,15 +215,13 @@ public class GuoJiaSmartLock implements ISmartLock {
     public String deleteLockPassword(LockPasswordVo lockPassword) throws SmartLockException {
         Log.info("删除密码");
         Log.info("删除密码内容：" + lockPassword.toString());
-        GuoJiaLockPwdVo guoJiaLockPwdVo = new GuoJiaLockPwdVo();
         Map<String, String> headers = GuoJiaSmartLockUtil.getHeaders();
-        //设置门锁编号
-        guoJiaLockPwdVo.setLock_no(lockPassword.getSerialNum());
-        //设置密码编号
-        guoJiaLockPwdVo.setPwd_no(lockPassword.getPwdNo());
+        JSONObject pwdJson = new JSONObject();
+        pwdJson.put("lock_no", lockPassword.getSerialNum());
+        pwdJson.put("pwd_no", lockPassword.getPwdNo());
         String url = BASE_URL + "/pwd/delete";
         //请求第三方删除密码
-        String result = HttpClientUtil.doPostJson(url, JSONObject.toJSONString(guoJiaLockPwdVo), headers);
+        String result = HttpClientUtil.doPostJson(url, pwdJson, headers);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(result);

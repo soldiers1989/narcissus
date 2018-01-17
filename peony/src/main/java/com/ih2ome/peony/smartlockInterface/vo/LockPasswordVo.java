@@ -1,4 +1,4 @@
-package com.ih2ome.peony.smartlockInterface.vo.guojia;
+package com.ih2ome.peony.smartlockInterface.vo;
 
 import com.ih2ome.common.base.BaseEntity;
 import lombok.Data;
@@ -16,6 +16,10 @@ public class LockPasswordVo extends BaseEntity implements Serializable {
     private String id;
     //门锁编码
     private String serialNum;
+    //门锁uuid（云丁）
+    private String uuid;
+    //是否是管理员密码(0否,1是)(云丁)
+    private String isDefault;
     //创建时间
     private String createdAt;
     //修改时间

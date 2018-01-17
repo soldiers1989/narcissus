@@ -4,7 +4,7 @@ import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.vo.GatewayInfoVO;
 import com.ih2ome.peony.smartlockInterface.vo.LockInfoVO;
-import com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo;
+import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 
 import java.text.ParseException;
 

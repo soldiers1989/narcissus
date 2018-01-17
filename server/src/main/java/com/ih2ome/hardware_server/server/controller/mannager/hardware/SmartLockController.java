@@ -7,7 +7,7 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
 import com.ih2ome.hardware_service.service.vo.*;
-import com.ih2ome.peony.smartlockInterface.vo.guojia.LockPasswordVo;
+import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
