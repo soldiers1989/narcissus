@@ -31,7 +31,11 @@
 			<artifactId>peony</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.ih2ome</groupId>
+			<artifactId>sunflower</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

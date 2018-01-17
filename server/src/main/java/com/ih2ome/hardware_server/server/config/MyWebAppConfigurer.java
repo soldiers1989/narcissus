@@ -70,24 +70,4 @@ public class MyWebAppConfigurer  extends WebMvcConfigurerAdapter {
 //        registration.setName("ssoValidateFilter");
 //        return registration;
 //    }
-
-
-//    @Bean("characterEncodingFilter")
-//    public Filter characterEncodingFilter(){
-//        return new CharacterEncodingFilter();
-//    }
-
-    /**
-     * 字符编码过滤器
-     * @return
-     */
-//    @Bean
-//    public FilterRegistrationBean characterEncodingRegistration() {
-//        FilterRegistrationBean registration = new FilterRegistrationBean();
-//        registration.setFilter(characterEncodingFilter());
-//        registration.addUrlPatterns("/*");
-//        registration.addInitParameter("encoding", "UTF-8");
-//        registration.addInitParameter("forceEncoding","true");
-//        return registration;
-//    }
 }

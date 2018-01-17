@@ -21,6 +21,7 @@
 		<module>orchid</module>
 		<module>peony</module>
 		<module>server</module>
+		<module>sunflower</module>
 	</modules>
 	<properties>
 		<start-class>com.ih2ome.hardware_server.server.ShuidiApplication</start-class>
@@ -165,9 +166,9 @@
 
 		<!--生产配置-->
 		<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-web</artifactId>
-	</dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
