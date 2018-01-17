@@ -39,6 +39,7 @@ public class YunDingLockPasswordVO {
     public static LockPasswordVo toH2ome(YunDingLockPasswordVO yunDingLockPasswordVO) throws ParseException {
         LockPasswordVo lockPasswordVo = new LockPasswordVo();
         lockPasswordVo.setUuid(yunDingLockPasswordVO.getUuid());
+        lockPasswordVo.setIsDefault(yunDingLockPasswordVO.getIsDefault());
         lockPasswordVo.setPwdNo(yunDingLockPasswordVO.getPasswordId());
         lockPasswordVo.setMobile(yunDingLockPasswordVO.getPhonenumber());
         lockPasswordVo.setPassword(yunDingLockPasswordVO.getPassword());
@@ -56,6 +57,7 @@ public class YunDingLockPasswordVO {
         yunDingLockPasswordVO.setUuid(lockPasswordVo.getUuid());
         yunDingLockPasswordVO.setPasswordId(lockPasswordVo.getPwdNo());
         yunDingLockPasswordVO.setPhonenumber(lockPasswordVo.getMobile());
+        yunDingLockPasswordVO.setIsDefault(lockPasswordVo.getIsDefault());
         yunDingLockPasswordVO.setPassword(lockPasswordVo.getPassword());
         Long permissionBeginLong = Long.valueOf(DateUtils.stringToLong(lockPasswordVo.getEnableTime(), "yyyy-MM-dd HH:mm:ss"))/1000L;
         yunDingLockPasswordVO.setPermissionBegin(String.valueOf(permissionBeginLong));
