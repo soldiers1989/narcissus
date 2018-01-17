@@ -240,14 +240,12 @@
 
     <!--查询分散式下的网关byUserid-->
     <select id="selectGatewaysByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.JZWatermeterGatewayVO" >
-        SELECT g.smart_gateway_id,g.uuid,CONCAT(h.area,h.building_num,"栋",h.unit_num,"单元",h.house_num) AS house_name,g.onoff_status, COUNT(DISTINCT gb.smart_id) AS watermeter_num,SUM(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num
+        SELECT g.smart_gateway_id,g.uuid, COUNT(DISTINCT gb.smart_id) AS watermeter_num,SUM(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num
         FROM <include refid="smart_gateway"/> AS g
         LEFT JOIN <include refid="smart_gateway_bind"/> AS gb
         ON g.smart_gateway_id=gb.smart_gateway_id
         LEFT JOIN <include refid="smart_watermeter"/> AS w
         ON w.smart_watermeter_id=gb.smart_id
-        LEFT JOIN <include refid="house"/> AS h
-        ON g.house_id =h.id
         WHERE g.created_by = #{id} AND g.house_catalog = 1
         GROUP BY g.smart_gateway_id;
     </select>
