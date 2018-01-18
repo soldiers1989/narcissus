@@ -89,7 +89,7 @@ public class YunDingCallBackHelp {
             smartMistakeInfo2.setExceptionType(exceptionType);
             smartMistakeInfo2.setUuid(uuid);
             smartMistakeInfo2.setSn("");
-            gatewayService.addSmartMistakeInfo(smartMistakeInfo);
+            gatewayService.addSmartMistakeInfo(smartMistakeInfo2);
             //添加水表离线
             watermeterService.updataWatermerterOnoffStatus(uuid,onOffStatus);
         }
