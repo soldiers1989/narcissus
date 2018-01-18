@@ -104,7 +104,7 @@
     <!--查询房源信息byhouseid-->
     <select id="findHouseByHouseId" parameterType="int" resultMap="addHomeVoResultMap">
         SELECT house.city,house.district AS zone,CONCAT(house.address,house.area ,house.building_num+house.unit_num+house.floor_num ,house.house_num) AS location,
-        house.district AS block,house.id AS home_id,house.area AS home_name,house.remark AS description
+        house.area AS block,house.id AS home_id,house.area AS home_name,house.remark AS description
         FROM <include refid="house"/> house WHERE house.id = #{id}
     </select>
 
