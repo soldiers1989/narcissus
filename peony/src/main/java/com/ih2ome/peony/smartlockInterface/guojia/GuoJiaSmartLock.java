@@ -274,7 +274,7 @@ public class GuoJiaSmartLock implements ISmartLock {
      * @throws SmartLockException
      */
     @Override
-    public String searchHomeInfo(String accessToken) throws SmartLockException {
+    public String searchHomeInfo(Map<String,Object> params) throws SmartLockException {
         return null;
     }
 }

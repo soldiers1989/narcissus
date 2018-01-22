@@ -15,7 +15,7 @@ public class YunDingDeviceInfoVO {
     private String uuid;
     //设备序列号
     private String sn;
-    //设备网关id
+    //设备绑定的网关id
     private String centerUuid;
     //描述
     private String description;

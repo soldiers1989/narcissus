@@ -7,6 +7,7 @@ import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 
 import java.text.ParseException;
+import java.util.Map;
 
 /**
  * 智能门锁第三方接口
@@ -80,6 +81,6 @@ public interface ISmartLock {
      * @return
      * @throws SmartLockException
      */
-    public String searchHomeInfo(String accessTokens) throws SmartLockException;
+    public String searchHomeInfo(Map<String, Object> params) throws SmartLockException;
 
 }
