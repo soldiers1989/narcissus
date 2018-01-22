@@ -1,8 +1,8 @@
 package com.ih2ome.peony.smartlockInterface.factory;
 
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirm;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ public class SmartLockOperateFactory {
             throw new SmartLockException("id格式不规范");
         }
         String type = ids[0];
-        SmartLockFirm smartLockFirm = SmartLockFirm.getByCode(type);
+        SmartLockFirmEnum smartLockFirm = SmartLockFirmEnum.getByCode(type);
         ISmartLock iSmartLock = null;
         iSmartLock = (ISmartLock) Class.forName(smartLockFirm.getClazz()).newInstance();
         return iSmartLock;
