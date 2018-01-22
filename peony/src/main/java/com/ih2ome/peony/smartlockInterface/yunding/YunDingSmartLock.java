@@ -174,4 +174,13 @@ public class YunDingSmartLock implements ISmartLock {
         return result;
     }
 
+    //查询所有的房源信息和设备信息
+    @Override
+    public String searchHomeInfo(String accessToken) throws SmartLockException {
+        Log.info("查询该用户所有的房源和设备信息");
+        String url = BASE_URL + "/search_home_info";
+
+        return null;
+    }
+
 }

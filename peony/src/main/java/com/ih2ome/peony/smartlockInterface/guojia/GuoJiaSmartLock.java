@@ -240,14 +240,41 @@ public class GuoJiaSmartLock implements ISmartLock {
         return result;
     }
 
+    /**
+     * 冻结门锁密码
+     *
+     * @param lockPassword
+     * @return
+     * @throws SmartLockException
+     * @throws ParseException
+     */
     @Override
     public String frozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         throw new SmartLockException("该厂商不支持此操作");
 
     }
 
+    /**
+     * 解冻门锁密码
+     *
+     * @param lockPassword
+     * @return
+     * @throws SmartLockException
+     * @throws ParseException
+     */
     @Override
     public String unfrozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         throw new SmartLockException("该厂商不支持此操作");
+    }
+
+    /**
+     * 查询所有的房源信息
+     *
+     * @return
+     * @throws SmartLockException
+     */
+    @Override
+    public String searchHomeInfo(String accessToken) throws SmartLockException {
+        return null;
     }
 }

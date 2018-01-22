@@ -73,4 +73,13 @@ public interface ISmartLock {
      * @return
      */
     public String unfrozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException;
+
+    /**
+     * 查询用户下所有的房源和设备信息
+     *
+     * @return
+     * @throws SmartLockException
+     */
+    public String searchHomeInfo(String accessTokens) throws SmartLockException;
+
 }
