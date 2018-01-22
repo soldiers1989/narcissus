@@ -4,11 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
-import com.ih2ome.hardware_service.service.service.WatermeterService;
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.entity.caspain.SmartLock;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Sky
@@ -32,7 +37,24 @@ public class SmartLockController extends BaseController {
     @RequestMapping(value = "search/home", method = RequestMethod.POST, produces = {"application/json"})
     public String searchHome(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        
+        //获得用户id
+        String userId=dt.getString("id");
+        //判断是集中还是分散
+        String type = dt.getString("type");
+        //判断是哪个第三方(云丁，果加)
+       String factoryType=dt.getString("factoryType");
+        try {
+            Map<String,List<HomeVO>> results=smartLockService.searchHome(userId,type,factoryType);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (SmartLockException e){
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

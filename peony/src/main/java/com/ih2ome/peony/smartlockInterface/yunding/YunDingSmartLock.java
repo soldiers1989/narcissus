@@ -221,7 +221,7 @@ public class YunDingSmartLock implements ISmartLock {
             JSONArray rooms = homeJsonObject.getJSONArray("rooms");
             for (Object roomObject : rooms) {
                 YunDingRoomInfoVO yunDingRoomInfoVO = new YunDingRoomInfoVO();
-                JSONObject roomJsonObject = JSONObject.parseObject(homeObject.toString());
+                JSONObject roomJsonObject = JSONObject.parseObject(roomObject.toString());
                 yunDingRoomInfoVO.setHomeId(homeJsonObject.getString("home_id"));
                 yunDingRoomInfoVO.setRoomId(roomJsonObject.getString("room_id"));
                 yunDingRoomInfoVO.setRoomName(roomJsonObject.getString("room_name"));
