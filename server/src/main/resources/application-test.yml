@@ -56,8 +56,10 @@ sso:
 #云丁信息
 yd:
   login:
-    url: https://open.dding.net/public/oauth/index.html
-  client_id: 7b7c10ebdec490d4e0d5850c
-  client_secret: b7019a28af49f61dcda9e6b4b42b4aca
+    url: http://dev-gate.dding.net:7080/public/oauth/index.html
+    client_id: shuidiceshi
+    client_secret: 3a5aacee5f45fc4f2cc14e8a904cdb79
   smart_lock:
     permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op
+    call_back:
+      url: http://narcissus.shuidiguanjia.com/api/yunDing/callBack/setOAuthCode
