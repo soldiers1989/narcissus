@@ -1,16 +1,15 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
+import com.ih2ome.peony.smartlockInterface.ISmartLock;
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
-import com.ih2ome.peony.smartlockInterface.ISmartLock;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirm;
-import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -47,7 +46,7 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService {
     @Override
     public SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
         String dateType = "yyyy-mm-dd";
-        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirmEnum.GUO_JIA.getClazz()).newInstance();
         if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
             SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getSmartDispersedDoorLockGatewayVOById(id);
             GatewayInfoVO gateWayInfoVo = iSmartLock.getGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
