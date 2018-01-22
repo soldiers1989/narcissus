@@ -53,4 +53,16 @@ sms:
 #sso基础信息配置
 sso:
   host: http://10.0.0.230:8080
+#云丁信息
+yd:
+  login:
+    url: http://dev-gate.dding.net:7080/public/oauth/index.html
+    client_id: shuidiceshi
+    client_secret: 3a5aacee5f45fc4f2cc14e8a904cdb79
+  smart_lock:
+    permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op
+    call_back:
+      url: http://narcissus.shuidiguanjia.com/api/yunDing/callBack/setOAuthCode
+
+
 

@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_server.server.callback.vo;
+package com.ih2ome.hardware_server.server.callback.yunding.watermeter.vo;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;

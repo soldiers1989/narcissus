@@ -131,6 +131,7 @@ public class YunDingSmartLock implements ISmartLock {
     }
 
     //冻结密码
+    @Override
     public String frozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
         Log.info("冻结门锁密码,门锁uuid:{},密码id:{}", yunDingLockPasswordVO.getUuid(), yunDingLockPasswordVO.getPasswordId());
@@ -157,6 +158,7 @@ public class YunDingSmartLock implements ISmartLock {
     }
 
     //解冻结密码
+    @Override
     public String unfrozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
         Log.info("解冻门锁密码,门锁uuid:{},密码id:{}", yunDingLockPasswordVO.getUuid(), yunDingLockPasswordVO.getPasswordId());

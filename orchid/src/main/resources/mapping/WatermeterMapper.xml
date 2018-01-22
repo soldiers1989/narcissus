@@ -40,7 +40,7 @@
 <!--增 -->
 
     <!--添加水表-->
-    <insert id="addSmartWatermeter" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter" useGeneratedKeys="true" keyProperty="smart_watermeter_id">
+    <insert id="addSmartWatermeter" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter" useGeneratedKeys="true" keyProperty="smart_watermeter_id">
         insert into <include refid="smart_watermeter" />(created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,apartment_id,floor_id,house_id,room_id,house_catalog,meter_type,
         uuid,onoff_status,price,meter_amount,last_amount,meter_updated_at,manufactory)
         values(#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{deletedAt},#{deletedBy},#{apartmentId},#{floorId},#{houseId},#{roomId},#{houseCatalog},#{meterType},
@@ -48,7 +48,7 @@
     </insert>
 
     <!--添加水表-->
-    <insert id="addSmartGatewayBind" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind" >
+    <insert id="addSmartGatewayBind" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind" >
         insert into <include refid="smart_gateway_bind" />(smart_gateway_id,smart_device_type,smart_id)
         values(#{smartGatewayId},#{smartDeviceType},#{smartId})
     </insert>
@@ -184,7 +184,7 @@
     </select>
 
     <!--查询筛选水表抄表记录by起止时间-->
-    <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord">
+    <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord">
        SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
     </select>
 

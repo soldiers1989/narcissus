@@ -73,8 +73,10 @@ public class YunDingSmartLockUtil {
             token = (String) map.get(TOKEN_KEY);
             Integer expires_time = (Integer) map.get(EXPRIES_KEY);
             CacheUtils.set(TOKEN_KEY, token, expires_time);
+
         }
         return token;
+
     }
 
 
