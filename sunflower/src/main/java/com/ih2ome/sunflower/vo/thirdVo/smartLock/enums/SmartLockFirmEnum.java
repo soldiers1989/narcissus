@@ -5,22 +5,22 @@ package com.ih2ome.sunflower.vo.thirdVo.smartLock.enums;
  * @create 2017/12/25
  * @email sky.li@ixiaoshuidi.com
  **/
-public enum SmartLockFirm {
-    GUO_JIA("guojia","com.ih2ome.peony.smartlockInterface.guojia.GuoJiaSmartLock"),
-    YUN_DING("yunding","com.ih2ome.peony.smartlockInterface.yunding.YunDingSmartLock");
+public enum SmartLockFirmEnum {
+    GUO_JIA("GJ","com.ih2ome.peony.smartlockInterface.guojia.GuoJiaSmartLock"),
+    YUN_DING("YD","com.ih2ome.peony.smartlockInterface.yunding.YunDingSmartLock");
     private String clazz;
     private String code;
 
-    public static SmartLockFirm getByCode(String code) {
-        for (SmartLockFirm smartLockFirm : SmartLockFirm.values()) {
-            if (smartLockFirm.getCode().equals(code)) {
-                return smartLockFirm;
+    public static SmartLockFirmEnum getByCode(String code) {
+        for (SmartLockFirmEnum smartLockFirmEnum: SmartLockFirmEnum.values()) {
+            if (smartLockFirmEnum.getCode().equals(code)) {
+                return smartLockFirmEnum;
             }
         }
         return null;
     }
 
-    SmartLockFirm(String code,String clazz) {
+    SmartLockFirmEnum(String code,String clazz) {
         this.code = code;
         this.clazz = clazz;
     }
