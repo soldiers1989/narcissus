@@ -39,17 +39,14 @@ public class WrapperedRequest extends HttpServletRequestWrapper {
     public ServletInputStream getInputStream() throws IOException {
         return new ServletInputStream() {
 
-            @Override
             public boolean isFinished() {
                 return false;
             }
 
-            @Override
             public boolean isReady() {
                 return false;
             }
 
-            @Override
             public void setReadListener(ReadListener readListener) {
 
             }
@@ -57,7 +54,6 @@ public class WrapperedRequest extends HttpServletRequestWrapper {
             private InputStream in = new ByteArrayInputStream(
                     requestBody.getBytes(req.getCharacterEncoding()));
 
-            @Override
             public int read() throws IOException {
                 return in.read();
             }
