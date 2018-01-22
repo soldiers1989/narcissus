@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/mannager/smartLock")
 @CrossOrigin
-public class SmartLockController extends BaseController {
+public class SmartLockManagerController extends BaseController {
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private LockManagerService lockManagerService;
