@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockDao">
+
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO" id="dispersedResultMap" autoMapping="true">
+        <id column="homeId" property="homeId"/>
+        <result property="userId" column="userId"></result>
+        <result property="homeName" column="homeName"></result>
+        <result property="homeType" column="homeType"></result>
+
+        <collection property="rooms" javaType="List"
+                    ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO" autoMapping="true">
+            <id column="roomId" property="roomId"/>
+            <result property="roomName" column="roomName"></result>
+            <result property="homeId" column="homeId"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO" id="concentrateResultMap" autoMapping="true">
+        <id column="homeId" property="homeId"/>
+        <result property="userId" column="userId"></result>
+        <result property="homeName" column="homeName"></result>
+        <result property="homeType" column="homeType"></result>
+
+        <collection property="rooms" javaType="List"
+                    ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO" autoMapping="true">
+            <id column="roomId" property="roomId"/>
+            <result property="roomName" column="roomName"></result>
+            <result property="homeId" column="homeId"></result>
+        </collection>
+    </resultMap>
+
+    <!--查询房源信息(分散式)-->
+    <select id="findDispersedHomes" parameterType="string" resultMap="dispersedResultMap">
+        SELECT
+        cth.created_by_id AS userId,
+        cth.id AS homeId,
+        cth.area AS homeName,
+        '1' AS homeType,
+        ctr.id AS roomId,
+        ctr. NAME AS roomName
+        FROM
+            caspain_test.house cth
+        LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
+        WHERE
+        ctr.created_by_id =#{userId};
+    </select>
+
+    <!--查询房源信息(集中式)-->
+    <select id="findConcentrateHomes" parameterType="string" resultMap="concentrateResultMap">
+        SELECT
+        vta.created_by AS userId,
+        vta.id AS homeId,
+        vta.`name` AS homeName,
+        '0' AS homeType,
+        vtr.id AS roomId,
+        vtr.name AS roomName
+        FROM
+            `volga_test`.apartment vta
+        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
+        where vta.created_by=#{userId};
+    </select>
+</mapper>

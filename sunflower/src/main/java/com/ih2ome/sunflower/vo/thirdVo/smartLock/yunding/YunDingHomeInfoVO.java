@@ -1,7 +1,10 @@
 package com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding;
 
+import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,4 +41,21 @@ public class YunDingHomeInfoVO {
     //公寓下的设备
     private List<YunDingDeviceInfoVO> devices;
 
+    public static HomeVO toH2ome(YunDingHomeInfoVO yunDingHomeInfoVO){
+        HomeVO homeVO=new HomeVO();
+        homeVO.setHomeId(yunDingHomeInfoVO.getHomeId());
+        homeVO.setHomeName(yunDingHomeInfoVO.getHomeName());
+        homeVO.setUserId(yunDingHomeInfoVO.getUserId());
+        homeVO.setHomeType(yunDingHomeInfoVO.getHomeType());
+        List<RoomVO> rooms=new ArrayList<RoomVO>();
+        for(YunDingRoomInfoVO yunDingRoomInfoVO:yunDingHomeInfoVO.getRooms()){
+            RoomVO roomVO=new RoomVO();
+            roomVO.setHomeId(homeVO.getHomeId());
+            roomVO.setRoomId(yunDingRoomInfoVO.getRoomId());
+            roomVO.setRoomName(yunDingRoomInfoVO.getRoomName());
+            rooms.add(roomVO);
+        }
+        homeVO.setRooms(rooms);
+        return homeVO;
+    }
 }
