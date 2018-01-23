@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_server.server.controller.smartlock.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,23 +40,33 @@ public class SmartLockController extends BaseController {
     public String searchHome(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         //获得用户id
-        String userId=dt.getString("id");
+        String userId = dt.getString("id");
         //判断是集中还是分散
         String type = dt.getString("type");
         //判断是哪个第三方(云丁，果加)
-       String factoryType=dt.getString("factoryType");
+        String factoryType = dt.getString("factoryType");
+        Map<String, List<HomeVO>> results = null;
         try {
-            Map<String,List<HomeVO>> results=smartLockService.searchHome(userId,type,factoryType);
+            results = smartLockService.searchHome(userId, type, factoryType);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
+            return result;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
+            return result;
         } catch (InstantiationException e) {
             e.printStackTrace();
-        } catch (SmartLockException e){
-            e.printStackTrace();
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
+            return result;
         }
-
-        return null;
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("thirdHomeList", results.get("thirdHomeList"));
+        responseJson.put("localHomeList", results.get("localHomeList"));
+        String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+        return result;
     }
 }

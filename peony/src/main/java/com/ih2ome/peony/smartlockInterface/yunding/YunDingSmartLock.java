@@ -9,6 +9,7 @@ import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingPullHomeCountEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingDeviceInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingLockPasswordVO;
@@ -191,6 +192,7 @@ public class YunDingSmartLock implements ISmartLock {
         String url = BASE_URL + "/search_home_info";
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("access_token", params.get("access_token"));
+        map.put("count", YunDingPullHomeCountEnum.ONE_THOUSAND.getCount());
         String result = HttpClientUtil.doGet(url, map);
         JSONObject resJson = null;
         try {

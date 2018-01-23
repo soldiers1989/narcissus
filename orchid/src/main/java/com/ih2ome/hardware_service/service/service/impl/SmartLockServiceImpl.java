@@ -11,7 +11,6 @@ import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -63,9 +62,9 @@ public class SmartLockServiceImpl implements SmartLockService {
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
             localHomeList = smartLockDao.findDispersedHomes(userId);
             Iterator<HomeVO> iterator = thirdHomeList.iterator();
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 HomeVO homeVO = iterator.next();
-                if(homeVO.getHomeType()!=YunDingHomeTypeEnum.DISPERSED.getCode()){
+                if (!homeVO.getHomeType().equals(YunDingHomeTypeEnum.DISPERSED.getCode())) {
                     iterator.remove();
                 }
             }
@@ -73,16 +72,16 @@ public class SmartLockServiceImpl implements SmartLockService {
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             localHomeList = smartLockDao.findConcentrateHomes(userId);
             Iterator<HomeVO> iterator = thirdHomeList.iterator();
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 HomeVO homeVO = iterator.next();
-                if(homeVO.getHomeType()!=YunDingHomeTypeEnum.CONCENTRAT.getCode()){
+                if (!homeVO.getHomeType().equals(YunDingHomeTypeEnum.CONCENTRAT.getCode())) {
                     iterator.remove();
                 }
             }
         }
-        Map<String, List<HomeVO>> map=new HashMap<String,List<HomeVO>>();
-        map.put("thirdHomeList",thirdHomeList);
-        map.put("localHomeList",localHomeList);
+        Map<String, List<HomeVO>> map = new HashMap<String, List<HomeVO>>();
+        map.put("thirdHomeList", thirdHomeList);
+        map.put("localHomeList", localHomeList);
         return map;
     }
 }
