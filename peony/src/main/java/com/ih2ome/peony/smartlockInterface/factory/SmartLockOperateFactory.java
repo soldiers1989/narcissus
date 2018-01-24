@@ -24,6 +24,7 @@ public class SmartLockOperateFactory {
         String [] ids = id.split("_");
         if(ids.length<2){
             throw new SmartLockException("id格式不规范");
+
         }
         String type = ids[0];
         SmartLockFirmEnum smartLockFirm = SmartLockFirmEnum.getByCode(type);

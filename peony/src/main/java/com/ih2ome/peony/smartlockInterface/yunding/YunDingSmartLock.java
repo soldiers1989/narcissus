@@ -42,7 +42,13 @@ public class YunDingSmartLock implements ISmartLock {
         return null;
     }
 
-    //新增密码
+    /**
+     * 新增密码
+     * @param lockPassword
+     * @return
+     * @throws SmartLockException
+     * @throws ParseException
+     */
     @Override
     public String addLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
@@ -73,7 +79,13 @@ public class YunDingSmartLock implements ISmartLock {
         return result;
     }
 
-    //修改密码
+    /**
+     * 修改密码
+     * @param lockPassword
+     * @return
+     * @throws SmartLockException
+     * @throws ParseException
+     */
     @Override
     public String updateLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
@@ -104,7 +116,13 @@ public class YunDingSmartLock implements ISmartLock {
         return result;
     }
 
-    //删除密码
+    /**
+     * 删除密码
+     * @param lockPassword
+     * @return
+     * @throws SmartLockException
+     * @throws ParseException
+     */
     @Override
     public String deleteLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
@@ -131,7 +149,13 @@ public class YunDingSmartLock implements ISmartLock {
         return result;
     }
 
-    //冻结密码
+    /**
+     *  冻结密码
+     * @param lockPassword
+     * @return
+     * @throws SmartLockException
+     * @throws ParseException
+     */
     @Override
     public String frozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
@@ -158,7 +182,13 @@ public class YunDingSmartLock implements ISmartLock {
         return result;
     }
 
-    //解冻结密码
+    /**
+     * 解冻结密码
+     * @param lockPassword
+     * @return
+     * @throws SmartLockException
+     * @throws ParseException
+     */
     @Override
     public String unfrozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
         YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
@@ -185,7 +215,12 @@ public class YunDingSmartLock implements ISmartLock {
         return result;
     }
 
-    //查询所有的房源信息和设备信息
+    /**
+     * 查询所有的房源信息和设备信息
+     * @param params
+     * @return
+     * @throws SmartLockException
+     */
     @Override
     public String searchHomeInfo(Map<String, Object> params) throws SmartLockException {
         Log.info("查询该用户所有的房源和设备信息");
