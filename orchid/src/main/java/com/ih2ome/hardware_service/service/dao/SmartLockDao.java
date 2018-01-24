@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.dao;
 
-import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
-import org.apache.ibatis.annotations.Param;
+import com.ih2ome.sunflower.model.house.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,17 +31,11 @@ public interface SmartLockDao {
 
     /**
      * 分散式取消关联房间
-     *
-     * @param roomId
-     * @param thirdRoomId
      */
-    void dispersedCancelAssociation(@Param("roomId") String roomId, @Param("thirdRoomId") String thirdRoomId);
+    void dispersedCancelAssociation(SmartHouseMappingVO smartHouseMappingVO);
 
     /**
      * 集中式取消关联房间
-     *
-     * @param roomId
-     * @param thirdRoomId
      */
-    void concentrateCancelAssociation(@Param("roomId") String roomId, @Param("thirdRoomId") String thirdRoomId);
+    void concentrateCancelAssociation(SmartHouseMappingVO smartHouseMappingVO);
 }

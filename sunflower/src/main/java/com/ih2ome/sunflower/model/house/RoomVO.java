@@ -1,4 +1,4 @@
-package com.ih2ome.sunflower.vo.pageVo.smartLock;
+package com.ih2ome.sunflower.model.house;
 
 import lombok.Data;
 

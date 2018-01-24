@@ -2,13 +2,13 @@ package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
-import com.ih2ome.hardware_service.service.dao.WatermeterMapper;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO;
+import com.ih2ome.sunflower.model.house.HomeVO;
+import com.ih2ome.sunflower.model.house.RoomVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
@@ -45,7 +45,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         SmartLockFirmEnum smartLockFirmEnum = SmartLockFirmEnum.getByCode(factoryType);
         //第三方房源信息(包括了分散式和集中式)
         List<HomeVO> thirdHomeList = new ArrayList<HomeVO>();
-        if (smartLockFirmEnum != null) {
+        if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals("YD")) {
             ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
             Map<String, Object> params = new HashMap<String, Object>();
             //云丁用户账号授权的token,   ****************暂时写死
@@ -109,18 +109,20 @@ public class SmartLockServiceImpl implements SmartLockService {
 
     /**
      * 取消房间关联
-     *
-     * @param type
-     * @param roomId
-     * @param thirdRoomId
      */
     @Override
-    public void cancelAssociation(String type, String roomId, String thirdRoomId) {
+    public void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO) {
+        String type = smartHouseMappingVO.getType();
+        SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+        SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
+        if("YD".equals(lockFirmEnum.getCode())){
+            houseMapping.setDataType("4");
+        }
         //判断是分散式(0是集中式，1是分散式)
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
-            smartLockDao.dispersedCancelAssociation(roomId, thirdRoomId);
+            smartLockDao.dispersedCancelAssociation(houseMapping);
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
-            smartLockDao.concentrateCancelAssociation(roomId, thirdRoomId);
+            smartLockDao.concentrateCancelAssociation(houseMapping);
         }
     }
 }

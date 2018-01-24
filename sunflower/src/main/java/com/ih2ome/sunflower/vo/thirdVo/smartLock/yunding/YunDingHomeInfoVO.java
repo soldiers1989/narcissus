@@ -1,7 +1,7 @@
 package com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding;
 
-import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO;
+import com.ih2ome.sunflower.model.house.HomeVO;
+import com.ih2ome.sunflower.model.house.RoomVO;
 import lombok.Data;
 
 import java.util.ArrayList;

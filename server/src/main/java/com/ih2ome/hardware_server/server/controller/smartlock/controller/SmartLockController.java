@@ -1,14 +1,13 @@
 package com.ih2ome.hardware_server.server.controller.smartlock.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO;
+import com.ih2ome.sunflower.model.house.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,13 +79,8 @@ public class SmartLockController extends BaseController {
     @RequestMapping(value = "association/cancel", method = RequestMethod.POST, produces = {"application/json"})
     public String cancelAssociation(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        //水滴的roomId
-        String roomId = dt.getString("roomId");
-        //第三方的roomId
-        String thirdRoomId = dt.getString("thirdRoomId");
-        //判断是集中还是分散
-        String type=dt.getString("type");
-        smartLockService.cancelAssociation(type,roomId,thirdRoomId);
+        SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
+        smartLockService.cancelAssociation(smartHouseMappingVO);
         return null;
 
     }

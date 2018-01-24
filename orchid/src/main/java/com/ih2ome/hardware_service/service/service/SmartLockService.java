@@ -1,7 +1,8 @@
 package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
+import com.ih2ome.sunflower.model.house.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 
 import java.util.List;
 import java.util.Map;
@@ -22,10 +23,6 @@ public interface SmartLockService {
 
     /**
      * 取消房间关联
-     *
-     * @param type
-     * @param roomId
-     * @param thirdRoomId
      */
-    void cancelAssociation(String type, String roomId, String thirdRoomId);
+    void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO);
 }
