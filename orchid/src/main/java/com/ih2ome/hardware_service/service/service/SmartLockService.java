@@ -18,5 +18,14 @@ public interface SmartLockService {
      * @param type
      * @return
      */
-    Map<String, List<HomeVO>> searchHome(String userId,String type,String factoryType) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException;
+    Map<String, List<HomeVO>> searchHome(String userId, String type, String factoryType) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException;
+
+    /**
+     * 取消房间关联
+     *
+     * @param type
+     * @param roomId
+     * @param thirdRoomId
+     */
+    void cancelAssociation(String type, String roomId, String thirdRoomId);
 }

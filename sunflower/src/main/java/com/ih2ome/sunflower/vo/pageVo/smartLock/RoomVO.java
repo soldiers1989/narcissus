@@ -9,9 +9,12 @@ import lombok.Data;
  **/
 @Data
 public class RoomVO {
-    private String homeId;
     private String roomId;
     private String roomName;
-    //房屋关联状态(0是已关联，1是未关联)
+    //房屋关联状态(1是已关联，2是未关联)
     private String roomAssociationStatus;
+    //第三方房间id
+    private String thirdRoomId;
+    //第三方房间名称
+    private String thirdRoomName;
 }
