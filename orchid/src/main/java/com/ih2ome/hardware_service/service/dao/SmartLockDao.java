@@ -1,6 +1,6 @@
 package com.ih2ome.hardware_service.service.dao;
 
-import com.ih2ome.sunflower.model.house.HomeVO;
+import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import org.springframework.stereotype.Repository;
 

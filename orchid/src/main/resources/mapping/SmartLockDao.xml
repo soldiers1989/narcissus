@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockDao">
 
-    <resultMap type="com.ih2ome.sunflower.model.house.HomeVO" id="dispersedResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.model.backup.HomeVO" id="dispersedResultMap" autoMapping="true">
         <id column="homeId" property="homeId"/>
         <result property="userId" column="userId"></result>
         <result property="homeName" column="homeName"></result>
         <result property="homeType" column="homeType"></result>
         <collection property="rooms" javaType="List"
-                    ofType="com.ih2ome.sunflower.model.house.RoomVO" autoMapping="true">
+                    ofType="com.ih2ome.sunflower.model.backup.RoomVO" autoMapping="true">
             <id column="roomId" property="roomId"/>
             <result property="roomName" column="roomName"></result>
             <result property="roomAssociationStatus" column="roomAssociationStatus"></result>
@@ -16,13 +16,13 @@
         </collection>
     </resultMap>
 
-    <resultMap type="com.ih2ome.sunflower.model.house.HomeVO" id="concentrateResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.model.backup.HomeVO" id="concentrateResultMap" autoMapping="true">
         <id column="homeId" property="homeId"/>
         <result property="userId" column="userId"></result>
         <result property="homeName" column="homeName"></result>
         <result property="homeType" column="homeType"></result>
         <collection property="rooms" javaType="List"
-                    ofType="com.ih2ome.sunflower.model.house.RoomVO" autoMapping="true">
+                    ofType="com.ih2ome.sunflower.model.backup.RoomVO" autoMapping="true">
             <id column="roomId" property="roomId"/>
             <result property="roomName" column="roomName"></result>
             <result property="roomAssociationStatus" column="roomAssociationStatus"></result>

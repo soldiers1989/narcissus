@@ -1,4 +1,4 @@
-package com.ih2ome.sunflower.model.house;
+package com.ih2ome.sunflower.model.backup;
 
 import lombok.Data;
 

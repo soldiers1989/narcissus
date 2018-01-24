@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.sunflower.model.house.HomeVO;
+import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 
 import java.util.List;
