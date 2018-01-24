@@ -39,8 +39,8 @@
         nshm.provider_code = #{providerCode}
         AND nshm.house_catalog = #{houseCatalog}
         AND nshm.data_type =#{dataType}
-        AND nshm.h2omeID = #{h2omeID}
-        AND nshm.threeID=#{threeID}
+        AND nshm.h2omeID = #{h2omeId}
+        AND nshm.threeID=#{threeId}
     </update>
 
 

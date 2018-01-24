@@ -112,7 +112,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      * 取消房间关联
      */
     @Override
-    public void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO) {
+    public void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException {
         String type = smartHouseMappingVO.getType();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());

@@ -80,10 +80,16 @@ public class SmartLockController extends BaseController {
     public String cancelAssociation(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
-        smartLockService.cancelAssociation(smartHouseMappingVO);
+        try {
+            smartLockService.cancelAssociation(smartHouseMappingVO);
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "取消失败");
+            return result;
+        }
         String result = structureSuccessResponseVO(null, new Date().toString(), "取消成功");
         return result;
-
-
     }
+
+
 }
