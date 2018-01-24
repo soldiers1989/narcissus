@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_server.server.controller.smartlock.controller;
+package com.ih2ome.hardware_server.server.controller.smartlock;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
@@ -36,7 +36,7 @@ public class SmartLockController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value = "search/home", method = RequestMethod.POST, produces = {"application/json"})
+    @RequestMapping(value = "/search/home", method = RequestMethod.POST, produces = {"application/json"})
     public String searchHome(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         //获得用户id
@@ -76,7 +76,7 @@ public class SmartLockController extends BaseController {
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value = "association/cancel", method = RequestMethod.POST, produces = {"application/json"})
+    @RequestMapping(value = "/association/cancel", method = RequestMethod.POST, produces = {"application/json"})
     public String cancelAssociation(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
