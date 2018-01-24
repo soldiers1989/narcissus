@@ -7,12 +7,12 @@
         <result property="userId" column="userId"></result>
         <result property="homeName" column="homeName"></result>
         <result property="homeType" column="homeType"></result>
-
         <collection property="rooms" javaType="List"
                     ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO" autoMapping="true">
             <id column="roomId" property="roomId"/>
             <result property="roomName" column="roomName"></result>
-            <result property="homeId" column="homeId"></result>
+            <result property="roomAssociationStatus" column="roomAssociationStatus"></result>
+            <result property="thirdRoomId" column="thirdRoomId"></result>
         </collection>
     </resultMap>
 
@@ -21,43 +21,61 @@
         <result property="userId" column="userId"></result>
         <result property="homeName" column="homeName"></result>
         <result property="homeType" column="homeType"></result>
-
         <collection property="rooms" javaType="List"
                     ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO" autoMapping="true">
             <id column="roomId" property="roomId"/>
             <result property="roomName" column="roomName"></result>
-            <result property="homeId" column="homeId"></result>
+            <result property="roomAssociationStatus" column="roomAssociationStatus"></result>
+            <result property="thirdRoomId" column="thirdRoomId"></result>
         </collection>
     </resultMap>
 
+    <!--update-->
+    <!--房间取消关联(分散式)-->
+    <update id="dispersedCancelAssociation">
+
+    </update>
+    <!--房间取消关联(集中式)-->
+    <update id="concentrateCancelAssociation">
+
+    </update>
+
+    <!--select-->
     <!--查询房源信息(分散式)-->
     <select id="findDispersedHomes" parameterType="string" resultMap="dispersedResultMap">
         SELECT
-        cth.created_by_id AS userId,
-        cth.id AS homeId,
-        cth.area AS homeName,
-        '1' AS homeType,
-        ctr.id AS roomId,
-        ctr. NAME AS roomName
-        FROM
-            caspain_test.house cth
-        LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
-        WHERE
-        ctr.created_by_id =#{userId};
+	cth.created_by_id AS userId,
+	cth.id AS homeId,
+	cth.area AS homeName,
+	'1' AS homeType,
+	ctr.id AS roomId,
+	ctr.`name` AS roomName,
+	nshm.threeID AS thirdRoomId,
+	nshm.status AS roomAssociationStatus
+    FROM
+        caspain_test.house cth
+    LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
+    LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id=nshm.h2omeID AND nshm.data_type=4
+    WHERE
+	ctr.created_by_id = #{userId};
     </select>
 
     <!--查询房源信息(集中式)-->
     <select id="findConcentrateHomes" parameterType="string" resultMap="concentrateResultMap">
-        SELECT
-        vta.created_by AS userId,
-        vta.id AS homeId,
-        vta.`name` AS homeName,
-        '0' AS homeType,
-        vtr.id AS roomId,
-        vtr.name AS roomName
-        FROM
-            `volga_test`.apartment vta
-        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
-        where vta.created_by=#{userId};
+       SELECT
+	vta.created_by AS userId,
+	vta.id AS homeId,
+	vta.`name` AS homeName,
+	'0' AS homeType,
+	vtr.id AS roomId,
+	vtr.`name` AS roomName,
+	nshm.`status` as roomAssociationStatus,
+	nshm.threeID as thirdRoomId
+    FROM
+    `volga_test`.apartment vta
+    LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
+    LEFT JOIN narcissus_test.smart_house_mapping nshm ON vtr.id=nshm.h2omeID AND nshm.data_type=4
+    WHERE
+    vta.created_by =#{userId};
     </select>
 </mapper>

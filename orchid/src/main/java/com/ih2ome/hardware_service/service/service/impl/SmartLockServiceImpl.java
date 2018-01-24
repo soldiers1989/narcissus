@@ -8,6 +8,7 @@ import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.RoomVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
@@ -79,9 +80,47 @@ public class SmartLockServiceImpl implements SmartLockService {
                 }
             }
         }
+        //房间关联数据处理
+        for (HomeVO localHomeVO : localHomeList) {
+            List<RoomVO> localRooms = localHomeVO.getRooms();
+            for (RoomVO localRoom : localRooms) {
+                String thirdRoomId = localRoom.getThirdRoomId();
+                if (thirdRoomId != null) {
+                    for (HomeVO thirdHomeVO : thirdHomeList) {
+                        List<RoomVO> thirdRooms = thirdHomeVO.getRooms();
+                        Iterator<RoomVO> iterator = thirdRooms.iterator();
+                        while (iterator.hasNext()) {
+                            RoomVO roomVO = iterator.next();
+                            if (thirdRoomId.equals(roomVO.getThirdRoomId())) {
+                                localRoom.setThirdRoomName(roomVO.getThirdRoomName());
+                                iterator.remove();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         Map<String, List<HomeVO>> map = new HashMap<String, List<HomeVO>>();
         map.put("thirdHomeList", thirdHomeList);
         map.put("localHomeList", localHomeList);
         return map;
+    }
+
+    /**
+     * 取消房间关联
+     *
+     * @param type
+     * @param roomId
+     * @param thirdRoomId
+     */
+    @Override
+    public void cancelAssociation(String type, String roomId, String thirdRoomId) {
+        //判断是分散式(0是集中式，1是分散式)
+        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            smartLockDao.dispersedCancelAssociation(roomId, thirdRoomId);
+        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            smartLockDao.concentrateCancelAssociation(roomId, thirdRoomId);
+        }
     }
 }

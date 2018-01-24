@@ -41,18 +41,17 @@ public class YunDingHomeInfoVO {
     //公寓下的设备
     private List<YunDingDeviceInfoVO> devices;
 
-    public static HomeVO toH2ome(YunDingHomeInfoVO yunDingHomeInfoVO){
-        HomeVO homeVO=new HomeVO();
+    public static HomeVO toH2ome(YunDingHomeInfoVO yunDingHomeInfoVO) {
+        HomeVO homeVO = new HomeVO();
         homeVO.setHomeId(yunDingHomeInfoVO.getHomeId());
         homeVO.setHomeName(yunDingHomeInfoVO.getHomeName());
         homeVO.setUserId(yunDingHomeInfoVO.getUserId());
         homeVO.setHomeType(yunDingHomeInfoVO.getHomeType());
-        List<RoomVO> rooms=new ArrayList<RoomVO>();
-        for(YunDingRoomInfoVO yunDingRoomInfoVO:yunDingHomeInfoVO.getRooms()){
-            RoomVO roomVO=new RoomVO();
-            roomVO.setHomeId(homeVO.getHomeId());
-            roomVO.setRoomId(yunDingRoomInfoVO.getRoomId());
-            roomVO.setRoomName(yunDingRoomInfoVO.getRoomName());
+        List<RoomVO> rooms = new ArrayList<RoomVO>();
+        for (YunDingRoomInfoVO yunDingRoomInfoVO : yunDingHomeInfoVO.getRooms()) {
+            RoomVO roomVO = new RoomVO();
+            roomVO.setThirdRoomId(yunDingRoomInfoVO.getRoomId());
+            roomVO.setThirdRoomName(yunDingRoomInfoVO.getRoomName());
             rooms.add(roomVO);
         }
         homeVO.setRooms(rooms);
