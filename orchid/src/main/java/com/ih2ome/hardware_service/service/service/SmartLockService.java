@@ -25,4 +25,11 @@ public interface SmartLockService {
      * 取消房间关联
      */
     void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException;
+
+    /**
+     * 关联房间
+     *
+     * @param smartHouseMappingVO
+     */
+    void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws  SmartLockException;
 }

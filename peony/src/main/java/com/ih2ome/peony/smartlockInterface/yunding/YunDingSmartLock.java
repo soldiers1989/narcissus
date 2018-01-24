@@ -289,6 +289,17 @@ public class YunDingSmartLock implements ISmartLock {
         return JSONObject.toJSONString(homeList);
     }
 
+    @Override
+    public String searchGataWayInfo(Map<String, Object> params) throws SmartLockException {
+        return null;
+    }
+
+    @Override
+    public String searchLockInfo(Map<String, Object> params) throws SmartLockException {
+        return null;
+    }
+
+
 //    public  static void main(String[] args){
 //        YunDingSmartLock yunDingSmartLock=new YunDingSmartLock();
 //        try {

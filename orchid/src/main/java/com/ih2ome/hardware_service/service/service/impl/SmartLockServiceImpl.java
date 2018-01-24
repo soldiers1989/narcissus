@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.hardware_service.service.dao.LockManagerDao;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
@@ -32,6 +33,7 @@ public class SmartLockServiceImpl implements SmartLockService {
     @Resource
     private SmartLockDao smartLockDao;
 
+
     /**
      * 查询第三方和水滴的房源信息
      *
@@ -46,7 +48,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         SmartLockFirmEnum smartLockFirmEnum = SmartLockFirmEnum.getByCode(factoryType);
         //第三方房源信息(包括了分散式和集中式)
         List<HomeVO> thirdHomeList = new ArrayList<HomeVO>();
-        if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals("YD")) {
+        if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals(SmartLockFirmEnum.YUN_DING.getCode())) {
             ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
             Map<String, Object> params = new HashMap<String, Object>();
             //云丁用户账号授权的token,   ****************暂时写死
@@ -70,6 +72,15 @@ public class SmartLockServiceImpl implements SmartLockService {
                     iterator.remove();
                 }
             }
+            for (HomeVO homeVO : thirdHomeList) {
+                List<RoomVO> rooms = homeVO.getRooms();
+                for (RoomVO roomVO : rooms) {
+                    if ("default".equals(roomVO.getThirdRoomName())) {
+                        roomVO.setThirdRoomName("公共区域");
+                    }
+                }
+            }
+
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             localHomeList = smartLockDao.findConcentrateHomes(userId);
@@ -78,6 +89,14 @@ public class SmartLockServiceImpl implements SmartLockService {
                 HomeVO homeVO = iterator.next();
                 if (!homeVO.getHomeType().equals(YunDingHomeTypeEnum.CONCENTRAT.getCode())) {
                     iterator.remove();
+                }
+            }
+            for (HomeVO homeVO : thirdHomeList) {
+                List<RoomVO> rooms = homeVO.getRooms();
+                for (RoomVO roomVO : rooms) {
+                    if ("default".equals(roomVO.getThirdRoomName())) {
+                        roomVO.setThirdRoomName("公共区域");
+                    }
                 }
             }
         }
@@ -116,10 +135,35 @@ public class SmartLockServiceImpl implements SmartLockService {
         String type = smartHouseMappingVO.getType();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
-        if ("YD".equals(lockFirmEnum.getCode())) {
+        if (SmartLockFirmEnum.YUN_DING.getCode().equals(lockFirmEnum.getCode())) {
             houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
         }
         smartLockDao.cancelAssociation(houseMapping);
 
+    }
+
+    /**
+     * 房间关联
+     *
+     * @param smartHouseMappingVO
+     */
+    @Override
+    public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException {
+        String type = smartHouseMappingVO.getType();
+        SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+        SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
+        //云丁厂商，房间关联
+        if (SmartLockFirmEnum.YUN_DING.getCode().equals(lockFirmEnum.getCode())) {
+            houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
+        }
+        //先查询记录是否存在
+        SmartHouseMappingVO isExistHouseMapping = smartLockDao.findHouseMappingRecord(houseMapping);
+        if (isExistHouseMapping == null) {
+            //表明该房间未关联过房间，需要创建一个记录,新增房间关联
+            smartLockDao.addAssociation(houseMapping);
+        } else {
+            //表明该房间关联过房间，更改关联
+            smartLockDao.updateAssociation(houseMapping);
+        }
     }
 }
