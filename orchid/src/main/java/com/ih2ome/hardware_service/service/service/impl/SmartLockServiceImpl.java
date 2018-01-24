@@ -116,9 +116,6 @@ public class SmartLockServiceImpl implements SmartLockService {
         String type = smartHouseMappingVO.getType();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
-        if("YD".equals(lockFirmEnum.getCode())){
-            houseMapping.setDataType("4");
-        }
         if ("YD".equals(lockFirmEnum.getCode())) {
             houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
         }
