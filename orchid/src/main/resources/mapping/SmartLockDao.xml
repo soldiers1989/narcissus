@@ -31,14 +31,18 @@
     </resultMap>
 
     <!--update-->
-    <!--房间取消关联(分散式)-->
-    <update id="dispersedCancelAssociation">
-
+    <!--房间取消关联(分散式,集中式)-->
+    <update id="cancelAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
+        UPDATE narcissus_test.smart_house_mapping nshm
+        SET nshm.`status` = '2'
+        WHERE
+        nshm.provider_code = #{providerCode}
+        AND nshm.house_catalog = #{houseCatalog}
+        AND nshm.data_type =#{dataType}
+        AND nshm.h2omeID = #{h2omeID}
+        AND nshm.threeID=#{threeID}
     </update>
-    <!--房间取消关联(集中式)-->
-    <update id="concentrateCancelAssociation">
 
-    </update>
 
     <!--select-->
     <!--查询房源信息(分散式)-->

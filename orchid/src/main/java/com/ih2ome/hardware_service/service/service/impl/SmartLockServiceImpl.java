@@ -5,6 +5,7 @@ import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
@@ -118,11 +119,10 @@ public class SmartLockServiceImpl implements SmartLockService {
         if("YD".equals(lockFirmEnum.getCode())){
             houseMapping.setDataType("4");
         }
-        //判断是分散式(0是集中式，1是分散式)
-        if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
-            smartLockDao.dispersedCancelAssociation(houseMapping);
-        } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
-            smartLockDao.concentrateCancelAssociation(houseMapping);
+        if ("YD".equals(lockFirmEnum.getCode())) {
+            houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
         }
+        smartLockDao.cancelAssociation(houseMapping);
+
     }
 }

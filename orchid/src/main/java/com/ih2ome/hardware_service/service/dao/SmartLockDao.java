@@ -30,12 +30,9 @@ public interface SmartLockDao {
     List<HomeVO> findConcentrateHomes(String userId);
 
     /**
-     * 分散式取消关联房间
+     * 取消关联房源(分散式，集中式)
+     *
+     * @param smartHouseMappingVO
      */
-    void dispersedCancelAssociation(SmartHouseMappingVO smartHouseMappingVO);
-
-    /**
-     * 集中式取消关联房间
-     */
-    void concentrateCancelAssociation(SmartHouseMappingVO smartHouseMappingVO);
+    void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO);
 }

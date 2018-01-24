@@ -81,7 +81,9 @@ public class SmartLockController extends BaseController {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
         smartLockService.cancelAssociation(smartHouseMappingVO);
-        return null;
+        String result = structureSuccessResponseVO(null, new Date().toString(), "取消成功");
+        return result;
+
 
     }
 }
