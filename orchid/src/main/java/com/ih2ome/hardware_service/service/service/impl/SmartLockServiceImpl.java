@@ -6,6 +6,7 @@ import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.model.backup.HomeVO;
@@ -51,6 +52,8 @@ public class SmartLockServiceImpl implements SmartLockService {
         if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals(SmartLockFirmEnum.YUN_DING.getCode())) {
             ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
             Map<String, Object> params = new HashMap<String, Object>();
+//            String accessToken = YunDingSmartLockUtil.getAccessToken(userId);
+//            params.put("access_token", accessToken);
             //云丁用户账号授权的token,   ****************暂时写死
             params.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
             String result = iSmartLock.searchHomeInfo(params);
@@ -148,13 +151,21 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @param smartHouseMappingVO
      */
     @Override
-    public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException {
+    public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         String type = smartHouseMappingVO.getType();
+        String userId = smartHouseMappingVO.getUserId();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
         //云丁厂商，房间关联
         if (SmartLockFirmEnum.YUN_DING.getCode().equals(lockFirmEnum.getCode())) {
             houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
+            ISmartLock iSmartLock = (ISmartLock) Class.forName(lockFirmEnum.getClazz()).newInstance();
+            Map<String, Object> params = new HashMap<String, Object>();
+//            String accessToken = YunDingSmartLockUtil.getAccessToken(userId);
+//            params.put("access_token", accessToken);
+            params.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
+            iSmartLock.searchLockInfo(params);
+
         }
         //先查询记录是否存在
         SmartHouseMappingVO isExistHouseMapping = smartLockDao.findHouseMappingRecord(houseMapping);

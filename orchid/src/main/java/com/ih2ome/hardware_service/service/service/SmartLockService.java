@@ -31,5 +31,5 @@ public interface SmartLockService {
      *
      * @param smartHouseMappingVO
      */
-    void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws  SmartLockException;
+    void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException;
 }

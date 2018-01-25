@@ -40,7 +40,7 @@ public class SmartLockController extends BaseController {
     public String searchHome(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         //获得用户id
-        String userId = dt.getString("id");
+        String userId = dt.getString("userId");
         //判断是集中还是分散
         String type = dt.getString("type");
         //判断是哪个第三方(云丁，果加)
@@ -91,25 +91,25 @@ public class SmartLockController extends BaseController {
         return result;
     }
 
-    /**
-     * 房间关联
-     *
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value = "/association/confirm", method = RequestMethod.POST, produces = {"application/json"})
-    public String confirmAssociation(@RequestBody ApiRequestVO apiRequestVO) {
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
-        try {
-            smartLockService.confirmAssociation(smartHouseMappingVO);
-        } catch (SmartLockException e) {
-            Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "关联失败");
-            return result;
-        }
-        String result = structureSuccessResponseVO(null, new Date().toString(), "关联成功");
-        return result;
-    }
+//    /**
+//     * 房间关联
+//     *
+//     * @param apiRequestVO
+//     * @return
+//     */
+//    @RequestMapping(value = "/association/confirm", method = RequestMethod.POST, produces = {"application/json"})
+//    public String confirmAssociation(@RequestBody ApiRequestVO apiRequestVO) {
+//        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+//        SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
+//        try {
+//            smartLockService.confirmAssociation(smartHouseMappingVO);
+//        } catch (SmartLockException e) {
+//            Log.error(e.getMessage(), e);
+//            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "关联失败");
+//            return result;
+//        }
+//        String result = structureSuccessResponseVO(null, new Date().toString(), "关联成功");
+//        return result;
+//    }
 
 }

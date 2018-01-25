@@ -50,6 +50,7 @@ public class YunDingHomeInfoVO {
         List<RoomVO> rooms = new ArrayList<RoomVO>();
         for (YunDingRoomInfoVO yunDingRoomInfoVO : yunDingHomeInfoVO.getRooms()) {
             RoomVO roomVO = new RoomVO();
+            roomVO.setThirdHomeId(homeVO.getHomeId());
             roomVO.setThirdRoomId(yunDingRoomInfoVO.getRoomId());
             roomVO.setThirdRoomName(yunDingRoomInfoVO.getRoomName());
             rooms.add(roomVO);

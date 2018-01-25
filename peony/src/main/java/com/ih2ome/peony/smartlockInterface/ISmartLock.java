@@ -92,5 +92,12 @@ public interface ISmartLock {
      */
     public String searchGataWayInfo(Map<String, Object> params) throws SmartLockException;
 
-    public String searchLockInfo(Map<String,Object> params) throws SmartLockException;
+    /**
+     * 根据房间id查询门锁信息
+     *
+     * @param params
+     * @return
+     * @throws SmartLockException
+     */
+    public String searchLockInfo(Map<String, Object> params) throws SmartLockException;
 }

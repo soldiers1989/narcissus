@@ -22,6 +22,7 @@ public class SmartHouseMappingVO {
     //关联状态
     private String status;
 
+    private String userId;
     private String roomId;
     private String thirdRoomId;
     private String type;

@@ -10,10 +10,7 @@ import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingPullHomeCountEnum;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingDeviceInfoVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingLockPasswordVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingRoomInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +41,7 @@ public class YunDingSmartLock implements ISmartLock {
 
     /**
      * 新增密码
+     *
      * @param lockPassword
      * @return
      * @throws SmartLockException
@@ -81,6 +79,7 @@ public class YunDingSmartLock implements ISmartLock {
 
     /**
      * 修改密码
+     *
      * @param lockPassword
      * @return
      * @throws SmartLockException
@@ -118,6 +117,7 @@ public class YunDingSmartLock implements ISmartLock {
 
     /**
      * 删除密码
+     *
      * @param lockPassword
      * @return
      * @throws SmartLockException
@@ -150,7 +150,8 @@ public class YunDingSmartLock implements ISmartLock {
     }
 
     /**
-     *  冻结密码
+     * 冻结密码
+     *
      * @param lockPassword
      * @return
      * @throws SmartLockException
@@ -184,6 +185,7 @@ public class YunDingSmartLock implements ISmartLock {
 
     /**
      * 解冻结密码
+     *
      * @param lockPassword
      * @return
      * @throws SmartLockException
@@ -217,6 +219,7 @@ public class YunDingSmartLock implements ISmartLock {
 
     /**
      * 查询所有的房源信息和设备信息
+     *
      * @param params
      * @return
      * @throws SmartLockException
@@ -289,31 +292,68 @@ public class YunDingSmartLock implements ISmartLock {
         return JSONObject.toJSONString(homeList);
     }
 
+    /**
+     * 根据网关的uuid查询网关信息
+     *
+     * @param params
+     * @return
+     * @throws SmartLockException
+     */
     @Override
     public String searchGataWayInfo(Map<String, Object> params) throws SmartLockException {
-        return null;
+        Log.info("根据网关uuid查询网关信息,uuid:{}", params.get("uuid"));
+        String url = BASE_URL + "/get_center_info";
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("access_token", params.get("access_token"));
+        map.put("uuid", params.get("uuid"));
+        String result = HttpClientUtil.doGet(url, map);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(result);
+        } catch (Exception e) {
+            Log.error("第三方json格式解析错误", e);
+            throw new SmartLockException("第三方json格式解析错误" + e.getMessage());
+        }
+        String code = resJson.get("ErrNo").toString();
+        if (!code.equals("0")) {
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败", msg);
+            throw new SmartLockException("第三方请求失败/n" + msg);
+        }
+        YunDingGataWayInfoVO yunDingGataWayInfoVO = YunDingGataWayInfoVO.jsonToObject(resJson);
+        return JSONObject.toJSONString(yunDingGataWayInfoVO);
     }
 
+    /**
+     * 根据门锁的uuid查询门锁信息
+     *
+     * @param params
+     * @return
+     * @throws SmartLockException
+     */
     @Override
     public String searchLockInfo(Map<String, Object> params) throws SmartLockException {
-        return null;
+        Log.info("根据门锁uuid查询门锁信息,uuid:{}", params.get("uuid"));
+        String url = BASE_URL + "/get_lock_info";
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("access_token", params.get("access_token"));
+        map.put("uuid", params.get("uuid"));
+        String result = HttpClientUtil.doGet(url, map);
+        JSONObject resJson = null;
+        try {
+            resJson = JSONObject.parseObject(result);
+        } catch (Exception e) {
+            Log.error("第三方json格式解析错误", e);
+            throw new SmartLockException("第三方json格式解析错误" + e.getMessage());
+        }
+        String code = resJson.get("ErrNo").toString();
+        if (!code.equals("0")) {
+            String msg = resJson.get("ErrMsg").toString();
+            Log.error("第三方请求失败", msg);
+            throw new SmartLockException("第三方请求失败/n" + msg);
+        }
+        YunDingLockInfoVO yunDingLockInfoVO = YunDingLockInfoVO.jsonToObject(resJson);
+        return JSONObject.toJSONString(yunDingLockInfoVO);
     }
 
-
-//    public  static void main(String[] args){
-//        YunDingSmartLock yunDingSmartLock=new YunDingSmartLock();
-//        try {
-//            Map<String,Object> params=new HashMap<String,Object>();
-//            params.put("access_token","99e54de548a000dcef76ffcae7c5074e25fd67dd50c71ce199bb174b6319c81eefdf09fc93f73f35e74e4dc2bd9004fb15c4be694e72d7be4230c96af8ea256c");
-//            String result = yunDingSmartLock.searchHomeInfo(params);
-//            System.out.println(result);
-//            List<YunDingHomeInfoVO> yundingLists = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
-//            for(YunDingHomeInfoVO yunDingHomeInfoVO:yundingLists){
-//                System.out.println(yunDingHomeInfoVO.getHomeName());
-//                System.out.println(yunDingHomeInfoVO.getHomeId());
-//            }
-//        } catch (SmartLockException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
