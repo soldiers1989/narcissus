@@ -35,7 +35,7 @@ public class ConstInfoController extends BaseController{
 
     @RequestMapping(value="/setAmmeterAlarmRules",method = RequestMethod.POST,produces = {"application/json"})
     public String getYunDingLoginPage(@RequestBody ApiRequestVO apiRequestVO){
-        String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("userId");
+        String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         if(StringUtils.isNotBlank(userId)){
             StringBuilder url = new StringBuilder();
             url.append(yunDingLoginBaseUrl)
@@ -57,7 +57,7 @@ public class ConstInfoController extends BaseController{
 
     @RequestMapping(value="/getYunDingLoginStatus",method = RequestMethod.POST,produces = {"application/json"})
     public String getYunDingLoginStatus(@RequestBody ApiRequestVO apiRequestVO){
-        String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("userId");
+        String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         if(StringUtils.isNotBlank(userId)){
             String tokenKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+userId;
             String code = CacheUtils.getStr(tokenKey);
