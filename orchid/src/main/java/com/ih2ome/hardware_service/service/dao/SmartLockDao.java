@@ -35,4 +35,26 @@ public interface SmartLockDao {
      * @param smartHouseMappingVO
      */
     void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO);
+
+    /**
+     * 查询房源映射表中的记录
+     *
+     * @param houseMapping
+     * @return
+     */
+    SmartHouseMappingVO findHouseMappingRecord(SmartHouseMappingVO houseMapping);
+
+    /**
+     * 新增房间关联记录
+     *
+     * @param houseMapping
+     */
+    void addAssociation(SmartHouseMappingVO houseMapping);
+
+    /**
+     * 修改房间关联记录
+     *
+     * @param houseMapping
+     */
+    void updateAssociation(SmartHouseMappingVO houseMapping);
 }
