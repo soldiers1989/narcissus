@@ -7,6 +7,7 @@ import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -84,20 +85,21 @@ public interface ISmartLock {
     public String searchHomeInfo(Map<String, Object> params) throws SmartLockException;
 
     /**
-     * 根据房间id查询网关信息
-     *
-     * @param params
+     * 查询房源设备信息
+     * @param userId
+     * @param thirdHomeId
      * @return
      * @throws SmartLockException
      */
-    public String searchGataWayInfo(Map<String, Object> params) throws SmartLockException;
+    public Map<String,Object> searchHouseDeviceInfo(String userId,String thirdHomeId) throws SmartLockException;
 
     /**
-     * 根据房间id查询门锁信息
-     *
-     * @param params
+     * 查询房间设备信息
+     * @param userId
+     * @param thirdHomeId
      * @return
      * @throws SmartLockException
      */
-    public String searchLockInfo(Map<String, Object> params) throws SmartLockException;
+    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdHomeId) throws SmartLockException;
+
 }

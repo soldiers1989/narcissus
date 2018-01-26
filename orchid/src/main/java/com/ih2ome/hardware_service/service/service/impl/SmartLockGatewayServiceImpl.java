@@ -1,82 +1,45 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
-import com.github.pagehelper.PageHelper;
+import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
-import com.ih2ome.peony.smartlockInterface.ISmartLock;
-import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
+import com.ih2ome.sunflower.model.house.SmartLockGatewayModel;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
 import java.util.List;
 
 /**
  * <br>
  *
  * @author Lucius
- * create by 2017/12/28
+ * create by 2018/1/24
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Service
-public class SmartLockGatewayServiceImpl implements SmartLockGatewayService {
+public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
 
     @Resource
     SmartLockGatewayDao smartLockGatewayDao;
 
     @Override
-    public List<SmartDoorLockGatewayVO> gatewayList(SmartDoorLockGatewayVO smartDoorLockGatewayVO) {
-        if(smartDoorLockGatewayVO.getPage()!= null && smartDoorLockGatewayVO.getRows() != null){
-            PageHelper.startPage(smartDoorLockGatewayVO.getPage(),smartDoorLockGatewayVO.getRows());
+    public List<SmartLockGatewayModel> getSmartLockGatewayList(String homeId) {
+        if(StringUtils.isNotBlank(homeId)){
+            return smartLockGatewayDao.getGatewayModelByHomeId(homeId);
         }
-        if(smartDoorLockGatewayVO.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
-            return smartLockGatewayDao.findDispersedGateway(smartDoorLockGatewayVO);
-        }else if(smartDoorLockGatewayVO.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            return smartLockGatewayDao.findConcentratGateway(smartDoorLockGatewayVO);
-        }else{
-            return null;
-        }
+        return null;
+
     }
 
     @Override
-    public SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
-        String dateType = "yyyy-mm-dd";
-        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirmEnum.GUO_JIA.getClazz()).newInstance();
-        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getSmartDispersedDoorLockGatewayVOById(id);
-            GatewayInfoVO gateWayInfoVo = iSmartLock.getGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
-            smartDoorLockGatewayVO.setGuaranteeTimeStart(gateWayInfoVo.getGuaranteeTimeStart());
-            smartDoorLockGatewayVO.setGuaranteeTimeEnd(gateWayInfoVo.getGuaranteeTimeEnd());
-            return smartDoorLockGatewayVO;
-        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getConcentratSmartDoorLockGatewayVOById(id);
-            GatewayInfoVO gateWayInfoVo = iSmartLock.getGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
-            smartDoorLockGatewayVO.setGuaranteeTimeStart(gateWayInfoVo.getGuaranteeTimeStart());
-            smartDoorLockGatewayVO.setGuaranteeTimeEnd(gateWayInfoVo.getGuaranteeTimeEnd());
-            return smartDoorLockGatewayVO;
-        }else{
-            return null;
+    public SmartLockGatewayHadBindVO getSmartLockHadBindGateway(String gatewayId) {
+        if(StringUtils.isNotBlank(gatewayId)){
+            SmartLockGatewayHadBindVO smartLockGatewayHadBindVO = smartLockGatewayDao.getSmartLockHadBindGateway(gatewayId);
+            List <SmartLockGatewayHadBindRoomVO> smartLockGatewayHadBindRoomVOList = smartLockGatewayDao.getSmartLockAndRoomListByGatewayId(gatewayId);
+            return smartLockGatewayDao.getSmartLockHadBindGateway(gatewayId);
         }
-    }
-
-    @Override
-    public List<LockListVo> getSmartDoorLockByGatewayId(String id, String type, Integer page, Integer rows) {
-        if(page!= null && rows != null){
-            PageHelper.startPage(page,rows);
-        }else{
-            PageHelper.startPage(1,10);
-        }
-        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            return smartLockGatewayDao.getDispersedSmartDoorLockByGatewayId(id);
-        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            return smartLockGatewayDao.getConcentratSmartDoorLockByGatewayId(id);
-        }else{
-            return null;
-        }
+        return null;
     }
 }

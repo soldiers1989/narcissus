@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao">
+    <!--SELECT-->
+
+    <select id="getDispersedGatewayModelByHomeId" resultType="com.ih2ome.sunflower.model.house.SmartLockGatewayModel">
+        SELECT
+            nsgv2.smart_gateway_ID gatewayId,
+            nsgv2.uuid thirdGatewayId
+        FROM
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_gateway_v2 nsgv2
+        WHERE
+            nsgv2.smart_gateway_ID = nsdv2.smart_device_ID
+        AND
+        AND (
+            nsdv2.house_ID = '${homeId}'
+            OR nsdv2.apartment_ID = '${homeId}'
+        )
+
+    </select>
+
+    <select id="getSmartLockHadBindGateway" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO">
+            SELECT
+                nsg.smart_gateway_id gatewayId,
+                nsg.uuid gatewayCode,
+                nsg.`name` gatewayName,
+                IFNULL(ch.area,va.`name`) houseName,
+                IFNULL(ch.address,va.address) houseAddress
+            FROM
+                narcissus_test.smart_device_v2 nsdv2,
+                narcissus_test.smart_gateway nsg,
+                caspain_test.house ch,
+                volga_test.apartment va
+            WHERE
+                nsg.smart_lock_ID = nsdv2.smart_device_ID
+            and nsg.smart_lock_ID='${gatewayId}'
+            AND (
+                nsdv2.house_ID = ch.id
+                OR nsdv2.apartment_ID = va.id
+            )
+    </select>
+
+    <select id="getSmartLockAndRoomListByGatewayId">
+
+    </select>
+</mapper>

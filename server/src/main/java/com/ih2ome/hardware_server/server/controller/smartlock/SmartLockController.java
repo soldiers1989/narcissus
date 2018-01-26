@@ -91,16 +91,16 @@ public class SmartLockController extends BaseController {
         return result;
     }
 
-//    /**
-//     * 房间关联
-//     *
-//     * @param apiRequestVO
-//     * @return
-//     */
-//    @RequestMapping(value = "/association/confirm", method = RequestMethod.POST, produces = {"application/json"})
-//    public String confirmAssociation(@RequestBody ApiRequestVO apiRequestVO) {
-//        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-//        SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
+    /**
+     * 房间关联
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/association/confirm", method = RequestMethod.POST, produces = {"application/json"})
+    public String confirmAssociation(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
 //        try {
 //            smartLockService.confirmAssociation(smartHouseMappingVO);
 //        } catch (SmartLockException e) {
@@ -108,8 +108,8 @@ public class SmartLockController extends BaseController {
 //            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "关联失败");
 //            return result;
 //        }
-//        String result = structureSuccessResponseVO(null, new Date().toString(), "关联成功");
-//        return result;
-//    }
+        String result = structureSuccessResponseVO(null, new Date().toString(), "关联成功");
+        return result;
+    }
 
 }

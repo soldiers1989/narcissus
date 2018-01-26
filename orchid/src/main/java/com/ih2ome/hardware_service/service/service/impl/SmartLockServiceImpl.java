@@ -1,16 +1,14 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.hardware_service.service.dao.LockManagerDao;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
@@ -164,7 +162,7 @@ public class SmartLockServiceImpl implements SmartLockService {
 //            String accessToken = YunDingSmartLockUtil.getAccessToken(userId);
 //            params.put("access_token", accessToken);
             params.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
-            iSmartLock.searchLockInfo(params);
+            //iSmartLock.searchLockInfo(params);
 
         }
         //先查询记录是否存在

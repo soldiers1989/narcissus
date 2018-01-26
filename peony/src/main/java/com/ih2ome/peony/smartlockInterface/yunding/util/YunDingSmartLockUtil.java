@@ -47,7 +47,7 @@ public class YunDingSmartLockUtil {
      * 云丁开放平台水滴身份标识
      */
     public static final String OPEN_CLIENT_ID = "shuidiceshi";
-    /**
+     /**
      * 云丁开放平台水滴访问密钥
      */
     public static final String OPEN_SECRET = "3a5aacee5f45fc4f2cc14e8a904cdb79";

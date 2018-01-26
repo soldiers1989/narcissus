@@ -292,6 +292,48 @@ public class YunDingSmartLock implements ISmartLock {
         return JSONObject.toJSONString(homeList);
     }
 
+    @Override
+    public Map<String,Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
+        Log.info("根据第三方homeId查询对应userId下的外门锁和网关设备,userId:{}", userId);
+        String gatewayUrl = BASE_URL + "/get_center_info_arr";
+        String outDoorLockUrl = BASE_URL + "/get_lock_info";
+        Map<String, Object> map = new HashMap<>();
+        map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
+        map.put("home_id",thirdHomeId);
+
+        String gatewayResult = HttpClientUtil.doGet(gatewayUrl, map);
+        JSONObject gatewayResponseJSON = JSONObject.parseObject(gatewayResult);
+
+        String lockResult = HttpClientUtil.doGet(outDoorLockUrl, map);
+        JSONObject lockResponseJSON = JSONObject.parseObject(lockResult);
+
+        List <GatewayInfoVO> gatewayInfoVOList = new ArrayList<>();
+        List <LockVO> lockVOList = new ArrayList<>();
+
+
+
+        Map <String,Object> resultMap = new HashMap<>();
+        resultMap.put("gatewayInfoVOList",gatewayInfoVOList);
+        resultMap.put("lockVOList",lockVOList);
+        return resultMap;
+    }
+
+    @Override
+    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
+        Log.info("根据第三方homeId查询对应userId下门锁列表,userId:{}", userId);
+        String url = BASE_URL + "/get_lock_info";
+        Map<String, Object> map = new HashMap<>();
+        map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
+        map.put("home_id",thirdHomeId);
+        String lockResult = HttpClientUtil.doGet(url, map);
+        JSONObject resJSON = JSONObject.parseObject(lockResult);
+        List<LockVO> lockVOList = new ArrayList<>();
+
+
+        return lockVOList;
+    }
+
+
     /**
      * 根据网关的uuid查询网关信息
      *
@@ -299,7 +341,6 @@ public class YunDingSmartLock implements ISmartLock {
      * @return
      * @throws SmartLockException
      */
-    @Override
     public String searchGataWayInfo(Map<String, Object> params) throws SmartLockException {
         Log.info("根据网关uuid查询网关信息,uuid:{}", params.get("uuid"));
         String url = BASE_URL + "/get_center_info";
@@ -331,7 +372,6 @@ public class YunDingSmartLock implements ISmartLock {
      * @return
      * @throws SmartLockException
      */
-    @Override
     public String searchLockInfo(Map<String, Object> params) throws SmartLockException {
         Log.info("根据门锁uuid查询门锁信息,uuid:{}", params.get("uuid"));
         String url = BASE_URL + "/get_lock_info";

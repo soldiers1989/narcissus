@@ -279,12 +279,14 @@ public class GuoJiaSmartLock implements ISmartLock {
     }
 
     @Override
-    public String searchGataWayInfo(Map<String, Object> params) throws SmartLockException {
-        return null;
+    public Map<String, Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
+        throw new SmartLockException("该厂商不支持此操作");
     }
 
     @Override
-    public String searchLockInfo(Map<String, Object> params) throws SmartLockException {
-        return null;
+    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
+        throw new SmartLockException("该厂商不支持此操作");
     }
+
+
 }

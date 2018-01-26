@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
-import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
+import com.ih2ome.hardware_service.service.service.SmartLockGatewayManagerService;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
@@ -28,11 +28,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/mannager/smartLockGateWay")
 @CrossOrigin
-public class SmartLockGatewayController extends BaseController {
+public class SmartLockGatewayManagerController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    SmartLockGatewayService smartLockGatewayService;
+    SmartLockGatewayManagerService smartLockGatewayService;
 
     /**
      * 网关列表

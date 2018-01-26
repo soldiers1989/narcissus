@@ -1,23 +1,24 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
-import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.model.house.SmartLockGatewayModel;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**
  * <br>
  *
  * @author Lucius
- * create by 2017/12/28
+ * create by 2018/1/24
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public interface SmartLockGatewayService {
-    List<SmartDoorLockGatewayVO> gatewayList(SmartDoorLockGatewayVO smartDoorLockGatewayVO);
+    /**
+     * 根据房源查询网关列表
+     * @param homeId
+     * @return
+     */
+    List<SmartLockGatewayModel> getSmartLockGatewayList(String homeId);
 
-    SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException;
-
-    List<LockListVo> getSmartDoorLockByGatewayId(String id, String type, Integer page, Integer rows);
+    SmartLockGatewayHadBindVO getSmartLockHadBindGateway(String gatewayId);
 }
