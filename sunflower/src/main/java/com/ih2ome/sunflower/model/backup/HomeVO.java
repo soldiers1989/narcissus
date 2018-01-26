@@ -16,6 +16,5 @@ public class HomeVO {
     private String homeName;
     //判断是集中还是分散(0是集中，1是分散)
     private String homeType;
-
     private List<RoomVO> rooms;
 }

@@ -2,6 +2,7 @@ package com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding;
 
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -52,7 +53,13 @@ public class YunDingHomeInfoVO {
             RoomVO roomVO = new RoomVO();
             roomVO.setThirdHomeId(homeVO.getHomeId());
             roomVO.setThirdRoomId(yunDingRoomInfoVO.getRoomId());
-            roomVO.setThirdRoomName(yunDingRoomInfoVO.getRoomName());
+            if ("default".equals(yunDingRoomInfoVO.getRoomName())) {
+                roomVO.setThirdRoomName("公共区域");
+                roomVO.setDataType(HouseMappingDataTypeEnum.PUBLICZONE.getCode());
+            } else {
+                roomVO.setThirdRoomName(yunDingRoomInfoVO.getRoomName());
+                roomVO.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
+            }
             rooms.add(roomVO);
         }
         homeVO.setRooms(rooms);

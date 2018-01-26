@@ -76,14 +76,6 @@ public class SmartLockServiceImpl implements SmartLockService {
                     iterator.remove();
                 }
             }
-            for (HomeVO homeVO : thirdHomeList) {
-                List<RoomVO> rooms = homeVO.getRooms();
-                for (RoomVO roomVO : rooms) {
-                    if ("default".equals(roomVO.getThirdRoomName())) {
-                        roomVO.setThirdRoomName("公共区域");
-                    }
-                }
-            }
 
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
@@ -95,14 +87,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                     iterator.remove();
                 }
             }
-            for (HomeVO homeVO : thirdHomeList) {
-                List<RoomVO> rooms = homeVO.getRooms();
-                for (RoomVO roomVO : rooms) {
-                    if ("default".equals(roomVO.getThirdRoomName())) {
-                        roomVO.setThirdRoomName("公共区域");
-                    }
-                }
-            }
+
         }
         //房间关联数据处理
         for (HomeVO localHomeVO : localHomeList) {
@@ -160,14 +145,14 @@ public class SmartLockServiceImpl implements SmartLockService {
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
         houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
         ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
-        Map <String,Object> map = iSmartLock.searchHouseDeviceInfo(smartHouseMappingVO.getUserId(),smartHouseMappingVO.getThirdRoomId());
-        List<LockVO> lockVOList = iSmartLock.searchRoomDeviceInfo(smartHouseMappingVO.getUserId(),smartHouseMappingVO.getThirdRoomId());
-        List <GatewayInfoVO> publicGatewayInfoVOList = (List<GatewayInfoVO>) map.get("gatewayInfoVOList");
-        List <LockVO> publicLockVOList = (List<LockVO>) map.get("lockVOList");
+        Map<String, Object> map = iSmartLock.searchHouseDeviceInfo(smartHouseMappingVO.getUserId(), smartHouseMappingVO.getThirdRoomId());
+        List<LockVO> lockVOList = iSmartLock.searchRoomDeviceInfo(smartHouseMappingVO.getUserId(), smartHouseMappingVO.getThirdRoomId());
+        List<GatewayInfoVO> publicGatewayInfoVOList = (List<GatewayInfoVO>) map.get("gatewayInfoVOList");
+        List<LockVO> publicLockVOList = (List<LockVO>) map.get("lockVOList");
         //TODO:将设备存进数据库
-            //TODO:lockVOLIst入门锁表关联“房间”
-            //TODO:publicGatewayInfoVOList入网关表关联“公共区域”
-            //TODO:publicLockVOList入门锁表关联“公共区域”
+        //TODO:lockVOLIst入门锁表关联“房间”
+        //TODO:publicGatewayInfoVOList入网关表关联“公共区域”
+        //TODO:publicLockVOList入门锁表关联“公共区域”
 
 
     }

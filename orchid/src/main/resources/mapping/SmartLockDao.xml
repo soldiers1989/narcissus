@@ -7,6 +7,7 @@
         <result property="userId" column="userId"></result>
         <result property="homeName" column="homeName"></result>
         <result property="homeType" column="homeType"></result>
+
         <collection property="rooms" javaType="List"
                     ofType="com.ih2ome.sunflower.model.backup.RoomVO" autoMapping="true">
             <id column="roomId" property="roomId"/>
@@ -14,6 +15,7 @@
             <result property="roomName" column="roomName"></result>
             <result property="roomAssociationStatus" column="roomAssociationStatus"></result>
             <result property="thirdRoomId" column="thirdRoomId"></result>
+            <result property="dataType" column="dataType"></result>
         </collection>
     </resultMap>
 
@@ -22,6 +24,7 @@
         <result property="userId" column="userId"></result>
         <result property="homeName" column="homeName"></result>
         <result property="homeType" column="homeType"></result>
+
         <collection property="rooms" javaType="List"
                     ofType="com.ih2ome.sunflower.model.backup.RoomVO" autoMapping="true">
             <id column="roomId" property="roomId"/>
@@ -29,6 +32,7 @@
             <result property="roomName" column="roomName"></result>
             <result property="roomAssociationStatus" column="roomAssociationStatus"></result>
             <result property="thirdRoomId" column="thirdRoomId"></result>
+            <result property="dataType" column="dataType"></result>
         </collection>
     </resultMap>
 
@@ -75,40 +79,97 @@
     <!--select-->
     <!--查询房源信息(分散式)-->
     <select id="findDispersedHomes" parameterType="string" resultMap="dispersedResultMap">
-        SELECT
-	cth.created_by_id AS userId,
-	cth.id AS homeId,
-	cth.area AS homeName,
-	'1' AS homeType,
-	ctr.id AS roomId,
-	ctr.`name` AS roomName,
-	nshm.threeID AS thirdRoomId,
-	nshm.status AS roomAssociationStatus
-    FROM
-        caspain_test.house cth
-    LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
-    LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id=nshm.h2omeID AND nshm.data_type=4 AND nshm.house_catalog=1
-    WHERE
-	ctr.created_by_id = #{userId} ORDER BY thirdRoomId DESC;
+       SELECT * FROM((
+            SELECT
+                cth.created_by_id AS userId,
+                cth.id AS homeId,
+                cth.area AS homeName,
+                '1' AS homeType,
+                ntpz.public_zone_ID AS roomId,
+                ntpz.`name` AS roomName,
+                nshm.`status` AS roomAssociationStatus,
+                nshm.threeID AS thirdRoomId,
+                '5' AS dataType
+            FROM
+                `caspain_test`.house cth
+            LEFT JOIN narcissus_test.public_zone ntpz ON cth.id = ntpz.parent_ID
+            LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
+            AND nshm.data_type = 5
+            AND nshm.house_catalog = 1
+            WHERE
+                ntpz.data_type = 3
+            AND cth.created_by_id =#{userId}
+        )
+        UNION ALL
+            (
+                SELECT
+                    cth.created_by_id AS userId,
+                    cth.id AS homeId,
+                    cth.area AS homeName,
+                    '1' AS homeType,
+                    ctr.id AS roomId,
+                    ctr.`name` AS roomName,
+                    nshm.`status` AS roomAssociationStatus,
+                    nshm.threeID AS thirdRoomId,
+                    '4' AS dataType
+                FROM
+                    `caspain_test`.house cth
+                LEFT JOIN `caspain_test`.room ctr ON cth.id = ctr.house_id
+                LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
+                AND nshm.data_type = 4
+                AND nshm.house_catalog = 1
+                WHERE
+                    cth.created_by_id=#{userId}
+                ORDER BY thirdRoomId DESC LIMIT 99999999999
+            )) AS allrecord
+
     </select>
 
     <!--查询房源信息(集中式)-->
     <select id="findConcentrateHomes" parameterType="string" resultMap="concentrateResultMap">
-       SELECT
-	vta.created_by AS userId,
-	vta.id AS homeId,
-	vta.`name` AS homeName,
-	'0' AS homeType,
-	vtr.id AS roomId,
-	vtr.`name` AS roomName,
-	nshm.`status` as roomAssociationStatus,
-	nshm.threeID as thirdRoomId
-    FROM
-    `volga_test`.apartment vta
-    LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
-    LEFT JOIN narcissus_test.smart_house_mapping nshm ON vtr.id=nshm.h2omeID AND nshm.data_type=4 and nshm.house_catalog=0
-    WHERE
-    vta.created_by =#{userId} ORDER BY thirdRoomId DESC;
+        SELECT * FROM((
+            SELECT
+                vta.created_by AS userId,
+                vta.id AS homeId,
+                vta.`name` AS homeName,
+                '0' AS homeType,
+                ntpz.public_zone_ID AS roomId,
+                ntpz.`name` AS roomName,
+                nshm.`status` AS roomAssociationStatus,
+                nshm.threeID AS thirdRoomId,
+                '5' AS dataType
+            FROM
+                `volga_test`.apartment vta
+            LEFT JOIN narcissus_test.public_zone ntpz ON vta.id = ntpz.parent_ID
+            LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
+            AND nshm.data_type = 5
+            AND nshm.house_catalog = 0
+            WHERE
+                ntpz.data_type = 1
+            AND vta.created_by = #{userId}
+        )
+        UNION ALL
+            (
+                SELECT
+                    vta.created_by AS userId,
+                    vta.id AS homeId,
+                    vta.`name` AS homeName,
+                    '0' AS homeType,
+                    vtr.id AS roomId,
+                    vtr.`name` AS roomName,
+                    nshm.`status` AS roomAssociationStatus,
+                    nshm.threeID AS thirdRoomId,
+                    '4' AS dataType
+                FROM
+                    `volga_test`.apartment vta
+                LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
+                LEFT JOIN narcissus_test.smart_house_mapping nshm ON vtr.id = nshm.h2omeID
+                AND nshm.data_type = 4
+                AND nshm.house_catalog = 0
+                WHERE
+                    vta.created_by = #{userId}
+                ORDER BY thirdRoomId DESC LIMIT 99999999999
+            )) AS allrecord
     </select>
 
     <!--查询房源映射表记录-->

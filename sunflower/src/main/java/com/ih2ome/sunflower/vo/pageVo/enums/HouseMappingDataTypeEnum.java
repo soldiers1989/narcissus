@@ -9,7 +9,8 @@ public enum HouseMappingDataTypeEnum {
     APARTMENT("1"),
     FLOOR("2"),
     HOUSE("3"),
-    ROOM("4");
+    ROOM("4"),
+    PUBLICZONE("5");
     private String code;
 
     HouseMappingDataTypeEnum(String code) {
