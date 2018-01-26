@@ -309,7 +309,7 @@ public class YunDingSmartLock implements ISmartLock {
 
         List <GatewayInfoVO> gatewayInfoVOList = new ArrayList<>();
         List <LockVO> lockVOList = new ArrayList<>();
-
+        //TODO:整理数据
 
 
         Map <String,Object> resultMap = new HashMap<>();
@@ -328,7 +328,7 @@ public class YunDingSmartLock implements ISmartLock {
         String lockResult = HttpClientUtil.doGet(url, map);
         JSONObject resJSON = JSONObject.parseObject(lockResult);
         List<LockVO> lockVOList = new ArrayList<>();
-
+        //TODO:整理数据
 
         return lockVOList;
     }
