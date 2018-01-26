@@ -101,13 +101,20 @@ public class SmartLockController extends BaseController {
     public String confirmAssociation(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
-//        try {
-//            smartLockService.confirmAssociation(smartHouseMappingVO);
-//        } catch (SmartLockException e) {
-//            Log.error(e.getMessage(), e);
-//            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "关联失败");
-//            return result;
-//        }
+
+        try {
+            smartLockService.confirmAssociation(smartHouseMappingVO);
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "关联失败");
+            return result;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         String result = structureSuccessResponseVO(null, new Date().toString(), "关联成功");
         return result;
     }

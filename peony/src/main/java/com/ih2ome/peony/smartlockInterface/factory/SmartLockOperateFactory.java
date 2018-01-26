@@ -1,5 +1,6 @@
 package com.ih2ome.peony.smartlockInterface.factory;
 
+import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
@@ -20,14 +21,12 @@ public class SmartLockOperateFactory {
         Log.info("门锁工厂启动");
     }
 
-    public static ISmartLock createSmartLock(String  id) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        String [] ids = id.split("_");
-        if(ids.length<2){
+    public static ISmartLock createSmartLock(String  firm) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        if(StringUtils.isEmpty(firm)){
             throw new SmartLockException("id格式不规范");
 
         }
-        String type = ids[0];
-        SmartLockFirmEnum smartLockFirm = SmartLockFirmEnum.getByCode(type);
+        SmartLockFirmEnum smartLockFirm = SmartLockFirmEnum.getByCode(firm);
         ISmartLock iSmartLock = null;
         iSmartLock = (ISmartLock) Class.forName(smartLockFirm.getClazz()).newInstance();
         return iSmartLock;

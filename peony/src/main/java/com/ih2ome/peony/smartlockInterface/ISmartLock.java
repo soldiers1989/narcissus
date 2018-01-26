@@ -96,10 +96,10 @@ public interface ISmartLock {
     /**
      * 查询房间设备信息
      * @param userId
-     * @param thirdHomeId
+     * @param thirdRoomId
      * @return
      * @throws SmartLockException
      */
-    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdHomeId) throws SmartLockException;
+    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException;
 
 }

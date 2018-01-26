@@ -9,17 +9,29 @@ import lombok.Data;
  **/
 @Data
 public class SmartHouseMappingVO {
-    //0是集中，1是分散
+    /**
+     * 0是集中，1是分散
+     */
     private String houseCatalog;
-    //    1:公寓 ,2:楼层,3:房屋,4:房间
+    /**
+     * 1:公寓 ,2:楼层,3:房屋,4:房间
+     */
     private String dataType;
-    //水滴数据ID
+    /**
+     * 水滴数据ID
+     */
     private String h2omeId;
-    //H2:水滴，GJ:果加，YD:云丁
+    /**
+     * H2:水滴，GJ:果加，YD:云丁
+     */
     private String providerCode;
-    //第三方数据ID
+    /**
+     * 第三方数据ID
+     */
     private String threeId;
-    //关联状态
+    /**
+     * 关联状态
+     */
     private String status;
 
     private String userId;

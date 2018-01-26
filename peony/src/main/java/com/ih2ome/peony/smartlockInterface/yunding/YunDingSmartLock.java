@@ -319,12 +319,12 @@ public class YunDingSmartLock implements ISmartLock {
     }
 
     @Override
-    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
+    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException {
         Log.info("根据第三方homeId查询对应userId下门锁列表,userId:{}", userId);
         String url = BASE_URL + "/get_lock_info";
         Map<String, Object> map = new HashMap<>();
         map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
-        map.put("home_id",thirdHomeId);
+        map.put("room_id",thirdRoomId);
         String lockResult = HttpClientUtil.doGet(url, map);
         JSONObject resJSON = JSONObject.parseObject(lockResult);
         List<LockVO> lockVOList = new ArrayList<>();

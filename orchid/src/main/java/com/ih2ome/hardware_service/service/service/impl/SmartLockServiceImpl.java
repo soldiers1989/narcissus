@@ -5,11 +5,14 @@ import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.peony.smartlockInterface.factory.SmartLockOperateFactory;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
@@ -150,29 +153,22 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        //TODO: 删除原来同步过的设备
         String type = smartHouseMappingVO.getType();
         String userId = smartHouseMappingVO.getUserId();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
-        //云丁厂商，房间关联
-        if (SmartLockFirmEnum.YUN_DING.getCode().equals(lockFirmEnum.getCode())) {
-            houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
-            ISmartLock iSmartLock = (ISmartLock) Class.forName(lockFirmEnum.getClazz()).newInstance();
-            Map<String, Object> params = new HashMap<String, Object>();
-//            String accessToken = YunDingSmartLockUtil.getAccessToken(userId);
-//            params.put("access_token", accessToken);
-            params.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
-            //iSmartLock.searchLockInfo(params);
+        houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
+        ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
+        Map <String,Object> map = iSmartLock.searchHouseDeviceInfo(smartHouseMappingVO.getUserId(),smartHouseMappingVO.getThirdRoomId());
+        List<LockVO> lockVOList = iSmartLock.searchRoomDeviceInfo(smartHouseMappingVO.getUserId(),smartHouseMappingVO.getThirdRoomId());
+        List <GatewayInfoVO> publicGatewayInfoVOList = (List<GatewayInfoVO>) map.get("gatewayInfoVOList");
+        List <LockVO> publicLockVOList = (List<LockVO>) map.get("lockVOList");
+        //TODO:将设备存进数据库
+            //TODO:lockVOLIst入门锁表关联“房间”
+            //TODO:publicGatewayInfoVOList入网关表关联“公共区域”
+            //TODO:publicLockVOList入门锁表关联“公共区域”
 
-        }
-        //先查询记录是否存在
-        SmartHouseMappingVO isExistHouseMapping = smartLockDao.findHouseMappingRecord(houseMapping);
-        if (isExistHouseMapping == null) {
-            //表明该房间未关联过房间，需要创建一个记录,新增房间关联
-            smartLockDao.addAssociation(houseMapping);
-        } else {
-            //表明该房间关联过房间，更改关联
-            smartLockDao.updateAssociation(houseMapping);
-        }
+
     }
 }

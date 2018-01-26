@@ -284,7 +284,7 @@ public class GuoJiaSmartLock implements ISmartLock {
     }
 
     @Override
-    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
+    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException {
         throw new SmartLockException("该厂商不支持此操作");
     }
 
