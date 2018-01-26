@@ -331,6 +331,7 @@ public class YunDingSmartLock implements ISmartLock {
         //TODO:整理数据
 
         return lockVOList;
+
     }
 
 
@@ -363,6 +364,7 @@ public class YunDingSmartLock implements ISmartLock {
         }
         YunDingGataWayInfoVO yunDingGataWayInfoVO = YunDingGataWayInfoVO.jsonToObject(resJson);
         return JSONObject.toJSONString(yunDingGataWayInfoVO);
+
     }
 
     /**
@@ -394,6 +396,7 @@ public class YunDingSmartLock implements ISmartLock {
         }
         YunDingLockInfoVO yunDingLockInfoVO = YunDingLockInfoVO.jsonToObject(resJson);
         return JSONObject.toJSONString(yunDingLockInfoVO);
+
     }
 
 }
