@@ -38,5 +38,7 @@ public class GatewayInfoVO {
     private String guaranteeTimeEnd;
     //描述
     private String description;
+    //设备的 MAC 地址
+    private String mac;
 
 }

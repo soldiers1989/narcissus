@@ -57,7 +57,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals(SmartLockFirmEnum.YUN_DING.getCode())) {
             ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("userId",userId);
+            params.put("userId", userId);
             String result = iSmartLock.searchHomeInfo(params);
             List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
             for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
@@ -154,16 +154,18 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @param smartHouseMappingVO
      */
     @Override
+    @Transactional
     public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         //TODO: 删除原来同步过的设备
         String type = smartHouseMappingVO.getType();
         String userId = smartHouseMappingVO.getUserId();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
+
         houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
         ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
-        Map<String, Object> map = iSmartLock.searchHouseDeviceInfo(smartHouseMappingVO.getUserId(), smartHouseMappingVO.getThirdRoomId());
-        List<LockVO> lockVOList = iSmartLock.searchRoomDeviceInfo(smartHouseMappingVO.getUserId(), smartHouseMappingVO.getThirdRoomId());
+        Map<String, Object> map = iSmartLock.searchHouseDeviceInfo(userId, smartHouseMappingVO.getThirdRoomId());
+        List<LockVO> lockVOList = iSmartLock.searchRoomDeviceInfo(userId, smartHouseMappingVO.getThirdRoomId());
         List<GatewayInfoVO> publicGatewayInfoVOList = (List<GatewayInfoVO>) map.get("gatewayInfoVOList");
         List<LockVO> publicLockVOList = (List<LockVO>) map.get("lockVOList");
         //TODO:将设备存进数据库

@@ -86,15 +86,17 @@ public interface ISmartLock {
 
     /**
      * 查询房源设备信息
+     *
      * @param userId
      * @param thirdHomeId
      * @return
      * @throws SmartLockException
      */
-    public Map<String,Object> searchHouseDeviceInfo(String userId,String thirdHomeId) throws SmartLockException;
+    public Map<String, Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException;
 
     /**
      * 查询房间设备信息
+     *
      * @param userId
      * @param thirdRoomId
      * @return

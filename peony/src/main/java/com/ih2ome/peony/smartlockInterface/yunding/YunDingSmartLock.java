@@ -294,6 +294,14 @@ public class YunDingSmartLock implements ISmartLock {
         return JSONObject.toJSONString(homeList);
     }
 
+    /**
+     * 查询房源设备信息
+     *
+     * @param userId
+     * @param thirdHomeId
+     * @return
+     * @throws SmartLockException
+     */
     @Override
     public Map<String, Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
         Log.info("根据第三方homeId查询对应userId下的外门锁和网关设备,userId:{}", userId);
@@ -320,6 +328,14 @@ public class YunDingSmartLock implements ISmartLock {
         return resultMap;
     }
 
+    /**
+     * 查询房间设备信息
+     *
+     * @param userId
+     * @param thirdRoomId
+     * @return
+     * @throws SmartLockException
+     */
     @Override
     public List<LockVO> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException {
         Log.info("根据第三方homeId查询对应userId下门锁列表,userId:{}", userId);
