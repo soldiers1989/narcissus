@@ -229,7 +229,9 @@ public class YunDingSmartLock implements ISmartLock {
         Log.info("查询该用户所有的房源和设备信息");
         String url = BASE_URL + "/search_home_info";
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("access_token", params.get("access_token"));
+//        String access_token= YunDingSmartLockUtil.getAccessToken(params.get("userId").toString());
+//        map.put("access_token",access_token);
+        map.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
         map.put("count", YunDingPullHomeCountEnum.ONE_THOUSAND.getCount());
         String result = HttpClientUtil.doGet(url, map);
         JSONObject resJson = null;
@@ -293,13 +295,13 @@ public class YunDingSmartLock implements ISmartLock {
     }
 
     @Override
-    public Map<String,Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
+    public Map<String, Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
         Log.info("根据第三方homeId查询对应userId下的外门锁和网关设备,userId:{}", userId);
         String gatewayUrl = BASE_URL + "/get_center_info_arr";
         String outDoorLockUrl = BASE_URL + "/get_lock_info";
         Map<String, Object> map = new HashMap<>();
         map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
-        map.put("home_id",thirdHomeId);
+        map.put("home_id", thirdHomeId);
 
         String gatewayResult = HttpClientUtil.doGet(gatewayUrl, map);
         JSONObject gatewayResponseJSON = JSONObject.parseObject(gatewayResult);
@@ -307,14 +309,14 @@ public class YunDingSmartLock implements ISmartLock {
         String lockResult = HttpClientUtil.doGet(outDoorLockUrl, map);
         JSONObject lockResponseJSON = JSONObject.parseObject(lockResult);
 
-        List <GatewayInfoVO> gatewayInfoVOList = new ArrayList<>();
-        List <LockVO> lockVOList = new ArrayList<>();
+        List<GatewayInfoVO> gatewayInfoVOList = new ArrayList<>();
+        List<LockVO> lockVOList = new ArrayList<>();
         //TODO:整理数据
 
 
-        Map <String,Object> resultMap = new HashMap<>();
-        resultMap.put("gatewayInfoVOList",gatewayInfoVOList);
-        resultMap.put("lockVOList",lockVOList);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("gatewayInfoVOList", gatewayInfoVOList);
+        resultMap.put("lockVOList", lockVOList);
         return resultMap;
     }
 
@@ -324,7 +326,7 @@ public class YunDingSmartLock implements ISmartLock {
         String url = BASE_URL + "/get_lock_info";
         Map<String, Object> map = new HashMap<>();
         map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
-        map.put("room_id",thirdRoomId);
+        map.put("room_id", thirdRoomId);
         String lockResult = HttpClientUtil.doGet(url, map);
         JSONObject resJSON = JSONObject.parseObject(lockResult);
         List<LockVO> lockVOList = new ArrayList<>();

@@ -190,4 +190,51 @@
             AND nshm.data_type = #{dataType}
             AND nshm.house_catalog = #{houseCatalog} AND nshm.provider_code=#{providerCode}
     </select>
+
+    <!--根据公共区域查询房间映射记录(分散式)-->
+    <select id="findDispersedRoomMappingByPublicZone"
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
+      SELECT
+        nshm.data_type AS dataType,
+        nshm.h2omeID AS h2omeId,
+        nshm.house_catalog AS houseCatalog,
+        nshm.provider_code AS providerCode,
+        nshm.threeID AS threeId
+        FROM
+            narcissus_test.public_zone ntpz
+        LEFT JOIN caspain_test.house cth ON ntpz.parent_ID = cth.id
+        LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ctr.id
+        WHERE
+            ntpz.public_zone_ID = #{h2omeId} -- 本地库,公共区域id
+        AND ntpz.data_type = 3
+        AND nshm.data_type = 4
+        AND nshm.house_catalog = 1 -- 分散式
+        AND nshm.provider_code = #{providerCode}
+    </select>
+
+    <!--根据公共区域查询房间映射记录(集中式)-->
+    <select id="findConcentrateRoomMappingByPublicZone"
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
+       SELECT
+        nshm.data_type AS dataType,
+        nshm.h2omeID AS h2omeId,
+        nshm.house_catalog as houseCatalog,
+        nshm.provider_code as providerCode,
+        nshm.threeID as threeId
+        FROM
+            narcissus_test.public_zone ntpz
+        LEFT JOIN `volga_test`.apartment vta ON ntpz.parent_ID = vta.id
+        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = vtr.id
+        WHERE
+            ntpz.public_zone_ID = #{h2omeId}
+        AND ntpz.data_type = 1
+        AND nshm.data_type = 4
+        AND nshm.house_catalog = 0
+        AND nshm.provider_code = #{providerCode}
+    </select>
+
 </mapper>

@@ -14,7 +14,7 @@ public class SmartHouseMappingVO {
      */
     private String houseCatalog;
     /**
-     * 1:公寓 ,2:楼层,3:房屋,4:房间
+     * 1:公寓 ,2:楼层,3:房屋,4:房间,5:公共区域
      */
     private String dataType;
     /**
@@ -46,6 +46,7 @@ public class SmartHouseMappingVO {
         smartHouseMappingVO1.setH2omeId(smartHouseMappingVO.getRoomId());
         smartHouseMappingVO1.setThreeId(smartHouseMappingVO.getThirdRoomId());
         smartHouseMappingVO1.setProviderCode(smartHouseMappingVO.getFactoryType());
+        smartHouseMappingVO1.setDataType(smartHouseMappingVO.getDataType());
         return smartHouseMappingVO1;
     }
 }

@@ -57,4 +57,20 @@ public interface SmartLockDao {
      * @param houseMapping
      */
     void updateAssociation(SmartHouseMappingVO houseMapping);
+
+    /**
+     * 根据公共区域，查询该房源下的所有关联记录(分散式)
+     *
+     * @param houseMapping
+     * @return
+     */
+    List<SmartHouseMappingVO> findDispersedRoomMappingByPublicZone(SmartHouseMappingVO houseMapping);
+
+    /**
+     * 根据公共区域，查询该房源下的所有关联记录(集中式)
+     *
+     * @param houseMapping
+     * @return
+     */
+    List<SmartHouseMappingVO> findConcentrateRoomMappingByPublicZone(SmartHouseMappingVO houseMapping);
 }

@@ -19,6 +19,7 @@ import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -48,15 +49,15 @@ public class SmartLockServiceImpl implements SmartLockService {
     public Map<String, List<HomeVO>> searchHome(String userId, String type, String factoryType) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
         //查询第三方房源信息
         SmartLockFirmEnum smartLockFirmEnum = SmartLockFirmEnum.getByCode(factoryType);
+        if (smartLockFirmEnum == null) {
+            throw new SmartLockException("该厂商不存在");
+        }
         //第三方房源信息(包括了分散式和集中式)
         List<HomeVO> thirdHomeList = new ArrayList<HomeVO>();
         if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals(SmartLockFirmEnum.YUN_DING.getCode())) {
             ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
             Map<String, Object> params = new HashMap<String, Object>();
-//            String accessToken = YunDingSmartLockUtil.getAccessToken(userId);
-//            params.put("access_token", accessToken);
-            //云丁用户账号授权的token,   ****************暂时写死
-            params.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
+            params.put("userId",userId);
             String result = iSmartLock.searchHomeInfo(params);
             List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
             for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
@@ -76,7 +77,6 @@ public class SmartLockServiceImpl implements SmartLockService {
                     iterator.remove();
                 }
             }
-
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             localHomeList = smartLockDao.findConcentrateHomes(userId);
@@ -120,14 +120,31 @@ public class SmartLockServiceImpl implements SmartLockService {
      * 取消房间关联
      */
     @Override
+    @Transactional
     public void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException {
         String type = smartHouseMappingVO.getType();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
-        SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
-        if (SmartLockFirmEnum.YUN_DING.getCode().equals(lockFirmEnum.getCode())) {
-            houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
+        String dataType = houseMapping.getDataType();
+        List<SmartHouseMappingVO> roomMappingList = new ArrayList<SmartHouseMappingVO>();
+        //判断取消关联的是公共区域之间的关联
+        if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
+            //判断是分散式
+            if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+                roomMappingList = smartLockDao.findDispersedRoomMappingByPublicZone(houseMapping);
+                //判断是集中式
+            } else {
+                roomMappingList = smartLockDao.findConcentrateRoomMappingByPublicZone(houseMapping);
+            }
+            //取消该公共区域所属房源下的房间的关联
+            for (SmartHouseMappingVO smartHouseMappingVO1 : roomMappingList) {
+                smartLockDao.cancelAssociation(smartHouseMappingVO1);
+            }
+            //取消公共区域的关联
+            smartLockDao.cancelAssociation(houseMapping);
+            //判断取消关联的是房间之间的关联
+        } else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
+            smartLockDao.cancelAssociation(houseMapping);
         }
-        smartLockDao.cancelAssociation(houseMapping);
 
     }
 
