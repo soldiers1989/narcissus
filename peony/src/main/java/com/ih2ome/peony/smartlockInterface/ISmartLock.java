@@ -92,7 +92,7 @@ public interface ISmartLock {
      * @return
      * @throws SmartLockException
      */
-    public Map<String, Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException;
+    public Map<String, Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException, ParseException;
 
     /**
      * 查询房间设备信息

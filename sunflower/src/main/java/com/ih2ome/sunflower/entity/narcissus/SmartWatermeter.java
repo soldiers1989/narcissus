@@ -2,31 +2,28 @@ package com.ih2ome.sunflower.entity.narcissus;
 
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Date;
-
 @Data
-public class SmartWatermeter implements Serializable{
+public class SmartWatermeter {
 
-  private int smartWatermeterId;
-  private Date createdAt;
-  private Long createdBy;
-  private Date updatedAt;
-  private Long updatedBy;
-  private Date deletedAt;
-  private Long deletedBy;
-  private Long apartmentId;
-  private int floorId;
-  private Long houseId;
-  private Long roomId;
-  private int houseCatalog;
-  private int meterType;
+  private long smartWatermeterId;
+  private java.sql.Timestamp createdAt;
+  private long createdBy;
+  private java.sql.Timestamp updatedAt;
+  private long updatedBy;
+  private java.sql.Timestamp deletedAt;
+  private long deletedBy;
+  private long apartmentId;
+  private long floorId;
+  private long houseId;
+  private long roomId;
+  private long houseCatalog;
+  private double meterType;
   private String uuid;
-  private int onoffStatus;
-  private Long price;
-  private Long meterAmount;
-  private Long lastAmount;
-  private Date meterUpdatedAt;
+  private double onoffStatus;
+  private long price;
+  private long meterAmount;
+  private long lastAmount;
+  private java.sql.Timestamp meterUpdatedAt;
   private String manufactory;
 
 }

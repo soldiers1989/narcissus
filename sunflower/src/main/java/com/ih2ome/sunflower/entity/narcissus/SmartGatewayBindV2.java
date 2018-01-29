@@ -3,10 +3,9 @@ package com.ih2ome.sunflower.entity.narcissus;
 import lombok.Data;
 
 @Data
-public class SmartGatewayBind {
+public class SmartGatewayBindV2 {
 
   private long smartGatewayId;
-  private double smartDeviceType;
-  private long smartId;
+  private long smartDeviceId;
 
 }

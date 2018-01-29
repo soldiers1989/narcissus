@@ -28,6 +28,7 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
     public List<SmartLockGatewayModel> getSmartLockGatewayList(String homeId) {
         if(StringUtils.isNotBlank(homeId)){
             return smartLockGatewayDao.getGatewayModelByHomeId(homeId);
+
         }
         return null;
 
@@ -38,8 +39,11 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
         if(StringUtils.isNotBlank(gatewayId)){
             SmartLockGatewayHadBindVO smartLockGatewayHadBindVO = smartLockGatewayDao.getSmartLockHadBindGateway(gatewayId);
             List <SmartLockGatewayHadBindRoomVO> smartLockGatewayHadBindRoomVOList = smartLockGatewayDao.getSmartLockAndRoomListByGatewayId(gatewayId);
-            return smartLockGatewayDao.getSmartLockHadBindGateway(gatewayId);
+            smartLockGatewayHadBindVO.setSmartLockGatewayHadBindRoomVOList(smartLockGatewayHadBindRoomVOList);
+            return smartLockGatewayHadBindVO;
+
         }
         return null;
+
     }
 }

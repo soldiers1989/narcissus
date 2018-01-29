@@ -2,13 +2,12 @@ package com.ih2ome.sunflower.entity.narcissus;
 
 import lombok.Data;
 
-import java.io.Serializable;
 @Data
-public class SmartMistakeInfo implements Serializable{
+public class SmartMistakeInfo {
 
-  private Long id;
+  private long id;
   private java.sql.Timestamp createdAt;
-  private Long smartDeviceType;
+  private long smartDeviceType;
   private String uuid;
   private String sn;
   private String exceptionType;

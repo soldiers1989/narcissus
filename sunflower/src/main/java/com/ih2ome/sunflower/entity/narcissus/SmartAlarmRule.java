@@ -1,12 +1,12 @@
 package com.ih2ome.sunflower.entity.narcissus;
 
+
 import lombok.Data;
 
-import java.io.Serializable;
 @Data
-public class SmartAlarmRule implements Serializable{
+public class SmartAlarmRule {
 
-  private Long id;
+  private long id;
   private String reportName;
   private String reportParam;
   private String switchStatus;

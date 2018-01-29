@@ -2,13 +2,18 @@ package com.ih2ome.peony.smartlockInterface.yunding;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
+import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
+import com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2;
+import com.ih2ome.sunflower.entity.narcissus.SmartLock;
+import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingPullHomeCountEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.*;
 import org.slf4j.Logger;
@@ -303,7 +308,7 @@ public class YunDingSmartLock implements ISmartLock {
      * @throws SmartLockException
      */
     @Override
-    public Map<String, Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException {
+    public Map<String, Object> searchHouseDeviceInfo(String userId, String thirdHomeId) throws SmartLockException, ParseException {
         Log.info("根据第三方homeId查询对应userId下的外门锁和网关设备,userId:{}", userId);
         String gatewayUrl = BASE_URL + "/get_center_info_arr";
         String outDoorLockUrl = BASE_URL + "/get_lock_info";
@@ -317,9 +322,46 @@ public class YunDingSmartLock implements ISmartLock {
         String lockResult = HttpClientUtil.doGet(outDoorLockUrl, map);
         JSONObject lockResponseJSON = JSONObject.parseObject(lockResult);
 
-        List<GatewayInfoVO> gatewayInfoVOList = new ArrayList<>();
-        List<LockVO> lockVOList = new ArrayList<>();
-        //TODO:整理数据
+        List<SmartGatewayV2> gatewayInfoVOList = new ArrayList<>();
+        List<SmartLock> lockVOList = new ArrayList<>();
+
+        //第三方返回的code为0为调用成功
+        if("0".equals(gatewayResponseJSON.getString("ErrNo"))){
+            JSONArray jsonArray = gatewayResponseJSON.getJSONArray("centers");
+            for(Object object : jsonArray){
+                JSONObject center = JSONObject.parseObject(object.toString());
+                SmartGatewayV2 smartGatewayV2 = new SmartGatewayV2();
+                SmartDeviceV2 smartDeviceV2 = new SmartDeviceV2();
+                smartGatewayV2.setUuid(center.getString("uuid"));
+                smartGatewayV2.setSn(center.getString("sn"));
+                smartGatewayV2.setMac(center.getString("mac"));
+                smartGatewayV2.setModel(center.getString("model"));
+                smartGatewayV2.setModelName(center.getString("model_name"));
+                smartGatewayV2.setInstallTime(DateUtils.longToString(center.getLong("bind_time"),"yyyy-MM-dd HH:mm:ss"));
+                smartGatewayV2.setInstallName(center.getString("name"));
+                smartGatewayV2.setBrand(center.getString("brand"));
+                smartDeviceV2.setBrand(center.getString("brand"));
+                smartDeviceV2.setConnectionStatus(center.getString("onoff_line"));
+                smartDeviceV2.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER_GATEWAY.getCode().toString());
+                smartDeviceV2.setThreeId(center.getString("uuid"));
+                smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(center.getLong("onoff_time"),"yyyy-MM-dd HH:mm:ss"));
+                smartGatewayV2.setSmartDeviceV2(smartDeviceV2);
+                gatewayInfoVOList.add(smartGatewayV2);
+
+            }
+        }else{
+            throw new SmartLockException("第三方接口调用失败");
+
+        }
+
+        //第三方返回的code为0为调用成功
+        if("0".equals(gatewayResponseJSON.getString("ErrNo"))){
+            SmartLock smartLock = new SmartLock();
+            //TODO:整理门锁数据
+        }else{
+            throw new SmartLockException("第三方接口调用失败");
+
+        }
 
 
         Map<String, Object> resultMap = new HashMap<>();

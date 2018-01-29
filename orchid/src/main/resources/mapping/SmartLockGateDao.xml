@@ -41,7 +41,22 @@
             )
     </select>
 
-    <select id="getSmartLockAndRoomListByGatewayId">
-
+    <select id="getSmartLockAndRoomListByGatewayId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO">
+        SELECT
+            ntsl.smart_lock_ID smartLockId,
+            IFNULL(cr.`name`,vr.`name`) roomNo,
+            ntsl.power powerRate,
+            nsdv2.connection_status communicationStatus
+        FROM
+            narcissus_test.smart_lock ntsl,
+            narcissus_test.smart_gateway_bind_v2 nsgbv2,
+            narcissus_test.smart_device_v2 nsdv2,
+            caspain_test.room cr,
+            volga_test.room vr
+        WHERE
+            nsgbv2.smart_device_ID = ntsl.smart_lock_ID
+        AND (nsdv2.room_ID = cr.id or nsdv2.room_ID=vr.id)
+        AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
+        AND nsgbv2.smart_gateway_ID = '${gatewayId}'
     </select>
 </mapper>
