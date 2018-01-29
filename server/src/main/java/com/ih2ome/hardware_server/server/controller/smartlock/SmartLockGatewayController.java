@@ -61,6 +61,7 @@ public class SmartLockGatewayController extends BaseController{
         responseJson.put("smartLockGatewayHadBindVO", model);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
+
     }
 
 

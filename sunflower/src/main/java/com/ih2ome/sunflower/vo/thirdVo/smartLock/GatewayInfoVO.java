@@ -14,31 +14,57 @@ import java.util.List;
  */
 @Data
 public class GatewayInfoVO {
-    //门锁类型
+    /**
+     * 门锁类型
+     */
     private String nodeKind;
-    //网关编码
+    /**
+     * 网关编码
+     */
     private String nodeNo;
-    //网关名称
+    /**
+     * 网关名称
+     */
     private String name;
-    //通信状态
+    /**
+     * 通信状态
+     */
     private String comuStatus;
-    //通信状态最近更新时间
+    /**
+     * 通信状态最近更新时间
+     */
     private String comuStatusUpdateTime;
-    //安装地区
+    /**
+     * 安装地区
+     */
     private List<GuoJiaRegionVo> region;
-    //安装地址
+    /**
+     * 安装地址
+     */
     private String address;
-    //业务编码
+    /**
+     * 业务编码
+     */
     private String houseCode;
-    //安装日期
+    /**
+     * 安装日期
+     */
     private String installTime;
-    //质保日期（起）
+    /**
+     * 质保日期（起）
+     */
     private String guaranteeTimeStart;
-    //质保日期（止）
+    /**
+     * 质保日期（止）
+     */
     private String guaranteeTimeEnd;
-    //描述
+    /**
+     * 描述
+     */
     private String description;
-    //设备的 MAC 地址
+    /**
+     * 设备的 MAC 地址
+     */
     private String mac;
 
 }

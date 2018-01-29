@@ -2,37 +2,34 @@ package com.ih2ome.sunflower.entity.narcissus;
 
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Date;
-
 @Data
-public class SmartGateway implements Serializable{
+public class SmartGateway {
 
-  private Long smartGatewayId;
-  private Date createdAt;
-  private Long createdBy;
-  private Date updatedAt;
-  private Long updatedBy;
-  private Date deletedAt;
-  private Long deletedBy;
+  private long smartGatewayId;
+  private java.sql.Timestamp createdAt;
+  private long createdBy;
+  private java.sql.Timestamp updatedAt;
+  private long updatedBy;
+  private java.sql.Timestamp deletedAt;
+  private long deletedBy;
   private String mac;
   private String sn;
   private String uuid;
   private String model;
   private String modelName;
   private String name;
-  private Date installTime;
+  private java.sql.Timestamp installTime;
   private String installName;
   private String installMobile;
   private String brand;
   private String operator;
-  private int installStatus;
-  private int onoffStatus;
+  private double installStatus;
+  private double onoffStatus;
   private String remark;
-  private Long houseCatalog;
-  private Long apartmentId;
-  private int floor;
-  private Long houseId;
-  private Long roomId;
+  private long houseCatalog;
+  private long apartmentId;
+  private long floor;
+  private long houseId;
+  private long roomId;
 
 }
