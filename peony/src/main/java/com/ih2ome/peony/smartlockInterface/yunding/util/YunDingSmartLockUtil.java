@@ -47,10 +47,10 @@ public class YunDingSmartLockUtil {
      * 云丁开放平台水滴身份标识
      */
     public static final String OPEN_CLIENT_ID = "shuidiceshi";
-     /**
+    /**
      * 云丁开放平台水滴访问密钥
      */
-    public static final String OPEN_SECRET = "3a5aacee5f45fc4f2cc14e8a904cdb79";
+    public static final String OPEN_SECRET = "shuidiceshioauthclientsecret";
     /**
      * 云丁开放平台固定植入
      */
@@ -58,7 +58,7 @@ public class YunDingSmartLockUtil {
 
     public final static String TOKEN_YUNDING_USER_CODE = "yunding_user_code_token";
 
-    public final static String  ACCESS_TOKEN_KEY = "access_token_key";
+    public final static String ACCESS_TOKEN_KEY = "access_token_key";
 
     public final static String REFRESH_TOKEN_KEY = "refresh_token_key";
 
@@ -118,13 +118,14 @@ public class YunDingSmartLockUtil {
 
     /**
      * 获取授权码
+     *
      * @param userId
      * @return
      * @throws SmartLockException
      */
     public static String getLicenseCode(String userId) throws SmartLockException {
-        String code = CacheUtils.getStr(TOKEN_YUNDING_USER_CODE+"_"+userId);
-        if(StringUtils.isEmpty(code)){
+        String code = CacheUtils.getStr(TOKEN_YUNDING_USER_CODE + "_" + userId);
+        if (StringUtils.isEmpty(code)) {
             throw new SmartLockException("请先做授权");
         }
         return code;
@@ -132,28 +133,30 @@ public class YunDingSmartLockUtil {
 
     /**
      * 从第三方获取accessToken
+     *
      * @param userId
      * @return
      * @throws SmartLockException
      */
     public static String getAccessTokenFromThrid(String userId) throws SmartLockException {
-        String url = OPEN_BASE_URL+"/oauth/token";
+        String url = OPEN_BASE_URL + "/oauth/token";
         //组装post参数
-        Map<String,Object> req = new HashMap<>();
-        req.put("client_id",OPEN_CLIENT_ID);
-        req.put("client_secret",OPEN_SECRET);
-        req.put("code",getLicenseCode(userId));
-        req.put("grant_type","authorization_code");
+        Map<String, Object> req = new HashMap<>();
+        req.put("client_id", OPEN_CLIENT_ID);
+        req.put("client_secret", OPEN_SECRET);
+//        req.put("code",getLicenseCode(userId));
+        req.put("code", "8bb6ceb73cd3ee67dfc59ae478347f9c0bbe5ee6");
+        req.put("grant_type", "authorization_code");
         //组装头部
-        Map <String,String> header = new HashMap<>();
-        header.put("Content-Type","application/x-www-form-urlencoded");
+        Map<String, String> header = new HashMap<>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
 
         String res;
-        try{
-            res = HttpClientUtil.doPost(url,req,header);
+        try {
+            res = HttpClientUtil.doPost(url, req, header);
 
-        }catch (Exception e){
-            throw new SmartLockException("门锁获取第三方accessToken失败",e);
+        } catch (Exception e) {
+            throw new SmartLockException("门锁获取第三方accessToken失败", e);
 
         }
 
@@ -162,9 +165,9 @@ public class YunDingSmartLockUtil {
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
         String refreshToken = resJson.getString("refresh_token");
-
-        CacheUtils.set(ACCESS_TOKEN_KEY+userId,accessToken,Integer.valueOf(expiresIn)-3*60*1000);
-        CacheUtils.set(REFRESH_TOKEN_KEY+userId,refreshToken,Integer.valueOf(expiresIn)-3*60*1000);
+        System.out.println("----------------" + accessToken);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
 
         return accessToken;
 
@@ -173,34 +176,35 @@ public class YunDingSmartLockUtil {
 
     /**
      * 刷新token
+     *
      * @param userId
      * @return
      */
     public static String flushRefreshToken(String userId) throws SmartLockException {
-        String refreshToken = CacheUtils.getStr(REFRESH_TOKEN_KEY+"_"+userId);
-        if(StringUtils.isEmpty(refreshToken)){
+        String refreshToken = CacheUtils.getStr(REFRESH_TOKEN_KEY + "_" + userId);
+        if (StringUtils.isEmpty(refreshToken)) {
             return getAccessTokenFromThrid(userId);
 
         }
-        String url = OPEN_BASE_URL+"/oauth/token";
+        String url = OPEN_BASE_URL + "/oauth/token";
 
         //组装post参数
-        Map<String,Object> req = new HashMap<>();
-        req.put("client_id",OPEN_CLIENT_ID);
-        req.put("client_secret",OPEN_SECRET);
-        req.put("refresh_token",refreshToken);
-        req.put("grant_type","authorization_code");
+        Map<String, Object> req = new HashMap<>();
+        req.put("client_id", OPEN_CLIENT_ID);
+        req.put("client_secret", OPEN_SECRET);
+        req.put("refresh_token", refreshToken);
+        req.put("grant_type", "authorization_code");
 
         //组装头部
-        Map <String,String> header = new HashMap<>();
-        header.put("Content-Type","application/x-www-form-urlencoded");
+        Map<String, String> header = new HashMap<>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
 
         String res;
-        try{
-            res = HttpClientUtil.doPost(url,req,header);
+        try {
+            res = HttpClientUtil.doPost(url, req, header);
 
-        }catch (Exception e){
-            throw new SmartLockException("门锁获取第三方accessToken失败",e);
+        } catch (Exception e) {
+            throw new SmartLockException("门锁获取第三方accessToken失败", e);
 
         }
 
@@ -210,21 +214,22 @@ public class YunDingSmartLockUtil {
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
 
-        CacheUtils.set(ACCESS_TOKEN_KEY+userId,accessToken,Integer.valueOf(expiresIn)-3*60*1000);
-        CacheUtils.set(REFRESH_TOKEN_KEY+userId,refreshToken,Integer.valueOf(expiresIn)-3*60*1000);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
 
         return accessToken;
     }
 
     /**
      * 获取访问token
+     *
      * @param userId
      * @return
      * @throws SmartLockException
      */
     public static String getAccessToken(String userId) throws SmartLockException {
-        String accessToken = CacheUtils.getStr(ACCESS_TOKEN_KEY+"_"+userId);
-        if(StringUtils.isNotBlank(accessToken)){
+        String accessToken = CacheUtils.getStr(ACCESS_TOKEN_KEY + "_" + userId);
+        if (StringUtils.isNotBlank(accessToken)) {
             return accessToken;
 
         }

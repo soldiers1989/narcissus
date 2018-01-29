@@ -149,16 +149,33 @@ public class SmartLockServiceImpl implements SmartLockService {
     }
 
     /**
-     * 房间关联
+     * 房间(公共区域)关联
      *
      * @param smartHouseMappingVO
      */
     @Override
     @Transactional
     public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        //TODO: 删除原来同步过的设备
+        //集中式或者分散式类型
         String type = smartHouseMappingVO.getType();
+        //用户id
         String userId = smartHouseMappingVO.getUserId();
+        //房屋或者公共区域类型
+        String dataType = smartHouseMappingVO.getDataType();
+        //第三方房源Id
+        String thirdHomeId = smartHouseMappingVO.getThirdHomeId();
+        //判断是否是公共区域
+        if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
+            //清除该公共区域下的设备信息(外门锁,网关设备)
+
+
+            //判断是否是房间
+        } else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
+            //清除该房间和所属公共区域下的设备信息
+
+        } else {
+            throw new SmartLockException("参数异常");
+        }
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
 

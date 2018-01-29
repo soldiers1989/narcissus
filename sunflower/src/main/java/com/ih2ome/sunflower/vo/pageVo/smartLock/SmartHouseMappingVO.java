@@ -36,6 +36,7 @@ public class SmartHouseMappingVO {
 
     private String userId;
     private String roomId;
+    private String thirdHomeId;
     private String thirdRoomId;
     private String type;
     private String factoryType;

@@ -229,9 +229,9 @@ public class YunDingSmartLock implements ISmartLock {
         Log.info("查询该用户所有的房源和设备信息");
         String url = BASE_URL + "/search_home_info";
         Map<String, Object> map = new HashMap<String, Object>();
-//        String access_token= YunDingSmartLockUtil.getAccessToken(params.get("userId").toString());
-//        map.put("access_token",access_token);
-        map.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
+        String access_token= YunDingSmartLockUtil.getAccessToken(params.get("userId").toString());
+        map.put("access_token",access_token);
+//        map.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
         map.put("count", YunDingPullHomeCountEnum.ONE_THOUSAND.getCount());
         String result = HttpClientUtil.doGet(url, map);
         JSONObject resJson = null;
