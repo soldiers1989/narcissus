@@ -4,6 +4,7 @@ import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +32,5 @@ public interface SmartLockService {
      *
      * @param smartHouseMappingVO
      */
-    void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException;
+    void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException;
 }
