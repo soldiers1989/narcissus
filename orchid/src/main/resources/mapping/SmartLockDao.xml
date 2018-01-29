@@ -75,6 +75,23 @@
         AND nshm.threeID=#{threeId}
     </update>
 
+    <!--通过roomId删除该房间下的设备记录(修改字段)-->
+    <update id="clearDevicesByRoomId">
+        UPDATE narcissus_test.smart_device_v2
+        SET manage_status = 1
+        WHERE
+            room_ID= #{roomId}
+        AND house_catalog = #{type} AND provider_code=#{providerCode}
+    </update>
+
+    <!--通过publicZoneId删除该公共区域下的设备记录(修改字段)-->
+    <update id="clearDevicesByPublicZoneId">
+        UPDATE narcissus_test.smart_device_v2
+        SET manage_status = 1
+        WHERE
+            public_zone_ID = #{publicZoneId}
+        AND house_catalog =#{type}  AND provider_code=#{providerCode}
+    </update>
 
     <!--select-->
     <!--查询房源信息(分散式)-->
@@ -237,4 +254,27 @@
         AND nshm.provider_code = #{providerCode}
     </select>
 
+    <!--根据房间ID查询公共区域ID(集中式)-->
+    <select id="findDispersedPublicZoneByRoomId" parameterType="string" resultType="string">
+        SELECT
+        npz.public_zone_ID
+        FROM
+            caspain_test.room ctr
+        LEFT JOIN caspain_test.house cth ON ctr.house_id = cth.id
+        LEFT JOIN narcissus_test.public_zone npz ON cth.id = npz.parent_ID
+        WHERE
+            npz.data_type = 3
+        AND ctr.id = #{roomId}
+    </select>
+
+    <!--根据房间ID查询公共区域ID(集中式)-->
+    <select id="findConcentratePublicZoneByRoomId" parameterType="string" resultType="string">
+        SELECT
+        npz.public_zone_ID
+        FROM
+            `volga_test`.room vtr
+        LEFT JOIN `volga_test`.apartment vta ON vtr.apartment_id = vta.id
+        LEFT JOIN narcissus_test.public_zone npz ON vta.id=npz.parent_ID
+        WHERE npz.data_type=1 AND vtr.id=#{roomId}
+    </select>
 </mapper>
