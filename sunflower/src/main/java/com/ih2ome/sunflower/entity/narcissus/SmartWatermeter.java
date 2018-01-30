@@ -2,15 +2,17 @@ package com.ih2ome.sunflower.entity.narcissus;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class SmartWatermeter {
 
   private long smartWatermeterId;
-  private java.sql.Timestamp createdAt;
+  private Date createdAt;
   private long createdBy;
-  private java.sql.Timestamp updatedAt;
+  private Date updatedAt;
   private long updatedBy;
-  private java.sql.Timestamp deletedAt;
+  private Date deletedAt;
   private long deletedBy;
   private long apartmentId;
   private long floorId;
@@ -23,7 +25,7 @@ public class SmartWatermeter {
   private long price;
   private long meterAmount;
   private long lastAmount;
-  private java.sql.Timestamp meterUpdatedAt;
+  private Date meterUpdatedAt;
   private String manufactory;
 
 }

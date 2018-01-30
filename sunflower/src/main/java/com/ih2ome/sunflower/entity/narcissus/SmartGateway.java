@@ -2,15 +2,17 @@ package com.ih2ome.sunflower.entity.narcissus;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class SmartGateway {
 
   private long smartGatewayId;
-  private java.sql.Timestamp createdAt;
+  private Date createdAt;
   private long createdBy;
-  private java.sql.Timestamp updatedAt;
+  private Date updatedAt;
   private long updatedBy;
-  private java.sql.Timestamp deletedAt;
+  private Date deletedAt;
   private long deletedBy;
   private String mac;
   private String sn;
@@ -18,7 +20,7 @@ public class SmartGateway {
   private String model;
   private String modelName;
   private String name;
-  private java.sql.Timestamp installTime;
+  private Date installTime;
   private String installName;
   private String installMobile;
   private String brand;
