@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
@@ -150,7 +151,7 @@ public class SmartLockServiceImpl implements SmartLockService {
     }
 
     /**
-     * 房间(公共区域)关联
+     * 房间或公共区域关联
      *
      * @param smartHouseMappingVO
      */
@@ -165,25 +166,42 @@ public class SmartLockServiceImpl implements SmartLockService {
         String dataType = smartHouseMappingVO.getDataType();
         //第三方房源Id
         String thirdHomeId = smartHouseMappingVO.getThirdHomeId();
+        //第三方房间Id
+        String thirdRoomId = smartHouseMappingVO.getThirdRoomId();
+        //获取本地公共区域或房间的Id
+        String roomId = smartHouseMappingVO.getRoomId();
+        //获得厂商
+        String providerCode = smartHouseMappingVO.getFactoryType();
+        String publicZoneId = null;
         //判断是否是公共区域
         if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
-            //清除该公共区域下的设备信息(外门锁,网关设备)
-
-
+            publicZoneId = roomId;
             //判断是否是房间
         } else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
-            //清除该房间和所属公共区域下的设备信息
-
+            //判断是分散式
+            if (HouseStyleEnum.DISPERSED.getCode().equals(type)) {
+                //查询该房间所属房源的公共区域
+                publicZoneId = smartLockDao.findDispersedPublicZoneByRoomId(roomId);
+                //判断是集中式
+            } else if (HouseStyleEnum.CONCENTRAT.getCode().equals(type)) {
+                //查询该房间所属房源的公共区域
+                publicZoneId = smartLockDao.findConcentratePublicZoneByRoomId(roomId);
+            } else {
+                throw new SmartLockException("参数异常");
+            }
+            //清除该房间下的设备信息(内门锁)
+            smartLockDao.clearDevicesByRoomId(type, roomId, providerCode);
         } else {
             throw new SmartLockException("参数异常");
         }
-        SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
-        SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(houseMapping.getProviderCode());
+        //清除该公共区域下的设备信息(外门锁,网关设备)
+        smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
 
-        houseMapping.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
+        //插入数据----------------------------
+        SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(providerCode);
         ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
-        Map<String, Object> map = iSmartLock.searchHouseDeviceInfo(userId, smartHouseMappingVO.getThirdRoomId());
-        List<LockVO> lockVOList = iSmartLock.searchRoomDeviceInfo(userId, smartHouseMappingVO.getThirdRoomId());
+        Map<String, Object> map = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
+        List<LockVO> lockVOList = iSmartLock.searchRoomDeviceInfo(userId, thirdRoomId);
         List<GatewayInfoVO> publicGatewayInfoVOList = (List<GatewayInfoVO>) map.get("gatewayInfoVOList");
         List<LockVO> publicLockVOList = (List<LockVO>) map.get("lockVOList");
         //TODO:将设备存进数据库
@@ -191,6 +209,19 @@ public class SmartLockServiceImpl implements SmartLockService {
         //TODO:publicGatewayInfoVOList入网关表关联“公共区域”
         //TODO:publicLockVOList入门锁表关联“公共区域”
 
+
+        //--------------------------------------
+
+
+        SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+        //查询该关联关系原先是否存在
+        SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
+        //该记录存在，修改该映射记录
+        if (houseMapping != null) {
+            smartLockDao.updateAssociation(houseMapping);
+        } else {
+            smartLockDao.addAssociation(houseMapping);
+        }
 
     }
 }
