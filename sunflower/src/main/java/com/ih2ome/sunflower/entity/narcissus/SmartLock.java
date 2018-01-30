@@ -20,6 +20,7 @@ public class SmartLock {
   private String guaranteeTimeEnd;
   private String versions;
   private String description;
+  private String gatewayUuid;
   private SmartDeviceV2 smartDeviceV2;
 
 }

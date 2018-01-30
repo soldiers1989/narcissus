@@ -355,19 +355,36 @@ public class YunDingSmartLock implements ISmartLock {
         }
 
         //第三方返回的code为0为调用成功
-        if("0".equals(gatewayResponseJSON.getString("ErrNo"))){
+        if("0".equals(lockResponseJSON.getString("ErrNo"))){
             SmartLock smartLock = new SmartLock();
-            //TODO:整理门锁数据
+            SmartDeviceV2 smartDeviceV2 = new SmartDeviceV2();
+            smartLock.setSn(lockResponseJSON.getString("sn"));
+            smartLock.setMac(lockResponseJSON.getString("mac"));
+            smartLock.setModel(lockResponseJSON.getString("model"));
+            smartLock.setModelName(lockResponseJSON.getString("model_name"));
+            smartLock.setPower(lockResponseJSON.getString("power"));
+            smartLock.setPowerRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("power_refreshtime"),"yyyy-MM-dd HH:mm:ss"));
+            smartLock.setOnoffTime(lockResponseJSON.getString("onoff_line"));
+            smartLock.setLqi(lockResponseJSON.getString("lqi"));
+            smartLock.setLqiRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("lqi_refreshtime"),"yyyy-MM-dd HH:mm:ss"));
+            smartLock.setBindTime(DateUtils.longToString(lockResponseJSON.getLong("bind_time"),"yyyy-MM-dd HH:mm:ss"));
+            smartLock.setVersions(lockResponseJSON.getString("versions"));
+            smartLock.setGatewayUuid(lockResponseJSON.getString("center_uuid"));
+            smartDeviceV2.setThreeId(lockResponseJSON.getString("uuid"));
+            smartDeviceV2.setConnectionStatus(lockResponseJSON.getString("onoff_line"));
+            smartDeviceV2.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER_GATEWAY.getCode().toString());
+            smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(lockResponseJSON.getLong("onoff_time"),"yyyy-MM-dd HH:mm:ss"));
+            smartLock.setSmartDeviceV2(smartDeviceV2);
+
         }else{
             throw new SmartLockException("第三方接口调用失败");
 
         }
-
-
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("gatewayInfoVOList", gatewayInfoVOList);
         resultMap.put("lockVOList", lockVOList);
         return resultMap;
+
     }
 
     /**
@@ -379,7 +396,7 @@ public class YunDingSmartLock implements ISmartLock {
      * @throws SmartLockException
      */
     @Override
-    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException {
+    public List<SmartLock> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException, ParseException {
         Log.info("根据第三方homeId查询对应userId下门锁列表,userId:{}", userId);
         String url = BASE_URL + "/get_lock_info";
         Map<String, Object> map = new HashMap<>();
@@ -387,8 +404,31 @@ public class YunDingSmartLock implements ISmartLock {
         map.put("room_id", thirdRoomId);
         String lockResult = HttpClientUtil.doGet(url, map);
         JSONObject resJSON = JSONObject.parseObject(lockResult);
-        List<LockVO> lockVOList = new ArrayList<>();
-        //TODO:整理数据
+        List<SmartLock> lockVOList = new ArrayList<>();
+        if("0".equals(resJSON.getString("ErrNo"))){
+            SmartLock smartLock = new SmartLock();
+            SmartDeviceV2 smartDeviceV2 = new SmartDeviceV2();
+            smartLock.setSn(resJSON.getString("sn"));
+            smartLock.setMac(resJSON.getString("mac"));
+            smartLock.setModel(resJSON.getString("model"));
+            smartLock.setModelName(resJSON.getString("model_name"));
+            smartLock.setPower(resJSON.getString("power"));
+            smartLock.setPowerRefreshtime(DateUtils.longToString(resJSON.getLong("power_refreshtime"),"yyyy-MM-dd HH:mm:ss"));
+            smartLock.setOnoffTime(resJSON.getString("onoff_line"));
+            smartLock.setLqi(resJSON.getString("lqi"));
+            smartLock.setLqiRefreshtime(DateUtils.longToString(resJSON.getLong("lqi_refreshtime"),"yyyy-MM-dd HH:mm:ss"));
+            smartLock.setBindTime(DateUtils.longToString(resJSON.getLong("bind_time"),"yyyy-MM-dd HH:mm:ss"));
+            smartLock.setVersions(resJSON.getString("versions"));
+            smartLock.setGatewayUuid(resJSON.getString("center_uuid"));
+            smartDeviceV2.setThreeId(resJSON.getString("uuid"));
+            smartDeviceV2.setConnectionStatus(resJSON.getString("onoff_line"));
+            smartDeviceV2.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER_GATEWAY.getCode().toString());
+            smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(resJSON.getLong("onoff_time"),"yyyy-MM-dd HH:mm:ss"));
+            smartLock.setSmartDeviceV2(smartDeviceV2);
+        }else{
+            throw new SmartLockException("第三方接口调用失败");
+
+        }
 
         return lockVOList;
 
