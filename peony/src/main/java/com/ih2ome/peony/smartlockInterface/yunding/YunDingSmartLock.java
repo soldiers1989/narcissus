@@ -10,6 +10,7 @@ import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
 import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
 import com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2;
 import com.ih2ome.sunflower.entity.narcissus.SmartLock;
+import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -33,6 +34,7 @@ import java.util.Map;
 public class YunDingSmartLock implements ISmartLock {
     private static final String BASE_URL = "https://lockapi.dding.net/openapi/v1";
     private static final Logger Log = LoggerFactory.getLogger(YunDingSmartLock.class);
+    private static final String MANAGER_SMART_LOCK_PASSWORD_ID = "999";
 
     @Override
     public LockVO getLockInfo(String lockNo) throws SmartLockException {
@@ -375,6 +377,8 @@ public class YunDingSmartLock implements ISmartLock {
             smartDeviceV2.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER_GATEWAY.getCode().toString());
             smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(lockResponseJSON.getLong("onoff_time"),"yyyy-MM-dd HH:mm:ss"));
             smartLock.setSmartDeviceV2(smartDeviceV2);
+            List <SmartLockPassword> smartLockPasswordList = this.fetchSmartLockPassword(lockResponseJSON.getString("uuid"),userId);
+            smartLock.setSmartLockPasswordList(smartLockPasswordList);
 
         }else{
             throw new SmartLockException("第三方接口调用失败");
@@ -425,12 +429,65 @@ public class YunDingSmartLock implements ISmartLock {
             smartDeviceV2.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER_GATEWAY.getCode().toString());
             smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(resJSON.getLong("onoff_time"),"yyyy-MM-dd HH:mm:ss"));
             smartLock.setSmartDeviceV2(smartDeviceV2);
+            List <SmartLockPassword> smartLockPasswordList = this.fetchSmartLockPassword(resJSON.getString("uuid"),userId);
+            smartLock.setSmartLockPasswordList(smartLockPasswordList);
+
         }else{
             throw new SmartLockException("第三方接口调用失败");
 
         }
 
         return lockVOList;
+
+    }
+
+    @Override
+    public List<SmartLockPassword> fetchSmartLockPassword(String uuid,String userId) throws SmartLockException, ParseException {
+        Log.info("根据第三方uuid查询门锁密码列表，uuid:{}",uuid);
+        String url = BASE_URL + "/fetch_passwords";
+        String managerPasswordUrl = BASE_URL + "/get_default_password_plaintext";
+        Map<String, Object> map = new HashMap<>();
+        map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
+        map.put("uuid", uuid);
+        String lockPasswordResult = HttpClientUtil.doGet(url, map);
+        JSONObject resJSON = JSONObject.parseObject(lockPasswordResult);
+        List<SmartLockPassword> smartLockPasswordList = new ArrayList<>();
+        if("0".equals(resJSON.getString("ErrNo"))){
+            JSONObject passwords = resJSON.getJSONObject("passwords");
+            for(Map.Entry<String, Object> entry : passwords.entrySet()){
+                JSONObject password = JSONObject.parseObject(entry.getValue().toString());
+                SmartLockPassword smartLockPassword = new SmartLockPassword();
+                smartLockPassword.setThreeId(password.getString("id"));
+                smartLockPassword.setLock3Id(uuid);
+                smartLockPassword.setName(password.getString("name"));
+                smartLockPassword.setStatus(password.getDouble("status"));
+                smartLockPassword.setPwdType(password.getJSONObject("permission").getLong("status"));
+                //等于2为永久性密码，等于1为时效密码
+                if(smartLockPassword.getPwdType()!=2){
+                    smartLockPassword.setValidTimeStart(DateUtils.longToString(password.getJSONObject("permission").getLong("begin"),"yyyy-MM-dd HH:mm:ss"));
+                    smartLockPassword.setValidTimeEnd(DateUtils.longToString(password.getJSONObject("permission").getLong("begin"),"yyyy-MM-dd HH:mm:ss"));
+
+                }
+                //等于999为管理员密码
+                if(MANAGER_SMART_LOCK_PASSWORD_ID.equals(password.getString("id"))){
+                    String managerPasswordJsonStr = HttpClientUtil.doGet(managerPasswordUrl, map);
+                    JSONObject managerPasswordJson = JSONObject.parseObject(managerPasswordJsonStr);
+                    String passwordStr = managerPasswordJson.getString("password");
+                    smartLockPassword.setPassword(passwordStr);
+                }
+                smartLockPassword.setDescription(password.getString("description"));
+                smartLockPassword.setIsDefault(password.getString("is_default"));
+
+                smartLockPasswordList.add(smartLockPassword);
+
+            }
+
+        }else{
+            throw new SmartLockException("第三方接口调用失败");
+
+        }
+
+        return smartLockPasswordList;
 
     }
 
@@ -445,22 +502,25 @@ public class YunDingSmartLock implements ISmartLock {
     public String searchGataWayInfo(Map<String, Object> params) throws SmartLockException {
         Log.info("根据网关uuid查询网关信息,uuid:{}", params.get("uuid"));
         String url = BASE_URL + "/get_center_info";
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("access_token", params.get("access_token"));
         map.put("uuid", params.get("uuid"));
         String result = HttpClientUtil.doGet(url, map);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(result);
+
         } catch (Exception e) {
             Log.error("第三方json格式解析错误", e);
             throw new SmartLockException("第三方json格式解析错误" + e.getMessage());
+
         }
         String code = resJson.get("ErrNo").toString();
         if (!code.equals("0")) {
             String msg = resJson.get("ErrMsg").toString();
             Log.error("第三方请求失败", msg);
             throw new SmartLockException("第三方请求失败/n" + msg);
+
         }
         YunDingGataWayInfoVO yunDingGataWayInfoVO = YunDingGataWayInfoVO.jsonToObject(resJson);
         return JSONObject.toJSONString(yunDingGataWayInfoVO);
@@ -484,15 +544,18 @@ public class YunDingSmartLock implements ISmartLock {
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(result);
+
         } catch (Exception e) {
             Log.error("第三方json格式解析错误", e);
             throw new SmartLockException("第三方json格式解析错误" + e.getMessage());
+
         }
         String code = resJson.get("ErrNo").toString();
         if (!code.equals("0")) {
             String msg = resJson.get("ErrMsg").toString();
             Log.error("第三方请求失败", msg);
             throw new SmartLockException("第三方请求失败/n" + msg);
+
         }
         YunDingLockInfoVO yunDingLockInfoVO = YunDingLockInfoVO.jsonToObject(resJson);
         return JSONObject.toJSONString(yunDingLockInfoVO);

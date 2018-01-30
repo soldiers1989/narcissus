@@ -2,6 +2,8 @@ package com.ih2ome.sunflower.entity.narcissus;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class SmartLock {
 
@@ -22,5 +24,6 @@ public class SmartLock {
   private String description;
   private String gatewayUuid;
   private SmartDeviceV2 smartDeviceV2;
+  private List<SmartLockPassword> smartLockPasswordList;
 
 }

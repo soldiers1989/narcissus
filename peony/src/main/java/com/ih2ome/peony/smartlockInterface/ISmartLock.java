@@ -3,6 +3,7 @@ package com.ih2ome.peony.smartlockInterface;
 
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.entity.narcissus.SmartLock;
+import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -104,5 +105,13 @@ public interface ISmartLock {
      * @throws SmartLockException
      */
     public List<SmartLock> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException, ParseException;
+
+    /**
+     * 获取门锁密码列表
+     * @param uuid
+     * @return
+     * @throws SmartLockException
+     */
+    public List <SmartLockPassword> fetchSmartLockPassword(String uuid,String userId) throws SmartLockException, ParseException;
 
 }

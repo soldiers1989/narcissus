@@ -7,6 +7,8 @@ import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.guojia.util.GuoJiaSmartLockUtil;
+import com.ih2ome.sunflower.entity.narcissus.SmartLock;
+import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -284,7 +286,12 @@ public class GuoJiaSmartLock implements ISmartLock {
     }
 
     @Override
-    public List<LockVO> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException {
+    public List<SmartLock> searchRoomDeviceInfo(String userId, String thirdRoomId) throws SmartLockException {
+        throw new SmartLockException("该厂商不支持此操作");
+    }
+
+    @Override
+    public List<SmartLockPassword> fetchSmartLockPassword(String uuid,String userId) throws SmartLockException {
         throw new SmartLockException("该厂商不支持此操作");
     }
 
