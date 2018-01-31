@@ -1,5 +1,9 @@
 package com.ih2ome.hardware_service.service.dao;
 
+import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
+import com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2;
+import com.ih2ome.sunflower.entity.narcissus.SmartLock;
+import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import org.apache.ibatis.annotations.Param;
@@ -106,4 +110,41 @@ public interface SmartLockDao {
      * @param publicZoneId
      */
     void clearDevicesByPublicZoneId(@Param("type") String type, @Param("publicZoneId") String publicZoneId, @Param("providerCode") String providerCode);
+
+    /**
+     * 新增智能设备记录
+     *
+     * @param gatewayDevice
+     * @return
+     */
+    void addSmartDevice(SmartDeviceV2 gatewayDevice);
+
+    /**
+     * 新增智能网关记录
+     *
+     * @param smartGatewayV2
+     */
+    void addSmartGateway(SmartGatewayV2 smartGatewayV2);
+
+    /**
+     * 新增智能门锁记录
+     *
+     * @param publicLock
+     */
+    void addSmartLock(SmartLock publicLock);
+
+    /**
+     * 新增设备绑定网关记录
+     *
+     * @param lockDeviceId
+     * @param gatewayDeviceId
+     */
+    void addSmartDeviceBind(@Param("lockDeviceId") String lockDeviceId, @Param("gatewayDeviceId") String gatewayDeviceId);
+
+    /**
+     * 新增门锁密码记录
+     *
+     * @param smartLockPassword
+     */
+    void addSmartLockPassword(SmartLockPassword smartLockPassword);
 }

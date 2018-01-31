@@ -7,8 +7,10 @@ import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.factory.SmartLockOperateFactory;
+import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseCatalogEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
@@ -20,6 +22,8 @@ import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -122,7 +126,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      * 取消房间关联
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor=Exception.class)
     public void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException {
         String type = smartHouseMappingVO.getType();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
@@ -156,7 +160,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @param smartHouseMappingVO
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor=Exception.class)
     public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException {
         //集中式或者分散式类型
         String type = smartHouseMappingVO.getType();
@@ -191,37 +195,122 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
             //清除该房间下的设备信息(内门锁)
             smartLockDao.clearDevicesByRoomId(type, roomId, providerCode);
+            //公共区域之间建立映射。
+            SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+            houseMapping.setH2omeId(publicZoneId);
+            houseMapping.setThreeId(thirdHomeId);
+            houseMapping.setDataType(HouseMappingDataTypeEnum.PUBLICZONE.getCode());
+            //查询该关联关系原先是否存在
+            SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
+            //该记录存在，修改该映射记录
+            if (houseMappingRecord != null) {
+                smartLockDao.updateAssociation(houseMapping);
+            } else {
+                smartLockDao.addAssociation(houseMapping);
+            }
         } else {
             throw new SmartLockException("参数异常");
         }
         //清除该公共区域下的设备信息(外门锁,网关设备)
         smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
 
-        //插入数据----------------------------
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(providerCode);
         ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
         Map<String, Object> map = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
-        List<LockVO> lockVOList = iSmartLock.searchRoomDeviceInfo(userId, thirdRoomId);
-        List<GatewayInfoVO> publicGatewayInfoVOList = (List<GatewayInfoVO>) map.get("gatewayInfoVOList");
-        List<LockVO> publicLockVOList = (List<LockVO>) map.get("lockVOList");
-        //TODO:将设备存进数据库
-        //TODO:lockVOLIst入门锁表关联“房间”
-        //TODO:publicGatewayInfoVOList入网关表关联“公共区域”
-        //TODO:publicLockVOList入门锁表关联“公共区域”
 
+        //获得该房屋下的网关信息
+        List<SmartGatewayV2> publicGatewayList = (List<SmartGatewayV2>) map.get("gatewayInfoVOList");
+        //获得该房屋下的外门锁信息
+        List<SmartLock> publicLockList = (List<SmartLock>) map.get("lockVOList");
+        //将网关信息插入数据库
+        for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
+            SmartDeviceV2 gatewayDevice = smartGatewayV2.getSmartDeviceV2();
+            gatewayDevice.setPublicZoneId(publicZoneId);
+            gatewayDevice.setCreatedBy(userId);
+            gatewayDevice.setHouseCatalog(type);
+            gatewayDevice.setProviderCode(providerCode);
+//            新增设备(网关)记录绑定公共区域
+            smartLockDao.addSmartDevice(gatewayDevice);
+            String gatewayDeviceId = gatewayDevice.getSmartDeviceId();
+            smartGatewayV2.setSmartGatewayId(gatewayDeviceId);
+            //新增网关记录
+            smartLockDao.addSmartGateway(smartGatewayV2);
+        }
+        //将外门锁信息插入数据库
+        for (SmartLock publicLock : publicLockList) {
+            //获取该门锁下的网关uuid
+            String gatewayUuid = publicLock.getGatewayUuid();
+            SmartDeviceV2 publicLockDevice = publicLock.getSmartDeviceV2();
+            publicLockDevice.setPublicZoneId(publicZoneId);
+            publicLockDevice.setCreatedBy(userId);
+            publicLockDevice.setHouseCatalog(type);
+            publicLockDevice.setProviderCode(providerCode);
+            //新增设备(外门锁)记录绑定公共区域
+            smartLockDao.addSmartDevice(publicLockDevice);
+            String lockDeviceId = publicLockDevice.getSmartDeviceId();
+            publicLock.setSmartLockId(lockDeviceId);
+            //新增门锁记录
+            smartLockDao.addSmartLock(publicLock);
+            for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
+                String uuid = smartGatewayV2.getUuid();
+                if (uuid.equals(gatewayUuid)) {
+                    String gatewayDeviceId = smartGatewayV2.getSmartGatewayId();
+                    smartLockDao.addSmartDeviceBind(lockDeviceId, gatewayDeviceId);
+                    break;
+                }
+            }
+            List<SmartLockPassword> smartLockPasswordList = publicLock.getSmartLockPasswordList();
+            for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
+                smartLockPassword.setSmartLockId(lockDeviceId);
+                smartLockPassword.setProviderCode(providerCode);
+                smartLockDao.addSmartLockPassword(smartLockPassword);
+            }
 
-        //--------------------------------------
-
+        }
+        //表明是房间
+        if (!publicZoneId.equals(roomId)) {
+            //获取该房间下的内门锁
+            List<SmartLock> innerLockList = iSmartLock.searchRoomDeviceInfo(userId, thirdRoomId);
+            //将内门锁信息插入数据库
+            for (SmartLock innerLock : innerLockList) {
+                //获取该门锁下的网关uuid
+                String gatewayUuid = innerLock.getGatewayUuid();
+                SmartDeviceV2 innerLockDevice = innerLock.getSmartDeviceV2();
+                innerLockDevice.setRoomId(roomId);
+                innerLockDevice.setCreatedBy(userId);
+                innerLockDevice.setHouseCatalog(type);
+                innerLockDevice.setProviderCode(providerCode);
+                //新增设备(内门锁)记录绑定房间
+                smartLockDao.addSmartDevice(innerLockDevice);
+                String lockDeviceId = innerLockDevice.getSmartDeviceId();
+                innerLock.setSmartLockId(lockDeviceId);
+                //新增门锁记录
+                smartLockDao.addSmartLock(innerLock);
+                for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
+                    String uuid = smartGatewayV2.getUuid();
+                    if (uuid.equals(gatewayUuid)) {
+                        String gatewayDeviceId = smartGatewayV2.getSmartGatewayId();
+                        smartLockDao.addSmartDeviceBind(lockDeviceId, gatewayDeviceId);
+                        break;
+                    }
+                }
+                List<SmartLockPassword> smartLockPasswordList = innerLock.getSmartLockPasswordList();
+                for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
+                    smartLockPassword.setSmartLockId(lockDeviceId);
+                    smartLockPassword.setProviderCode(providerCode);
+                    smartLockDao.addSmartLockPassword(smartLockPassword);
+                }
+            }
+        }
 
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         //查询该关联关系原先是否存在
         SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
         //该记录存在，修改该映射记录
-        if (houseMapping != null) {
+        if (houseMappingRecord != null) {
             smartLockDao.updateAssociation(houseMapping);
         } else {
             smartLockDao.addAssociation(houseMapping);
         }
-
     }
 }
