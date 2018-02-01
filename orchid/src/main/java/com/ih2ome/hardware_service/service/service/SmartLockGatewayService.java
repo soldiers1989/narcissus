@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.sunflower.model.house.SmartLockGatewayModel;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
 
 import java.util.List;
@@ -16,9 +17,22 @@ public interface SmartLockGatewayService {
     /**
      * 根据房源查询网关列表
      * @param homeId
+     * @param type
      * @return
      */
-    List<SmartLockGatewayModel> getSmartLockGatewayList(String homeId);
+    List<SmartLockGatewayAndHouseInfoVO> getSmartLockGatewayList(String homeId, String type);
 
+    /**
+     * 查询已绑定网关的门锁
+     * @param gatewayId
+     * @return
+     */
     SmartLockGatewayHadBindVO getSmartLockHadBindGateway(String gatewayId);
+
+    /**
+     * 查询网关基本信息
+     * @param gatewayId
+     * @return
+     */
+    SmartLockDetailVO getSmartLockGatewayDetailInfo(String gatewayId);
 }

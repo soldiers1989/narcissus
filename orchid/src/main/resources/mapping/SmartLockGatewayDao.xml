@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao">
+    <!--SELECT-->
+
+    <select id="getConcentrateGatewayModelByHomeId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO">
+          SELECT
+            nsgv2.smart_gateway_ID gatewayId,
+            nsdv2.`name` gatewayCode,
+            va.address houseAddress,
+            nsdv2.connection_status connectionState,
+            CONCAT(
+            (
+                    SELECT
+                        count(*)
+                    FROM
+                        narcissus_test.smart_gateway_bind_v2 nsgbv2,
+                        narcissus_test.smart_lock nsl,
+                        narcissus_test.smart_device_v2 nsdv2l
+                    WHERE
+                        nsgbv2.smart_device_ID = nsl.smart_lock_ID
+                    AND nsgbv2.smart_gateway_ID = nsgv2.smart_gateway_ID
+                    AND nsdv2l.smart_device_ID = nsl.smart_lock_ID
+                    AND nsdv2l.connection_status = '1'
+                ),
+                '/',
+                (
+                    SELECT
+                        count(*)
+                    FROM
+                        narcissus_test.smart_gateway_bind_v2 nsgbv2,
+                        narcissus_test.smart_lock nsl
+                    WHERE
+                        nsgbv2.smart_device_ID = nsl.smart_lock_ID
+                    AND nsgbv2.smart_gateway_ID = nsgv2.smart_gateway_ID
+                )
+            ) bindOnlineDeviceCountPercentage
+        FROM
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_gateway_v2 nsgv2,
+            narcissus_test.public_zone npz,
+            volga_test.apartment va
+        WHERE
+            nsgv2.smart_gateway_ID = nsdv2.smart_device_ID
+        AND nsdv2.public_zone_ID = npz.public_zone_ID
+        AND va.id = npz.parent_ID
+        AND npz.data_type = '1'
+        AND va.id = #{homeId}
+
+    </select>
+
+    <select id="getDispersedGatewayModelByHomeId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO">
+        SELECT
+            nsgv2.smart_gateway_ID gatewayId,
+            nsdv2.`name` gatewayCode,
+            ch.address houseAddress,
+            nsdv2.connection_status connectionState,
+            CONCAT(
+                (
+                    SELECT
+                        count(*)
+                    FROM
+                        narcissus_test.smart_gateway_bind_v2 nsgbv2,
+                        narcissus_test.smart_lock nsl,
+                        narcissus_test.smart_device_v2 nsdv2l
+                    WHERE
+                        nsgbv2.smart_device_ID = nsl.smart_lock_ID
+                    AND nsgbv2.smart_gateway_ID = nsgv2.smart_gateway_ID
+                    AND nsdv2l.smart_device_ID = nsl.smart_lock_ID
+                    AND nsdv2l.connection_status = '1'
+                ),
+                '/',
+                (
+                    SELECT
+                        count(*)
+                    FROM
+                        narcissus_test.smart_gateway_bind_v2 nsgbv2,
+                        narcissus_test.smart_lock nsl
+                    WHERE
+                        nsgbv2.smart_device_ID = nsl.smart_lock_ID
+                    AND nsgbv2.smart_gateway_ID = nsgv2.smart_gateway_ID
+                )
+            ) bindOnlineDeviceCountPercentage
+        FROM
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_gateway_v2 nsgv2,
+            narcissus_test.public_zone npz,
+            caspain_test.house ch
+        WHERE
+            nsgv2.smart_gateway_ID = nsdv2.smart_device_ID
+        AND nsdv2.public_zone_ID = npz.public_zone_ID
+        AND ch.id = npz.parent_ID
+        AND npz.data_type = '1'
+        AND ch.id = #{homeId}
+    </select>
+
+    <select id="getSmartLockHadBindGateway" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO">
+            SELECT
+                nsg.smart_gateway_id gatewayId,
+                nsg.uuid gatewayCode,
+                nsg.`name` gatewayName,
+                IFNULL(ch.area,va.`name`) houseName,
+                IFNULL(ch.address,va.address) houseAddress
+            FROM
+                narcissus_test.smart_device_v2 nsdv2,
+                narcissus_test.smart_gateway nsg,
+                caspain_test.house ch,
+                volga_test.apartment va
+            WHERE
+                nsg.smart_lock_ID = nsdv2.smart_device_ID
+            AND nsg.smart_lock_ID=#{gatewayId}
+            AND (
+                nsdv2.house_ID = ch.id
+                OR nsdv2.apartment_ID = va.id
+            )
+    </select>
+
+    <select id="getSmartLockAndRoomListByGatewayId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO">
+        SELECT
+            ntsl.smart_lock_ID smartLockId,
+            IFNULL(cr.`name`,vr.`name`) roomNo,
+            ntsl.power powerRate,
+            nsdv2.connection_status communicationStatus
+        FROM
+            narcissus_test.smart_lock ntsl,
+            narcissus_test.smart_gateway_bind_v2 nsgbv2,
+            narcissus_test.smart_device_v2 nsdv2,
+            caspain_test.room cr,
+            volga_test.room vr
+        WHERE
+            nsgbv2.smart_device_ID = ntsl.smart_lock_ID
+        AND (nsdv2.room_ID = cr.id or nsdv2.room_ID=vr.id)
+        AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
+        AND nsgbv2.smart_gateway_ID = #{gatewayId}
+    </select>
+
+    <select id="getSmartLockGatewayDetailInfo" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
+        SELECT
+            nsgv2.smart_gateway_ID gatewayId,
+            nsdv2.`name` gatewayCode,
+            nsgv2.install_time bindTime,
+            nsdv2.connection_status_update_time updateTime,
+            nsdv2.provider_code provider,
+            nsgv2.versions versionJson
+        FROM
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_gateway_v2 nsgv2
+        WHERE
+            nsdv2.smart_device_ID = nsgv2.smart_gateway_ID
+        AND nsdv2.smart_device_ID = #{gatewayId}
+        AND nsdv2.manage_status='0'
+    </select>
+</mapper>
