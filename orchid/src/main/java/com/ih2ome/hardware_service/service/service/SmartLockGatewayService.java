@@ -3,6 +3,7 @@ package com.ih2ome.hardware_service.service.service;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo;
 
 import java.util.List;
 
@@ -35,4 +36,12 @@ public interface SmartLockGatewayService {
      * @return
      */
     SmartLockDetailVO getSmartLockGatewayDetailInfo(String gatewayId);
+
+    /**
+     * 获取已绑定房源列表
+     * @param type
+     * @param userId
+     * @return
+     */
+    List<SmartLockHadBindHouseVo> getHadBindHouseList(String type, String userId);
 }

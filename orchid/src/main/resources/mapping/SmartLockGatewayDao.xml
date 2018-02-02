@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao">
+
+    <resultMap id="HadBindHouseMap" type="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo" autoMapping="true">
+        <id column="homeId" property="homeId"/>
+        <result property="gatewayId" column="gatewayId"></result>
+        <result property="homeName" column="homeName"></result>
+        <collection property="roomAndPublicZoneVoList" javaType="List"
+                    ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomAndPublicZoneVo" autoMapping="true">
+            <id property="smartLockId" column="smartLockId"></id>
+            <result column="roomNo" property="roomNo"></result>
+            <result property="communicationStatus" column="communicationStatus"></result>
+            <result property="powerRate" column="powerRate"></result>
+        </collection>
+    </resultMap>
+
     <!--SELECT-->
 
     <select id="getConcentrateGatewayModelByHomeId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO">
@@ -103,7 +117,7 @@
                 IFNULL(ch.address,va.address) houseAddress
             FROM
                 narcissus_test.smart_device_v2 nsdv2,
-                narcissus_test.smart_gateway nsg,
+                narcissus_test.smart_gateway_v2 nsg,
                 caspain_test.house ch,
                 volga_test.apartment va
             WHERE
@@ -149,5 +163,123 @@
             nsdv2.smart_device_ID = nsgv2.smart_gateway_ID
         AND nsdv2.smart_device_ID = #{gatewayId}
         AND nsdv2.manage_status='0'
+    </select>
+
+    <select id="getDispersedHadBindHouseList" resultMap="HadBindHouseMap">
+        SELECT
+            va.id AS homeId,
+            nsg.smart_gateway_ID AS gatewayId,
+            va.address AS homeName,
+            lockCon.roomNo AS roomNo,
+            lockCon.smartLockId AS smartLockId,
+            lockCon.communicationStatus AS communicationStatus,
+            lockCon.powerRate AS powerRate
+        FROM
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_gateway_v2 nsg,
+            narcissus_test.public_zone npz,
+            caspain_test.house va,
+            caspain_test.auth_user cau,
+            (
+                (
+                    SELECT
+                        "公共区域" roomNo,
+                        nslpublic.smart_lock_ID smartLockId,
+                        nsdv2public.connection_status communicationStatus,
+                        nsdv2public.work_status powerRate,
+                        npzpublic.parent_ID parentId
+                    FROM
+                        narcissus_test.public_zone npzpublic,
+                        narcissus_test.smart_lock nslpublic,
+                        narcissus_test.smart_device_v2 nsdv2public
+                    WHERE
+                        nslpublic.smart_lock_ID = nsdv2public.smart_device_ID
+                    AND nsdv2public.public_zone_ID = npzpublic.public_zone_ID
+                    AND npzpublic.data_type = '1'
+                )
+                UNION
+                    (
+                        SELECT
+                            nslprivate.smart_lock_ID smartLockId,
+                            vr.`name` roomNo,
+                            nsdv2private.connection_status communicationStatus,
+                            nsdv2private.work_status powerRate,
+                            vr.apartment_id parentId
+                        FROM
+                            narcissus_test.smart_lock nslprivate,
+                            narcissus_test.smart_device_v2 nsdv2private,
+                            volga_test.room vr
+                        WHERE
+                            nslprivate.smart_lock_ID = nsdv2private.smart_device_ID
+                        AND nsdv2private.room_ID = vr.id
+                    )
+            ) lockCon
+        WHERE
+            nsdv2.smart_device_ID = nsg.smart_gateway_ID
+        AND nsdv2.public_zone_ID = npz.public_zone_ID
+        AND npz.parent_ID = va.id
+        AND npz.data_type = '1'
+        AND lockCon.parentId = va.id
+        AND cau.id = va.created_by_id
+        AND cau.id = #{userId}
+    </select>
+
+    <select id="getConcentrateHadBindHouseList" resultMap="HadBindHouseMap">
+         SELECT
+            va.id AS homeId,
+            nsg.smart_gateway_ID AS gatewayId,
+            va.address AS homeName,
+            lockCon.roomNo AS roomNo,
+            lockCon.smartLockId AS smartLockId,
+            lockCon.communicationStatus AS communicationStatus,
+            lockCon.powerRate AS powerRate
+        FROM
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_gateway_v2 nsg,
+            narcissus_test.public_zone npz,
+            volga_test.apartment va,
+            caspain_test.auth_user cau,
+            (
+                (
+                    SELECT
+                        "公共区域" roomNo,
+                        nslpublic.smart_lock_ID smartLockId,
+                        nsdv2public.connection_status communicationStatus,
+                        nsdv2public.work_status powerRate,
+                        npzpublic.parent_ID parentId
+                    FROM
+                        narcissus_test.public_zone npzpublic,
+                        narcissus_test.smart_lock nslpublic,
+                        narcissus_test.smart_device_v2 nsdv2public
+                    WHERE
+                        nslpublic.smart_lock_ID = nsdv2public.smart_device_ID
+                    AND nsdv2public.public_zone_ID = npzpublic.public_zone_ID
+                    AND npzpublic.data_type = '1'
+                )
+                UNION
+                    (
+                        SELECT
+                            nslprivate.smart_lock_ID smartLockId,
+                            vr.`name` roomNo,
+                            nsdv2private.connection_status communicationStatus,
+                            nsdv2private.work_status powerRate,
+                            vr.apartment_id parentId
+                        FROM
+                            narcissus_test.smart_lock nslprivate,
+                            narcissus_test.smart_device_v2 nsdv2private,
+                            volga_test.room vr
+                        WHERE
+                            nslprivate.smart_lock_ID = nsdv2private.smart_device_ID
+                        AND nsdv2private.room_ID = vr.id
+                    )
+            ) lockCon
+        WHERE
+            nsdv2.smart_device_ID = nsg.smart_gateway_ID
+        AND nsdv2.public_zone_ID = npz.public_zone_ID
+        AND npz.parent_ID = va.id
+        AND npz.data_type = '1'
+        AND lockCon.parentId = va.id
+        AND cau.id = va.created_by
+        AND cau.id = #{userId}
     </select>
 </mapper>

@@ -11,6 +11,7 @@ import com.ih2ome.sunflower.model.house.SmartLockGatewayModel;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,27 @@ public class SmartLockGatewayController extends BaseController{
         }
         SmartLockDetailVO smartLockDetailVO = smartLockGatewayService.getSmartLockGatewayDetailInfo(gatewayId);
         String result = structureSuccessResponseVO((JSONObject) JSON.toJSON(smartLockDetailVO), new Date().toString(), "");
+        return result;
+
+    }
+
+    @RequestMapping(value = "/search/getHadBindHouseList", method = RequestMethod.POST, produces = {"application/json"})
+    public String getHadBindHouseList(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        String type = dt.getString("type");
+        String userId = dt.getString("id");
+        if(StringUtils.isEmpty(type)){
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"type为空");
+
+        }
+        if(StringUtils.isEmpty(userId)){
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"userId为空");
+
+        }
+        List<SmartLockHadBindHouseVo> smartLockGatewayServiceHadBindHouseList = smartLockGatewayService.getHadBindHouseList(type,userId);
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("smartLockGatewayServiceHadBindHouseList", smartLockGatewayServiceHadBindHouseList);
+        String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
 
     }

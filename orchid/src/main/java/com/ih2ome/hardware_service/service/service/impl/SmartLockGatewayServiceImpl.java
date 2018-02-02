@@ -4,10 +4,7 @@ import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -69,5 +66,17 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
         }
         return null;
 
+    }
+
+    @Override
+    public List<SmartLockHadBindHouseVo> getHadBindHouseList(String type, String userId) {
+        if(StringUtils.isNotBlank(userId)&&StringUtils.isNotBlank(type)){
+            if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+                return smartLockGatewayDao.getDispersedHadBindHouseList(userId);
+            }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+                return smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
+            }
+        }
+        return null;
     }
 }

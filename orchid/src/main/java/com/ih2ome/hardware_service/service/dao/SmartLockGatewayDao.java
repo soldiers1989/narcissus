@@ -1,9 +1,6 @@
 package com.ih2ome.hardware_service.service.dao;
 
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -52,4 +49,18 @@ public interface SmartLockGatewayDao {
      * @return
      */
     SmartLockDetailVO getSmartLockGatewayDetailInfo(String gatewayId);
+
+    /**
+     * 获取分散式已绑定房源列表
+     * @param userId
+     * @return
+     */
+    List<SmartLockHadBindHouseVo> getDispersedHadBindHouseList(String userId);
+
+    /**
+     * 获取集中式已绑定房源列表
+     * @param userId
+     * @return
+     */
+    List<SmartLockHadBindHouseVo> getConcentrateHadBindHouseList(String userId);
 }
