@@ -162,6 +162,7 @@ public class SmartLockServiceImpl implements SmartLockService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException {
+        ///// 1.1 获取数据
         //集中式或者分散式类型
         String type = smartHouseMappingVO.getType();
         //用户id
@@ -177,11 +178,14 @@ public class SmartLockServiceImpl implements SmartLockService {
         //获得厂商
         String providerCode = smartHouseMappingVO.getFactoryType();
         String publicZoneId = null;
+
+        //1.2 获取公区
         //判断是否是公共区域
         if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
             publicZoneId = roomId;
-            //判断是否是房间
-        } else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
+        }
+        //判断是否是房间
+        else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
             //判断是分散式
             if (HouseStyleEnum.DISPERSED.getCode().equals(type)) {
                 //查询该房间所属房源的公共区域
@@ -193,6 +197,13 @@ public class SmartLockServiceImpl implements SmartLockService {
             } else {
                 throw new SmartLockException("参数异常");
             }
+        } else {
+            throw new SmartLockException("参数异常");
+        }
+
+        //2 清除该房间下的所有设备信息和该房间所在房源的公共区域的设备信息
+        //2.1 清除该非公共区域下的设备信息(外门锁,网关设备)
+        if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
             //清除该房间下的设备信息(内门锁)
             smartLockDao.clearDevicesByRoomId(type, roomId, providerCode);
             //公共区域之间建立映射。
@@ -208,21 +219,23 @@ public class SmartLockServiceImpl implements SmartLockService {
             } else {
                 smartLockDao.addAssociation(houseMapping);
             }
-        } else {
-            throw new SmartLockException("参数异常");
         }
-        //清除该公共区域下的设备信息(外门锁,网关设备)
+        //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
         smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
 
+        //3 根据厂商建立关联
+        //3.1 获取云丁相关信息
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(providerCode);
         ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
-        Map<String, Object> map = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
+        Map<String, Object> houseDeviceInfoMap = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
 
-        //获得该房屋下的网关信息
-        List<SmartGatewayV2> publicGatewayList = (List<SmartGatewayV2>) map.get("gatewayInfoVOList");
-        //获得该房屋下的外门锁信息
-        List<SmartLock> publicLockList = (List<SmartLock>) map.get("lockVOList");
-        //将网关信息插入数据库
+        //获得云丁该房屋下的网关信息
+        List<SmartGatewayV2> publicGatewayList = (List<SmartGatewayV2>) houseDeviceInfoMap.get("gatewayInfoVOList");
+        //获得云丁该房屋下的外门锁信息
+        List<SmartLock> publicLockList = (List<SmartLock>) houseDeviceInfoMap.get("lockVOList");
+
+        //3.2 房间下的设备关联
+        //3.2.1 将网关信息插入数据库
         for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
             SmartDeviceV2 gatewayDevice = smartGatewayV2.getSmartDeviceV2();
             gatewayDevice.setPublicZoneId(publicZoneId);
@@ -236,7 +249,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             //新增网关记录
             smartLockDao.addSmartGateway(smartGatewayV2);
         }
-        //将外门锁信息插入数据库
+        //3.2.2 将外门锁信息插入数据库
         for (SmartLock publicLock : publicLockList) {
             //获取该门锁下的网关uuid
             String gatewayUuid = publicLock.getGatewayUuid();
@@ -267,7 +280,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
 
         }
-        //表明是房间
+        //3.2.3 表明是房间
         if (!publicZoneId.equals(roomId)) {
             //获取该房间下的内门锁
             List<SmartLock> innerLockList = iSmartLock.searchRoomDeviceInfo(userId, thirdRoomId);
@@ -303,6 +316,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
         }
 
+        //3.3 房间关联
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         //查询该关联关系原先是否存在
         SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
