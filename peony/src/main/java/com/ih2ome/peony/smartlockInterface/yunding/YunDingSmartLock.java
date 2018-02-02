@@ -57,17 +57,17 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String addLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
-        YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
-        Log.info("添加门锁密码,密码信息:{}", yunDingLockPasswordVO);
+        Log.info("添加门锁密码,密码信息:{}", lockPassword);
         String url = BASE_URL + "/add_password";
         JSONObject pwdJson = new JSONObject();
         pwdJson.put("access_token", YunDingSmartLockUtil.getToken());
-        pwdJson.put("uuid", yunDingLockPasswordVO.getUuid());
-        pwdJson.put("phonenumber", yunDingLockPasswordVO.getPhonenumber());
-        pwdJson.put("is_default", yunDingLockPasswordVO.getIsDefault());
-        pwdJson.put("password", yunDingLockPasswordVO.getPassword());
-        pwdJson.put("permission_begin", yunDingLockPasswordVO.getPermissionBegin());
-        pwdJson.put("permission_end", yunDingLockPasswordVO.getPermissionEnd());
+        pwdJson.put("uuid", lockPassword.getUuid());
+        pwdJson.put("phonenumber", lockPassword.getMobile());
+        pwdJson.put("is_default", lockPassword.getIsDefault());
+        pwdJson.put("password", lockPassword.getPassword());
+        pwdJson.put("permission_begin", DateUtils.stringToLong(lockPassword.getEnableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        pwdJson.put("permission_end", DateUtils.stringToLong(lockPassword.getDisableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        pwdJson.put("name", lockPassword.getName());
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
@@ -340,7 +340,7 @@ public class YunDingSmartLock implements ISmartLock {
                 smartGatewayV2.setMac(center.getString("mac"));
                 smartGatewayV2.setModel(center.getString("model"));
                 smartGatewayV2.setModelName(center.getString("model_name"));
-                smartGatewayV2.setInstallTime(DateUtils.longToString(center.getLong("bind_time")*1000L, "yyyy-MM-dd HH:mm:ss"));
+                smartGatewayV2.setInstallTime(DateUtils.longToString(center.getLong("bind_time") * 1000L, "yyyy-MM-dd HH:mm:ss"));
                 smartGatewayV2.setBrand(center.getString("brand"));
                 smartGatewayV2.setVersions(center.getString("versions"));
                 smartDeviceV2.setBrand(center.getString("brand"));
@@ -348,7 +348,7 @@ public class YunDingSmartLock implements ISmartLock {
                 smartDeviceV2.setConnectionStatus(center.getString("onoff_line"));
                 smartDeviceV2.setSmartDeviceType(SmartDeviceEnum.SMART_DEVICE_GATEWAY.getCode());
                 smartDeviceV2.setThreeId(center.getString("uuid"));
-                smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(center.getLong("onoff_time")*1000L, "yyyy-MM-dd HH:mm:ss"));
+                smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(center.getLong("onoff_time") * 1000L, "yyyy-MM-dd HH:mm:ss"));
                 smartGatewayV2.setSmartDeviceV2(smartDeviceV2);
                 gatewayInfoVOList.add(smartGatewayV2);
 
@@ -366,11 +366,11 @@ public class YunDingSmartLock implements ISmartLock {
             smartLock.setModel(lockResponseJSON.getString("model"));
             smartLock.setModelName(lockResponseJSON.getString("model_name"));
             smartLock.setPower(lockResponseJSON.getString("power"));
-            smartLock.setPowerRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("power_refreshtime")*1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartLock.setPowerRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("power_refreshtime") * 1000L, "yyyy-MM-dd HH:mm:ss"));
             smartLock.setOnoffTime(lockResponseJSON.getString("onoff_line"));
             smartLock.setLqi(lockResponseJSON.getString("lqi"));
-            smartLock.setLqiRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("lqi_refreshtime")*1000L, "yyyy-MM-dd HH:mm:ss"));
-            smartLock.setBindTime(DateUtils.longToString(lockResponseJSON.getLong("bind_time")*1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartLock.setLqiRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("lqi_refreshtime") * 1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartLock.setBindTime(DateUtils.longToString(lockResponseJSON.getLong("bind_time") * 1000L, "yyyy-MM-dd HH:mm:ss"));
             smartLock.setVersions(lockResponseJSON.getString("versions"));
             smartLock.setGatewayUuid(lockResponseJSON.getString("center_uuid"));
             smartDeviceV2.setBrand(lockResponseJSON.getString("brand"));
@@ -378,7 +378,7 @@ public class YunDingSmartLock implements ISmartLock {
             smartDeviceV2.setThreeId(lockResponseJSON.getString("uuid"));
             smartDeviceV2.setConnectionStatus(lockResponseJSON.getString("onoff_line"));
             smartDeviceV2.setSmartDeviceType(SmartDeviceEnum.SMART_DEVICE_LOCK.getCode());
-            smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(lockResponseJSON.getLong("onoff_time")*1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(lockResponseJSON.getLong("onoff_time") * 1000L, "yyyy-MM-dd HH:mm:ss"));
             smartLock.setSmartDeviceV2(smartDeviceV2);
             List<SmartLockPassword> smartLockPasswordList = this.fetchSmartLockPassword(lockResponseJSON.getString("uuid"), userId);
             smartLock.setSmartLockPasswordList(smartLockPasswordList);
@@ -420,11 +420,11 @@ public class YunDingSmartLock implements ISmartLock {
             smartLock.setModel(resJSON.getString("model"));
             smartLock.setModelName(resJSON.getString("model_name"));
             smartLock.setPower(resJSON.getString("power"));
-            smartLock.setPowerRefreshtime(DateUtils.longToString(resJSON.getLong("power_refreshtime")*1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartLock.setPowerRefreshtime(DateUtils.longToString(resJSON.getLong("power_refreshtime") * 1000L, "yyyy-MM-dd HH:mm:ss"));
             smartLock.setOnoffTime(resJSON.getString("onoff_line"));
             smartLock.setLqi(resJSON.getString("lqi"));
-            smartLock.setLqiRefreshtime(DateUtils.longToString(resJSON.getLong("lqi_refreshtime")*1000L, "yyyy-MM-dd HH:mm:ss"));
-            smartLock.setBindTime(DateUtils.longToString(resJSON.getLong("bind_time")*1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartLock.setLqiRefreshtime(DateUtils.longToString(resJSON.getLong("lqi_refreshtime") * 1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartLock.setBindTime(DateUtils.longToString(resJSON.getLong("bind_time") * 1000L, "yyyy-MM-dd HH:mm:ss"));
             smartLock.setVersions(resJSON.getString("versions"));
             smartLock.setGatewayUuid(resJSON.getString("center_uuid"));
             smartDeviceV2.setBrand(resJSON.getString("brand"));
@@ -432,7 +432,7 @@ public class YunDingSmartLock implements ISmartLock {
             smartDeviceV2.setThreeId(resJSON.getString("uuid"));
             smartDeviceV2.setConnectionStatus(resJSON.getString("onoff_line"));
             smartDeviceV2.setSmartDeviceType(SmartDeviceEnum.SMART_DEVICE_LOCK.getCode());
-            smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(resJSON.getLong("onoff_time")*1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartDeviceV2.setConnectionStatusUpdateTime(DateUtils.longToString(resJSON.getLong("onoff_time") * 1000L, "yyyy-MM-dd HH:mm:ss"));
             smartLock.setSmartDeviceV2(smartDeviceV2);
             String lockUuid = resJSON.getString("uuid");
             List<SmartLockPassword> smartLockPasswordList = null;
@@ -476,8 +476,8 @@ public class YunDingSmartLock implements ISmartLock {
                 smartLockPassword.setSendToMobile(password.getString("send_to"));
                 //等于1为永久性密码，等于2为时效密码
                 if (smartLockPassword.getPwdType().equals("2")) {
-                    smartLockPassword.setValidTimeStart(DateUtils.longToString(password.getJSONObject("permission").getLong("begin")*1000L, "yyyy-MM-dd HH:mm:ss"));
-                    smartLockPassword.setValidTimeEnd(DateUtils.longToString(password.getJSONObject("permission").getLong("begin")*1000L, "yyyy-MM-dd HH:mm:ss"));
+                    smartLockPassword.setValidTimeStart(DateUtils.longToString(password.getJSONObject("permission").getLong("begin") * 1000L, "yyyy-MM-dd HH:mm:ss"));
+                    smartLockPassword.setValidTimeEnd(DateUtils.longToString(password.getJSONObject("permission").getLong("begin") * 1000L, "yyyy-MM-dd HH:mm:ss"));
                 }
                 //等于999为管理员密码
                 if (MANAGER_SMART_LOCK_PASSWORD_ID.equals(password.getString("id"))) {

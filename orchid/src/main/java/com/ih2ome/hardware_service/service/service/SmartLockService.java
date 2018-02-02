@@ -1,8 +1,10 @@
 package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 
 import java.text.ParseException;
 import java.util.List;
@@ -33,4 +35,19 @@ public interface SmartLockService {
      * @param smartHouseMappingVO
      */
     void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException;
+
+    /**
+     * 根据门锁id查询门锁密码列表
+     *
+     * @param lockId
+     * @return
+     */
+    List<SmartLockPassword> findPasswordList(String lockId) throws SmartLockException;
+
+    /**
+     * 新增门锁密码
+     *
+     * @param
+     */
+    void addLockPassword(LockPasswordVo passwordVo) throws SmartLockException, IllegalAccessException, InstantiationException, ClassNotFoundException, ParseException;
 }

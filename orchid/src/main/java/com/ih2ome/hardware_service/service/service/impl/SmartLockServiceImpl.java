@@ -10,11 +10,10 @@ import com.ih2ome.peony.smartlockInterface.factory.SmartLockOperateFactory;
 import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseCatalogEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.*;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
@@ -108,6 +107,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                             RoomVO roomVO = iterator.next();
                             if (thirdRoomId.equals(roomVO.getThirdRoomId())) {
                                 localRoom.setThirdRoomName(roomVO.getThirdRoomName());
+                                localHomeVO.setThirdHomeId(thirdHomeVO.getHomeId());
                                 iterator.remove();
                                 break;
                             }
@@ -126,7 +126,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      * 取消房间关联
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException {
         String type = smartHouseMappingVO.getType();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
@@ -160,7 +160,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @param smartHouseMappingVO
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException {
         //集中式或者分散式类型
         String type = smartHouseMappingVO.getType();
@@ -313,4 +313,54 @@ public class SmartLockServiceImpl implements SmartLockService {
             smartLockDao.addAssociation(houseMapping);
         }
     }
+
+    /**
+     * 根据门锁id查询密码列表
+     *
+     * @param lockId
+     * @return
+     * @throws SmartLockException
+     */
+    @Override
+    public List<SmartLockPassword> findPasswordList(String lockId) throws SmartLockException {
+        List<SmartLockPassword> passwords = smartLockDao.findPasswordListByLockId(lockId);
+        return passwords;
+    }
+
+    /**
+     * 新增门锁密码
+     *
+     * @throws SmartLockException
+     */
+    @Override
+    public void addLockPassword(LockPasswordVo lockPasswordVo) throws SmartLockException, IllegalAccessException, InstantiationException, ClassNotFoundException, ParseException {
+        //获取门锁id
+        String smartLockId = lockPasswordVo.getSerialNum();
+        //根据门锁Id(即设备id)查询第三方门锁uuid
+        SmartDeviceV2 smartDeviceV2 = smartLockDao.findThirdLockUuid(smartLockId);
+        String thirdLockUuid = smartDeviceV2.getThreeId();
+        String provideCode = smartDeviceV2.getProviderCode();
+        ISmartLock smartLock = SmartLockOperateFactory.createSmartLock(provideCode);
+        lockPasswordVo.setUuid(thirdLockUuid);
+        String digitPwdType = lockPasswordVo.getDigitPwdType();
+        String pwdTypeName = SmartLockPwdTypeEnum.getByCode(digitPwdType);
+        lockPasswordVo.setName(pwdTypeName);
+        if (SmartLockPwdTypeEnum.MANAGER_PASSWORD.equals(digitPwdType)) {
+            lockPasswordVo.setIsDefault(SmartLockIsDefaultEnum.PASSWORD_ISDEFAULT.getCode());
+        } else {
+            lockPasswordVo.setIsDefault(SmartLockIsDefaultEnum.PASSWORD_ISNOTDEFAULT.getCode());
+        }
+        String result = smartLock.addLockPassword(lockPasswordVo);
+        JSONObject resJson = JSONObject.parseObject(result);
+        String errNo = resJson.getString("ErrNo");
+        if (!errNo.equals("0")) {
+            throw new SmartLockException("第三方密码添加失败");
+        }
+        //第三方面密码生成的id编号
+        String passwordId = resJson.getString("id");
+        lockPasswordVo.setPwdNo(passwordId);
+
+    }
+
+
 }

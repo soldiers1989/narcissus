@@ -147,4 +147,20 @@ public interface SmartLockDao {
      * @param smartLockPassword
      */
     void addSmartLockPassword(SmartLockPassword smartLockPassword);
+
+    /**
+     * 根据门锁Id查询密码列表
+     *
+     * @param lockId
+     * @return
+     */
+    List<SmartLockPassword> findPasswordListByLockId(@Param("lockId") String lockId);
+
+    /**
+     * 根据门锁id查询对应第三方门锁的uuid和厂商
+     *
+     * @param smartLockId
+     * @return
+     */
+    SmartDeviceV2 findThirdLockUuid(@Param("smartLockId") String smartLockId);
 }

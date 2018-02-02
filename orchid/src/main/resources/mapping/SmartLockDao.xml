@@ -135,6 +135,8 @@
             send_to_mobile
         )VALUES(#{smartLockId},#{providerCode},#{threeId},#{lock3Id},NOW(),#{name},#{status},#{pwdType},#{validTimeStart},#{validTimeEnd},#{password},#{description},#{isDefault},#{sendToMobile})
     </insert>
+    <!--新增门锁密码-->
+
 
     <!--update-->
     <!--修改房间关联记录-->
@@ -361,5 +363,46 @@
         LEFT JOIN `volga_test`.apartment vta ON vtr.apartment_id = vta.id
         LEFT JOIN narcissus_test.public_zone npz ON vta.id=npz.parent_ID
         WHERE npz.data_type=1 AND vtr.id=#{roomId}
+    </select>
+
+    <!--根据门锁Id查询密码列表-->
+    <select id="findPasswordListByLockId" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartLockPassword">
+        SELECT
+        smart_lock_password_ID AS smartLockPasswordId,
+        name,
+        pwd_user_name AS pwdUserName,
+        CASE STATUS
+        WHEN '1' THEN
+            '初始状态'
+        WHEN '2' THEN
+            '已生效'
+        WHEN '3' THEN
+            '将生效'
+        WHEN '4' THEN
+            '已过期'
+        WHEN '5' THEN
+            '已冻结'
+        END status,
+        password,
+        valid_time_start AS validTimeStart,
+        valid_time_end AS validTimeEnd,
+        description
+        FROM
+            narcissus_test.smart_lock_password
+        WHERE
+        smart_lock_ID = #{lockId};
+    </select>
+
+    <!--根据门锁Id查询第三方门锁的uuid-->
+    <select id="findThirdLockUuid" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2">
+        SELECT
+            threeID,
+            provider_code as providerCode
+        FROM
+            narcissus_test.smart_device_v2
+        WHERE
+            smart_device_ID = #{smartLockId}
     </select>
 </mapper>
