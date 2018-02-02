@@ -6,11 +6,14 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.convert.RedisData;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -129,5 +132,86 @@ public class SmartLockController extends BaseController {
         String result = structureSuccessResponseVO(null, new Date().toString(), "关联成功");
         return result;
     }
+
+    /**
+     * 密码列表
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/password/list", method = RequestMethod.POST, produces = {"application/json"})
+    public String passwordManageList(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        //获取门锁Id
+        String lockId = dt.getString("serial_id");
+        List<SmartLockPassword> passwordList = null;
+        try {
+            passwordList = smartLockService.findPasswordList(lockId);
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
+            return result;
+        }
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("passwordList", passwordList);
+        String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+        return result;
+    }
+
+    /**
+     * 新增密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/password/add", method = RequestMethod.POST, produces = {"application/json"})
+    public String addPassword(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String serial_id = resData.getString("serial_id");
+        String password = resData.getString("password");
+        String digit_pwd_type = resData.getString("digit_pwd_type");
+        String user_name = resData.getString("user_name");
+        String mobile = resData.getString("mobile");
+        String enable_time = resData.getString("enable_time");
+        String disable_time = resData.getString("disable_time");
+        String remark = resData.getString("remark");
+        LockPasswordVo passwordVo = new LockPasswordVo();
+        passwordVo.setSerialNum(serial_id);
+        passwordVo.setPassword(password);
+        passwordVo.setDigitPwdType(digit_pwd_type);
+        passwordVo.setUserName(user_name);
+        passwordVo.setMobile(mobile);
+        passwordVo.setUserName(user_name);
+        passwordVo.setEnableTime(enable_time);
+        passwordVo.setDisableTime(disable_time);
+        passwordVo.setRemark(remark);
+        passwordVo.setUserId(resData.getString("userId"));
+        try {
+            smartLockService.addLockPassword(passwordVo);
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        } catch (ParseException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "新增失败");
+            return result;
+        }
+        String result = structureSuccessResponseVO(null, new Date().toString(), "新增成功");
+        return result;
+    }
+
 
 }

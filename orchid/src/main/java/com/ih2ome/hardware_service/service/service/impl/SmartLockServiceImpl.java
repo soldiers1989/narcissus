@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
@@ -10,20 +10,15 @@ import com.ih2ome.peony.smartlockInterface.factory.SmartLockOperateFactory;
 import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseCatalogEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseMappingDataTypeEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.*;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -108,6 +103,8 @@ public class SmartLockServiceImpl implements SmartLockService {
                             RoomVO roomVO = iterator.next();
                             if (thirdRoomId.equals(roomVO.getThirdRoomId())) {
                                 localRoom.setThirdRoomName(roomVO.getThirdRoomName());
+                                localHomeVO.setThirdHomeId(thirdHomeVO.getHomeId());
+                                thirdHomeVO.setLocalHomeId(localHomeVO.getHomeId());
                                 iterator.remove();
                                 break;
                             }
@@ -126,7 +123,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      * 取消房间关联
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void cancelAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException {
         String type = smartHouseMappingVO.getType();
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
@@ -160,8 +157,9 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @param smartHouseMappingVO
      */
     @Override
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException {
+        ///// 1.1 获取数据
         //集中式或者分散式类型
         String type = smartHouseMappingVO.getType();
         //用户id
@@ -177,11 +175,14 @@ public class SmartLockServiceImpl implements SmartLockService {
         //获得厂商
         String providerCode = smartHouseMappingVO.getFactoryType();
         String publicZoneId = null;
+
+        //1.2 获取公区
         //判断是否是公共区域
         if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
             publicZoneId = roomId;
-            //判断是否是房间
-        } else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
+        }
+        //判断是否是房间
+        else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
             //判断是分散式
             if (HouseStyleEnum.DISPERSED.getCode().equals(type)) {
                 //查询该房间所属房源的公共区域
@@ -193,6 +194,13 @@ public class SmartLockServiceImpl implements SmartLockService {
             } else {
                 throw new SmartLockException("参数异常");
             }
+        } else {
+            throw new SmartLockException("参数异常");
+        }
+
+        //2 清除该房间下的所有设备信息和该房间所在房源的公共区域的设备信息
+        //2.1 清除该非公共区域下的设备信息(外门锁,网关设备)
+        if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
             //清除该房间下的设备信息(内门锁)
             smartLockDao.clearDevicesByRoomId(type, roomId, providerCode);
             //公共区域之间建立映射。
@@ -208,21 +216,23 @@ public class SmartLockServiceImpl implements SmartLockService {
             } else {
                 smartLockDao.addAssociation(houseMapping);
             }
-        } else {
-            throw new SmartLockException("参数异常");
         }
-        //清除该公共区域下的设备信息(外门锁,网关设备)
+        //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
         smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
 
+        //3 根据厂商建立关联
+        //3.1 获取云丁相关信息
         SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(providerCode);
         ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
-        Map<String, Object> map = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
+        Map<String, Object> houseDeviceInfoMap = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
 
-        //获得该房屋下的网关信息
-        List<SmartGatewayV2> publicGatewayList = (List<SmartGatewayV2>) map.get("gatewayInfoVOList");
-        //获得该房屋下的外门锁信息
-        List<SmartLock> publicLockList = (List<SmartLock>) map.get("lockVOList");
-        //将网关信息插入数据库
+        //获得云丁该房屋下的网关信息
+        List<SmartGatewayV2> publicGatewayList = (List<SmartGatewayV2>) houseDeviceInfoMap.get("gatewayInfoVOList");
+        //获得云丁该房屋下的外门锁信息
+        List<SmartLock> publicLockList = (List<SmartLock>) houseDeviceInfoMap.get("lockVOList");
+
+        //3.2 房间下的设备关联
+        //3.2.1 将网关信息插入数据库
         for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
             SmartDeviceV2 gatewayDevice = smartGatewayV2.getSmartDeviceV2();
             gatewayDevice.setPublicZoneId(publicZoneId);
@@ -236,7 +246,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             //新增网关记录
             smartLockDao.addSmartGateway(smartGatewayV2);
         }
-        //将外门锁信息插入数据库
+        //3.2.2 将外门锁信息插入数据库
         for (SmartLock publicLock : publicLockList) {
             //获取该门锁下的网关uuid
             String gatewayUuid = publicLock.getGatewayUuid();
@@ -267,7 +277,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
 
         }
-        //表明是房间
+        //3.2.3 表明是房间
         if (!publicZoneId.equals(roomId)) {
             //获取该房间下的内门锁
             List<SmartLock> innerLockList = iSmartLock.searchRoomDeviceInfo(userId, thirdRoomId);
@@ -303,6 +313,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
         }
 
+        //3.3 房间关联
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         //查询该关联关系原先是否存在
         SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
@@ -313,4 +324,75 @@ public class SmartLockServiceImpl implements SmartLockService {
             smartLockDao.addAssociation(houseMapping);
         }
     }
+
+    /**
+     * 根据门锁id查询密码列表
+     *
+     * @param lockId
+     * @return
+     * @throws SmartLockException
+     */
+    @Override
+    public List<SmartLockPassword> findPasswordList(String lockId) throws SmartLockException {
+        List<SmartLockPassword> passwords = smartLockDao.findPasswordListByLockId(lockId);
+        return passwords;
+    }
+
+    /**
+     * 新增门锁密码
+     *
+     * @throws SmartLockException
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addLockPassword(LockPasswordVo lockPasswordVo) throws SmartLockException, IllegalAccessException, InstantiationException, ClassNotFoundException, ParseException {
+        //获取门锁id
+        String smartLockId = lockPasswordVo.getSerialNum();
+        //根据门锁Id(即设备id)查询第三方门锁uuid
+        SmartDeviceV2 smartDeviceV2 = smartLockDao.findThirdLockUuid(smartLockId);
+        String thirdLockUuid = smartDeviceV2.getThreeId();
+        String provideCode = smartDeviceV2.getProviderCode();
+        ISmartLock smartLock = SmartLockOperateFactory.createSmartLock(provideCode);
+        lockPasswordVo.setUuid(thirdLockUuid);
+        String digitPwdType = lockPasswordVo.getDigitPwdType();
+        String pwdTypeName = SmartLockPwdTypeEnum.getByCode(digitPwdType);
+        lockPasswordVo.setName(pwdTypeName);
+        if (SmartLockPwdTypeEnum.MANAGER_PASSWORD.getCode().equals(digitPwdType)) {
+            lockPasswordVo.setIsDefault(SmartLockPasswordIsDefaultEnum.PASSWORD_ISDEFAULT.getCode());
+            lockPasswordVo.setPwdType(SmartLockPasswordValidTypeEnum.PASSWORD_FOREVER.getCode());
+            long currentTime = System.currentTimeMillis();
+            lockPasswordVo.setEnableTime(DateUtils.longToString(currentTime, "yyyy-MM-dd HH:mm:ss"));
+            lockPasswordVo.setDisableTime("2060-12-31 00:00:00");
+        } else {
+            lockPasswordVo.setIsDefault(SmartLockPasswordIsDefaultEnum.PASSWORD_ISNOTDEFAULT.getCode());
+            lockPasswordVo.setPwdType(SmartLockPasswordValidTypeEnum.PASSWORD_TIMEVALID.getCode());
+        }
+        String result = smartLock.addLockPassword(lockPasswordVo);
+        JSONObject resJson = JSONObject.parseObject(result);
+        String errNo = resJson.getString("ErrNo");
+        if (!errNo.equals("0")) {
+            throw new SmartLockException("第三方密码添加失败");
+        }
+        //第三方密码生成的id编号
+        lockPasswordVo.setProvideCode(provideCode);
+        lockPasswordVo.setStatus(SmartLockPasswordStatusEnum.PASSWORD_START.getCode());
+        String passwordId = resJson.getString("id");
+        lockPasswordVo.setPwdNo(passwordId);
+        if ("999".equals(passwordId)) {
+            String smartLockPasswordId = smartLockDao.findLockManagePassword(smartLockId, passwordId);
+            //判断该管理密码在数据库中是否存在
+            if (smartLockPasswordId != null) {
+                //存在则修改
+                smartLockDao.updateLockPassword(lockPasswordVo);
+            } //不存在则创建
+            else {
+                smartLockDao.addLockPassword(lockPasswordVo);
+            }
+        }//不是管理密码则直接创建
+        else {
+            smartLockDao.addLockPassword(lockPasswordVo);
+        }
+    }
+
+
 }
