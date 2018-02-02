@@ -1,7 +1,7 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
@@ -12,17 +12,13 @@ import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
 import com.ih2ome.sunflower.vo.pageVo.enums.*;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
-import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -108,6 +104,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                             if (thirdRoomId.equals(roomVO.getThirdRoomId())) {
                                 localRoom.setThirdRoomName(roomVO.getThirdRoomName());
                                 localHomeVO.setThirdHomeId(thirdHomeVO.getHomeId());
+                                thirdHomeVO.setLocalHomeId(localHomeVO.getHomeId());
                                 iterator.remove();
                                 break;
                             }
@@ -347,6 +344,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @throws SmartLockException
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addLockPassword(LockPasswordVo lockPasswordVo) throws SmartLockException, IllegalAccessException, InstantiationException, ClassNotFoundException, ParseException {
         //获取门锁id
         String smartLockId = lockPasswordVo.getSerialNum();
@@ -359,10 +357,15 @@ public class SmartLockServiceImpl implements SmartLockService {
         String digitPwdType = lockPasswordVo.getDigitPwdType();
         String pwdTypeName = SmartLockPwdTypeEnum.getByCode(digitPwdType);
         lockPasswordVo.setName(pwdTypeName);
-        if (SmartLockPwdTypeEnum.MANAGER_PASSWORD.equals(digitPwdType)) {
-            lockPasswordVo.setIsDefault(SmartLockIsDefaultEnum.PASSWORD_ISDEFAULT.getCode());
+        if (SmartLockPwdTypeEnum.MANAGER_PASSWORD.getCode().equals(digitPwdType)) {
+            lockPasswordVo.setIsDefault(SmartLockPasswordIsDefaultEnum.PASSWORD_ISDEFAULT.getCode());
+            lockPasswordVo.setPwdType(SmartLockPasswordValidTypeEnum.PASSWORD_FOREVER.getCode());
+            long currentTime = System.currentTimeMillis();
+            lockPasswordVo.setEnableTime(DateUtils.longToString(currentTime, "yyyy-MM-dd HH:mm:ss"));
+            lockPasswordVo.setDisableTime("2060-12-31 00:00:00");
         } else {
-            lockPasswordVo.setIsDefault(SmartLockIsDefaultEnum.PASSWORD_ISNOTDEFAULT.getCode());
+            lockPasswordVo.setIsDefault(SmartLockPasswordIsDefaultEnum.PASSWORD_ISNOTDEFAULT.getCode());
+            lockPasswordVo.setPwdType(SmartLockPasswordValidTypeEnum.PASSWORD_TIMEVALID.getCode());
         }
         String result = smartLock.addLockPassword(lockPasswordVo);
         JSONObject resJson = JSONObject.parseObject(result);
@@ -370,10 +373,25 @@ public class SmartLockServiceImpl implements SmartLockService {
         if (!errNo.equals("0")) {
             throw new SmartLockException("第三方密码添加失败");
         }
-        //第三方面密码生成的id编号
+        //第三方密码生成的id编号
+        lockPasswordVo.setProvideCode(provideCode);
+        lockPasswordVo.setStatus(SmartLockPasswordStatusEnum.PASSWORD_START.getCode());
         String passwordId = resJson.getString("id");
         lockPasswordVo.setPwdNo(passwordId);
-
+        if ("999".equals(passwordId)) {
+            String smartLockPasswordId = smartLockDao.findLockManagePassword(smartLockId, passwordId);
+            //判断该管理密码在数据库中是否存在
+            if (smartLockPasswordId != null) {
+                //存在则修改
+                smartLockDao.updateLockPassword(lockPasswordVo);
+            } //不存在则创建
+            else {
+                smartLockDao.addLockPassword(lockPasswordVo);
+            }
+        }//不是管理密码则直接创建
+        else {
+            smartLockDao.addLockPassword(lockPasswordVo);
+        }
     }
 
 

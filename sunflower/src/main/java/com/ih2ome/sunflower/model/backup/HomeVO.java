@@ -14,6 +14,7 @@ public class HomeVO {
     private String userId;
     private String homeId;
     private String thirdHomeId;
+    private String localHomeId;
     private String homeName;
     //判断是集中还是分散(0是集中，1是分散)
     private String homeType;

@@ -66,5 +66,8 @@ public class LockPasswordVo extends BaseEntity implements Serializable {
     //是否是管理员密码(0否,1是)(云丁)
     private String isDefault;
     private String name;
+    private String provideCode;
+    //1永久密码 2.时间有效密码
+    private String pwdType;
 
 }

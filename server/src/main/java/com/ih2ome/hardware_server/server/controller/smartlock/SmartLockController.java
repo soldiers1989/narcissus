@@ -185,6 +185,7 @@ public class SmartLockController extends BaseController {
         passwordVo.setEnableTime(enable_time);
         passwordVo.setDisableTime(disable_time);
         passwordVo.setRemark(remark);
+        passwordVo.setUserId(resData.getString("userId"));
         try {
             smartLockService.addLockPassword(passwordVo);
         } catch (SmartLockException e) {

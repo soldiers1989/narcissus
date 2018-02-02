@@ -13,6 +13,7 @@ import com.ih2ome.sunflower.entity.narcissus.SmartLock;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.SmartLockPasswordIsDefaultEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
@@ -60,18 +61,22 @@ public class YunDingSmartLock implements ISmartLock {
         Log.info("添加门锁密码,密码信息:{}", lockPassword);
         String url = BASE_URL + "/add_password";
         JSONObject pwdJson = new JSONObject();
-        pwdJson.put("access_token", YunDingSmartLockUtil.getToken());
+        pwdJson.put("access_token", YunDingSmartLockUtil.getAccessToken(lockPassword.getUserId()));
         pwdJson.put("uuid", lockPassword.getUuid());
         pwdJson.put("phonenumber", lockPassword.getMobile());
         pwdJson.put("is_default", lockPassword.getIsDefault());
         pwdJson.put("password", lockPassword.getPassword());
-        pwdJson.put("permission_begin", DateUtils.stringToLong(lockPassword.getEnableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
-        pwdJson.put("permission_end", DateUtils.stringToLong(lockPassword.getDisableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        System.out.println(lockPassword.getIsDefault());
+        if (SmartLockPasswordIsDefaultEnum.PASSWORD_ISNOTDEFAULT.getCode().equals(lockPassword.getIsDefault())) {
+            pwdJson.put("permission_begin", DateUtils.stringToLong(lockPassword.getEnableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+            pwdJson.put("permission_end", DateUtils.stringToLong(lockPassword.getDisableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        }
         pwdJson.put("name", lockPassword.getName());
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(result);
+            System.out.println(resJson);
         } catch (Exception e) {
             Log.error("第三方json格式解析错误", e);
             throw new SmartLockException("第三方json格式解析错误" + e.getMessage());

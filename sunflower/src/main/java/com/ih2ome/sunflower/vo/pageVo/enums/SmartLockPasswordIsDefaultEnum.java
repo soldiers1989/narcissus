@@ -5,7 +5,7 @@ package com.ih2ome.sunflower.vo.pageVo.enums;
  * @create 2018/02/02
  * @email sky.li@ixiaoshuidi.com
  **/
-public enum SmartLockIsDefaultEnum {
+public enum SmartLockPasswordIsDefaultEnum {
     /**
      * 是管理员密码
      */
@@ -17,7 +17,7 @@ public enum SmartLockIsDefaultEnum {
 
     private String code;
 
-    SmartLockIsDefaultEnum(String code) {
+    SmartLockPasswordIsDefaultEnum(String code) {
         this.code = code;
     }
 

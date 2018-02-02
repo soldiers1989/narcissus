@@ -115,7 +115,7 @@
         )VALUES(#{lockDeviceId},#{gatewayDeviceId})
 
     </insert>
-    <!--新增密码记录-->
+    <!--新增密码记录(同步第三方设备)-->
     <insert id="addSmartLockPassword" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartLockPassword"
             useGeneratedKeys="true" keyProperty="smartLockPasswordId" keyColumn="smart_lock_password_ID">
         INSERT INTO narcissus_test.smart_lock_password (
@@ -135,8 +135,27 @@
             send_to_mobile
         )VALUES(#{smartLockId},#{providerCode},#{threeId},#{lock3Id},NOW(),#{name},#{status},#{pwdType},#{validTimeStart},#{validTimeEnd},#{password},#{description},#{isDefault},#{sendToMobile})
     </insert>
-    <!--新增门锁密码-->
 
+    <!--新增门锁密码-->
+    <insert id="addLockPassword" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
+     INSERT INTO narcissus_test.smart_lock_password (
+        smart_lock_ID,
+        provider_code,
+        threeID,
+        lock3ID,
+        created_at,
+        NAME,
+        STATUS,
+        pwd_type,
+        valid_time_start,
+        valid_time_end,
+        send_to_mobile,
+        pwd_user_name,
+        password,
+        description,
+        is_default
+        )values(#{serialNum},#{provideCode},#{pwdNo},#{uuid},NOW(),#{name},#{status},#{pwdType},#{enableTime},#{disableTime},#{mobile},#{userName},#{password},#{remark},#{isDefault});
+    </insert>
 
     <!--update-->
     <!--修改房间关联记录-->
@@ -178,6 +197,20 @@
         WHERE
             public_zone_ID = #{publicZoneId}
         AND house_catalog =#{type}  AND provider_code=#{providerCode}
+    </update>
+
+    <!--修改门锁密码-->
+    <update id="updateLockPassword" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
+        UPDATE narcissus_test.smart_lock_password
+        <set>
+            <if test="userName!=null and userName.trim()!=''">pwd_user_name = #{userName},</if>
+            <if test="password!=null and password.trim()!=''">password = #{password},</if>
+            <if test="mobile!=null and mobile.trim()!=''">send_to_mobile = #{mobile},</if>
+            <if test="remark!=null and remark.trim()!=''">description = #{remark},</if>
+            <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
+            <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
+        </set>
+        WHERE smart_lock_ID=#{serialNum} AND threeID=#{pwdNo}
     </update>
 
     <!--select-->
@@ -404,5 +437,10 @@
             narcissus_test.smart_device_v2
         WHERE
             smart_device_ID = #{smartLockId}
+    </select>
+
+    <!--查询该门锁的管理密码是否存在-->
+    <select id="findLockManagePassword" resultType="string">
+       select smart_lock_password_ID from narcissus_test.smart_lock_password WHERE smart_lock_ID=#{smartLockId} AND threeID=#{passwordId}
     </select>
 </mapper>
