@@ -3,7 +3,9 @@ package com.ih2ome.hardware_service.service.service.impl;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
-import com.ih2ome.sunflower.model.house.SmartLockGatewayModel;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
 import org.springframework.stereotype.Service;
@@ -25,9 +27,16 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
     SmartLockGatewayDao smartLockGatewayDao;
 
     @Override
-    public List<SmartLockGatewayModel> getSmartLockGatewayList(String homeId) {
-        if(StringUtils.isNotBlank(homeId)){
-            return smartLockGatewayDao.getGatewayModelByHomeId(homeId);
+    public List<SmartLockGatewayAndHouseInfoVO> getSmartLockGatewayList(String homeId, String type) {
+        if(StringUtils.isNotBlank(homeId)&&StringUtils.isNotBlank(type)){
+
+            if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+                return smartLockGatewayDao.getDispersedGatewayModelByHomeId(homeId);
+            }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+                return smartLockGatewayDao.getConcentrateGatewayModelByHomeId(homeId);
+            }else{
+                return null;
+            }
 
         }
         return null;
@@ -41,6 +50,21 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
             List <SmartLockGatewayHadBindRoomVO> smartLockGatewayHadBindRoomVOList = smartLockGatewayDao.getSmartLockAndRoomListByGatewayId(gatewayId);
             smartLockGatewayHadBindVO.setSmartLockGatewayHadBindRoomVOList(smartLockGatewayHadBindRoomVOList);
             return smartLockGatewayHadBindVO;
+
+        }
+        return null;
+
+    }
+
+    @Override
+    public SmartLockDetailVO getSmartLockGatewayDetailInfo(String gatewayId) {
+        if(StringUtils.isNotBlank(gatewayId)){
+            SmartLockDetailVO smartLockDetailVO = smartLockGatewayDao.getSmartLockGatewayDetailInfo(gatewayId);
+            if(smartLockDetailVO != null){
+                smartLockDetailVO.splitVersion();
+
+            }
+            return smartLockDetailVO;
 
         }
         return null;
