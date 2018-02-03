@@ -10,8 +10,8 @@ public enum SmartLockPasswordStatusEnum {
     PASSWORD_START("2", "已生效"),
     PASSWORD_WILLSTART("3", "将生效"),
     PASSWORD_END("4", "已过期"),
-    PASSWORD_FROZEN("5", "已冻结");
-
+    PASSWORD_FROZEN("5", "已冻结"),
+    PASSWORD_DELETED("6", "已删除");
     private String code;
     private String name;
 

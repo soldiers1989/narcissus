@@ -50,4 +50,18 @@ public interface SmartLockService {
      * @param
      */
     void addLockPassword(LockPasswordVo passwordVo) throws SmartLockException, IllegalAccessException, InstantiationException, ClassNotFoundException, ParseException;
+
+    /**
+     * 删除门锁密码
+     *
+     * @param password_id
+     */
+    void deleteLockPassword(String password_id, String userId) throws SmartLockException, IllegalAccessException, InstantiationException, ClassNotFoundException, ParseException;
+
+    /**
+     * 修改门锁密码
+     *
+     * @param passwordVo
+     */
+    void updateLockPassword(LockPasswordVo passwordVo) throws SmartLockException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParseException;
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
+import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
@@ -159,7 +160,7 @@ public class SmartLockController extends BaseController {
     }
 
     /**
-     * 新增密码
+     * 新增门锁密码
      *
      * @param apiRequestVO
      * @return
@@ -181,7 +182,6 @@ public class SmartLockController extends BaseController {
         passwordVo.setDigitPwdType(digit_pwd_type);
         passwordVo.setUserName(user_name);
         passwordVo.setMobile(mobile);
-        passwordVo.setUserName(user_name);
         passwordVo.setEnableTime(enable_time);
         passwordVo.setDisableTime(disable_time);
         passwordVo.setRemark(remark);
@@ -213,5 +213,83 @@ public class SmartLockController extends BaseController {
         return result;
     }
 
+    /**
+     * 删除门锁密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/password/delete", method = RequestMethod.POST, produces = {"application/json"})
+    public String deletePassword(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String password_id = resData.getString("password_id");
+        String userId = resData.getString("userId");
+        try {
+            smartLockService.deleteLockPassword(password_id, userId);
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        } catch (ParseException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            return result;
+        }
+
+        String result = structureSuccessResponseVO(null, new Date().toString(), "删除成功");
+        return result;
+    }
+
+    /**
+     * 修改门锁密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/password/update", method = RequestMethod.POST, produces = {"application/json"})
+    public String updatePassword(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String password_id = resData.getString("password_id");
+        String password = resData.getString("password");
+        String mobile = resData.getString("mobile");
+        String enable_time = resData.getString("enable_time");
+        String disable_time = resData.getString("disable_time");
+        String remark = resData.getString("remark");
+        LockPasswordVo passwordVo = new LockPasswordVo();
+        passwordVo.setMobile(mobile);
+        passwordVo.setPassword(password);
+        passwordVo.setId(password_id);
+        passwordVo.setEnableTime(enable_time);
+        passwordVo.setDisableTime(disable_time);
+        passwordVo.setRemark(remark);
+        passwordVo.setUserId(resData.getString("userId"));
+        try {
+            smartLockService.updateLockPassword(passwordVo);
+        } catch (SmartLockException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String result = structureSuccessResponseVO(null, new Date().toString(), "修改成功");
+        return result;
+    }
 
 }

@@ -157,6 +157,15 @@
         )values(#{serialNum},#{provideCode},#{pwdNo},#{uuid},NOW(),#{name},#{status},#{pwdType},#{enableTime},#{disableTime},#{mobile},#{userName},#{password},#{remark},#{isDefault});
     </insert>
 
+    <!--delete-->
+    <!--删除密码记录-->
+    <update id="deleteLockPassword" parameterType="string">
+        UPDATE narcissus_test.smart_lock_password
+        SET `status` = '6'
+        WHERE
+          smart_lock_password_ID = #{passwordId};
+    </update>
+
     <!--update-->
     <!--修改房间关联记录-->
     <update id="updateAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
@@ -210,7 +219,7 @@
             <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
             <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
         </set>
-        WHERE smart_lock_ID=#{serialNum} AND threeID=#{pwdNo}
+        WHERE smart_lock_password_ID=#{id}
     </update>
 
     <!--select-->
@@ -424,14 +433,14 @@
         FROM
             narcissus_test.smart_lock_password
         WHERE
-        smart_lock_ID = #{lockId};
+        smart_lock_ID = #{lockId} AND status !='6';
     </select>
 
     <!--根据门锁Id查询第三方门锁的uuid-->
     <select id="findThirdLockUuid" parameterType="string"
             resultType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2">
         SELECT
-            threeID,
+            threeID as threeId,
             provider_code as providerCode
         FROM
             narcissus_test.smart_device_v2
@@ -442,5 +451,26 @@
     <!--查询该门锁的管理密码是否存在-->
     <select id="findLockManagePassword" resultType="string">
        select smart_lock_password_ID from narcissus_test.smart_lock_password WHERE smart_lock_ID=#{smartLockId} AND threeID=#{passwordId}
+    </select>
+
+    <!--根据门锁密码id查询该密码记录-->
+    <select id="findPasswordById" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartLockPassword">
+        SELECT
+        smart_lock_password_ID AS smartLockPasswordId,
+        provider_code as providerCode,
+        lock3ID AS lock3Id,
+        threeID as threeId,
+        `name`,
+        pwd_user_name as pwdUserName,
+        send_to_mobile as sendToMobile,
+        `password`,
+        valid_time_start AS validTimeStart,
+        valid_time_end AS validTimeEnd,
+        description
+        FROM
+            narcissus_test.smart_lock_password
+        WHERE
+            smart_lock_password_ID = #{passwordId}
     </select>
 </mapper>
