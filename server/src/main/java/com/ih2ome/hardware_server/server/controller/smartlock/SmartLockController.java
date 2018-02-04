@@ -278,18 +278,102 @@ public class SmartLockController extends BaseController {
         try {
             smartLockService.updateLockPassword(passwordVo);
         } catch (SmartLockException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
+            return result;
         }
         String result = structureSuccessResponseVO(null, new Date().toString(), "修改成功");
         return result;
     }
 
+    /**
+     * 冻结门锁密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/password/frozen", method = RequestMethod.POST, produces = {"application/json"})
+    public String frozenPassword(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String password_id = resData.getString("password_id");
+        String userId = resData.getString("userId");
+        try {
+            smartLockService.frozenLockPassword(userId, password_id);
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
+            return result;
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
+            return result;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
+            return result;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
+            return result;
+        } catch (ParseException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
+            return result;
+        }
+        String result = structureSuccessResponseVO(null, new Date().toString(), "冻结成功");
+        return result;
+    }
+
+
+    /**
+     * 解冻门锁密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/password/unfrozen", method = RequestMethod.POST, produces = {"application/json"})
+    public String unFrozenPassword(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String password_id = resData.getString("password_id");
+        String userId = resData.getString("userId");
+        try {
+            smartLockService.unFrozenLockPassword(userId, password_id);
+        } catch (ClassNotFoundException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
+            return result;
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
+            return result;
+        } catch (InstantiationException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
+            return result;
+        } catch (IllegalAccessException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
+            return result;
+        } catch (ParseException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
+            return result;
+        }
+        String result = structureSuccessResponseVO(null, new Date().toString(), "解冻成功");
+        return result;
+    }
 }

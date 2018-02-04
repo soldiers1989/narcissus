@@ -108,10 +108,11 @@ public interface ISmartLock {
 
     /**
      * 获取门锁密码列表
+     *
      * @param uuid
      * @return
      * @throws SmartLockException
      */
-    public List <SmartLockPassword> fetchSmartLockPassword(String uuid,String userId) throws SmartLockException, ParseException;
+    public List<SmartLockPassword> fetchSmartLockPassword(String uuid, String userId) throws SmartLockException, ParseException;
 
 }

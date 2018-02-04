@@ -222,6 +222,16 @@
         WHERE smart_lock_password_ID=#{id}
     </update>
 
+    <!--冻结门锁密码-->
+    <update id="frozenLockPassword" parameterType="string">
+       UPDATE narcissus_test.smart_lock_password SET `status`='5' where smart_lock_password_ID=#{passwordId}
+    </update>
+
+    <!--解冻门锁密码-->
+    <update id="unFrozenLockPassword" parameterType="string">
+        UPDATE narcissus_test.smart_lock_password SET `status`='2' where smart_lock_password_ID=#{passwordId}
+    </update>
+
     <!--select-->
     <!--查询房源信息(分散式)-->
     <select id="findDispersedHomes" parameterType="string" resultMap="dispersedResultMap">

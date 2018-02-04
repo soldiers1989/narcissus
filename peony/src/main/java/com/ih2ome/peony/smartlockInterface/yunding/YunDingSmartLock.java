@@ -170,13 +170,12 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String frozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
-        YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
-        Log.info("冻结门锁密码,门锁uuid:{},密码id:{}", yunDingLockPasswordVO.getUuid(), yunDingLockPasswordVO.getPasswordId());
+        Log.info("冻结门锁密码,门锁uuid:{},密码id:{}", lockPassword.getUuid(), lockPassword.getPwdNo());
         String url = BASE_URL + "/frozen_password";
         JSONObject pwdJson = new JSONObject();
-        pwdJson.put("access_token", YunDingSmartLockUtil.getToken());
-        pwdJson.put("uuid", yunDingLockPasswordVO.getUuid());
-        pwdJson.put("password_id", yunDingLockPasswordVO.getPasswordId());
+        pwdJson.put("access_token", YunDingSmartLockUtil.getAccessToken(lockPassword.getUserId()));
+        pwdJson.put("uuid", lockPassword.getUuid());
+        pwdJson.put("password_id", lockPassword.getPwdNo());
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
@@ -204,13 +203,12 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String unfrozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
-        YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
-        Log.info("解冻门锁密码,门锁uuid:{},密码id:{}", yunDingLockPasswordVO.getUuid(), yunDingLockPasswordVO.getPasswordId());
+        Log.info("解冻门锁密码,门锁uuid:{},密码id:{}", lockPassword.getUuid(), lockPassword.getPwdNo());
         String url = BASE_URL + "/unfrozen_password";
         JSONObject pwdJson = new JSONObject();
-        pwdJson.put("access_token", YunDingSmartLockUtil.getToken());
-        pwdJson.put("uuid", yunDingLockPasswordVO.getUuid());
-        pwdJson.put("password_id", yunDingLockPasswordVO.getPasswordId());
+        pwdJson.put("access_token", YunDingSmartLockUtil.getAccessToken(lockPassword.getUserId()));
+        pwdJson.put("uuid", lockPassword.getUuid());
+        pwdJson.put("password_id", lockPassword.getPwdNo());
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
