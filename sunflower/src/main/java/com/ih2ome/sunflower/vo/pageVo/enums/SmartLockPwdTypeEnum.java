@@ -18,9 +18,9 @@ public enum SmartLockPwdTypeEnum {
     private String name;
 
     public static String getByCode(String code) {
-        for (SmartLockPwdTypeEnum smartLockPwdTypeEnum : SmartLockPwdTypeEnum.values()) {
-            if (smartLockPwdTypeEnum.getCode().equals(code)) {
-                return smartLockPwdTypeEnum.getName();
+        for (LockStatusEnum lockStatusEnum : LockStatusEnum.values()) {
+            if (lockStatusEnum.getCode().equals(code)) {
+                return lockStatusEnum.getName();
             }
         }
         return null;

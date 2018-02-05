@@ -12,6 +12,7 @@ import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
 import com.ih2ome.sunflower.vo.pageVo.enums.*;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
@@ -505,6 +506,19 @@ public class SmartLockServiceImpl implements SmartLockService {
             throw new SmartLockException("第三方密码修改失败");
         }
         smartLockDao.unFrozenLockPassword(passwordId);
+    }
+
+    /**
+     * 根据门锁id查询门锁详情
+     *
+     * @param lockId
+     * @return
+     */
+    @Override
+    public SmartLockDetailVO findSmartLockDetail(String lockId) throws SmartLockException {
+        SmartLockDetailVO lockDetail = smartLockDao.findSmartLockDetail(lockId);
+        lockDetail.splitVersion();
+        return lockDetail;
     }
 
 

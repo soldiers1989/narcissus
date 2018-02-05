@@ -369,7 +369,7 @@ public class YunDingSmartLock implements ISmartLock {
             smartLock.setPowerRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("power_refreshtime") * 1000L, "yyyy-MM-dd HH:mm:ss"));
             smartLock.setOnoffTime(lockResponseJSON.getString("onoff_line"));
             smartLock.setLqi(lockResponseJSON.getString("lqi"));
-            smartLock.setLqiRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("lqi_refreshtime") * 1000L, "yyyy-MM-dd HH:mm:ss"));
+            smartLock.setLqiRefreshtime(DateUtils.longToString(lockResponseJSON.getLong("lqi_refreshtime"), "yyyy-MM-dd HH:mm:ss"));
             smartLock.setBindTime(DateUtils.longToString(lockResponseJSON.getLong("bind_time") * 1000L, "yyyy-MM-dd HH:mm:ss"));
             smartLock.setVersions(lockResponseJSON.getString("versions"));
             smartLock.setGatewayUuid(lockResponseJSON.getString("center_uuid"));

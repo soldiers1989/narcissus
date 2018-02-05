@@ -483,4 +483,11 @@
         WHERE
             smart_lock_password_ID = #{passwordId}
     </select>
+
+    <!--根据门锁id查询该门锁详情-->
+    <select id="findSmartLockDetail" parameterType="string"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
+
+    </select>
+
 </mapper>

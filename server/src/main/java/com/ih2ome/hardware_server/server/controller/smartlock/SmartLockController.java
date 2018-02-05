@@ -10,6 +10,7 @@ import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -374,6 +375,28 @@ public class SmartLockController extends BaseController {
             return result;
         }
         String result = structureSuccessResponseVO(null, new Date().toString(), "解冻成功");
+        return result;
+    }
+
+    /**
+     * 查询门锁详情
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/search/lockinfo", method = RequestMethod.POST, produces = {"application/json"})
+    public String getSmartLockInfo(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        String lockId = dt.getString("serial_id");
+        SmartLockDetailVO smartLockDetailVO = null;
+        try {
+            smartLockDetailVO = smartLockService.findSmartLockDetail(lockId);
+        } catch (SmartLockException e) {
+            e.printStackTrace();
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("smartlockinfo", smartLockDetailVO);
+        String result = structureSuccessResponseVO(jsonObject, new Date().toString(), "查询成功");
         return result;
     }
 }

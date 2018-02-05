@@ -6,6 +6,7 @@ import com.ih2ome.sunflower.entity.narcissus.SmartLock;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -216,4 +217,13 @@ public interface SmartLockDao {
      * @param passwordId
      */
     void unFrozenLockPassword(@Param("passwordId") String passwordId);
+
+    /**
+     * 查询门锁详情
+     *
+     * @param lockId
+     * @return
+     */
+    SmartLockDetailVO findSmartLockDetail(@Param("lockId") String lockId);
+
 }
