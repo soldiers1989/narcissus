@@ -521,5 +521,20 @@ public class SmartLockServiceImpl implements SmartLockService {
         return lockDetail;
     }
 
+    @Override
+    public void addLockPasswordCallBack(LockPasswordVo passwordVo) {
+        smartLockDao.addLockPassword(passwordVo);
+    }
+
+    @Override
+    public void updateLockPasswordCallBack(LockPasswordVo passwordVo) {
+        smartLockDao.updateLockPassword(passwordVo);
+    }
+
+    @Override
+    public void deleteLockPasswordCallBack(String uuid) {
+        smartLockDao.deleteLockPasswordByUuid(uuid);
+    }
+
 
 }

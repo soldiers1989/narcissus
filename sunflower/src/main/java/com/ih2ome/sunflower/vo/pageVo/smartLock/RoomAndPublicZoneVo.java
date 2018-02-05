@@ -12,13 +12,13 @@ import lombok.Data;
 @Data
 public class RoomAndPublicZoneVo {
     /**
+     * 门锁id
+     */
+    private long smartLockId;
+    /**
      * 房间编号
      */
     private String roomNo;
-    /**
-     * 门锁id
-     */
-    private String smartLockId;
     /**
      * 在线离线
      */

@@ -23,7 +23,7 @@ public class SmartLockDetailVO {
     /**
      * 门锁Id
      */
-    private String lockId;
+    private long lockId;
     /**
      * 门锁序列号
      */
@@ -47,7 +47,7 @@ public class SmartLockDetailVO {
     /**
      * 网关id
      */
-    private String gatewayId;
+    private long gatewayId;
     /**
      * 网关编号
      */

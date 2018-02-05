@@ -89,4 +89,23 @@ public interface SmartLockService {
      * @return
      */
     SmartLockDetailVO findSmartLockDetail(String lockId) throws SmartLockException;
+
+    /**
+     * 本地添加密码
+     * @param passwordVo
+     */
+    void addLockPasswordCallBack(LockPasswordVo passwordVo);
+
+    /**
+     * 本地更新密码
+     * @param passwordVo
+     */
+    void updateLockPasswordCallBack(LockPasswordVo passwordVo);
+
+    /**
+     * 本地删除密码
+     * @param uuid
+     */
+    void deleteLockPasswordCallBack(String uuid);
+
 }

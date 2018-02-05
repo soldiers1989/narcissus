@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Data
 public class SmartLockGatewayHadBindVO{
-    private String gatewayId;
+    private long gatewayId;
     private String gatewayName;
     private String gatewayCode;
     private String houseName;

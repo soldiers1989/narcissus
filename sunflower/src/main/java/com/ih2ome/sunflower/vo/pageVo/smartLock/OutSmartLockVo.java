@@ -6,14 +6,21 @@ import lombok.Data;
  * <br>
  *
  * @author Lucius
- * create by 2018/1/25
+ * create by 2018/2/5
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Data
-public class SmartLockGatewayHadBindRoomVO {
+public class OutSmartLockVo {
+    /**
+     * 门锁id
+     */
     private long smartLockId;
-    private String roomNo;
-    private String powerRate;
+    /**
+     * 在线离线
+     */
     private String communicationStatus;
-
+    /**
+     * 电量
+     */
+    private String powerRate;
 }

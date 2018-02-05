@@ -14,7 +14,7 @@ public class SmartLockGatewayAndHouseInfoVO {
     /**
      * 网关id
      */
-    private String gatewayId;
+    private long gatewayId;
     /**
      * 网关编码
      */

@@ -166,6 +166,15 @@
           smart_lock_password_ID = #{passwordId};
     </update>
 
+    <update id="deleteLockPasswordByUuid" parameterType="string">
+        UPDATE narcissus_test.smart_lock_password nslp,
+         narcissus_test.smart_device_v2 nsdv2
+        SET `status` = '6'
+        WHERE
+            nslp.smart_lock_ID = nsdv2.smart_device_ID
+        AND smart_lock_password_ID = #{uuid}
+    </update>
+
     <!--update-->
     <!--修改房间关联记录-->
     <update id="updateAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">

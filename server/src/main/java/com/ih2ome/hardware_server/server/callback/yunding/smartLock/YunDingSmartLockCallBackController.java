@@ -6,12 +6,15 @@ import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.sunflower.vo.pageVo.enums.AlarmTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.DigestUtils;
@@ -33,6 +36,9 @@ import java.util.*;
 public class YunDingSmartLockCallBackController extends BaseController{
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    SmartLockService smartLockService;
 
     final static String TOKEN_YUNDING_USER_CODE = "yunding_user_code_token";
 
@@ -57,7 +63,7 @@ public class YunDingSmartLockCallBackController extends BaseController{
     @RequestMapping(value="/smartLock",method = RequestMethod.POST,produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<Object> yundingSmartLockCallBack(@RequestBody CallbackRequestVo apiRequestVO){
-        Log.info("云丁门锁回调接口开始");
+        Log.info("云丁门锁回调接口开始:{}",apiRequestVO.toString());
         String sign = apiRequestVO.getSign();
         boolean flag=checkSign(sign,apiRequestVO);
         if(!flag){
@@ -66,13 +72,16 @@ public class YunDingSmartLockCallBackController extends BaseController{
         String event = apiRequestVO.getEvent();
         switch (event){
             case "batteryAlarm":
-
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "clearBatteryAlarm":
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "brokenAlarm":
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "wrongPwdAlarm":
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "pwdSync":
                 break;
@@ -83,14 +92,19 @@ public class YunDingSmartLockCallBackController extends BaseController{
             case "pwdUpdateLocal":
                 break;
             case "lockerOpenAlarm":
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "clearCenterOfflineAlarm":
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "clearLockOfflineAlarm":
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "centerOfflineAlarm":
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "lockOfflineAlarm":
+                saveSmartLockAlarm(apiRequestVO);
                 break;
             case "batteryAsync":
                 break;
@@ -151,6 +165,11 @@ public class YunDingSmartLockCallBackController extends BaseController{
         return sign;
     }
 
+    /**
+     * 构建第三方与本地的映射map
+     * @param thirdAlarmType
+     * @return
+     */
     private static AlarmTypeEnum getThirdAlarmNameMap(String thirdAlarmType){
         Map <String,AlarmTypeEnum> thirdAlarmNameMap = new HashMap<>();
         thirdAlarmNameMap.put("batteryAlarm",AlarmTypeEnum.YUN_DING_SMART_LOCK_EXCEPTION_TYPE_LOWER_POWER);
@@ -165,6 +184,10 @@ public class YunDingSmartLockCallBackController extends BaseController{
         return thirdAlarmNameMap.get(thirdAlarmType);
     }
 
+    /**
+     * 保存报警信息
+     * @param apiRequestVO
+     */
     private static void saveSmartLockAlarm(CallbackRequestVo apiRequestVO){
         String [] lockAlarmName = {"batteryAlarm","clearBatteryAlarm","lockerOpenAlarm","clearLockOfflineAlarm","lockOfflineAlarm","brokenAlarm"};
         List<String> lockAmarmNameist=Arrays.asList(lockAlarmName);
@@ -176,6 +199,34 @@ public class YunDingSmartLockCallBackController extends BaseController{
         }else{
             smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_SMART_LOCK_GATEWAY.getCode());
         }
+
+    }
+
+    /**
+     * 添加门锁密码
+     * @param apiRequestVO
+     */
+    private void addSmartLockPassword(CallbackRequestVo apiRequestVO){
+        LockPasswordVo passwordVo = new LockPasswordVo();
+
+        smartLockService.addLockPasswordCallBack(passwordVo);
+    }
+
+    /**
+     * 更新门锁密码
+     * @param apiRequestVO
+     */
+    private void updateSmartLockPassword(CallbackRequestVo apiRequestVO){
+        LockPasswordVo passwordVo = new LockPasswordVo();
+
+        smartLockService.updateLockPasswordCallBack(passwordVo);
+    }
+
+    /**
+     * 删除门锁密码
+     * @param apiRequestVO
+     */
+    private void deleteSmartLockPassword(CallbackRequestVo apiRequestVO){
 
     }
 

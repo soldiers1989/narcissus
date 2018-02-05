@@ -15,4 +15,20 @@ public class CallbackRequestVo {
     private String room_id;//房间标识，内门锁才有
     private JSONObject detail;//通知的详细信息
     private String sign;//签名
+
+    @Override
+    public String toString() {
+        return "CallbackRequestVo{" +
+                "event='" + event + '\'' +
+                ", time=" + time +
+                ", uuid='" + uuid + '\'' +
+                ", old_uuid='" + old_uuid + '\'' +
+                ", manufactory='" + manufactory + '\'' +
+                ", home_id='" + home_id + '\'' +
+                ", gateway_uuid='" + gateway_uuid + '\'' +
+                ", room_id='" + room_id + '\'' +
+                ", detail=" + detail +
+                ", sign='" + sign + '\'' +
+                '}';
+    }
 }

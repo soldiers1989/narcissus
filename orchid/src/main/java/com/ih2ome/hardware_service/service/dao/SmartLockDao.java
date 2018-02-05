@@ -226,4 +226,9 @@ public interface SmartLockDao {
      */
     SmartLockDetailVO findSmartLockDetail(@Param("lockId") String lockId);
 
+    /**
+     * 根据uuid删除门锁密码
+     * @param uuid
+     */
+    void deleteLockPasswordByUuid(String uuid);
 }

@@ -16,17 +16,21 @@ public class SmartLockHadBindHouseVo {
     /**
      * 房源id
      */
-    private String homeId;
+    private long homeId;
     /**
      * 网关id
      */
-    private String gatewayId;
+    private long gatewayId;
+    /**
+     * 外门锁
+     */
+    private OutSmartLockVo outSmartLockVo;
     /**
      * 房源名称
      */
     private String homeName;
     /**
-     * 房间列表
+     * 楼层列表
      */
-    private List<RoomAndPublicZoneVo> roomAndPublicZoneVoList;
+    private List <FloorVo> floorVoList;
 }
