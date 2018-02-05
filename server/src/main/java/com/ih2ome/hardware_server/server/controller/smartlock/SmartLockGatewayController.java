@@ -97,6 +97,11 @@ public class SmartLockGatewayController extends BaseController{
 
     }
 
+    /**
+     * 查询已绑定的房源列表
+     * @param apiRequestVO
+     * @return
+     */
     @RequestMapping(value = "/search/getHadBindHouseList", method = RequestMethod.POST, produces = {"application/json"})
     public String getHadBindHouseList(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();

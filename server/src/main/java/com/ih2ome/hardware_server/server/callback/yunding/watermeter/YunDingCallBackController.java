@@ -2,7 +2,7 @@ package com.ih2ome.hardware_server.server.callback.yunding.watermeter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.base.BaseController;
-import com.ih2ome.hardware_server.server.callback.yunding.watermeter.vo.CallbackRequestVo;
+import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 import com.ih2ome.hardware_service.service.service.*;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;

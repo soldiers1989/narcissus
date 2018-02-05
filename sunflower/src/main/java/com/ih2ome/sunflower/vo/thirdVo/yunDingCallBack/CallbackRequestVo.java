@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_server.server.callback.yunding.watermeter.vo;
+package com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
