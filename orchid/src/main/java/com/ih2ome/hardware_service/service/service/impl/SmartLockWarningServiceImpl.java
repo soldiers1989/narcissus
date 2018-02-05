@@ -1,13 +1,16 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao;
 import com.ih2ome.hardware_service.service.dao.SmartLockWarningDao;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.SmartLockWarningService;
+import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockWarningVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +26,8 @@ public class SmartLockWarningServiceImpl implements SmartLockWarningService {
 
     @Resource
     SmartLockWarningDao smartLockWarningDao;
+    @Resource
+    AmmeterAlarmDao ammeterAlarmDao;
     @Override
     public List<SmartLockWarningVO> getSmartLockWarningList(SmartLockWarningVO smartLockWarningVO) {
         if(smartLockWarningVO.getPage()!= null && smartLockWarningVO.getRows() != null){
@@ -35,5 +40,12 @@ public class SmartLockWarningServiceImpl implements SmartLockWarningService {
         }else{
             return null;
         }
+    }
+
+    @Override
+    public void saveSmartLockAlarmInfo(SmartMistakeInfo smartMistakeInfo) {
+        List<SmartMistakeInfo> smartMistakeInfoList = new ArrayList<>();
+        smartMistakeInfoList.add(smartMistakeInfo);
+        ammeterAlarmDao.saveAlarmList(smartMistakeInfoList);
     }
 }

@@ -9,7 +9,7 @@
         <collection property="roomAndPublicZoneVoList" javaType="List"
                     ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomAndPublicZoneVo" autoMapping="true">
             <id property="smartLockId" column="smartLockId"></id>
-            <result column="roomNo" property="roomNo"></result>
+            <result property="roomNo" column="roomNo" ></result>
             <result property="communicationStatus" column="communicationStatus"></result>
             <result property="powerRate" column="powerRate"></result>
         </collection>
@@ -196,6 +196,7 @@
                         nslpublic.smart_lock_ID = nsdv2public.smart_device_ID
                     AND nsdv2public.public_zone_ID = npzpublic.public_zone_ID
                     AND npzpublic.data_type = '1'
+                    and nsdv2public.manage_status='0'
                 )
                 UNION
                     (
@@ -212,6 +213,7 @@
                         WHERE
                             nslprivate.smart_lock_ID = nsdv2private.smart_device_ID
                         AND nsdv2private.room_ID = vr.id
+                        and nsdv2private.manage_status='0'
                     )
             ) lockCon
         WHERE
@@ -222,6 +224,7 @@
         AND lockCon.parentId = va.id
         AND cau.id = va.created_by_id
         AND cau.id = #{userId}
+        and nsdv2.manage_status='0'
     </select>
 
     <select id="getConcentrateHadBindHouseList" resultMap="HadBindHouseMap">
@@ -255,6 +258,7 @@
                         nslpublic.smart_lock_ID = nsdv2public.smart_device_ID
                     AND nsdv2public.public_zone_ID = npzpublic.public_zone_ID
                     AND npzpublic.data_type = '1'
+                    and nsdv2public.manage_status='0'
                 )
                 UNION
                     (
@@ -271,6 +275,7 @@
                         WHERE
                             nslprivate.smart_lock_ID = nsdv2private.smart_device_ID
                         AND nsdv2private.room_ID = vr.id
+                        and nsdv2private.manage_status='0'
                     )
             ) lockCon
         WHERE
@@ -281,5 +286,6 @@
         AND lockCon.parentId = va.id
         AND cau.id = va.created_by
         AND cau.id = #{userId}
+        and nsdv2.manage_status='0'
     </select>
 </mapper>

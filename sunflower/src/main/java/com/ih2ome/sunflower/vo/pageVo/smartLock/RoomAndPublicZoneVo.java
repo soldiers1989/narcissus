@@ -1,5 +1,7 @@
 package com.ih2ome.sunflower.vo.pageVo.smartLock;
 
+import lombok.Data;
+
 /**
  * <br>
  *
@@ -7,6 +9,7 @@ package com.ih2ome.sunflower.vo.pageVo.smartLock;
  * create by 2018/2/2
  * @Emial Lucius.li@ixiaoshuidi.com
  */
+@Data
 public class RoomAndPublicZoneVo {
     /**
      * 房间编号
