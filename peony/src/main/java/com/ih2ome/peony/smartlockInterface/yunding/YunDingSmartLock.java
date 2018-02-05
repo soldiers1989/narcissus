@@ -100,17 +100,16 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String updateLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
-        YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
-        Log.info("修改门锁密码,密码信息:{}", yunDingLockPasswordVO);
+        Log.info("修改门锁密码,密码id:{},密码内容:{}", lockPassword.getPwdNo(), lockPassword.getPassword());
         String url = BASE_URL + "/update_password";
         JSONObject pwdJson = new JSONObject();
-        pwdJson.put("access_token", YunDingSmartLockUtil.getToken());
-        pwdJson.put("uuid", yunDingLockPasswordVO.getUuid());
-        pwdJson.put("password_id", yunDingLockPasswordVO.getPasswordId());
-        pwdJson.put("password", yunDingLockPasswordVO.getPassword());
-        pwdJson.put("phonenumber", yunDingLockPasswordVO.getPhonenumber());
-        pwdJson.put("permission_begin", yunDingLockPasswordVO.getPermissionBegin());
-        pwdJson.put("permission_end", yunDingLockPasswordVO.getPermissionEnd());
+        pwdJson.put("access_token", YunDingSmartLockUtil.getAccessToken(lockPassword.getUserId()));
+        pwdJson.put("uuid", lockPassword.getUuid());
+        pwdJson.put("password_id", lockPassword.getPwdNo());
+        pwdJson.put("password", lockPassword.getPassword());
+        pwdJson.put("phonenumber", lockPassword.getMobile());
+        pwdJson.put("permission_begin", DateUtils.stringToLong(lockPassword.getEnableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        pwdJson.put("permission_end", DateUtils.stringToLong(lockPassword.getDisableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
@@ -138,13 +137,12 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String deleteLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
-        YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
-        Log.info("删除门锁密码,门锁uuid:{},密码id:{}", yunDingLockPasswordVO.getUuid(), yunDingLockPasswordVO.getPasswordId());
+        Log.info("删除门锁密码,门锁uuid:{},密码id:{}", lockPassword.getUuid(), lockPassword.getPwdNo());
         String url = BASE_URL + "/delete_password";
         JSONObject pwdJson = new JSONObject();
-        pwdJson.put("access_token", YunDingSmartLockUtil.getToken());
-        pwdJson.put("uuid", yunDingLockPasswordVO.getUuid());
-        pwdJson.put("password_id", yunDingLockPasswordVO.getPasswordId());
+        pwdJson.put("access_token", YunDingSmartLockUtil.getAccessToken(lockPassword.getUserId()));
+        pwdJson.put("uuid", lockPassword.getUuid());
+        pwdJson.put("password_id", lockPassword.getPwdNo());
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
@@ -172,13 +170,12 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String frozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
-        YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
-        Log.info("冻结门锁密码,门锁uuid:{},密码id:{}", yunDingLockPasswordVO.getUuid(), yunDingLockPasswordVO.getPasswordId());
+        Log.info("冻结门锁密码,门锁uuid:{},密码id:{}", lockPassword.getUuid(), lockPassword.getPwdNo());
         String url = BASE_URL + "/frozen_password";
         JSONObject pwdJson = new JSONObject();
-        pwdJson.put("access_token", YunDingSmartLockUtil.getToken());
-        pwdJson.put("uuid", yunDingLockPasswordVO.getUuid());
-        pwdJson.put("password_id", yunDingLockPasswordVO.getPasswordId());
+        pwdJson.put("access_token", YunDingSmartLockUtil.getAccessToken(lockPassword.getUserId()));
+        pwdJson.put("uuid", lockPassword.getUuid());
+        pwdJson.put("password_id", lockPassword.getPwdNo());
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
@@ -206,13 +203,12 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String unfrozenLockPassword(LockPasswordVo lockPassword) throws SmartLockException, ParseException {
-        YunDingLockPasswordVO yunDingLockPasswordVO = YunDingLockPasswordVO.fromH2ome(lockPassword);
-        Log.info("解冻门锁密码,门锁uuid:{},密码id:{}", yunDingLockPasswordVO.getUuid(), yunDingLockPasswordVO.getPasswordId());
+        Log.info("解冻门锁密码,门锁uuid:{},密码id:{}", lockPassword.getUuid(), lockPassword.getPwdNo());
         String url = BASE_URL + "/unfrozen_password";
         JSONObject pwdJson = new JSONObject();
-        pwdJson.put("access_token", YunDingSmartLockUtil.getToken());
-        pwdJson.put("uuid", yunDingLockPasswordVO.getUuid());
-        pwdJson.put("password_id", yunDingLockPasswordVO.getPasswordId());
+        pwdJson.put("access_token", YunDingSmartLockUtil.getAccessToken(lockPassword.getUserId()));
+        pwdJson.put("uuid", lockPassword.getUuid());
+        pwdJson.put("password_id", lockPassword.getPwdNo());
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
@@ -244,7 +240,6 @@ public class YunDingSmartLock implements ISmartLock {
         Map<String, Object> map = new HashMap<String, Object>();
         String access_token = YunDingSmartLockUtil.getAccessToken(params.get("userId").toString());
         map.put("access_token", access_token);
-//        map.put("access_token", "e8588a69ed4fd31d1ea714a87abe7d66948e8cfbcb7962406d151effa44ebf75b46ff39036ecc4112aac7ef6643c1b0cc0ec100d1649b44fd88573a6e0ad84b4");
         map.put("count", YunDingPullHomeCountEnum.ONE_THOUSAND.getCount());
         String result = HttpClientUtil.doGet(url, map);
         JSONObject resJson = null;
@@ -482,7 +477,7 @@ public class YunDingSmartLock implements ISmartLock {
                 //等于1为永久性密码，等于2为时效密码
                 if (smartLockPassword.getPwdType().equals("2")) {
                     smartLockPassword.setValidTimeStart(DateUtils.longToString(password.getJSONObject("permission").getLong("begin") * 1000L, "yyyy-MM-dd HH:mm:ss"));
-                    smartLockPassword.setValidTimeEnd(DateUtils.longToString(password.getJSONObject("permission").getLong("begin") * 1000L, "yyyy-MM-dd HH:mm:ss"));
+                    smartLockPassword.setValidTimeEnd(DateUtils.longToString(password.getJSONObject("permission").getLong("end") * 1000L, "yyyy-MM-dd HH:mm:ss"));
                 }
                 //等于999为管理员密码
                 if (MANAGER_SMART_LOCK_PASSWORD_ID.equals(password.getString("id"))) {

@@ -187,4 +187,33 @@ public interface SmartLockDao {
      * @param lockPasswordVo
      */
     void updateLockPassword(LockPasswordVo lockPasswordVo);
+
+    /**
+     * 根据密码id查询密码的详细信息
+     *
+     * @param passwordId
+     * @return
+     */
+    SmartLockPassword findPasswordById(@Param("passwordId") String passwordId);
+
+    /**
+     * 根据密码Id删除门锁密码
+     *
+     * @param passwordId
+     */
+    void deleteLockPassword(@Param("passwordId") String passwordId);
+
+    /**
+     * 冻结门锁密码
+     *
+     * @param passwordId
+     */
+    void frozenLockPassword(@Param("passwordId") String passwordId);
+
+    /**
+     * 解冻门锁密码
+     *
+     * @param passwordId
+     */
+    void unFrozenLockPassword(@Param("passwordId") String passwordId);
 }

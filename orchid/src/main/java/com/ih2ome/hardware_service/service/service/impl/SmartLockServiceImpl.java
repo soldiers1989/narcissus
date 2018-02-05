@@ -380,6 +380,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         lockPasswordVo.setPwdNo(passwordId);
         if ("999".equals(passwordId)) {
             String smartLockPasswordId = smartLockDao.findLockManagePassword(smartLockId, passwordId);
+            lockPasswordVo.setId(smartLockPasswordId);
             //判断该管理密码在数据库中是否存在
             if (smartLockPasswordId != null) {
                 //存在则修改
@@ -392,6 +393,118 @@ public class SmartLockServiceImpl implements SmartLockService {
         else {
             smartLockDao.addLockPassword(lockPasswordVo);
         }
+    }
+
+    /**
+     * 删除门锁密码
+     *
+     * @param
+     * @throws SmartLockException
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteLockPassword(String passwordId, String userId) throws SmartLockException, IllegalAccessException, InstantiationException, ClassNotFoundException, ParseException {
+        SmartLockPassword password = smartLockDao.findPasswordById(passwordId);
+        String providerCode = password.getProviderCode();
+        String thirdPasswordId = password.getThreeId();
+        String thirdLockUuid = password.getLock3Id();
+        LockPasswordVo passwordVo = new LockPasswordVo();
+        passwordVo.setUuid(thirdLockUuid);
+        passwordVo.setPwdNo(thirdPasswordId);
+        passwordVo.setUserId(userId);
+        ISmartLock smartLock = SmartLockOperateFactory.createSmartLock(providerCode);
+        String result = smartLock.deleteLockPassword(passwordVo);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String errNo = jsonObject.getString("ErrNo");
+        if (!errNo.equals("0")) {
+            throw new SmartLockException("第三方密码删除失败");
+        }
+        smartLockDao.deleteLockPassword(passwordId);
+    }
+
+    /**
+     * 修改门锁密码
+     *
+     * @param passwordVo
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateLockPassword(LockPasswordVo passwordVo) throws ClassNotFoundException, SmartLockException, InstantiationException, IllegalAccessException, ParseException {
+        SmartLockPassword password = smartLockDao.findPasswordById(passwordVo.getId());
+        String providerCode = password.getProviderCode();
+        String thirdPasswordId = password.getThreeId();
+        String thirdLockUuid = password.getLock3Id();
+        //设置第三方密码对应门锁Id
+        passwordVo.setUuid(thirdLockUuid);
+        //设置第三方密码id
+        passwordVo.setPwdNo(thirdPasswordId);
+        passwordVo.setUserId(passwordVo.getUserId());
+        ISmartLock smartLock = SmartLockOperateFactory.createSmartLock(providerCode);
+        String result = smartLock.updateLockPassword(passwordVo);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String errNo = jsonObject.getString("ErrNo");
+        if (!errNo.equals("0")) {
+            throw new SmartLockException("第三方密码修改失败");
+        }
+        smartLockDao.updateLockPassword(passwordVo);
+
+    }
+
+    /**
+     * 冻结门锁密码
+     *
+     * @param userId
+     * @param password_id
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void frozenLockPassword(String userId, String password_id) throws ClassNotFoundException, SmartLockException, InstantiationException, IllegalAccessException, ParseException {
+        SmartLockPassword password = smartLockDao.findPasswordById(password_id);
+        String providerCode = password.getProviderCode();
+        String thirdPasswordId = password.getThreeId();
+        String thirdLockUuid = password.getLock3Id();
+        LockPasswordVo passwordVo = new LockPasswordVo();
+        //设置第三方门锁id
+        passwordVo.setUuid(thirdLockUuid);
+        //设置第三方密码id
+        passwordVo.setPwdNo(thirdPasswordId);
+        passwordVo.setUserId(userId);
+        ISmartLock smartLock = SmartLockOperateFactory.createSmartLock(providerCode);
+        String result = smartLock.frozenLockPassword(passwordVo);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String errNo = jsonObject.getString("ErrNo");
+        if (!errNo.equals("0")) {
+            throw new SmartLockException("第三方密码修改失败");
+        }
+        smartLockDao.frozenLockPassword(password_id);
+    }
+
+    /**
+     * 解冻门锁密码
+     *
+     * @param userId
+     * @param passwordId
+     */
+    @Override
+    public void unFrozenLockPassword(String userId, String passwordId) throws ClassNotFoundException, SmartLockException, InstantiationException, IllegalAccessException, ParseException {
+        SmartLockPassword password = smartLockDao.findPasswordById(passwordId);
+        String providerCode = password.getProviderCode();
+        String thirdPasswordId = password.getThreeId();
+        String thirdLockUuid = password.getLock3Id();
+        LockPasswordVo passwordVo = new LockPasswordVo();
+        //设置第三方门锁id
+        passwordVo.setUuid(thirdLockUuid);
+        //设置第三方密码id
+        passwordVo.setPwdNo(thirdPasswordId);
+        passwordVo.setUserId(userId);
+        ISmartLock smartLock = SmartLockOperateFactory.createSmartLock(providerCode);
+        String result = smartLock.unfrozenLockPassword(passwordVo);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String errNo = jsonObject.getString("ErrNo");
+        if (!errNo.equals("0")) {
+            throw new SmartLockException("第三方密码修改失败");
+        }
+        smartLockDao.unFrozenLockPassword(passwordId);
     }
 
 
