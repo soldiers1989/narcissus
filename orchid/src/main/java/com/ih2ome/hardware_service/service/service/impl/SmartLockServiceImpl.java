@@ -17,6 +17,7 @@ import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -518,6 +519,25 @@ public class SmartLockServiceImpl implements SmartLockService {
     public SmartLockDetailVO findSmartLockDetail(String lockId) throws SmartLockException {
         SmartLockDetailVO lockDetail = smartLockDao.findSmartLockDetail(lockId);
         lockDetail.splitVersion();
+        String houseCatalog = lockDetail.getHouseCatalog();
+        String publicZoneId = lockDetail.getPublicZoneId();
+        String roomId = lockDetail.getRoomId();
+        SmartLockDetailVO smartLockDetailVO = null;
+        if (HouseStyleEnum.CONCENTRAT.getCode().equals(houseCatalog)) {
+            if (StringUtils.isNotBlank(publicZoneId)) {
+                smartLockDetailVO = smartLockDao.findConcentrateHomeInfoByPublicZoneId(publicZoneId);
+            } else {
+                smartLockDetailVO = smartLockDao.findConcentrateHomeInfoByRoomId(roomId);
+            }
+        } else {
+            if (StringUtils.isNotBlank(publicZoneId)) {
+                smartLockDetailVO = smartLockDao.findDispersedHomeInfoByPublicZoneId(publicZoneId);
+            } else {
+                smartLockDetailVO = smartLockDao.findDispersedHomeInfoByRoomId(roomId);
+            }
+        }
+        lockDetail.setHomeName(smartLockDetailVO.getHomeName());
+        lockDetail.setRoomName(smartLockDetailVO.getRoomName());
         return lockDetail;
     }
 

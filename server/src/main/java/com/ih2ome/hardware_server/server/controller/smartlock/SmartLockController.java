@@ -392,7 +392,9 @@ public class SmartLockController extends BaseController {
         try {
             smartLockDetailVO = smartLockService.findSmartLockDetail(lockId);
         } catch (SmartLockException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
+            return result;
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("smartlockinfo", smartLockDetailVO);

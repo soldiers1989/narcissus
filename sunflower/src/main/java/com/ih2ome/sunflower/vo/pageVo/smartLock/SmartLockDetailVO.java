@@ -13,9 +13,21 @@ import lombok.Data;
 @Data
 public class SmartLockDetailVO {
     /**
+     * 公寓类型
+     */
+    private String houseCatalog;
+    /**
      * 公寓名称
      */
     private String homeName;
+    /**
+     * 公共区域id
+     */
+    private String publicZoneId;
+    /**
+     * 房间id
+     */
+    private String roomId;
     /**
      * 房间名称
      */
@@ -23,7 +35,7 @@ public class SmartLockDetailVO {
     /**
      * 门锁Id
      */
-    private long lockId;
+    private String lockId;
     /**
      * 门锁序列号
      */
@@ -47,7 +59,7 @@ public class SmartLockDetailVO {
     /**
      * 网关id
      */
-    private long gatewayId;
+    private String gatewayId;
     /**
      * 网关编号
      */
@@ -87,14 +99,19 @@ public class SmartLockDetailVO {
     private String versionJson;
 
     /**
+     * 设备型号名称
+     */
+    private String modelName;
+
+    /**
      * 将versionJson切割赋值给各个version
      */
     public void splitVersion() {
         JSONObject jsonObject = JSONObject.parseObject(this.versionJson);
         this.fireWareVersion = jsonObject.getString("app_version");
         this.hardwareVersion = jsonObject.getString("hardware_version");
-        this.mediaVersion = jsonObject.getString("media_version");
-        this.kernelVersion = jsonObject.getString("kernel_version");
+//        this.mediaVersion = jsonObject.getString("media_version");
+//        this.kernelVersion = jsonObject.getString("kernel_version");
         this.zigBeeVersion = jsonObject.getString("zigbee_version");
     }
 

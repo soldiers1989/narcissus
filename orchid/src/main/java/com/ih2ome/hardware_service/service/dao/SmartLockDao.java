@@ -227,6 +227,38 @@ public interface SmartLockDao {
     SmartLockDetailVO findSmartLockDetail(@Param("lockId") String lockId);
 
     /**
+     * 通过公共区域id查询房源信息(集中式)
+     *
+     * @param publicZoneId
+     * @return
+     */
+    SmartLockDetailVO findConcentrateHomeInfoByPublicZoneId(@Param("publicZoneId") String publicZoneId);
+
+    /**
+     * 通过房间id查询房源信息(集中式)
+     *
+     * @param roomId
+     * @return
+     */
+    SmartLockDetailVO findConcentrateHomeInfoByRoomId(@Param("roomId") String roomId);
+
+    /**
+     * 通过公共区域id查询房源信息(分散式)
+     *
+     * @param publicZoneId
+     * @return
+     */
+    SmartLockDetailVO findDispersedHomeInfoByPublicZoneId(@Param("publicZoneId") String publicZoneId);
+
+    /**
+     * 通过房间id查询房屋信息(分散式)
+     *
+     * @param roomId
+     * @return
+     */
+    SmartLockDetailVO findDispersedHomeInfoByRoomId(@Param("roomId") String roomId);
+
+    /**
      * 根据uuid删除门锁密码
      * @param uuid
      */
