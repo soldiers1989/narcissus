@@ -91,6 +91,7 @@ public class SmartLockGatewayController extends BaseController{
 
         }
         SmartLockDetailVO smartLockDetailVO = smartLockGatewayService.getSmartLockGatewayDetailInfo(gatewayId);
+        smartLockDetailVO.setVersionJson(null);
         String result = structureSuccessResponseVO((JSONObject) JSON.toJSON(smartLockDetailVO), new Date().toString(), "");
         return result;
 

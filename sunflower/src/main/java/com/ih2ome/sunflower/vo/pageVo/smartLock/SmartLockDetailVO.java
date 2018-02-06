@@ -59,7 +59,7 @@ public class SmartLockDetailVO {
     /**
      * 网关id
      */
-    private String gatewayId;
+    private long gatewayId;
     /**
      * 网关编号
      */
@@ -98,6 +98,10 @@ public class SmartLockDetailVO {
      */
     private String versionJson;
 
+    /**
+     * 更新时间
+     */
+    private String updateTime;
     /**
      * 设备型号名称
      */
