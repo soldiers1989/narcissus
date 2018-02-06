@@ -11,7 +11,6 @@ import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
 import com.ih2ome.sunflower.vo.pageVo.enums.*;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -577,13 +576,21 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public List<SmartMistakeInfo> findHistoryOperations(String lockId) {
-        List<SmartMistakeInfo> list=smartLockDao.findHistoryOperations(lockId);
+        List<SmartMistakeInfo> list = smartLockDao.findHistoryOperations(lockId);
         return list;
     }
 
+    /**
+     * 查询异常记录
+     *
+     * @param lockId
+     * @return
+     * @throws SmartLockException
+     */
     @Override
-    public void updateBatteryInfo(LockInfoVo lockInfoVo) {
-        smartLockDao.updateBatteryInfo(lockInfoVo);
+    public List<SmartMistakeInfo> findExceptionRecords(String lockId) throws SmartLockException {
+        List<SmartMistakeInfo> list=smartLockDao.findExceptionRecords(lockId);
+        return list;
     }
 
 

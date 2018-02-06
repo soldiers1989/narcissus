@@ -447,5 +447,26 @@ public class SmartLockController extends BaseController {
         return result;
     }
 
+    /**
+     * 查询操作记录
+     */
+    @RequestMapping(value = "/search/exceptionRecords", method = RequestMethod.POST, produces = {"application/json"})
+    public String getLockExceptionRecords(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        String lockId = dt.getString("serial_id");
+        List<SmartMistakeInfo> exceptions = null;
+        try {
+            exceptions = smartLockService.findExceptionRecords(lockId);
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
+            return result;
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("exceptionRecords", exceptions);
+        String result = structureSuccessResponseVO(jsonObject, new Date().toString(), "查询成功");
+        return result;
+    }
+
 
 }
