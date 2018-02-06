@@ -232,6 +232,16 @@
         UPDATE narcissus_test.smart_lock_password SET `status`='2' where smart_lock_password_ID=#{passwordId}
     </update>
 
+    <!--修改电量信息-->
+    <update id="updateBatteryInfo" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo">
+        update
+        narcissus_test.smart_device_v2 nsdv2,
+        narcissus_test.smart_lock nsl set nsl.power=#{remainingBattery}
+        where
+        nsdv2.smart_device_ID=nsl.smart_lock_ID
+        and nsdv2.manage_status='0'
+        and nsdv2.threeID=#{uuid}
+    </update>
     <!--select-->
     <!--查询房源信息(分散式)-->
     <select id="findDispersedHomes" parameterType="string" resultMap="dispersedResultMap">
