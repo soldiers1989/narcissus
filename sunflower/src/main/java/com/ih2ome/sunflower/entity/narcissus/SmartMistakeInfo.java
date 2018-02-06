@@ -5,11 +5,15 @@ import lombok.Data;
 @Data
 public class SmartMistakeInfo {
 
-  private long id;
-  private java.sql.Timestamp createdAt;
-  private long smartDeviceType;
-  private String uuid;
-  private String sn;
-  private String exceptionType;
+    private Long id;
+    private java.sql.Timestamp createdAt;
+    private Long smartDeviceType;
+    private String uuid;
+    private String sn;
+    private String exceptionType;
+
+    private String passwordName;
+    private String userName;
+    private String mobile;
 
 }

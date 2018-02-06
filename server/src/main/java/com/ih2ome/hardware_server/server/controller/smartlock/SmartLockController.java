@@ -8,6 +8,7 @@ import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
+import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
@@ -401,4 +402,50 @@ public class SmartLockController extends BaseController {
         String result = structureSuccessResponseVO(jsonObject, new Date().toString(), "查询成功");
         return result;
     }
+
+
+    /**
+     * 查询开门记录
+     */
+    @RequestMapping(value = "/search/openlockrecord", method = RequestMethod.POST, produces = {"application/json"})
+    public String getOpenLockRecord(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        String lockId = dt.getString("serial_id");
+        List<SmartMistakeInfo> openRecords = null;
+        try {
+            openRecords = smartLockService.findOpenLockRecord(lockId);
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
+            return result;
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("openRecords", openRecords);
+        String result = structureSuccessResponseVO(jsonObject, new Date().toString(), "查询成功");
+        return result;
+    }
+
+
+    /**
+     * 查询操作记录
+     */
+    @RequestMapping(value = "/search/lock_history_operations", method = RequestMethod.POST, produces = {"application/json"})
+    public String getLockHistoryOperations(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        String lockId = dt.getString("serial_id");
+        List<SmartMistakeInfo> historyOperations = null;
+        try {
+            historyOperations = smartLockService.findHistoryOperations(lockId);
+        } catch (SmartLockException e) {
+            Log.error(e.getMessage(), e);
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "查询失败");
+            return result;
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("historyOperations", historyOperations);
+        String result = structureSuccessResponseVO(jsonObject, new Date().toString(), "查询成功");
+        return result;
+    }
+
+
 }

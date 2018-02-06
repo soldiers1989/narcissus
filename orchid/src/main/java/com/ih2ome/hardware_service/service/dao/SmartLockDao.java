@@ -1,9 +1,6 @@
 package com.ih2ome.hardware_service.service.dao;
 
-import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
-import com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2;
-import com.ih2ome.sunflower.entity.narcissus.SmartLock;
-import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
+import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
@@ -260,7 +257,24 @@ public interface SmartLockDao {
 
     /**
      * 根据uuid删除门锁密码
+     *
      * @param uuid
      */
     void deleteLockPasswordByUuid(String uuid);
+
+    /**
+     * 查询开门记录
+     *
+     * @param lockId
+     * @return
+     */
+    List<SmartMistakeInfo> findOpenLockRecord(String lockId);
+
+    /**
+     * 查询操作记录
+     *
+     * @param lockId
+     * @return
+     */
+    List<SmartMistakeInfo> findHistoryOperations(String lockId);
 }
