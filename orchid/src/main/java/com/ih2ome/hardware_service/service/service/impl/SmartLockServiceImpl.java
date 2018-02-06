@@ -396,6 +396,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         else {
             smartLockDao.addLockPassword(lockPasswordVo);
         }
+        
     }
 
     /**

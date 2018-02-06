@@ -2,6 +2,8 @@ package com.ih2ome.sunflower.entity.narcissus;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 public class SmartMistakeInfo {
 
@@ -18,5 +20,6 @@ public class SmartMistakeInfo {
 
     private String exceptionName;
     private String description;
+    private String createdTime;
 
 }

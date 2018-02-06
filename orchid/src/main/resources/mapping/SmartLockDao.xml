@@ -590,7 +590,7 @@
             resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
         SELECT
         ntslp.`name` AS passwordName,
-        ntsmi.created_at AS createdAt,
+        ntsmi.created_at AS createdTime,
         IFNULL(ntslp.pwd_user_name,'') AS userName,
         IFNULL(ntslp.send_to_mobile,'') AS mobile
         FROM
@@ -623,7 +623,7 @@
         WHEN 12 THEN
         '门锁密码连输三次错误'
         END exceptionName,
-        ntsmi.created_at AS createdAt,
+        ntsmi.created_at AS createdTime,
         CASE ntsmi.exception_type
         WHEN 9 THEN
         '电量过低'

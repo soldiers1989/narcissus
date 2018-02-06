@@ -293,4 +293,11 @@ public interface SmartLockDao {
      * @param lockInfoVo
      */
     void updateBatteryInfo(LockInfoVo lockInfoVo);
+
+    /**
+     * 新增操作日志
+     *
+     * @param smartLockLog
+     */
+    void addSmartLockOperationLog(SmartLockLog smartLockLog);
 }
