@@ -22,4 +22,5 @@ public class SmartMistakeInfo {
     private String description;
     private String createdTime;
 
+
 }

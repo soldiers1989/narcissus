@@ -420,6 +420,7 @@ public class SmartLockServiceImpl implements SmartLockService {
     public void deleteLockPassword(String passwordId, String userId) throws SmartLockException, IllegalAccessException, InstantiationException, ClassNotFoundException, ParseException {
         SmartLockPassword password = smartLockDao.findPasswordById(passwordId);
         String providerCode = password.getProviderCode();
+        String smartLockId = password.getSmartLockId();
         String thirdPasswordId = password.getThreeId();
         String thirdLockUuid = password.getLock3Id();
         LockPasswordVo passwordVo = new LockPasswordVo();
@@ -434,6 +435,12 @@ public class SmartLockServiceImpl implements SmartLockService {
             throw new SmartLockException("第三方密码删除失败");
         }
         smartLockDao.deleteLockPassword(passwordId);
+        SmartLockLog smartLockLog = new SmartLockLog();
+        smartLockLog.setSmartLockId(Long.valueOf(smartLockId));
+        smartLockLog.setSmartLockPasswordId(Long.valueOf(passwordId));
+        smartLockLog.setCreatedBy(Long.valueOf(userId));
+        smartLockLog.setOperatorType(SmartLockOperatorTypeEnum.SMARTLOCK_PASSWORD_DELETE.getCode().longValue());
+        smartLockDao.addSmartLockOperationLog(smartLockLog);
     }
 
     /**
@@ -446,6 +453,7 @@ public class SmartLockServiceImpl implements SmartLockService {
     public void updateLockPassword(LockPasswordVo passwordVo) throws ClassNotFoundException, SmartLockException, InstantiationException, IllegalAccessException, ParseException {
         SmartLockPassword password = smartLockDao.findPasswordById(passwordVo.getId());
         String providerCode = password.getProviderCode();
+        String smartLockId = password.getSmartLockId();
         String thirdPasswordId = password.getThreeId();
         String thirdLockUuid = password.getLock3Id();
         //设置第三方密码对应门锁Id
@@ -461,7 +469,12 @@ public class SmartLockServiceImpl implements SmartLockService {
             throw new SmartLockException("第三方密码修改失败");
         }
         smartLockDao.updateLockPassword(passwordVo);
-
+        SmartLockLog smartLockLog = new SmartLockLog();
+        smartLockLog.setSmartLockId(Long.valueOf(smartLockId));
+        smartLockLog.setSmartLockPasswordId(Long.valueOf(passwordVo.getId()));
+        smartLockLog.setCreatedBy(Long.valueOf(passwordVo.getUserId()));
+        smartLockLog.setOperatorType(SmartLockOperatorTypeEnum.SMARTLOCK_PASSWORD_UPDATE.getCode().longValue());
+        smartLockDao.addSmartLockOperationLog(smartLockLog);
     }
 
     /**
@@ -475,6 +488,7 @@ public class SmartLockServiceImpl implements SmartLockService {
     public void frozenLockPassword(String userId, String password_id) throws ClassNotFoundException, SmartLockException, InstantiationException, IllegalAccessException, ParseException {
         SmartLockPassword password = smartLockDao.findPasswordById(password_id);
         String providerCode = password.getProviderCode();
+        String smartLockId = password.getSmartLockId();
         String thirdPasswordId = password.getThreeId();
         String thirdLockUuid = password.getLock3Id();
         LockPasswordVo passwordVo = new LockPasswordVo();
@@ -491,6 +505,12 @@ public class SmartLockServiceImpl implements SmartLockService {
             throw new SmartLockException("第三方密码修改失败");
         }
         smartLockDao.frozenLockPassword(password_id);
+        SmartLockLog smartLockLog = new SmartLockLog();
+        smartLockLog.setSmartLockId(Long.valueOf(smartLockId));
+        smartLockLog.setSmartLockPasswordId(Long.valueOf(password_id));
+        smartLockLog.setCreatedBy(Long.valueOf(userId));
+        smartLockLog.setOperatorType(SmartLockOperatorTypeEnum.SMARTLOCK_PASSWORD_FROZEN.getCode().longValue());
+        smartLockDao.addSmartLockOperationLog(smartLockLog);
     }
 
     /**
@@ -504,6 +524,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         SmartLockPassword password = smartLockDao.findPasswordById(passwordId);
         String providerCode = password.getProviderCode();
         String thirdPasswordId = password.getThreeId();
+        String smartLockId = password.getSmartLockId();
         String thirdLockUuid = password.getLock3Id();
         LockPasswordVo passwordVo = new LockPasswordVo();
         //设置第三方门锁id
@@ -519,6 +540,12 @@ public class SmartLockServiceImpl implements SmartLockService {
             throw new SmartLockException("第三方密码修改失败");
         }
         smartLockDao.unFrozenLockPassword(passwordId);
+        SmartLockLog smartLockLog = new SmartLockLog();
+        smartLockLog.setSmartLockId(Long.valueOf(smartLockId));
+        smartLockLog.setSmartLockPasswordId(Long.valueOf(passwordId));
+        smartLockLog.setCreatedBy(Long.valueOf(userId));
+        smartLockLog.setOperatorType(SmartLockOperatorTypeEnum.SMARTLOCK_PASSWORD_UNFROZEN.getCode().longValue());
+        smartLockDao.addSmartLockOperationLog(smartLockLog);
     }
 
     /**
