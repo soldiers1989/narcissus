@@ -622,7 +622,22 @@
     <!--通过门锁id查询操作记录-->
     <select id="findHistoryOperations" parameterType="string"
             resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
-        
+        SELECT
+        ctup.`name` as userName,
+        ctup.phone as mobile,
+        ntsl.created_at as createdTime,
+        CASE ntsl.operator_type
+        WHEN 1 THEN '新增密码'
+        WHEN 2 THEN '更新密码'
+        WHEN 3 THEN '删除密码'
+        WHEN 4 THEN '冻结密码'
+        WHEN 5 THEN '冻结密码'
+        END operatorType
+        FROM
+            narcissus_test.smart_lock_log ntsl
+        LEFT JOIN caspain_test.auth_user ctau ON ntsl.created_by = ctau.id
+        LEFT JOIN caspain_test.user_profile ctup ON ctup.user_id = ctau.id
+        where ntsl.smart_lock_ID=#{lockId} ORDER BY ntsl.created_at DESC
     </select>
 
     <!--通过门锁id查询异常记录-->

@@ -21,6 +21,7 @@ public class SmartMistakeInfo {
     private String exceptionName;
     private String description;
     private String createdTime;
+    private String operatorType;
 
 
 }
