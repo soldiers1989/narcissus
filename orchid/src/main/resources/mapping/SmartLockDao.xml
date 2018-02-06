@@ -137,7 +137,8 @@
     </insert>
 
     <!--新增门锁密码-->
-    <insert id="addLockPassword" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
+    <insert id="addLockPassword" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="smart_lock_password_ID">
         INSERT INTO narcissus_test.smart_lock_password (
         smart_lock_ID,
         provider_code,
@@ -155,6 +156,12 @@
         description,
         is_default
         )values(#{serialNum},#{provideCode},#{pwdNo},#{uuid},NOW(),#{name},#{status},#{pwdType},#{enableTime},#{disableTime},#{mobile},#{userName},#{password},#{remark},#{isDefault});
+    </insert>
+
+    <!--新增门锁密码操作记录-->
+    <insert id="addSmartLockOperationLog" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartLockLog">
+      INSERT INTO narcissus_test.smart_lock_log(created_at,created_by,smart_lock_password_ID,smart_lock_ID,operator_type)
+      VALUES (NOW(),#{createdBy},#{smartLockPasswordId}, #{smartLockId},#{operatorType});
     </insert>
 
     <!--delete-->
@@ -225,12 +232,14 @@
             <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
         </set>
         WHERE 1=1
-        <if test="id!=null add id.trim()!=''">
-            and smart_lock_password_ID=#{id}
-        </if>
-        <if test="uuid!=null add uuid.trim()!=''">
-            and threeID=#{uuid}
-        </if>
+        <choose>
+            <when test="id!=null and id.trim()!=''and ( uuid==null or uuid.trim()=='')">
+                and smart_lock_password_ID=#{id}
+            </when>
+            <when test="uuid!=null and uuid.trim()!='' and (id==null or id.trim()=='')">
+                and threeID=#{uuid}
+            </when>
+        </choose>
     </update>
 
     <!--冻结门锁密码-->

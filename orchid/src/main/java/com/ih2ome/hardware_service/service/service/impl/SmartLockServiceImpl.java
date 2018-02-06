@@ -363,9 +363,9 @@ public class SmartLockServiceImpl implements SmartLockService {
         if (SmartLockPwdTypeEnum.MANAGER_PASSWORD.getCode().equals(digitPwdType)) {
             lockPasswordVo.setIsDefault(SmartLockPasswordIsDefaultEnum.PASSWORD_ISDEFAULT.getCode());
             lockPasswordVo.setPwdType(SmartLockPasswordValidTypeEnum.PASSWORD_FOREVER.getCode());
-            long currentTime = System.currentTimeMillis();
-            lockPasswordVo.setEnableTime(DateUtils.longToString(currentTime, "yyyy-MM-dd HH:mm:ss"));
-            lockPasswordVo.setDisableTime("2060-12-31 00:00:00");
+//            long currentTime = System.currentTimeMillis();
+//            lockPasswordVo.setEnableTime(DateUtils.longToString(currentTime, "yyyy-MM-dd HH:mm:ss"));
+//            lockPasswordVo.setDisableTime("2060-12-31 00:00:00");
         } else {
             lockPasswordVo.setIsDefault(SmartLockPasswordIsDefaultEnum.PASSWORD_ISNOTDEFAULT.getCode());
             lockPasswordVo.setPwdType(SmartLockPasswordValidTypeEnum.PASSWORD_TIMEVALID.getCode());
@@ -381,6 +381,8 @@ public class SmartLockServiceImpl implements SmartLockService {
         lockPasswordVo.setStatus(SmartLockPasswordStatusEnum.PASSWORD_START.getCode());
         String passwordId = resJson.getString("id");
         lockPasswordVo.setPwdNo(passwordId);
+        //操作密码记录对象
+        SmartLockLog smartLockLog = new SmartLockLog();
         if ("999".equals(passwordId)) {
             String smartLockPasswordId = smartLockDao.findLockManagePassword(smartLockId, passwordId);
             lockPasswordVo.setId(smartLockPasswordId);
@@ -388,15 +390,24 @@ public class SmartLockServiceImpl implements SmartLockService {
             if (smartLockPasswordId != null) {
                 //存在则修改
                 smartLockDao.updateLockPassword(lockPasswordVo);
+                smartLockLog.setSmartLockPasswordId(Long.valueOf(smartLockPasswordId));
+                smartLockLog.setOperatorType(SmartLockOperatorTypeEnum.SMARTLOCK_PASSWORD_UPDATE.getCode().longValue());
             } //不存在则创建
             else {
                 smartLockDao.addLockPassword(lockPasswordVo);
+                smartLockLog.setSmartLockPasswordId(Long.valueOf(lockPasswordVo.getId()));
+                smartLockLog.setOperatorType(SmartLockOperatorTypeEnum.SMARTLOCK_PASSWORD_ADD.getCode().longValue());
             }
         }//不是管理密码则直接创建
         else {
             smartLockDao.addLockPassword(lockPasswordVo);
+            smartLockLog.setSmartLockPasswordId(Long.valueOf(lockPasswordVo.getId()));
+            smartLockLog.setOperatorType(SmartLockOperatorTypeEnum.SMARTLOCK_PASSWORD_ADD.getCode().longValue());
         }
-        
+        smartLockLog.setCreatedBy(Long.valueOf(lockPasswordVo.getUserId()));
+        smartLockLog.setSmartLockId(Long.valueOf(smartLockId));
+        //新增密码操作记录
+        smartLockDao.addSmartLockOperationLog(smartLockLog);
     }
 
     /**
