@@ -44,8 +44,10 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
     public SmartLockGatewayHadBindVO getSmartLockHadBindGateway(String gatewayId) {
         if(StringUtils.isNotBlank(gatewayId)){
             SmartLockGatewayHadBindVO smartLockGatewayHadBindVO = smartLockGatewayDao.getSmartLockHadBindGateway(gatewayId);
-            List <SmartLockGatewayHadBindRoomVO> smartLockGatewayHadBindRoomVOList = smartLockGatewayDao.getSmartLockAndRoomListByGatewayId(gatewayId);
-            smartLockGatewayHadBindVO.setSmartLockGatewayHadBindRoomVOList(smartLockGatewayHadBindRoomVOList);
+            if(smartLockGatewayHadBindVO!=null){
+                List <SmartLockGatewayHadBindRoomVO> smartLockGatewayHadBindRoomVOList = smartLockGatewayDao.getSmartLockAndRoomListByGatewayId(gatewayId);
+                smartLockGatewayHadBindVO.setSmartLockGatewayHadBindRoomVOList(smartLockGatewayHadBindRoomVOList);
+            }
             return smartLockGatewayHadBindVO;
 
         }

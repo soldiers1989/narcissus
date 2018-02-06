@@ -7,7 +7,6 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
-import com.ih2ome.sunflower.model.house.SmartLockGatewayModel;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
@@ -65,12 +64,12 @@ public class SmartLockGatewayController extends BaseController{
     @RequestMapping(value = "/search/smartLockHadBindGatewayList", method = RequestMethod.POST, produces = {"application/json"})
     public String getSmartLockHadBindGateway(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        SmartLockGatewayModel smartLockGatewayModel = dt.getObject("smartLockGatewayModel", SmartLockGatewayModel.class);
-        if(StringUtils.isEmpty(smartLockGatewayModel.getGatewayId())){
+        String gatewayId = dt.getString("gatewayId");
+        if(StringUtils.isEmpty(gatewayId)){
             return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"gatewayId为空");
 
         }
-        SmartLockGatewayHadBindVO model = smartLockGatewayService.getSmartLockHadBindGateway(smartLockGatewayModel.getGatewayId());
+        SmartLockGatewayHadBindVO model = smartLockGatewayService.getSmartLockHadBindGateway(gatewayId);
         JSONObject responseJson = new JSONObject();
         responseJson.put("smartLockGatewayHadBindVO", model);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");

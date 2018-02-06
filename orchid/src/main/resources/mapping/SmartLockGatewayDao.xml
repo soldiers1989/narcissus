@@ -120,43 +120,81 @@
     </select>
 
     <select id="getSmartLockHadBindGateway" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO">
+           (
             SELECT
                 nsg.smart_gateway_id gatewayId,
                 nsg.uuid gatewayCode,
-                nsg.`name` gatewayName,
-                IFNULL(ch.area,va.`name`) houseName,
-                IFNULL(ch.address,va.address) houseAddress
+                nsg.model_name gatewayName,
+                 va.`name` houseName,
+                 va.address houseAddress
+            FROM
+                narcissus_test.smart_device_v2 nsdv2,
+                narcissus_test.smart_gateway_v2 nsg,
+                volga_test.apartment va,
+                narcissus_test.public_zone npz
+            WHERE
+                nsg.smart_gateway_ID = nsdv2.smart_device_ID
+            AND nsdv2.manage_status = '0'
+            AND nsdv2.public_zone_ID = npz.public_zone_ID
+            AND npz.parent_ID = va.id
+            AND nsg.smart_gateway_ID = #{gatewayId}
+            )
+            UNION
+            (
+                SELECT
+                nsg.smart_gateway_id gatewayId,
+                nsg.uuid gatewayCode,
+                nsg.model_name gatewayName,
+                 ch.area houseName,
+                 ch.address houseAddress
             FROM
                 narcissus_test.smart_device_v2 nsdv2,
                 narcissus_test.smart_gateway_v2 nsg,
                 caspain_test.house ch,
-                volga_test.apartment va
+                narcissus_test.public_zone npz
             WHERE
-                nsg.smart_lock_ID = nsdv2.smart_device_ID
-            AND nsg.smart_lock_ID=#{gatewayId}
-            AND (
-                nsdv2.house_ID = ch.id
-                OR nsdv2.apartment_ID = va.id
+                nsg.smart_gateway_ID = nsdv2.smart_device_ID
+            AND nsdv2.manage_status = '0'
+            AND nsdv2.public_zone_ID = npz.public_zone_ID
+            AND npz.parent_ID = ch.id
+            AND nsg.smart_gateway_ID = #{gatewayId}
             )
     </select>
 
     <select id="getSmartLockAndRoomListByGatewayId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO">
-        SELECT
-            ntsl.smart_lock_ID smartLockId,
-            IFNULL(cr.`name`,vr.`name`) roomNo,
-            ntsl.power powerRate,
-            nsdv2.connection_status communicationStatus
-        FROM
-            narcissus_test.smart_lock ntsl,
-            narcissus_test.smart_gateway_bind_v2 nsgbv2,
-            narcissus_test.smart_device_v2 nsdv2,
-            caspain_test.room cr,
-            volga_test.room vr
-        WHERE
-            nsgbv2.smart_device_ID = ntsl.smart_lock_ID
-        AND (nsdv2.room_ID = cr.id or nsdv2.room_ID=vr.id)
-        AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
-        AND nsgbv2.smart_gateway_ID = #{gatewayId}
+        (
+	SELECT
+		ntsl.smart_lock_ID smartLockId,
+		vr.`name` roomNo,
+		ntsl.power powerRate,
+		nsdv2.connection_status communicationStatus
+	FROM
+		narcissus_test.smart_lock ntsl,
+		narcissus_test.smart_gateway_bind_v2 nsgbv2,
+		narcissus_test.smart_device_v2 nsdv2,
+		volga_test.room vr
+	WHERE
+		nsgbv2.smart_device_ID = ntsl.smart_lock_ID
+	AND nsdv2.room_ID = vr.id
+	AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
+	AND nsgbv2.smart_gateway_ID = #{gatewayId}) UNION
+	(
+		SELECT
+			ntsl.smart_lock_ID smartLockId,
+			cr.`name` roomNo,
+			ntsl.power powerRate,
+			nsdv2.connection_status communicationStatus
+		FROM
+			narcissus_test.smart_lock ntsl,
+			narcissus_test.smart_gateway_bind_v2 nsgbv2,
+			narcissus_test.smart_device_v2 nsdv2,
+			caspain_test.room cr
+		WHERE
+			nsgbv2.smart_device_ID = ntsl.smart_lock_ID
+		AND nsdv2.room_ID = cr.id
+		AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
+		AND nsgbv2.smart_gateway_ID = #{gatewayId}
+	)
     </select>
 
     <select id="getSmartLockGatewayDetailInfo" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
