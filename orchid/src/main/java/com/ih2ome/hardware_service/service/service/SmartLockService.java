@@ -143,4 +143,5 @@ public interface SmartLockService {
      * @param lockInfoVo
      */
     void updateBatteryInfo(LockInfoVo lockInfoVo);
+
 }

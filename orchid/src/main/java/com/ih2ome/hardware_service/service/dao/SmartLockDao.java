@@ -300,4 +300,10 @@ public interface SmartLockDao {
      * @param smartLockLog
      */
     void addSmartLockOperationLog(SmartLockLog smartLockLog);
+
+    /**
+     * 根据uuid更新密码
+     * @param lockPasswordVo
+     */
+    void updateLockPasswordByUuid(LockPasswordVo lockPasswordVo);
 }

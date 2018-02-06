@@ -231,15 +231,21 @@
             <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
             <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
         </set>
-        WHERE 1=1
-        <choose>
-            <when test="id!=null and id.trim()!=''and ( uuid==null or uuid.trim()=='')">
-                and smart_lock_password_ID=#{id}
-            </when>
-            <when test="uuid!=null and uuid.trim()!='' and (id==null or id.trim()=='')">
-                and threeID=#{uuid}
-            </when>
-        </choose>
+        WHERE  smart_lock_password_ID=#{id}
+
+    </update>
+
+    <update id="updateLockPasswordByUuid" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
+        UPDATE narcissus_test.smart_lock_password
+        <set>
+            <if test="userName!=null and userName.trim()!=''">pwd_user_name = #{userName},</if>
+            <if test="password!=null and password.trim()!=''">password = #{password},</if>
+            <if test="mobile!=null and mobile.trim()!=''">send_to_mobile = #{mobile},</if>
+            <if test="remark!=null and remark.trim()!=''">description = #{remark},</if>
+            <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
+            <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
+        </set>
+        WHERE and threeID=#{uuid}
     </update>
 
     <!--冻结门锁密码-->

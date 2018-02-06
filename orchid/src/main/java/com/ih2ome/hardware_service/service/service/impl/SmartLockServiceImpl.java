@@ -1,7 +1,6 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
@@ -561,7 +560,7 @@ public class SmartLockServiceImpl implements SmartLockService {
 
     @Override
     public void updateLockPasswordCallBack(LockPasswordVo passwordVo) {
-        smartLockDao.updateLockPassword(passwordVo);
+        smartLockDao.updateLockPasswordByUuid(passwordVo);
     }
 
     @Override
