@@ -26,6 +26,15 @@
 
     </resultMap>
 
+    <update id="deleteSmartLockGateway">
+        UPDATE narcissus_test.smart_device_v2 nsdv2,
+         narcissus_test.smart_gateway_v2 nsgv2
+        SET nsdv2.manage_status = '1'
+        WHERE
+            nsdv2.smart_device_ID = nsgv2.smart_gateway_ID
+        and nsdv2.threeID=#{uuid}
+    </update>
+
     <!--SELECT-->
 
     <select id="getConcentrateGatewayModelByHomeId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO">

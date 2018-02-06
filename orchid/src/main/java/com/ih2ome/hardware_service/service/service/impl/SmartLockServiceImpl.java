@@ -637,4 +637,9 @@ public class SmartLockServiceImpl implements SmartLockService {
         smartLockDao.updateBatteryInfo(lockInfoVo);
     }
 
+    @Override
+    public void uninstallSmartLock(String uuid) {
+        smartLockDao.deleteSmartLockByUuid(uuid);
+    }
+
 }

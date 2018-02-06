@@ -1,6 +1,7 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
@@ -22,6 +23,7 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
 
     @Resource
     SmartLockGatewayDao smartLockGatewayDao;
+
 
     @Override
     public List<SmartLockGatewayAndHouseInfoVO> getSmartLockGatewayList(String homeId, String type) {
@@ -80,5 +82,10 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
             }
         }
         return null;
+    }
+
+    @Override
+    public void uninstallSmartLockGateway(String uuid) {
+        smartLockGatewayDao.deleteSmartLockGateway(uuid);
     }
 }

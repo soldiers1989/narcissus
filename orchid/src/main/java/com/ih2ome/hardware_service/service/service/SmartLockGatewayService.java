@@ -44,4 +44,10 @@ public interface SmartLockGatewayService {
      * @return
      */
     List<SmartLockHadBindHouseVo> getHadBindHouseList(String type, String userId);
+
+    /**
+     * 解绑网关
+     * @param uuid
+     */
+    void uninstallSmartLockGateway(String uuid);
 }

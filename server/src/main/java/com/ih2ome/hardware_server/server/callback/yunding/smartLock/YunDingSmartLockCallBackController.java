@@ -6,6 +6,7 @@ import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.hardware_service.service.service.SmartLockWarningService;
 import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
@@ -44,6 +45,9 @@ public class YunDingSmartLockCallBackController extends BaseController{
 
     @Autowired
     SmartLockWarningService smartLockWarningService;
+
+    @Autowired
+    SmartLockGatewayService smartLockGatewayService;
 
     final static String TOKEN_YUNDING_USER_CODE = "yunding_user_code_token";
 
@@ -117,6 +121,8 @@ public class YunDingSmartLockCallBackController extends BaseController{
                 break;
             case "batteryAsync":
                 asyncBattery(apiRequestVO);
+                break;
+            case "deviceUninstall":
                 break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
@@ -252,6 +258,20 @@ public class YunDingSmartLockCallBackController extends BaseController{
         lockInfoVo.setRemainingBattery(battery);
         smartLockService.updateBatteryInfo(lockInfoVo);
 
+    }
+
+    /**
+     * 解绑设备
+     * @param apiRequestVO
+     */
+    private void deviceUninstall(CallbackRequestVo apiRequestVO){
+        JSONObject detail = apiRequestVO.getDetail().getJSONObject("detail");
+        //网关
+        if(detail.getJSONObject("detail").getString("type").equals("1")){
+            smartLockGatewayService.uninstallSmartLockGateway(detail.getString("uuid"));
+        }else if(detail.getJSONObject("detail").getString("type").equals("4")){
+            smartLockService.uninstallSmartLock(detail.getString("uuid"));
+        }
     }
 
 }

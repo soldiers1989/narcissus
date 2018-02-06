@@ -63,4 +63,10 @@ public interface SmartLockGatewayDao {
      * @return
      */
     List<SmartLockHadBindHouseVo> getConcentrateHadBindHouseList(String userId);
+
+    /**
+     * 解绑网关
+     * @param uuid
+     */
+    void deleteSmartLockGateway(String uuid);
 }
