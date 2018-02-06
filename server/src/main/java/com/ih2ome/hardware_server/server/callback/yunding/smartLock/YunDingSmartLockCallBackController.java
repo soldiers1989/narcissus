@@ -116,6 +116,7 @@ public class YunDingSmartLockCallBackController extends BaseController{
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "batteryAsync":
+                asyncBattery(apiRequestVO);
                 break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
