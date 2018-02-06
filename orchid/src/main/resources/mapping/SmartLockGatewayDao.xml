@@ -178,40 +178,41 @@
 
     <select id="getDispersedHadBindHouseList" resultMap="HadBindHouseMap">
         SELECT
-                ch.id homeId,
-                ch.address homeName,
-                nslOutSmartLock.smart_lock_ID outSmartLockId,
-                nsdv2OutSmartLock.connection_status outCommunicationStatus,
-                nsdv2OutSmartLock.work_status outPowerRate,
-                nsdv2.smart_device_ID gatewayId,
-                nsdv2Indoor.smart_device_ID smartLockId,
-                cr.`name` roomNo,
-                nsdv2Indoor.connection_status communicationStatus,
-                nsdv2Indoor.work_status powerRate
-            FROM
-                narcissus_test.smart_device_v2 nsdv2,
-                narcissus_test.smart_gateway_v2 nsg,
-                narcissus_test.public_zone npz,
-                caspain_test.house ch,
-                narcissus_test.smart_device_v2 nsdv2OutSmartLock,
-                narcissus_test.smart_lock nslOutSmartLock,
-                caspain_test.room cr,
-                narcissus_test.smart_lock nslIndoor,
-                narcissus_test.smart_device_v2 nsdv2Indoor,
-                caspain_test.auth_user cau
-            where
-                nsdv2.smart_device_ID=nsg.smart_gateway_ID
-            and nsdv2.public_zone_ID=npz.public_zone_ID
-            and npz.parent_ID=ch.id
-            and nsdv2OutSmartLock.smart_device_ID=nslOutSmartLock.smart_lock_ID
-            and nsdv2OutSmartLock.public_zone_ID=npz.public_zone_ID
-            and cr.house_id=ch.id
-            and nslIndoor.smart_lock_ID=nsdv2Indoor.smart_device_ID
-            and nsdv2Indoor.room_ID=cr.id
-            and ch.created_by_id=cau.id
-            and nsdv2.manage_status='0'
-            and nsdv2OutSmartLock.manage_status='0'
-            and nsdv2Indoor.manage_status='0'
+            ch.id homeId,
+            ch.address homeName,
+            nslOutSmartLock.smart_lock_ID outSmartLockId,
+            nsdv2OutSmartLock.connection_status outCommunicationStatus,
+            nslOutSmartLock.power outPowerRate,
+            nsdv2.smart_device_ID gatewayId,
+            nsdv2Indoor.smart_device_ID smartLockId,
+            cr.`name` roomNo,
+            nsdv2Indoor.connection_status communicationStatus,
+            nslIndoor.power powerRate
+        FROM
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_gateway_v2 nsg,
+            narcissus_test.public_zone npz,
+            caspain_test.house ch,
+            narcissus_test.smart_device_v2 nsdv2OutSmartLock,
+            narcissus_test.smart_lock nslOutSmartLock,
+            caspain_test.room cr,
+            narcissus_test.smart_lock nslIndoor,
+            narcissus_test.smart_device_v2 nsdv2Indoor,
+            caspain_test.auth_user cau
+        WHERE
+            nsdv2.smart_device_ID = nsg.smart_gateway_ID
+        AND nsdv2.public_zone_ID = npz.public_zone_ID
+        AND npz.parent_ID = ch.id
+        AND nsdv2OutSmartLock.smart_device_ID = nslOutSmartLock.smart_lock_ID
+        AND nsdv2OutSmartLock.public_zone_ID = npz.public_zone_ID
+        AND cr.house_id = ch.id
+        AND nslIndoor.smart_lock_ID = nsdv2Indoor.smart_device_ID
+        AND nsdv2Indoor.room_ID = cr.id
+        AND ch.created_by_id = cau.id
+        AND nsdv2.manage_status = '0'
+        AND nsdv2OutSmartLock.manage_status = '0'
+        AND nsdv2Indoor.manage_status = '0'
+        AND cau.id = #{userId}
     </select>
 
     <select id="getConcentrateHadBindHouseList" resultMap="HadBindHouseMap">
@@ -220,14 +221,14 @@
             va.`name` homeName,
             nslOutSmartLock.smart_lock_ID outSmartLockId,
             nsdv2OutSmartLock.connection_status outCommunicationStatus,
-            nsdv2OutSmartLock.work_status outPowerRate,
+            nslOutSmartLock.power outPowerRate,
             nsdv2.smart_device_ID gatewayId,
             vf.id floorId,
             vf.`name` floorName,
             nsdv2Indoor.smart_device_ID smartLockId,
             vr.`name` roomNo,
             nsdv2Indoor.connection_status communicationStatus,
-            nsdv2Indoor.work_status powerRate
+            nslIndoor.power powerRate
         FROM
             volga_test.apartment va,
             caspain_test.auth_user cau,
@@ -246,14 +247,14 @@
         AND nsdv2.smart_device_ID = nsg.smart_gateway_ID
         AND nsdv2.public_zone_ID = npz.public_zone_ID
         AND npz.parent_ID = va.id
-        and nsdv2OutSmartLock.public_zone_ID=npz.public_zone_ID
-        and nslOutSmartLock.smart_lock_ID=nsdv2OutSmartLock.smart_device_ID
-        and nslIndoor.smart_lock_ID=nsdv2Indoor.smart_device_ID
-        and nsdv2Indoor.room_ID=vr.id
-        and vr.floor_id=vf.id
-        and vf.apartment_id=va.id
-        and nsdv2.manage_status='0'
-        and nsdv2OutSmartLock.manage_status='0'
-        and nsdv2Indoor.manage_status='0'
+        AND nsdv2OutSmartLock.public_zone_ID = npz.public_zone_ID
+        AND nslOutSmartLock.smart_lock_ID = nsdv2OutSmartLock.smart_device_ID
+        AND nslIndoor.smart_lock_ID = nsdv2Indoor.smart_device_ID
+        AND nsdv2Indoor.room_ID = vr.id
+        AND vr.floor_id = vf.id
+        AND vf.apartment_id = va.id
+        AND nsdv2.manage_status = '0'
+        AND nsdv2OutSmartLock.manage_status = '0'
+        AND nsdv2Indoor.manage_status = '0'
     </select>
 </mapper>

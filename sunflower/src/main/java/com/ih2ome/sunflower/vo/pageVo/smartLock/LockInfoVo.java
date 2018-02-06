@@ -17,6 +17,8 @@ public class LockInfoVo implements Serializable {
     private String houseAddress;
     //房屋编号
     private String roomNo;
+    //第三方对接id
+    private String uuid;
     //门锁编码
     private String serialNum;
     //通讯状态

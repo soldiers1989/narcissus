@@ -2,6 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -277,4 +278,10 @@ public interface SmartLockDao {
      * @return
      */
     List<SmartMistakeInfo> findHistoryOperations(String lockId);
+
+    /**
+     * 更新门锁剩余电量
+     * @param lockInfoVo
+     */
+    void updateBatteryInfo(LockInfoVo lockInfoVo);
 }

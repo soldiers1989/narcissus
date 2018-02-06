@@ -166,6 +166,13 @@
         smart_lock_password_ID = #{passwordId};
     </update>
 
+    <update id="deleteLockPasswordByUuid" parameterType="string">
+        UPDATE narcissus_test.smart_lock_password
+        SET `status` = '6'
+        WHERE
+        threeID = #{uuid};
+    </update>
+
     <!--update-->
     <!--修改房间关联记录-->
     <update id="updateAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
@@ -219,7 +226,13 @@
             <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
             <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
         </set>
-        WHERE smart_lock_password_ID=#{id}
+        WHERE 1=1
+        <if test="id!=null add id.trim()!=''">
+            and smart_lock_password_ID=#{id}
+        </if>
+        <if test="uuid!=null add uuid.trim()!=''">
+            and threeID=#{uuid}
+        </if>
     </update>
 
     <!--冻结门锁密码-->
@@ -232,6 +245,16 @@
         UPDATE narcissus_test.smart_lock_password SET `status`='2' where smart_lock_password_ID=#{passwordId}
     </update>
 
+    <!---->
+    <update id="updateBatteryInfo" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo">
+        update
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_lock nsl set nsl.power=#{remainingBattery}
+        where
+            nsdv2.smart_device_ID=nsl.smart_lock_ID
+        and nsdv2.manage_status='0'
+        and nsdv2.threeID=#{uuid}
+    </update>
     <!--select-->
     <!--查询房源信息(分散式)-->
     <select id="findDispersedHomes" parameterType="string" resultMap="dispersedResultMap">

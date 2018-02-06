@@ -7,9 +7,11 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
+import com.ih2ome.hardware_service.service.service.SmartLockWarningService;
 import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.sunflower.vo.pageVo.enums.AlarmTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 import org.slf4j.Logger;
@@ -39,6 +41,9 @@ public class YunDingSmartLockCallBackController extends BaseController{
 
     @Autowired
     SmartLockService smartLockService;
+
+    @Autowired
+    SmartLockWarningService smartLockWarningService;
 
     final static String TOKEN_YUNDING_USER_CODE = "yunding_user_code_token";
 
@@ -84,12 +89,16 @@ public class YunDingSmartLockCallBackController extends BaseController{
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "pwdSync":
+                //TODO:本次没有密码同步需求，暂时不做实现
                 break;
             case "pwdAddLocal":
+                updateSmartLockPassword(apiRequestVO);
                 break;
             case "pwdDelLocal":
+                deleteSmartLockPassword(apiRequestVO);
                 break;
             case "pwdUpdateLocal":
+                updateSmartLockPassword(apiRequestVO);
                 break;
             case "lockerOpenAlarm":
                 saveSmartLockAlarm(apiRequestVO);
@@ -188,7 +197,7 @@ public class YunDingSmartLockCallBackController extends BaseController{
      * 保存报警信息
      * @param apiRequestVO
      */
-    private static void saveSmartLockAlarm(CallbackRequestVo apiRequestVO){
+    private void saveSmartLockAlarm(CallbackRequestVo apiRequestVO){
         String [] lockAlarmName = {"batteryAlarm","clearBatteryAlarm","lockerOpenAlarm","clearLockOfflineAlarm","lockOfflineAlarm","brokenAlarm"};
         List<String> lockAmarmNameist=Arrays.asList(lockAlarmName);
         SmartMistakeInfo smartMistakeInfo = new SmartMistakeInfo();
@@ -199,17 +208,14 @@ public class YunDingSmartLockCallBackController extends BaseController{
         }else{
             smartMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_SMART_LOCK_GATEWAY.getCode());
         }
+        if("lockerOpenAlarm".equals(apiRequestVO.getEvent())){
+            JSONObject detail = apiRequestVO.getDetail();
+            String  passwordId = detail.getString("sourceid");
+            smartMistakeInfo.setSmartLockPasswordId(passwordId);
 
-    }
+        }
+        smartLockWarningService.saveSmartLockAlarmInfo(smartMistakeInfo);
 
-    /**
-     * 添加门锁密码
-     * @param apiRequestVO
-     */
-    private void addSmartLockPassword(CallbackRequestVo apiRequestVO){
-        LockPasswordVo passwordVo = new LockPasswordVo();
-
-        smartLockService.addLockPasswordCallBack(passwordVo);
     }
 
     /**
@@ -217,9 +223,12 @@ public class YunDingSmartLockCallBackController extends BaseController{
      * @param apiRequestVO
      */
     private void updateSmartLockPassword(CallbackRequestVo apiRequestVO){
+        JSONObject password = apiRequestVO.getDetail().getJSONObject("password");
         LockPasswordVo passwordVo = new LockPasswordVo();
-
+        passwordVo.setUuid(password.getString("id"));
+        passwordVo.setPassword(password.getString("password"));
         smartLockService.updateLockPasswordCallBack(passwordVo);
+
     }
 
     /**
@@ -227,6 +236,20 @@ public class YunDingSmartLockCallBackController extends BaseController{
      * @param apiRequestVO
      */
     private void deleteSmartLockPassword(CallbackRequestVo apiRequestVO){
+        smartLockService.deleteLockPasswordCallBack(apiRequestVO.getDetail().getString("id"));
+    }
+
+    /**
+     * 同步电量信息
+     * @param apiRequestVO
+     */
+    private void asyncBattery(CallbackRequestVo apiRequestVO){
+        LockInfoVo lockInfoVo = new LockInfoVo();
+        String battery = apiRequestVO.getDetail().getJSONObject("detail").getString("battery");
+        String uuid = apiRequestVO.getUuid();
+        lockInfoVo.setUuid(uuid);
+        lockInfoVo.setRemainingBattery(battery);
+        smartLockService.updateBatteryInfo(lockInfoVo);
 
     }
 
