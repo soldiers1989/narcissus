@@ -11,6 +11,7 @@ import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
 import com.ih2ome.sunflower.vo.pageVo.enums.*;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -591,6 +592,11 @@ public class SmartLockServiceImpl implements SmartLockService {
     public List<SmartMistakeInfo> findExceptionRecords(String lockId) throws SmartLockException {
         List<SmartMistakeInfo> list=smartLockDao.findExceptionRecords(lockId);
         return list;
+    }
+
+    @Override
+    public void updateBatteryInfo(LockInfoVo lockInfoVo) {
+        smartLockDao.updateBatteryInfo(lockInfoVo);
     }
 
 

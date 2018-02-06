@@ -4,6 +4,7 @@ import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.sunflower.model.backup.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -135,4 +136,11 @@ public interface SmartLockService {
      * @return
      */
     List<SmartMistakeInfo> findExceptionRecords(String lockId) throws SmartLockException;
+
+    /**
+     * 更新门锁剩余电量
+     *
+     * @param lockInfoVo
+     */
+    void updateBatteryInfo(LockInfoVo lockInfoVo);
 }
