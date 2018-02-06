@@ -448,7 +448,7 @@ public class SmartLockController extends BaseController {
     }
 
     /**
-     * 查询操作记录
+     * 查询异常记录
      */
     @RequestMapping(value = "/search/exceptionRecords", method = RequestMethod.POST, produces = {"application/json"})
     public String getLockExceptionRecords(@RequestBody ApiRequestVO apiRequestVO) {

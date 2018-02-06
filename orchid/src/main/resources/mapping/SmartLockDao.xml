@@ -513,6 +513,7 @@
     <select id="findPasswordById" parameterType="string"
             resultType="com.ih2ome.sunflower.entity.narcissus.SmartLockPassword">
         SELECT
+        smart_lock_ID AS smartLockId,
         smart_lock_password_ID AS smartLockPasswordId,
         provider_code as providerCode,
         lock3ID AS lock3Id,
@@ -630,7 +631,7 @@
     <!--通过门锁id查询操作记录-->
     <select id="findHistoryOperations" parameterType="string"
             resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
-
+        
     </select>
 
     <!--通过门锁id查询异常记录-->
