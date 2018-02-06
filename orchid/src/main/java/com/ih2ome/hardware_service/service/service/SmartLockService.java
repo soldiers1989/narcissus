@@ -144,4 +144,9 @@ public interface SmartLockService {
      */
     void updateBatteryInfo(LockInfoVo lockInfoVo);
 
+    /**
+     * 解绑门锁
+     * @param uuid
+     */
+    void uninstallSmartLock(String uuid);
 }

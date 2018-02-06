@@ -306,4 +306,11 @@ public interface SmartLockDao {
      * @param lockPasswordVo
      */
     void updateLockPasswordByUuid(LockPasswordVo lockPasswordVo);
+
+    /**
+     *解绑门锁
+     * @param uuid
+     */
+    void deleteSmartLockByUuid(String uuid);
+
 }

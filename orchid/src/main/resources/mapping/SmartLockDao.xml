@@ -268,6 +268,15 @@
         and nsdv2.manage_status='0'
         and nsdv2.threeID=#{uuid}
     </update>
+    <!--解绑门锁-->
+    <update id="deleteSmartLockByUuid">
+        update
+        narcissus_test.smart_device_v2 nsdv2,
+        narcissus_test.smart_lock nsl set nsdv2.manage_status='1'
+        where
+        nsdv2.smart_device_ID=nsl.smart_lock_ID
+        and nsdv2.threeID=#{uuid}
+    </update>
     <!--select-->
     <!--查询房源信息(分散式)-->
     <select id="findDispersedHomes" parameterType="string" resultMap="dispersedResultMap">
