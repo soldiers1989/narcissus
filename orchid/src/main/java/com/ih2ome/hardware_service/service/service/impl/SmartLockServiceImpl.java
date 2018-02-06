@@ -590,7 +590,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public List<SmartMistakeInfo> findExceptionRecords(String lockId) throws SmartLockException {
-        List<SmartMistakeInfo> list=smartLockDao.findExceptionRecords(lockId);
+        List<SmartMistakeInfo> list = smartLockDao.findExceptionRecords(lockId);
         return list;
     }
 
@@ -598,6 +598,5 @@ public class SmartLockServiceImpl implements SmartLockService {
     public void updateBatteryInfo(LockInfoVo lockInfoVo) {
         smartLockDao.updateBatteryInfo(lockInfoVo);
     }
-
 
 }
