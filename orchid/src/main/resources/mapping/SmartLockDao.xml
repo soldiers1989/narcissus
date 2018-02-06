@@ -219,7 +219,13 @@
             <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
             <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
         </set>
-        WHERE smart_lock_password_ID=#{id}
+        WHERE 1=1
+        <if test="id!=null add id.trim()!=''">
+            and smart_lock_password_ID=#{id}
+        </if>
+        <if test="uuid!=null add uuid.trim()!=''">
+            and threeID=#{uuid}
+        </if>
     </update>
 
     <!--冻结门锁密码-->
