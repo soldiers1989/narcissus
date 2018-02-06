@@ -556,5 +556,29 @@ public class SmartLockServiceImpl implements SmartLockService {
         smartLockDao.deleteLockPasswordByUuid(uuid);
     }
 
+    /**
+     * 根据门锁id查询开门记录
+     *
+     * @param lockId
+     * @return
+     */
+    @Override
+    public List<SmartMistakeInfo> findOpenLockRecord(String lockId) throws SmartLockException {
+        List<SmartMistakeInfo> list = smartLockDao.findOpenLockRecord(lockId);
+        return list;
+    }
+
+    /**
+     * 根据门锁Id查询操作记录
+     *
+     * @param lockId
+     * @return
+     */
+    @Override
+    public List<SmartMistakeInfo> findHistoryOperations(String lockId) {
+        List<SmartMistakeInfo> list=smartLockDao.findHistoryOperations(lockId);
+        return list;
+    }
+
 
 }

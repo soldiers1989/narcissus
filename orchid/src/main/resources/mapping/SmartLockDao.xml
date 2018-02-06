@@ -422,9 +422,9 @@
             resultType="com.ih2ome.sunflower.entity.narcissus.SmartLockPassword">
         SELECT
         smart_lock_password_ID AS smartLockPasswordId,
-        send_to_mobile AS sendToMobile,
+        IFNULL(send_to_mobile,'') AS sendToMobile,
         name,
-        pwd_user_name AS pwdUserName,
+        IFNULL(pwd_user_name,'') AS pwdUserName,
         CASE STATUS
         WHEN '1' THEN
         '初始状态'
@@ -437,10 +437,10 @@
         WHEN '5' THEN
         '已冻结'
         END status,
-        password,
-        valid_time_start AS validTimeStart,
-        valid_time_end AS validTimeEnd,
-        description
+        IFNULL(password,'') as password,
+        IFNULL(valid_time_start,'') AS validTimeStart,
+        IFNULL(valid_time_end,'') AS validTimeEnd,
+        IFNULL(description,'') as description
         FROM
         narcissus_test.smart_lock_password
         WHERE
@@ -564,5 +564,33 @@
         WHERE  ctr.id =#{roomId}
     </select>
 
+    <!--通过门锁id查询开门记录-->
+    <select id="findOpenLockRecord" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
+      SELECT
+        ntslp.`name` AS passwordName,
+        ntsmi.created_at AS createdAt,
+        IFNULL(ntslp.pwd_user_name,'') AS userName,
+        IFNULL(ntslp.send_to_mobile,'') AS mobile
+        FROM
+            narcissus_test.smart_lock_password ntslp
+        LEFT JOIN narcissus_test.smart_mistake_info ntsmi ON ntslp.threeID = ntsmi.smart_lock_password_id
+        WHERE
+            ntslp.smart_lock_ID = #{lockId}
+        AND ntsmi.smart_device_type = 3
+        AND ntsmi.exception_type = 13 ORDER BY ntsmi.created_at desc
+    </select>
 
+
+    <!--通过门锁id查询操作记录-->
+    <select id="findHistoryOperations" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
+
+    </select>
+
+    <!--通过门锁id查询异常记录-->
+    <select id="findExceptionRecords" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
+
+    </select>
 </mapper>

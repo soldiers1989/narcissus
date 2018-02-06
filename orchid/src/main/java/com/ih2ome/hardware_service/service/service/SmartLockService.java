@@ -2,6 +2,7 @@ package com.ih2ome.hardware_service.service.service;
 
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
+import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
@@ -92,20 +93,38 @@ public interface SmartLockService {
 
     /**
      * 本地添加密码
+     *
      * @param passwordVo
      */
     void addLockPasswordCallBack(LockPasswordVo passwordVo);
 
     /**
      * 本地更新密码
+     *
      * @param passwordVo
      */
     void updateLockPasswordCallBack(LockPasswordVo passwordVo);
 
     /**
      * 本地删除密码
+     *
      * @param uuid
      */
     void deleteLockPasswordCallBack(String uuid);
 
+    /**
+     * 查询开门记录
+     *
+     * @param lockId
+     * @return
+     */
+    List<SmartMistakeInfo> findOpenLockRecord(String lockId) throws SmartLockException;
+
+    /**
+     * 查询操作记录
+     *
+     * @param lockId
+     * @return
+     */
+    List<SmartMistakeInfo> findHistoryOperations(String lockId) throws SmartLockException;
 }
