@@ -1,16 +1,16 @@
 package com.ih2ome.hardware_server.server.callback.help;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.hardware_server.server.callback.vo.CallbackRequestVo;
-import com.ih2ome.hardware_service.service.enums.AlarmTypeEnum;
-import com.ih2ome.hardware_service.service.enums.HouseCatalogEnum;
-import com.ih2ome.hardware_service.service.enums.OnOffStatusEnum;
-import com.ih2ome.hardware_service.service.enums.SmartDeviceTypeEnum;
-import com.ih2ome.hardware_service.service.model.narcissus.*;
 import com.ih2ome.hardware_service.service.service.*;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
-import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.sunflower.entity.narcissus.*;
+import com.ih2ome.sunflower.vo.pageVo.enums.AlarmTypeEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseCatalogEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.OnOffStatusEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
+import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
+import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class YunDingCallBackHelp {
     public void waterGatewayOnOfflineAlarm(CallbackRequestVo apiRequestVO, int onOffStatus) {
         String exceptionType = null;
         //离线
-        if (onOffStatus==OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()){
+        if (onOffStatus== OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()){
             exceptionType=String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_OFF_LINE.getCode());
         }else {
             exceptionType=String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_GATEWAY_EXCEPTION_TYPE_ON_LINE.getCode());

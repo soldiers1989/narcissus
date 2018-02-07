@@ -127,7 +127,7 @@
     </select>
 
     <!--查询集中式房源同步信息byUserid-->
-    <select id="findApartmentIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+    <select id="findApartmentIsSynchronousedByUserId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO">
         SELECT id,apartment.name,synchronous
         FROM <include refid="apartment"/> apartment WHERE created_by = #{userId}
     </select>
@@ -242,7 +242,7 @@
     </select>
 
     <!--查询集中式room已全部或未全部同步的房源-->
-    <select id="findApartmentAllSynchronousedByUserId" resultType="com.ih2ome.hardware_service.service.vo.HomeSyncVO">
+    <select id="findApartmentAllSynchronousedByUserId" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO">
         SELECT  apartment.id, apartment.`name`,#{synchronous} AS synchronous
         FROM <include refid="apartment" /> AS apartment
         INNER JOIN <include refid="jzroom" /> room

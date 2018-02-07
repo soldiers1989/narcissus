@@ -2,20 +2,15 @@ package com.ih2ome.hardware_server.server.callback;
 
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_server.server.callback.help.YunDingCallBackHelp;
-import com.ih2ome.hardware_server.server.callback.vo.CallbackRequestVo;
-import com.ih2ome.hardware_service.service.enums.OnOffStatusEnum;
+
 import com.ih2ome.hardware_service.service.service.GatewayBindService;
 import com.ih2ome.hardware_service.service.service.GatewayService;
 import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
-import com.ih2ome.hardware_service.service.service.*;
-import com.ih2ome.peony.watermeterInterface.IWatermeter;
+
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
-import com.ih2ome.sunflower.entity.narcissus.*;
-import com.ih2ome.sunflower.vo.pageVo.enums.AlarmTypeEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.HouseCatalogEnum;
+
 import com.ih2ome.sunflower.vo.pageVo.enums.OnOffStatusEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
-import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
