@@ -662,6 +662,10 @@
         '门锁破坏报警'
         WHEN 12 THEN
         '门锁密码连输三次错误'
+        WHEN 16 THEN
+        '通讯状态'
+        WHEN 17 THEN
+        '通讯状态'
         END exceptionName,
         ntsmi.created_at AS createdTime,
         CASE ntsmi.exception_type
@@ -673,6 +677,10 @@
         '门锁被暴力破坏'
         WHEN 12 THEN
         '门锁密码连输三次错误'
+        WHEN 16 THEN
+        '门锁在线'
+        WHEN 17 THEN
+        '门锁离线'
         END description
         FROM
         narcissus_test.smart_device_v2 ntsv2
@@ -680,6 +688,6 @@
         WHERE
         ntsv2.smart_device_ID =#{lockId}
         AND ntsmi.smart_device_type = 3
-        AND ntsmi.exception_type IN (9, 10, 11, 12)
+        AND ntsmi.exception_type IN (9, 10, 11, 12,16,17)
     </select>
 </mapper>
