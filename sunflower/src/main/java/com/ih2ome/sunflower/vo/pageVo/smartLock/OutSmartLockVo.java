@@ -23,4 +23,6 @@ public class OutSmartLockVo {
      * 电量
      */
     private String powerRate;
+
+    private String outLockName;
 }

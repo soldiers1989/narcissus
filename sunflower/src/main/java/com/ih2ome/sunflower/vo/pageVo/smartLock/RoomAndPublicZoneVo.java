@@ -27,4 +27,6 @@ public class RoomAndPublicZoneVo {
      * 电量
      */
     private String powerRate;
+
+    private String lockName;
 }
