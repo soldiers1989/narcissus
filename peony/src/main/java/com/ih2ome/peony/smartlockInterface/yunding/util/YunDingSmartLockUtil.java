@@ -46,11 +46,11 @@ public class YunDingSmartLockUtil {
     /**
      * 云丁开放平台水滴身份标识
      */
-    public static final String OPEN_CLIENT_ID = "shuidiceshi";
+    public static final String OPEN_CLIENT_ID = "shuidiguanjia";
     /**
      * 云丁开放平台水滴访问密钥
      */
-    public static final String OPEN_SECRET = "shuidiceshioauthclientsecret";
+    public static final String OPEN_SECRET = "b3a19f6ba2e99046582a9cb5de334de6";
     /**
      * 云丁开放平台固定植入
      */

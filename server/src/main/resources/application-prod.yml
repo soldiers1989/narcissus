@@ -57,8 +57,8 @@ sso:
 yd:
   login:
     url: https://open.dding.net/public/oauth/index.html
-  client_id: 7b7c10ebdec490d4e0d5850c
-  client_secret: b7019a28af49f61dcda9e6b4b42b4aca
+  client_id: shuidiguanjia
+  client_secret: b3a19f6ba2e99046582a9cb5de334de6
   smart_lock:
     permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op
 
