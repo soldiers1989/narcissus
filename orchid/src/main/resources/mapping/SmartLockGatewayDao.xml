@@ -126,7 +126,7 @@
             nsgv2.smart_gateway_ID = nsdv2.smart_device_ID
         AND nsdv2.public_zone_ID = npz.public_zone_ID
         AND ch.id = npz.parent_ID
-        AND npz.data_type = '1'
+        AND npz.data_type = '3'
         AND ch.id = #{homeId}
     </select>
 
