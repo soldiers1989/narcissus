@@ -25,4 +25,7 @@ public class FloorVo {
      * 房间列表
      */
     private List<RoomAndPublicZoneVo> roomAndPublicZoneVoList;
+
+    private long lockCount;
+    private long onlineCount;
 }

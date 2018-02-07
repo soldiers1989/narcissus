@@ -29,10 +29,10 @@ public class SmartLockHadBindHouseVo {
      * 房源名称
      */
     private String homeName;
-    private String lockCount;
-    private String onlineCount;
-    private String offlineCount;
-    private String lowerPowerCount;
+    private long lockCount;
+    private long onlineCount;
+    private long offlineCount;
+    private long lowerPowerCount;
     /**
      * 楼层列表
      */

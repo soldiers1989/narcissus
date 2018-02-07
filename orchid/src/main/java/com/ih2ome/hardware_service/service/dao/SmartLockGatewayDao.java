@@ -69,4 +69,20 @@ public interface SmartLockGatewayDao {
      * @param uuid
      */
     void deleteSmartLockGateway(String uuid);
+
+    long getCountOfApartmentLock(long homeId);
+
+    long getCountOfApartmentOnlineLock(long homeId);
+
+    long getCountOfApartmentOfflineLock(long homeId);
+
+    long getCountOfApartmentLowPowerLock(long homeId);
+
+    long getCountOfFloorLock(long floorId);
+
+    long getCountOfOnlineFloorLock(long floorId);
+
+    long getCountOfZoneLock(long floorId);
+
+    long getCountOfZoneOnlineLock(long floorId);
 }

@@ -6,10 +6,6 @@
         <id column="homeId" property="homeId"/>
         <result property="gatewayId" column="gatewayId"></result>
         <result property="homeName" column="homeName"></result>
-        <result property="lockCount" column="lockCount"></result>
-        <result property="onlineCount" column="onlineCount"></result>
-        <result property="offlineCount" column="offlineCount"></result>
-        <result property="lowerPowerCount" column="lowerPowerCount"></result>
         <collection property="outSmartLockVo" ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.OutSmartLockVo">
             <id property="smartLockId" column="outSmartLockId"></id>
             <result property="communicationStatus" column="outCommunicationStatus"></result>
@@ -272,97 +268,255 @@
 
     <select id="getConcentrateHadBindHouseList" resultMap="HadBindHouseMap">
         SELECT
-        va.id homeId,
-        va.`name` homeName,
-        nslOutSmartLock.smart_lock_ID outSmartLockId,
-        nsdv2OutSmartLock.connection_status outCommunicationStatus,
-        nslOutSmartLock.power outPowerRate,
-        nsdv2.smart_device_ID gatewayId,
-        vf.id floorId,
-        vf.`name` floorName,
-        nsdv2Indoor.smart_device_ID smartLockId,
-        vr.`name` roomNo,
-        nsdv2Indoor.connection_status communicationStatus,
-        nslIndoor.power powerRate,
-        nslIndoor.sn lockName,
-	    nslOutSmartLock.sn outLockName,
+	va.id homeId,
+	va.`name` homeName,
+	nslOutSmartLock.smart_lock_ID outSmartLockId,
+	nsdv2OutSmartLock.connection_status outCommunicationStatus,
+	nslOutSmartLock.power outPowerRate,
+	nsdv2.smart_device_ID gatewayId,
+	vf.id floorId,
+	vf.`name` floorName,
+	nsdv2Indoor.smart_device_ID smartLockId,
+	vr.`name` roomNo,
+	nsdv2Indoor.connection_status communicationStatus,
+	nslIndoor.power powerRate,
+	nslIndoor.sn lockName,
+	nslOutSmartLock.sn outLockName
+FROM
+	volga_test.apartment va,
+	caspain_test.auth_user cau,
+	narcissus_test.smart_device_v2 nsdv2,
+	narcissus_test.smart_gateway_v2 nsg,
+	narcissus_test.public_zone npz,
+	narcissus_test.smart_device_v2 nsdv2OutSmartLock,
+	narcissus_test.smart_lock nslOutSmartLock,
+	volga_test.floor vf,
+	volga_test.room vr,
+	narcissus_test.smart_lock nslIndoor,
+	narcissus_test.smart_device_v2 nsdv2Indoor
+WHERE
+	va.created_by = cau.id
+AND cau.id = #{userId}
+AND nsdv2.smart_device_ID = nsg.smart_gateway_ID
+AND nsdv2.public_zone_ID = npz.public_zone_ID
+AND npz.parent_ID = va.id
+AND nsdv2OutSmartLock.public_zone_ID = npz.public_zone_ID
+AND nslOutSmartLock.smart_lock_ID = nsdv2OutSmartLock.smart_device_ID
+AND nslIndoor.smart_lock_ID = nsdv2Indoor.smart_device_ID
+AND nsdv2Indoor.room_ID = vr.id
+AND vr.floor_id = vf.id
+AND vf.apartment_id = va.id
+AND nsdv2.manage_status = '0'
+AND nsdv2OutSmartLock.manage_status = '0'
+AND nsdv2Indoor.manage_status = '0'
+    </select>
+
+    <!--查询公寓下门锁数量-->
+    <select id="getCountOfApartmentLock" resultType="long">
+        SELECT
+			count(a.deviceCountID)
+		FROM
+			(
+				(
+					SELECT
+						deviceCount.smart_device_ID deviceCountID
+					FROM
+						narcissus_test.smart_device_v2 deviceCount,
+						narcissus_test.smart_lock lockCount,
+						volga_test.room roomCount,
+						volga_test.floor floorCount
+					WHERE
+						deviceCount.smart_device_ID = lockCount.smart_lock_ID
+					AND deviceCount.room_ID = roomCount.id
+					AND roomCount.floor_id = floorCount.id
+					AND floorCount.apartment_id = #{homeId}
+					AND deviceCount.manage_status = '0'
+				)
+				UNION
+					(
+						SELECT
+							deviceCount.smart_device_ID deviceCountID
+						FROM
+							narcissus_test.smart_device_v2 deviceCount,
+							narcissus_test.smart_lock lockCount,
+							narcissus_test.public_zone zoneCount
+						WHERE
+							deviceCount.smart_device_ID = lockCount.smart_lock_ID
+						AND deviceCount.public_zone_ID = zoneCount.public_zone_ID
+						AND zoneCount.parent_ID = #{homeId}
+						AND deviceCount.manage_status = '0'
+					)
+			) a
+    </select>
+
+    <select id="getCountOfApartmentOnlineLock" resultType="long">
+        SELECT
+			count(a.deviceCountID)
+		FROM
+			(
+				(
+					SELECT
+						deviceCount.smart_device_ID deviceCountID
+					FROM
+						narcissus_test.smart_device_v2 deviceCount,
+						narcissus_test.smart_lock lockCount,
+						volga_test.room roomCount,
+						volga_test.floor floorCount
+					WHERE
+						deviceCount.smart_device_ID = lockCount.smart_lock_ID
+					AND deviceCount.room_ID = roomCount.id
+					AND roomCount.floor_id = floorCount.id
+					AND floorCount.apartment_id = #{homeId}
+					AND deviceCount.manage_status = '0'
+					AND deviceCount.connection_status = '1'
+				)
+				UNION
+					(
+						SELECT
+							deviceCount.smart_device_ID deviceCountID
+						FROM
+							narcissus_test.smart_device_v2 deviceCount,
+							narcissus_test.smart_lock lockCount,
+							narcissus_test.public_zone zoneCount
+						WHERE
+							deviceCount.smart_device_ID = lockCount.smart_lock_ID
+						AND deviceCount.public_zone_ID = zoneCount.public_zone_ID
+						AND zoneCount.parent_ID = #{homeId}
+						AND deviceCount.manage_status = '0'
+						AND deviceCount.connection_status = '1'
+					)
+			) a
+    </select>
+
+    <select id="getCountOfApartmentOfflineLock" resultType="long">
+        SELECT
+			count(a.deviceCountID)
+		FROM
+			(
+				(
+					SELECT
+						deviceCount.smart_device_ID deviceCountID
+					FROM
+						narcissus_test.smart_device_v2 deviceCount,
+						narcissus_test.smart_lock lockCount,
+						volga_test.room roomCount,
+						volga_test.floor floorCount
+					WHERE
+						deviceCount.smart_device_ID = lockCount.smart_lock_ID
+					AND deviceCount.room_ID = roomCount.id
+					AND roomCount.floor_id = floorCount.id
+					AND floorCount.apartment_id = #{homeId}
+					AND deviceCount.manage_status = '0'
+					AND deviceCount.connection_status = '1'
+				)
+				UNION
+					(
+						SELECT
+							deviceCount.smart_device_ID deviceCountID
+						FROM
+							narcissus_test.smart_device_v2 deviceCount,
+							narcissus_test.smart_lock lockCount,
+							narcissus_test.public_zone zoneCount
+						WHERE
+							deviceCount.smart_device_ID = lockCount.smart_lock_ID
+						AND deviceCount.public_zone_ID = zoneCount.public_zone_ID
+						AND zoneCount.parent_ID = #{homeId}
+						AND deviceCount.manage_status = '0'
+						AND deviceCount.connection_status = '2'
+					)
+			) a
+    </select>
+
+    <select id="getCountOfApartmentLowPowerLock" resultType="long">
+        SELECT
+        count(a.deviceCountID)
+        FROM
+        (
         (
         SELECT
-        count(*)
+        deviceCount.smart_device_ID deviceCountID
         FROM
-        narcissus_test.smart_device_v2 countDevice,
-        narcissus_test.smart_lock countLock,
-        volga_test.room countRoom
+        narcissus_test.smart_device_v2 deviceCount,
+        narcissus_test.smart_lock lockCount,
+        volga_test.room roomCount,
+        volga_test.floor floorCount
         WHERE
-        countLock.smart_lock_ID = countDevice.smart_device_ID
-        AND countDevice.room_ID = countRoom.id
-        AND countRoom.apartment_id = va.id
-        ) lockCount,
+        deviceCount.smart_device_ID = lockCount.smart_lock_ID
+        AND deviceCount.room_ID = roomCount.id
+        AND roomCount.floor_id = floorCount.id
+        AND floorCount.apartment_id =#{homeId}
+        AND deviceCount.manage_status = '0'
+        AND deviceCount.connection_status = '1'
+        )
+        UNION
         (
         SELECT
-        count(*)
+        deviceCount.smart_device_ID deviceCountID
         FROM
-        narcissus_test.smart_device_v2 countDevice,
-        narcissus_test.smart_lock countLock,
-        volga_test.room countRoom
+        narcissus_test.smart_device_v2 deviceCount,
+        narcissus_test.smart_lock lockCount,
+        narcissus_test.public_zone zoneCount
         WHERE
-        countLock.smart_lock_ID = countDevice.smart_device_ID
-        AND countDevice.room_ID = countRoom.id
-        AND countRoom.apartment_id = va.id
-        AND countDevice.connection_status = '1'
-        ) onlineCount,
-        (
-        SELECT
-        count(*)
-        FROM
-        narcissus_test.smart_device_v2 countDevice,
-        narcissus_test.smart_lock countLock,
-        volga_test.room countRoom
-        WHERE
-        countLock.smart_lock_ID = countDevice.smart_device_ID
-        AND countDevice.room_ID = countRoom.id
-        AND countRoom.apartment_id = va.id
-        AND countDevice.connection_status = '2'
-        ) offlineCount,
-        (
-        SELECT
-        count(*)
-        FROM
-        narcissus_test.smart_device_v2 countDevice,
-        narcissus_test.smart_lock countLock,
-        volga_test.room countRoom
-        WHERE
-        countLock.smart_lock_ID = countDevice.smart_device_ID
-        AND countDevice.room_ID = countRoom.id
-        AND countRoom.apartment_id = va.id
-        AND countLock.power &lt;  10
-        ) lowerPowerCount
-        FROM
-        volga_test.apartment va,
-        caspain_test.auth_user cau,
+        deviceCount.smart_device_ID = lockCount.smart_lock_ID
+        AND deviceCount.public_zone_ID = zoneCount.public_zone_ID
+        AND zoneCount.parent_ID = #{homeId}
+        AND lockCount.power &lt;   10
+        AND deviceCount.connection_status = '1'
+        AND deviceCount.manage_status = '0'
+        )
+        ) a
+    </select>
+
+    <select id="getCountOfFloorLock" resultType="long">
+      SELECT
+	    count(*)
+    FROM
         narcissus_test.smart_device_v2 nsdv2,
-        narcissus_test.smart_gateway_v2 nsg,
+        narcissus_test.smart_lock nsl,
+        volga_test.room vr
+    where nsdv2.smart_device_ID=nsl.smart_lock_ID
+    and nsdv2.room_ID=vr.id
+    and vr.floor_id=#{floorId}
+    AND nsdv2.manage_status = '0'
+    </select>
+
+    <select id="getCountOfOnlineFloorLock" resultType="long">
+        SELECT
+        count(*)
+        FROM
+        narcissus_test.smart_device_v2 nsdv2,
+        narcissus_test.smart_lock nsl,
+        volga_test.room vr
+        where nsdv2.smart_device_ID=nsl.smart_lock_ID
+        and nsdv2.room_ID=vr.id
+        and vr.floor_id=#{floorId}
+        and nsdv2.connection_status='2'
+    </select>
+
+    <select id="getCountOfZoneLock" resultType="long">
+        SELECT
+            count(*)
+        FROM
+            narcissus_test.public_zone npz,
+            narcissus_test.smart_device_v2 nsdv2,
+            narcissus_test.smart_lock nsl
+        where nsl.smart_lock_ID=nsdv2.smart_device_ID
+        and nsdv2.public_zone_ID=npz.public_zone_ID
+        and npz.parent_ID=#{homeId}
+        and nsdv2.manage_status='0'
+    </select>
+
+    <select id="getCountOfZoneOnlineLock" resultType="long">
+        SELECT
+        count(*)
+        FROM
         narcissus_test.public_zone npz,
-        narcissus_test.smart_device_v2 nsdv2OutSmartLock,
-        narcissus_test.smart_lock nslOutSmartLock,
-        volga_test.floor vf,
-        volga_test.room vr,
-        narcissus_test.smart_lock nslIndoor,
-        narcissus_test.smart_device_v2 nsdv2Indoor
-        WHERE
-        va.created_by = cau.id
-        AND cau.id = #{userId}
-        AND nsdv2.smart_device_ID = nsg.smart_gateway_ID
-        AND nsdv2.public_zone_ID = npz.public_zone_ID
-        AND npz.parent_ID = va.id
-        AND nsdv2OutSmartLock.public_zone_ID = npz.public_zone_ID
-        AND nslOutSmartLock.smart_lock_ID = nsdv2OutSmartLock.smart_device_ID
-        AND nslIndoor.smart_lock_ID = nsdv2Indoor.smart_device_ID
-        AND nsdv2Indoor.room_ID = vr.id
-        AND vr.floor_id = vf.id
-        AND vf.apartment_id = va.id
-        AND nsdv2.manage_status = '0'
-        AND nsdv2OutSmartLock.manage_status = '0'
-        AND nsdv2Indoor.manage_status = '0'
+        narcissus_test.smart_device_v2 nsdv2,
+        narcissus_test.smart_lock nsl
+        where nsl.smart_lock_ID=nsdv2.smart_device_ID
+        and nsdv2.public_zone_ID=npz.public_zone_ID
+        and npz.parent_ID=#{homeId}
+        and nsdv2.manage_status='0'
+        and nsdv2.connection_status='2'
     </select>
 </mapper>

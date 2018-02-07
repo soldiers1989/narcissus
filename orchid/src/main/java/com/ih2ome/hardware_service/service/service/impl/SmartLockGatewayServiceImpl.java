@@ -80,6 +80,15 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
             }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
                 List<SmartLockHadBindHouseVo> smartLockHadBindHouseVoList = smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
                 for(SmartLockHadBindHouseVo smartLockHadBindHouseVo:smartLockHadBindHouseVoList){
+
+                    long lockCount = smartLockGatewayDao.getCountOfApartmentLock(smartLockHadBindHouseVo.getHomeId());
+                    long onlineCount = smartLockGatewayDao.getCountOfApartmentOnlineLock(smartLockHadBindHouseVo.getHomeId());
+                    long offlineCount = lockCount-onlineCount;
+                    long lowerPowerCount = smartLockGatewayDao.getCountOfApartmentLowPowerLock(smartLockHadBindHouseVo.getHomeId());
+                    smartLockHadBindHouseVo.setLockCount(lockCount);
+                    smartLockHadBindHouseVo.setOnlineCount(onlineCount);
+                    smartLockHadBindHouseVo.setOfflineCount(offlineCount);
+                    smartLockHadBindHouseVo.setLowerPowerCount(lowerPowerCount);
                     FloorVo floorVo = new FloorVo();
                     List<RoomAndPublicZoneVo> roomAndPublicZoneVoList = new ArrayList<>();
                     RoomAndPublicZoneVo roomAndPublicZoneVo = new RoomAndPublicZoneVo();
@@ -93,6 +102,16 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                     roomAndPublicZoneVoList.add(roomAndPublicZoneVo);
                     floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
                     smartLockHadBindHouseVo.getFloorVoList().add(floorVo);
+                    List <FloorVo> floorVoList = smartLockHadBindHouseVo.getFloorVoList();
+                    for (FloorVo floorModel:floorVoList){
+                        if(floorModel.getFloorId()==0){
+                            floorModel.setLockCount(smartLockGatewayDao.getCountOfZoneLock(smartLockHadBindHouseVo.getHomeId()));
+                            floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(smartLockHadBindHouseVo.getHomeId()));
+                        }else{
+                            floorModel.setLockCount(smartLockGatewayDao.getCountOfFloorLock(floorModel.getFloorId()));
+                            floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(floorModel.getFloorId()));
+                        }
+                    }
                     smartLockHadBindHouseVo.setOutSmartLockVo(null);
                 }
                 return smartLockHadBindHouseVoList;
