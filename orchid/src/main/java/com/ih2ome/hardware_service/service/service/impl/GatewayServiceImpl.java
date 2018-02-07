@@ -25,10 +25,7 @@ public class GatewayServiceImpl implements GatewayService {
     public Integer findGatewayIdByUuid(String gateway_uuid) {
         Log.info("查找网关id，网关gateway_uuid：{}",gateway_uuid);
         Integer res = gatewayMapper.selectGatewayIdByUuid(gateway_uuid);
-        //没查到返回负数
-        if (res ==null){
-            return -1;
-        }
+
         return res;
     }
 
@@ -74,6 +71,15 @@ public class GatewayServiceImpl implements GatewayService {
     public void updataGatewayOnoffStatus(String uuid, Integer code) {
         Log.info("更新网关在线离线状态，网关uuid：{},状态码code：",uuid,code);
         gatewayMapper.updataGatewayOnoffStatusByUuid(uuid,code);
+    }
+
+    /**
+     * 更新网关
+     * @param smartGateway
+     */
+    @Override
+    public void updataSmartGateway(SmartGateway smartGateway) {
+        gatewayMapper.updataSmartGateway(smartGateway);
     }
 
 

@@ -81,7 +81,7 @@
 
     <!-- 分散式水表 -->
     <select id="findWatermetersByUserId" parameterType="int" resultMap="hmWatermeterListResultMap" >
-        SELECT r.id AS room_id,gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,CONCAT(h.area,h.building_num,"栋",h.unit_num,"单元",h.house_num) AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
+        SELECT r.id AS room_id,gb.smart_gateway_id,w.smart_watermeter_id,w.uuid,r.name AS room_name,CONCAT(h.area,h.building_num,"栋",h.unit_num,"单元",h.house_num) AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,(w.price/100) AS price,w.onoff_status,g.sn
         FROM
         <include refid="smart_watermeter" /> AS w
         INNER JOIN
@@ -100,19 +100,19 @@
 
     <!-- 查询集中式网关by网关id -->
     <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterGatewayDetailVO">
-        SELECT g.smart_gateway_id,a.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="apartment" /> AS a
+        SELECT g.smart_gateway_id,g.uuid,a.name AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="apartment" /> AS a
         ON g.apartment_id =a.id WHERE smart_gateway_id =  #{id};
     </select>
 
     <!-- 查询分散式网关by网关id -->
     <select id="findhmGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterGatewayDetailVO">
-        SELECT g.smart_gateway_id,h.area AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="house" /> AS h
+        SELECT g.smart_gateway_id,g.uuid,CONCAT(h.area,h.building_num,"栋",h.unit_num,"单元",h.house_num) AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="house" /> AS h
         ON g.house_id =h.id WHERE smart_gateway_id =  #{id};
     </select>
 
     <!--查询分散式水表listby网关id-->
     <select id="findWatermeterByGatewayId" parameterType="int" resultMap="hmWatermeterListResultMap">
-        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.floor_num,CONCAT(h.area,h.building_num,"栋",h.unit_num,"单元",h.house_num) AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status
+        SELECT gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,h.floor_num,CONCAT(h.area,h.building_num,"栋",h.unit_num,"单元",h.house_num) AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,(w.price/100) AS price,w.onoff_status
         FROM
         <include refid="smart_watermeter" /> AS w
         INNER JOIN
@@ -128,7 +128,7 @@
 
     <!--查询集中式水表listby网关id-->
     <select id="selectJzWatermetersByGatewayId" parameterType="int" resultMap="jzWatermeterListResultMap">
-        SELECT gb.smart_gateway_id,w.uuid,w.smart_watermeter_id,r.name AS room_name,h.floor_num,h.name AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status
+        SELECT gb.smart_gateway_id,w.uuid,w.smart_watermeter_id,r.name AS room_name,h.floor_num,h.name AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,(w.price/100) AS price,w.onoff_status
         FROM
         <include refid="smart_watermeter" /> AS w
         INNER JOIN
@@ -144,7 +144,7 @@
 
     <!--查询集中式水表列表by楼层id-->
     <select id="findWatermetersByFloorId" parameterType="int" resultMap="jzWatermeterListResultMap" >
-        SELECT r.id AS room_id,w.uuid,a.name AS house_name,gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,w.price,w.onoff_status,g.sn
+        SELECT r.id AS room_id,w.uuid,a.name AS house_name,gb.smart_gateway_id,w.smart_watermeter_id,r.name AS room_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,(w.price/100) AS price,w.onoff_status,g.sn
         FROM
         <include refid="smart_watermeter" /> AS w
         INNER JOIN
@@ -185,7 +185,7 @@
 
     <!--查询筛选水表抄表记录by起止时间-->
     <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord">
-       SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} AND created_at between #{startTime} and #{endTime} ORDER BY created_at DESC
+       SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} AND created_at between ADDDATE(#{startTime},-1) and #{endTime} ORDER BY created_at DESC
     </select>
 
     <!--水表异常记录by水表id-->
@@ -204,8 +204,8 @@
     </select>
 
     <!--查询floorIdByroomId-->
-    <select id="selectHouseCreatedByByHouseId" parameterType="int" resultType="java.lang.Integer">
-        SELECT house.created_by
+    <select id="selectHouseCreatedByByHouseId" resultType="java.lang.Integer">
+        SELECT house.created_by_id
         FROM <include refid="house"/> house WHERE house.id = #{id}
     </select>
 
@@ -240,7 +240,7 @@
 
     <!--查询分散式下的网关byUserid-->
     <select id="selectGatewaysByUserId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterGatewayVO" >
-        SELECT g.smart_gateway_id,g.uuid,g.onoff_status, COUNT(DISTINCT gb.smart_id) AS watermeter_num,SUM(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num
+        SELECT g.smart_gateway_id,g.uuid, COUNT(DISTINCT gb.smart_id) AS watermeter_num,SUM(case w.onoff_status when 1 then 1 else 0 end) AS watermeter_onoff_num
         FROM <include refid="smart_gateway"/> AS g
         LEFT JOIN <include refid="smart_gateway_bind"/> AS gb
         ON g.smart_gateway_id=gb.smart_gateway_id
@@ -267,9 +267,9 @@
 
     <!-- 查询水表idBygatewayuuid -->
     <select id="selectWatermeterIdByGatewayUuid" resultType="java.lang.String">
-        SELECT watermeter.smart_watermeter_id FROM smart_gateway AS gateway
-        INNER JOIN smart_gateway_bind AS bind ON gateway.smart_gateway_id=bind.smart_gateway_id
-        INNER JOIN smart_watermeter AS watermeter ON bind.smart_id=watermeter.smart_watermeter_id
+        SELECT watermeter.uuid FROM <include refid="smart_gateway" /> AS gateway
+        INNER JOIN <include refid="smart_gateway_bind" /> AS bind ON gateway.smart_gateway_id=bind.smart_gateway_id
+        INNER JOIN <include refid="smart_watermeter" /> AS watermeter ON bind.smart_id=watermeter.smart_watermeter_id
         WHERE gateway.uuid=#{uuid}
   </select>
 

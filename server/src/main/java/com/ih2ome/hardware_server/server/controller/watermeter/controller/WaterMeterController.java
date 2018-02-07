@@ -86,11 +86,12 @@ public class WaterMeterController extends BaseController {
     public String updataWaterPrice(@RequestBody ApiRequestVO apiRequestVO ){
         //获取更改价格
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int price = dt.getIntValue("price");
+        Float price = dt.getFloatValue("price");
+
         int watermeterId = dt.getIntValue("watermeterId");
         Boolean flag;
         try {
-            flag = watermeterService.updataWaterPrice(price,watermeterId);
+            flag = watermeterService.updataWaterPrice((int) (price*100),watermeterId);
         } catch (AmmeterException e) {
             Log.error(e.getMessage(),e);
             String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());

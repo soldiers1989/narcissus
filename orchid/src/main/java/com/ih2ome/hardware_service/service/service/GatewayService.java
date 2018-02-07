@@ -39,4 +39,10 @@ public interface GatewayService {
      * @param code
      */
     void updataGatewayOnoffStatus(String uuid, Integer code);
+
+    /**
+     * 更新网关
+     * @param smartGateway
+     */
+    void updataSmartGateway(SmartGateway smartGateway);
 }

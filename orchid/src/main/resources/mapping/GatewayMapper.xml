@@ -41,6 +41,14 @@
         UPDATE <include refid="smart_gateway" /> SET onoff_status = #{code} WHERE uuid = #{uuid};
     </update>
 
+    <!-- 更新网关 -->
+    <update id="updataSmartGateway" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartGateway">
+        update  <include refid="smart_gateway" /> SET created_at=#{createdAt},created_by=#{createdBy},updated_at=#{updatedAt},updated_by=#{updatedBy},deleted_at=#{deletedAt},
+        deleted_by=#{deletedBy},sn=#{sn},model_name=#{modelName},`name`=#{name},install_time=#{installTime},install_name=#{installName},
+        install_mobile=#{installMobile},brand=#{brand},operator=#{operator},onoff_status=#{onoffStatus},remark=#{remark},house_catalog=#{houseCatalog},apartment_id=#{apartmentId},
+        floor=#{floor},house_id=#{houseId},room_id=#{roomId}
+        WHERE uuid=#{uuid}
+    </update>
 <!--查-->
     <!-- 查询网关idbyuuid -->
     <select id="selectGatewayIdByUuid" parameterType="String" resultType="java.lang.Integer">

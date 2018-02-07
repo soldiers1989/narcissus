@@ -403,7 +403,7 @@
             AND house.area LIKE '%${areaName}%'
         </if>
         <if test="authUserName != '' and authUserName != null">
-            AND auth_user.username LIKE '%${authUserName}%'
+            AND auth_user.username = '${authUserName}'
         </if>
     </select>
 
@@ -436,7 +436,7 @@
             AND apartment.area LIKE '%${areaName}%'
         </if>
         <if test="authUserName != '' and authUserName != null">
-            AND auth_user.username LIKE '%${authUserName}%'
+            AND auth_user.username = '${authUserName}'
         </if>
     </select>
 
@@ -445,25 +445,28 @@
         SELECT  room.id, room.`name`,room.house_id,room.synchronous
         FROM <include refid="room" /> AS room
         WHERE room.house_id = #{homeId}
-        <if test="synchronous == 0">
+        <if test="synchronous == 0 or synchronous == null">
             AND ( synchronous=0 OR synchronous IS NULL )
         </if>
-        <if test="synchronous == 1">
+        <if test="synchronous == 1 or synchronous == null">
             AND  synchronous = 1
         </if>
     </select>
 
-    <!--查询集中式房间同步状态-->
-    <select id="selectJzRoomSynchronousStatus" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HmRoomSyncVO">
-        SELECT  room.id, room.`name`,room.apartment_id AS house_id,room.synchronous
-        FROM <include refid="jzroom" /> AS room
-        WHERE room.apartment_id = #{homeId}
+    <!--查询集中式floor同步状态-->
+    <select id="selectJzFloorSynchronousStatus" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HmRoomSyncVO">
+        SELECT  floor.id, floor.`name`,floor.apartment_id AS house_id
+        FROM <include refid="floor" /> AS floor
+        INNER JOIN <include refid="jzroom" /> room
+        ON floor.id = room.floor_id
+        WHERE floor.apartment_id = #{homeId}
         <if test="synchronous == 0">
-            AND ( synchronous=0 OR synchronous IS NULL )
+            AND ( room.synchronous=0 OR room.synchronous IS NULL )
         </if>
         <if test="synchronous == 1">
-            AND  synchronous = 1
+            AND  room.synchronous = 1
         </if>
+        GROUP BY floor.id
     </select>
 
     <!--查询分散式房间是否全同步-->

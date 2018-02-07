@@ -110,7 +110,9 @@ public class YunDingWatermeterUtil {
             token = (String) map.get(TOKEN_KEY);
             Integer expires_time = (Integer) map.get(EXPRIES_TIME);
             CacheUtils.set(TOKEN_KEY, token, ExpireTime.HALF_AN_HOUR);
+            // CacheUtils.set(UID_KEY,uid,0);
         }
+        //CacheUtils.set(TOKEN_KEY, token, 1);
         return token;
     }
 

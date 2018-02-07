@@ -7,18 +7,28 @@ import com.github.pagehelper.PageInfo;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
+import com.ih2ome.hardware_server.server.controller.mannager.watermeter.help.ExcelHelp;
+import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord;
 import com.ih2ome.hardware_service.service.service.SynchronousHomeService;
 import com.ih2ome.hardware_service.service.service.WatermeterManagerService;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 水表WebController
@@ -297,5 +307,66 @@ public class WatermeterManagerController extends BaseController{
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
+
+
+    /**
+     * 水表抄表记录导出excel
+     * @param req
+     * @return
+     */
+    @RequestMapping(value="/smartwatermeterrecords/export",method = RequestMethod.GET)
+    public void exportWaterRecordList(HttpServletRequest req, HttpServletResponse res,String smartWatermeterId,String startTime,String endTime) throws IOException {
+        //获取参数
+        WatermeterRecordManagerVO watermeterRecordManagerVO=new WatermeterRecordManagerVO();
+        watermeterRecordManagerVO.setSmartWatermeterId(smartWatermeterId);
+        watermeterRecordManagerVO.setStartTime(startTime);
+        watermeterRecordManagerVO.setEndTime(endTime);
+        //通过水表id查询水表读数列表
+        List<WatermeterRecordManagerVO> watermeterRecordManagerVOList= watermeterManagerService.findWatermeterRecordByWatermeterIdAndTime2(watermeterRecordManagerVO);
+        List<Map<String,Object>> list=ExcelHelp.createExcelRecord(watermeterRecordManagerVOList);
+        String columnNames[]={"水表id", "抄表时间", "读数", "当日用水量"};//列名
+        String keys[] = {"smartWatermeterId", "createdAt", "deviceAmount", "dayAmount"};//map中的key
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String formatTime = sdf.format(d);
+        String fileName="水表抄表记录表-"+formatTime;
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            ExcelHelp.createWorkBook(list,keys,columnNames).write(os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] content = os.toByteArray();
+        InputStream is = new ByteArrayInputStream(content);
+        // 设置response参数，可以打开下载页面
+        res.reset();
+        res.setContentType("application/vnd.ms-excel;charset=utf-8");
+        res.setHeader("Content-Disposition", "attachment;filename="+ new String((fileName + ".xls").getBytes(), "iso-8859-1"));
+        ServletOutputStream out = res.getOutputStream();
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            bis = new BufferedInputStream(is);
+            bos = new BufferedOutputStream(out);
+            byte[] buff = new byte[2048];
+            int bytesRead;
+            // Simple read/write loop.
+            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                bos.write(buff, 0, bytesRead);
+            }
+        } catch (final IOException e) {
+            throw e;
+        } finally {
+            if (bis != null)
+                bis.close();
+            if (bos != null)
+                bos.close();
+        }
+    }
+
+
+
+
 
 }

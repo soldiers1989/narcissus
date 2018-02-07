@@ -346,9 +346,9 @@ public class SynchronousHomeController  extends BaseController {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int apartmentId = dt.getIntValue("apartmentId");
         JSONArray jsonArray = dt.getJSONArray("roomIds");
-        int[] roomIds = new int[jsonArray.size()];
+        List<Integer> roomIds = new ArrayList<>();
         for (int i=0;i<jsonArray.size();i++){
-            roomIds[i]= (int) jsonArray.get(i);
+            roomIds.add((Integer) jsonArray.get(i));
         }
         String reslut=null;
         try {
@@ -398,6 +398,9 @@ public class SynchronousHomeController  extends BaseController {
         try {
             for (int roomId:roomIds) {
                 reslut = synchronousHomeService.synchronousHousingByHmRooms(roomId);
+                if(!reslut.equals("success")){
+                    return reslut;
+                }
             }
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(),e);

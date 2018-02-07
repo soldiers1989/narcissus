@@ -16,7 +16,7 @@ public class WatermeterDetailVO {
     private Date createdAt;
     private int lastAmount;//当月累计水表量 wu当月累计量 = 最近抄表记录 - 月初抄表记录
     private int meterAmount;//月初抄表记录
-    private int price;//电费单价
+    private float price;//电费单价
     private int onoffStatus;//通讯状态 wu
     private int smartGatewayId;//绑定网关
     private String sn;//网关序列号

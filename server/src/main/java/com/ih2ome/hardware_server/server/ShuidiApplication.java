@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_server.server;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

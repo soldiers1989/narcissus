@@ -365,9 +365,14 @@ public class WatermeterServiceImpl implements WatermeterService {
         return watermeterDao.selectJzWatermetersByGatewayId(smartGatewayId);
     }
 
+    /**
+     * 分散式水表网关详情
+     * @param userId
+     * @return
+     */
     @Override
     public List<JZWatermeterGatewayVO> findGatewaysByUserId(int userId) {
-        Log.info("集中式网关详情,userId：{}",userId);
+        Log.info("分散式网关详情,userId：{}",userId);
         return watermeterDao.selectGatewaysByUserId(userId);
     }
 
