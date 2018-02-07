@@ -14,7 +14,7 @@
             <id property="smartLockId" column="outSmartLockId"></id>
             <result property="communicationStatus" column="outCommunicationStatus"></result>
             <result property="powerRate" column="outPowerRate"></result>
-            <result property="outLockName" column="outLockName"></result>
+            <result property="lockName" column="outLockName"></result>
         </collection>
         <collection property="floorVoList" javaType="List"
                     ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.FloorVo" autoMapping="true">

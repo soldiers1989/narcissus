@@ -1,7 +1,6 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.ih2ome.common.utils.StringUtils;
-import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
@@ -9,6 +8,7 @@ import com.ih2ome.sunflower.vo.pageVo.smartLock.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,7 +78,24 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
             if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
                 return smartLockGatewayDao.getDispersedHadBindHouseList(userId);
             }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-                return smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
+                List<SmartLockHadBindHouseVo> smartLockHadBindHouseVoList = smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
+                for(SmartLockHadBindHouseVo smartLockHadBindHouseVo:smartLockHadBindHouseVoList){
+                    FloorVo floorVo = new FloorVo();
+                    List<RoomAndPublicZoneVo> roomAndPublicZoneVoList = new ArrayList<>();
+                    RoomAndPublicZoneVo roomAndPublicZoneVo = new RoomAndPublicZoneVo();
+                    floorVo.setFloorId(000);
+                    floorVo.setFloorName("公共区域");
+                    roomAndPublicZoneVo.setCommunicationStatus(smartLockHadBindHouseVo.getOutSmartLockVo().getCommunicationStatus());
+                    roomAndPublicZoneVo.setLockName(smartLockHadBindHouseVo.getOutSmartLockVo().getLockName());
+                    roomAndPublicZoneVo.setPowerRate(smartLockHadBindHouseVo.getOutSmartLockVo().getPowerRate());
+                    roomAndPublicZoneVo.setSmartLockId(smartLockHadBindHouseVo.getOutSmartLockVo().getSmartLockId());
+                    roomAndPublicZoneVo.setRoomNo("外门锁");
+                    roomAndPublicZoneVoList.add(roomAndPublicZoneVo);
+                    floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
+                    smartLockHadBindHouseVo.getFloorVoList().add(floorVo);
+                    smartLockHadBindHouseVo.setOutSmartLockVo(null);
+                }
+                return smartLockHadBindHouseVoList;
             }
         }
         return null;

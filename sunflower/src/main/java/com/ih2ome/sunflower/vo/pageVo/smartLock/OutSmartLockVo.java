@@ -24,5 +24,5 @@ public class OutSmartLockVo {
      */
     private String powerRate;
 
-    private String outLockName;
+    private String lockName;
 }
