@@ -362,6 +362,8 @@ public class SmartLockServiceImpl implements SmartLockService {
         if (SmartLockPwdTypeEnum.MANAGER_PASSWORD.getCode().equals(digitPwdType)) {
             lockPasswordVo.setIsDefault(SmartLockPasswordIsDefaultEnum.PASSWORD_ISDEFAULT.getCode());
             lockPasswordVo.setPwdType(SmartLockPasswordValidTypeEnum.PASSWORD_FOREVER.getCode());
+            lockPasswordVo.setEnableTime(null);
+            lockPasswordVo.setDisableTime(null);
 //            long currentTime = System.currentTimeMillis();
 //            lockPasswordVo.setEnableTime(DateUtils.longToString(currentTime, "yyyy-MM-dd HH:mm:ss"));
 //            lockPasswordVo.setDisableTime("2060-12-31 00:00:00");
