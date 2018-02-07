@@ -26,7 +26,7 @@ public class ConstInfoController extends BaseController{
 
     @Value("${yd.login.url}")
     String yunDingLoginBaseUrl;
-    @Value("${yd.login.client_id}")
+    @Value("${yd.client_id}")
     String yunDingClientId;
     @Value("${yd.smart_lock.permission_group}")
     String yunDingPermissionGroup;
