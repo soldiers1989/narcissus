@@ -340,7 +340,7 @@
         nshm.threeID AS thirdRoomId,
         '5' AS dataType
         FROM
-        ``volga_test``.apartment vta
+        `volga_test`.apartment vta
         LEFT JOIN narcissus_test.public_zone ntpz ON vta.id = ntpz.parent_ID
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
         AND nshm.data_type = 5
@@ -362,8 +362,8 @@
         nshm.threeID AS thirdRoomId,
         '4' AS dataType
         FROM
-        ``volga_test``.apartment vta
-        LEFT JOIN ``volga_test``.room vtr ON vta.id = vtr.apartment_id
+        `volga_test`.apartment vta
+        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON vtr.id = nshm.h2omeID
         AND nshm.data_type = 4
         AND nshm.house_catalog = 0 AND  nshm.status= 1
@@ -427,8 +427,8 @@
         nshm.threeID as threeId
         FROM
         narcissus_test.public_zone ntpz
-        LEFT JOIN ``volga_test``.apartment vta ON ntpz.parent_ID = vta.id
-        LEFT JOIN ``volga_test``.room vtr ON vta.id = vtr.apartment_id
+        LEFT JOIN `volga_test`.apartment vta ON ntpz.parent_ID = vta.id
+        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = vtr.id
         WHERE
         ntpz.public_zone_ID = #{h2omeId}
@@ -456,8 +456,8 @@
         SELECT
         npz.public_zone_ID
         FROM
-        ``volga_test``.room vtr
-        LEFT JOIN ``volga_test``.apartment vta ON vtr.apartment_id = vta.id
+        `volga_test`.room vtr
+        LEFT JOIN `volga_test`.apartment vta ON vtr.apartment_id = vta.id
         LEFT JOIN narcissus_test.public_zone npz ON vta.id=npz.parent_ID
         WHERE npz.data_type=1 AND vtr.id=#{roomId}
     </select>
@@ -571,7 +571,7 @@
         ntpz.`name` as roomName
         FROM
         narcissus_test.public_zone ntpz
-        LEFT JOIN ``volga_test``.apartment vta ON vta.id=ntpz.parent_ID
+        LEFT JOIN `volga_test`.apartment vta ON vta.id=ntpz.parent_ID
         where ntpz.public_zone_ID=#{publicZoneId} and ntpz.data_type=1
     </select>
 
@@ -594,8 +594,8 @@
         vta.`name` AS homeName,
         vtr.`name` AS roomName
         FROM
-        ``volga_test``.apartment vta
-        LEFT JOIN ``volga_test``.room vtr ON vta.id=vtr.apartment_id where vtr.id=#{roomId}
+        `volga_test`.apartment vta
+        LEFT JOIN `volga_test`.room vtr ON vta.id=vtr.apartment_id where vtr.id=#{roomId}
     </select>
 
     <!--通过房间id查询房源名称（分散式）-->
