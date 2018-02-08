@@ -75,7 +75,7 @@
             narcissus_test.smart_device_v2 nsdv2,
             narcissus_test.smart_gateway_v2 nsgv2,
             narcissus_test.public_zone npz,
-            volga_test.apartment va
+            `volga_test`.apartment va
         WHERE
             nsgv2.smart_gateway_ID = nsdv2.smart_device_ID
         AND nsdv2.public_zone_ID = npz.public_zone_ID
@@ -141,7 +141,7 @@
             FROM
                 narcissus_test.smart_device_v2 nsdv2,
                 narcissus_test.smart_gateway_v2 nsg,
-                volga_test.apartment va,
+                `volga_test`.apartment va,
                 narcissus_test.public_zone npz
             WHERE
                 nsg.smart_gateway_ID = nsdv2.smart_device_ID
@@ -186,7 +186,7 @@
 		narcissus_test.smart_lock ntsl,
 		narcissus_test.smart_gateway_bind_v2 nsgbv2,
 		narcissus_test.smart_device_v2 nsdv2,
-		volga_test.room vr
+		`volga_test`.room vr
 	WHERE
 		nsgbv2.smart_device_ID = ntsl.smart_lock_ID
 	AND nsdv2.room_ID = vr.id
@@ -308,15 +308,15 @@ AND nsgbv2.smart_gateway_ID = #{gatewayId}
 	nslIndoor.sn lockName,
 	nslOutSmartLock.sn outLockName
 FROM
-	volga_test.apartment va,
+	`volga_test`.apartment va,
 	caspain_test.auth_user cau,
 	narcissus_test.smart_device_v2 nsdv2,
 	narcissus_test.smart_gateway_v2 nsg,
 	narcissus_test.public_zone npz,
 	narcissus_test.smart_device_v2 nsdv2OutSmartLock,
 	narcissus_test.smart_lock nslOutSmartLock,
-	volga_test.floor vf,
-	volga_test.room vr,
+	`volga_test`.floor vf,
+	`volga_test`.room vr,
 	narcissus_test.smart_lock nslIndoor,
 	narcissus_test.smart_device_v2 nsdv2Indoor
 WHERE
@@ -348,8 +348,8 @@ AND nsdv2Indoor.manage_status = '0'
 					FROM
 						narcissus_test.smart_device_v2 deviceCount,
 						narcissus_test.smart_lock lockCount,
-						volga_test.room roomCount,
-						volga_test.floor floorCount
+						`volga_test`.room roomCount,
+						`volga_test`.floor floorCount
 					WHERE
 						deviceCount.smart_device_ID = lockCount.smart_lock_ID
 					AND deviceCount.room_ID = roomCount.id
@@ -385,8 +385,8 @@ AND nsdv2Indoor.manage_status = '0'
 					FROM
 						narcissus_test.smart_device_v2 deviceCount,
 						narcissus_test.smart_lock lockCount,
-						volga_test.room roomCount,
-						volga_test.floor floorCount
+						`volga_test`.room roomCount,
+						`volga_test`.floor floorCount
 					WHERE
 						deviceCount.smart_device_ID = lockCount.smart_lock_ID
 					AND deviceCount.room_ID = roomCount.id
@@ -424,8 +424,8 @@ AND nsdv2Indoor.manage_status = '0'
 					FROM
 						narcissus_test.smart_device_v2 deviceCount,
 						narcissus_test.smart_lock lockCount,
-						volga_test.room roomCount,
-						volga_test.floor floorCount
+						`volga_test`.room roomCount,
+						`volga_test`.floor floorCount
 					WHERE
 						deviceCount.smart_device_ID = lockCount.smart_lock_ID
 					AND deviceCount.room_ID = roomCount.id
@@ -463,8 +463,8 @@ AND nsdv2Indoor.manage_status = '0'
         FROM
         narcissus_test.smart_device_v2 deviceCount,
         narcissus_test.smart_lock lockCount,
-        volga_test.room roomCount,
-        volga_test.floor floorCount
+        `volga_test`.room roomCount,
+        `volga_test`.floor floorCount
         WHERE
         deviceCount.smart_device_ID = lockCount.smart_lock_ID
         AND deviceCount.room_ID = roomCount.id
@@ -498,7 +498,7 @@ AND nsdv2Indoor.manage_status = '0'
     FROM
         narcissus_test.smart_device_v2 nsdv2,
         narcissus_test.smart_lock nsl,
-        volga_test.room vr
+        `volga_test`.room vr
     where nsdv2.smart_device_ID=nsl.smart_lock_ID
     and nsdv2.room_ID=vr.id
     and vr.floor_id=#{floorId}
@@ -511,7 +511,7 @@ AND nsdv2Indoor.manage_status = '0'
         FROM
         narcissus_test.smart_device_v2 nsdv2,
         narcissus_test.smart_lock nsl,
-        volga_test.room vr
+        `volga_test`.room vr
         where nsdv2.smart_device_ID=nsl.smart_lock_ID
         and nsdv2.room_ID=vr.id
         and vr.floor_id=#{floorId}
