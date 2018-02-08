@@ -134,7 +134,7 @@
            (
             SELECT
                 nsg.smart_gateway_id gatewayId,
-                nsg.uuid gatewayCode,
+                nsg.sn gatewayCode,
                 nsg.model_name gatewayName,
                  va.`name` houseName,
                  va.address houseAddress
@@ -155,7 +155,7 @@
             (
                 SELECT
                 nsg.smart_gateway_id gatewayId,
-                nsg.uuid gatewayCode,
+                nsg.sn gatewayCode,
                 nsg.model_name gatewayName,
                  ch.area houseName,
                  ch.address houseAddress
