@@ -58,17 +58,20 @@ public class ConstInfoController extends BaseController{
     @RequestMapping(value="/getYunDingLoginStatus",method = RequestMethod.POST,produces = {"application/json"})
     public String getYunDingLoginStatus(@RequestBody ApiRequestVO apiRequestVO){
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
+        String result = "";
         if(StringUtils.isNotBlank(userId)){
             String tokenKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+userId;
             String code = CacheUtils.getStr(tokenKey);
             if(StringUtils.isNotBlank(code)){
-                return structureSuccessResponseVO(new JSONObject(),new Date().toString(),"授权成功");
+                result = structureSuccessResponseVO(new JSONObject(),new Date().toString(),"授权成功");
             }else{
-                return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"授权失败");
+                result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"授权失败");
             }
 
+        }else{
+            result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"授权失败");
         }
-        return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"授权失败");
+        return result;
 
     }
 
