@@ -148,6 +148,7 @@
             AND nsdv2.manage_status = '0'
             AND nsdv2.public_zone_ID = npz.public_zone_ID
             AND npz.parent_ID = va.id
+            and npz.data_type=1
             AND nsg.smart_gateway_ID = #{gatewayId}
             )
             UNION
@@ -168,6 +169,7 @@
             AND nsdv2.manage_status = '0'
             AND nsdv2.public_zone_ID = npz.public_zone_ID
             AND npz.parent_ID = ch.id
+            and npz.data_type=3
             AND nsg.smart_gateway_ID = #{gatewayId}
             )
     </select>
