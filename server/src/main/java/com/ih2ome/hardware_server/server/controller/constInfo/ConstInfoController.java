@@ -7,6 +7,8 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ import java.util.Date;
 @CrossOrigin
 public class ConstInfoController extends BaseController{
 
+    private final Logger Log = LoggerFactory.getLogger(this.getClass());
     @Value("${yd.login.url}")
     String yunDingLoginBaseUrl;
     @Value("${yd.client_id}")
@@ -71,6 +74,9 @@ public class ConstInfoController extends BaseController{
         }else{
             result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"授权失败");
         }
+        Log.info("*********************************");
+        Log.info(result);
+        Log.info("*********************************");
         return result;
 
     }
