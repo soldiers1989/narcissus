@@ -63,7 +63,7 @@ public class ConstInfoController extends BaseController{
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         String result = "";
         if(StringUtils.isNotBlank(userId)){
-            String tokenKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+userId;
+            String tokenKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
             String code = CacheUtils.getStr(tokenKey);
             if(StringUtils.isNotBlank(code)){
                 result = structureSuccessResponseVO(new JSONObject(),new Date().toString(),"授权成功");
