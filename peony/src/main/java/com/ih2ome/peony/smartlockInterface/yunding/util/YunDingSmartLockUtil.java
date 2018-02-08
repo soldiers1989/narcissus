@@ -5,6 +5,8 @@ import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +17,7 @@ import java.util.Map;
  * @email sky.li@ixiaoshuidi.com
  **/
 public class YunDingSmartLockUtil {
+    private static final Logger Log = LoggerFactory.getLogger(YunDingSmartLockUtil.class);
     /**
      * 云丁客户端账号
      */
@@ -125,6 +128,10 @@ public class YunDingSmartLockUtil {
      */
     public static String getLicenseCode(String userId) throws SmartLockException {
         String code = CacheUtils.getStr(TOKEN_YUNDING_USER_CODE + "_" + userId);
+        Log.info(TOKEN_YUNDING_USER_CODE + "_" + userId);
+        Log.info("********************************");
+        Log.info(code);
+        Log.info("********************************");
         if (StringUtils.isEmpty(code)) {
             throw new SmartLockException("请先做授权");
         }
