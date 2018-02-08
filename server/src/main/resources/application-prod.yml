@@ -5,9 +5,9 @@ spring:
   profiles: prod
   redis:
     database: 0
-    host: 10.0.0.24
+    host: 2df27a68346746ba.m.cnhza.kvstore.aliyuncs.com
     port: 6379
-    password:
+    password: 2df27a68346746ba
     pool:
       max-active: 8
       max-wait: -1
