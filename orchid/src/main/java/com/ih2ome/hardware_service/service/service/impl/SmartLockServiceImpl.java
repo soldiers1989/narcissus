@@ -558,7 +558,9 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public SmartLockDetailVO findSmartLockDetail(String lockId) throws SmartLockException {
+        Log.info("************ lockid",lockId);
         SmartLockDetailVO lockDetail = smartLockDao.findSmartLockDetail(lockId);
+        Log.info("*****************",lockDetail);
         lockDetail.splitVersion();
         String houseCatalog = lockDetail.getHouseCatalog();
         String publicZoneId = lockDetail.getPublicZoneId();
