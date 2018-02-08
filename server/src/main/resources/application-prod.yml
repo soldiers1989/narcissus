@@ -7,7 +7,7 @@ spring:
     database: 0
     host: 2df27a68346746ba.m.cnhza.kvstore.aliyuncs.com
     port: 6379
-    password: 2df27a68346746ba
+    password: 2df27a68346746ba:h2omeRedis
     pool:
       max-active: 8
       max-wait: -1
