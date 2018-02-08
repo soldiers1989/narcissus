@@ -179,6 +179,7 @@
 	SELECT
 		ntsl.smart_lock_ID smartLockId,
 		vr.`name` roomNo,
+		ntsl.sn smartLockCode,
 		ntsl.power powerRate,
 		nsdv2.connection_status communicationStatus
 	FROM
@@ -190,11 +191,15 @@
 		nsgbv2.smart_device_ID = ntsl.smart_lock_ID
 	AND nsdv2.room_ID = vr.id
 	AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
-	AND nsgbv2.smart_gateway_ID = #{gatewayId}) UNION
+	AND nsgbv2.smart_gateway_ID = #{gatewayId}
+
+)
+UNION
 	(
 		SELECT
 			ntsl.smart_lock_ID smartLockId,
 			cr.`name` roomNo,
+			ntsl.sn smartLockCode,
 			ntsl.power powerRate,
 			nsdv2.connection_status communicationStatus
 		FROM
@@ -207,7 +212,24 @@
 		AND nsdv2.room_ID = cr.id
 		AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
 		AND nsgbv2.smart_gateway_ID = #{gatewayId}
-	)
+	)union(
+	SELECT
+	ntsl.smart_lock_ID smartLockId,
+	'公共区域' roomNo,
+	ntsl.sn smartLockCode,
+	ntsl.power powerRate,
+	nsdv2.connection_status communicationStatus
+FROM
+	narcissus_test.smart_lock ntsl,
+	narcissus_test.smart_gateway_bind_v2 nsgbv2,
+	narcissus_test.smart_device_v2 nsdv2,
+	narcissus_test.public_zone npz
+WHERE
+	nsgbv2.smart_device_ID = ntsl.smart_lock_ID
+AND nsdv2.public_zone_ID = npz.public_zone_ID
+AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
+AND nsgbv2.smart_gateway_ID = #{gatewayId}
+)
     </select>
 
     <select id="getSmartLockGatewayDetailInfo" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
