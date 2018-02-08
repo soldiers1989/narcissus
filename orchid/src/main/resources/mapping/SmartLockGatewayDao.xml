@@ -179,7 +179,7 @@
 	SELECT
 		ntsl.smart_lock_ID smartLockId,
 		vr.`name` roomNo,
-		ntsl.sn smartLockCode,
+		ntsl.sn lockName,
 		ntsl.power powerRate,
 		nsdv2.connection_status communicationStatus
 	FROM
@@ -199,7 +199,7 @@ UNION
 		SELECT
 			ntsl.smart_lock_ID smartLockId,
 			cr.`name` roomNo,
-			ntsl.sn smartLockCode,
+			ntsl.sn lockName,
 			ntsl.power powerRate,
 			nsdv2.connection_status communicationStatus
 		FROM
@@ -216,7 +216,7 @@ UNION
 	SELECT
 	ntsl.smart_lock_ID smartLockId,
 	'公共区域' roomNo,
-	ntsl.sn smartLockCode,
+	ntsl.sn lockName,
 	ntsl.power powerRate,
 	nsdv2.connection_status communicationStatus
 FROM

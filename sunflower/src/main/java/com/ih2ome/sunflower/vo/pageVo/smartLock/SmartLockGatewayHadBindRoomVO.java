@@ -15,6 +15,6 @@ public class SmartLockGatewayHadBindRoomVO {
     private String roomNo;
     private String powerRate;
     private String communicationStatus;
-    private String smartLockCode;
+    private String lockName;
 
 }
