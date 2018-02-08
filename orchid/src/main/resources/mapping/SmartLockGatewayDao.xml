@@ -237,6 +237,7 @@ AND nsgbv2.smart_gateway_ID = #{gatewayId}
             nsgv2.smart_gateway_ID gatewayId,
             nsdv2.`name` gatewayCode,
             nsgv2.install_time bindTime,
+            nsdv2.connection_status connectionStatus,
             nsdv2.connection_status_update_time updateTime,
             nsdv2.provider_code provider,
             nsgv2.versions versionJson

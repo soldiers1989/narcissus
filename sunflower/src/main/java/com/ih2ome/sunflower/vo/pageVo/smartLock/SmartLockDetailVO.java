@@ -114,8 +114,8 @@ public class SmartLockDetailVO {
         JSONObject jsonObject = JSONObject.parseObject(this.versionJson);
         this.fireWareVersion = jsonObject.getString("app_version");
         this.hardwareVersion = jsonObject.getString("hardware_version");
-//        this.mediaVersion = jsonObject.getString("media_version");
-//        this.kernelVersion = jsonObject.getString("kernel_version");
+        this.mediaVersion = jsonObject.getString("media_version");
+        this.kernelVersion = jsonObject.getString("kernel_version");
         this.zigBeeVersion = jsonObject.getString("zigbee_version");
     }
 
