@@ -144,8 +144,7 @@ public class YunDingSmartLockUtil {
         Map<String, Object> req = new HashMap<>();
         req.put("client_id", OPEN_CLIENT_ID);
         req.put("client_secret", OPEN_SECRET);
-//        req.put("code",getLicenseCode(userId));
-        req.put("code", "8bb6ceb73cd3ee67dfc59ae478347f9c0bbe5ee6");
+        req.put("code",getLicenseCode(userId));
         req.put("grant_type", "authorization_code");
         //组装头部
         Map<String, String> header = new HashMap<>();
