@@ -62,4 +62,4 @@ yd:
   smart_lock:
     permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op
     call_back:
-          url: http://rose.shuidiguanjia.com/api/yunDing/callBack/setOAuthCode
+          url: http://rose.ih2ome.com/api/yunDing/callBack/setOAuthCode
