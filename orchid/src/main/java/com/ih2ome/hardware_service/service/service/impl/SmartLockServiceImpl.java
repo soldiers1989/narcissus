@@ -244,6 +244,7 @@ public class SmartLockServiceImpl implements SmartLockService {
 //            新增设备(网关)记录绑定公共区域
             smartLockDao.addSmartDevice(gatewayDevice);
             String gatewayDeviceId = gatewayDevice.getSmartDeviceId();
+            Log.info("*********gatewayDeviceId:{}",gatewayDeviceId);
             smartGatewayV2.setSmartGatewayId(gatewayDeviceId);
             //新增网关记录
             smartLockDao.addSmartGateway(smartGatewayV2);
