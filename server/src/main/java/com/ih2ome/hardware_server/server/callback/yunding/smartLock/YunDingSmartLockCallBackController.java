@@ -88,6 +88,9 @@ public class YunDingSmartLockCallBackController extends BaseController{
 //        }
         //TODO:签名校验暂时取消
         String event = apiRequestVO.getEvent();
+        if(StringUtils.isEmpty(event)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
+        }
         switch (event){
             case "batteryAlarm":
                 Log.info("低电量回调");
@@ -276,9 +279,7 @@ public class YunDingSmartLockCallBackController extends BaseController{
      */
     private void asyncBattery(CallbackRequestVo apiRequestVO){
         LockInfoVo lockInfoVo = new LockInfoVo();
-        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         Log.info(JSON.toJSON(apiRequestVO).toString());
-        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         String battery = apiRequestVO.getDetail().getString("battery");
         String uuid = apiRequestVO.getUuid();
         lockInfoVo.setUuid(uuid);
