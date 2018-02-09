@@ -128,10 +128,6 @@ public class YunDingSmartLockUtil {
      */
     public static String getLicenseCode(String userId) throws SmartLockException {
         String code = CacheUtils.getStr(TOKEN_YUNDING_USER_CODE + "_" + userId);
-        Log.info(TOKEN_YUNDING_USER_CODE + "_" + userId);
-        Log.info("********************************");
-        Log.info(code);
-        Log.info("********************************");
         if (StringUtils.isEmpty(code)) {
             throw new SmartLockException("请先做授权");
         }
@@ -171,7 +167,6 @@ public class YunDingSmartLockUtil {
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
         String refreshToken = resJson.getString("refresh_token");
-        System.out.println("----------------" + accessToken);
         CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
         CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
 
@@ -235,7 +230,6 @@ public class YunDingSmartLockUtil {
      */
     public static String getAccessToken(String userId) throws SmartLockException {
         String accessToken = CacheUtils.getStr(ACCESS_TOKEN_KEY + "_" + userId);
-        Log.info("***********accessToken:{}",accessToken);
         if (StringUtils.isNotBlank(accessToken)) {
             return accessToken;
 
