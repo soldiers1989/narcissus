@@ -13,6 +13,7 @@ import com.ih2ome.sunflower.vo.pageVo.enums.*;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGateWayHadBindInnerLockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
@@ -219,6 +220,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 smartLockDao.addAssociation(houseMapping);
             }
         }
+        List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
         //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
         smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
 
@@ -244,12 +246,28 @@ public class SmartLockServiceImpl implements SmartLockService {
 //            新增设备(网关)记录绑定公共区域
             smartLockDao.addSmartDevice(gatewayDevice);
             String gatewayDeviceId = gatewayDevice.getSmartDeviceId();
-            Log.info("*********gatewayDeviceId:{}",gatewayDeviceId);
+            Log.info("*********gatewayDeviceId:{}", gatewayDeviceId);
             smartGatewayV2.setSmartGatewayId(gatewayDeviceId);
             //新增网关记录
             smartLockDao.addSmartGateway(smartGatewayV2);
         }
-        //3.2.2 将外门锁信息插入数据库
+        //3.2.2 修改内门锁与网关的绑定信息
+        for (SmartLockGateWayHadBindInnerLockVO gateWayHadBindInnerLockVO : gatewayBindInnerLocks) {
+            String gatewayThirdId = gateWayHadBindInnerLockVO.getGatewayThirdId();
+            for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
+                String uuid = smartGatewayV2.getUuid();
+                if (gatewayThirdId.equals(uuid)) {
+                    String smartGatewayId = smartGatewayV2.getSmartGatewayId();
+                    Long gatewayId = gateWayHadBindInnerLockVO.getGatewayId();
+                    Long innerLockId = gateWayHadBindInnerLockVO.getInnerLockId();
+                    smartLockDao.updateInnerLockBindGateway(smartGatewayId, gatewayId, innerLockId);
+                    break;
+                }
+
+            }
+        }
+
+        //3.2.3 将外门锁信息插入数据库
         for (SmartLock publicLock : publicLockList) {
             //获取该门锁下的网关uuid
             String gatewayUuid = publicLock.getGatewayUuid();
@@ -280,7 +298,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
 
         }
-        //3.2.3 表明是房间
+        //3.2.4 表明是房间
         if (!publicZoneId.equals(roomId)) {
             //获取该房间下的内门锁
             List<SmartLock> innerLockList = iSmartLock.searchRoomDeviceInfo(userId, thirdRoomId);
@@ -559,9 +577,9 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public SmartLockDetailVO findSmartLockDetail(String lockId) throws SmartLockException {
-        Log.info("************ lockid{}",lockId);
+        Log.info("************ lockid{}", lockId);
         SmartLockDetailVO lockDetail = smartLockDao.findSmartLockDetail(lockId);
-        Log.info("*****************",lockDetail);
+        Log.info("*****************", lockDetail);
         lockDetail.splitVersion();
         String houseCatalog = lockDetail.getHouseCatalog();
         String publicZoneId = lockDetail.getPublicZoneId();

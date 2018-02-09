@@ -5,6 +5,7 @@ import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGateWayHadBindInnerLockVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -303,14 +304,36 @@ public interface SmartLockDao {
 
     /**
      * 根据uuid更新密码
+     *
      * @param lockPasswordVo
      */
     void updateLockPasswordByUuid(LockPasswordVo lockPasswordVo);
 
     /**
-     *解绑门锁
+     * 解绑门锁
+     *
      * @param uuid
      */
     void deleteSmartLockByUuid(String uuid);
 
+    /**
+     * 查询该公区下绑定的内门锁
+     *
+     * @param type
+     * @param publicZoneId
+     * @param providerCode
+     * @return
+     */
+    List<SmartLockGateWayHadBindInnerLockVO> findGatewayBindInnerLock
+    (@Param("type") String type, @Param("publicZoneId") String publicZoneId, @Param("providerCode") String providerCode);
+
+    /**
+     * 修改内门锁的绑定关系
+     *
+     * @param smartGatewayId
+     * @param gatewayId
+     * @param innerLockId
+     */
+    void updateInnerLockBindGateway
+    (@Param("smartGatewayId") String smartGatewayId, @Param("gatewayId") Long gatewayId, @Param("innerLockId") Long innerLockId);
 }

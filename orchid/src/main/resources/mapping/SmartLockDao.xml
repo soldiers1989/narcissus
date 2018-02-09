@@ -231,7 +231,7 @@
             <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
             <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
         </set>
-        WHERE  smart_lock_password_ID=#{id}
+        WHERE smart_lock_password_ID=#{id}
 
     </update>
 
@@ -276,6 +276,13 @@
         where
         nsdv2.smart_device_ID=nsl.smart_lock_ID
         and nsdv2.threeID=#{uuid}
+    </update>
+
+    <!--修改内门锁与网关的绑定关系-->
+    <update id="updateInnerLockBindGateway">
+        UPDATE narcissus_test.smart_gateway_bind_v2 ntsgbv2
+          SET ntsgbv2.smart_gateway_ID=#{smartGatewayId}
+        where ntsgbv2.smart_device_ID=#{innerLockId} AND ntsgbv2.smart_gateway_ID=#{gatewayId}
     </update>
     <!--select-->
     <!--查询房源信息(分散式)-->
@@ -690,4 +697,24 @@
         AND ntsmi.smart_device_type = 3
         AND ntsmi.exception_type IN (9, 10, 11, 12,16,17)
     </select>
+
+    <!--通过公区id查询网关已绑定的内门锁-->
+    <select id="findGatewayBindInnerLock"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGateWayHadBindInnerLockVO">
+      SELECT
+        ntsdv2g.smart_device_ID AS gatewayId,
+        ntsdv2g.threeID AS gatewayThirdId,
+        ntsgbv2.smart_device_ID AS innerLockId
+        FROM
+            narcissus_test.smart_device_v2 ntsdv2g
+        LEFT JOIN narcissus_test.smart_gateway_bind_v2 ntsgbv2 ON ntsdv2g.smart_device_ID = ntsgbv2.smart_gateway_ID
+        LEFT JOIN narcissus_test.smart_device_v2 ntsdv2l ON ntsdv2l.smart_device_ID = ntsgbv2.smart_device_ID
+        WHERE
+            ntsdv2g.public_zone_ID = #{publicZoneId}
+        AND ntsdv2g.provider_code = #{providerCode}
+        AND ntsdv2g.house_catalog = #{type}
+        AND ntsdv2g.smart_device_type = 4
+        AND ntsdv2l.room_ID IS NOT NULL;
+    </select>
+
 </mapper>
