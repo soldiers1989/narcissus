@@ -282,7 +282,7 @@
     <update id="updateInnerLockBindGateway">
         UPDATE narcissus_test.smart_gateway_bind_v2 ntsgbv2
           SET ntsgbv2.smart_gateway_ID=#{smartGatewayId}
-        where ntsgbv2.smart_device_ID=#{innerLockId} AND ntsgbv2.smart_gateway_ID=#{gatewayId}
+        where ntsgbv2.smart_device_ID=#{innerLockId}
     </update>
     <!--select-->
     <!--查询房源信息(分散式)-->
