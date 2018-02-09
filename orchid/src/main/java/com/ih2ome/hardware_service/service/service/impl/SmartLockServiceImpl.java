@@ -108,7 +108,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                                 localRoom.setThirdRoomName(roomVO.getThirdRoomName());
                                 localHomeVO.setThirdHomeId(thirdHomeVO.getHomeId());
                                 thirdHomeVO.setLocalHomeId(localHomeVO.getHomeId());
-                                iterator.remove();
+//                                iterator.remove();
                                 break;
                             }
                         }
