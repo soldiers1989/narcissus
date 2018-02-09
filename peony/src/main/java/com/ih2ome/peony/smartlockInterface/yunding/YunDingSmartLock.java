@@ -235,7 +235,7 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String searchHomeInfo(Map<String, Object> params) throws SmartLockException {
-        Log.info("查询该用户所有的房源和设备信息");
+        Log.info("查询该用户所有的房源和设备信息,用户ID:{}",YunDingSmartLockUtil.getAccessToken(params.get("userId").toString()));
         String url = BASE_URL + "/search_home_info";
         Map<String, Object> map = new HashMap<String, Object>();
         String access_token = YunDingSmartLockUtil.getAccessToken(params.get("userId").toString());
