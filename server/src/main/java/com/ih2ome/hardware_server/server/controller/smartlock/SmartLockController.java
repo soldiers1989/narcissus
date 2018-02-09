@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author Sky
  * @create 2018/01/22
- * @email sky.li@ixiaoshuidi.com
+ * @email sky.li@ixiaoshuidi.comF
  **/
 @RestController
 @RequestMapping("/smartlock")
@@ -74,6 +74,7 @@ public class SmartLockController extends BaseController {
         responseJson.put("thirdHomeList", results.get("thirdHomeList"));
         responseJson.put("localHomeList", results.get("localHomeList"));
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+        Log.info("***********************aaaaaaaaaaaaaaaaaaaaaa:{}",result);
         return result;
 
     }
