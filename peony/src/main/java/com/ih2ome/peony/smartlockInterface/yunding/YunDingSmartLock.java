@@ -242,8 +242,6 @@ public class YunDingSmartLock implements ISmartLock {
         map.put("access_token", access_token);
         map.put("count", YunDingPullHomeCountEnum.ONE_THOUSAND.getCount());
         String result = HttpClientUtil.doGet(url, map);
-        Log.info("**************房源信息：{}",result);
-        Log.info("RESULT:{}",result);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(result);
@@ -272,7 +270,6 @@ public class YunDingSmartLock implements ISmartLock {
             //封装该房屋下的房间
             List<YunDingRoomInfoVO> roomList = new ArrayList<YunDingRoomInfoVO>();
             JSONArray rooms = homeJsonObject.getJSONArray("rooms");
-            Log.info("***********{}",rooms);
             for (Object roomObject : rooms) {
                 YunDingRoomInfoVO yunDingRoomInfoVO = new YunDingRoomInfoVO();
                 JSONObject roomJsonObject = JSONObject.parseObject(roomObject.toString());
@@ -303,6 +300,7 @@ public class YunDingSmartLock implements ISmartLock {
             yunDingHomeInfoVO.setDevices(deviceList);
             homeList.add(yunDingHomeInfoVO);
         }
+        Log.info("***********************aaaaaaaaaaaaaaaaaaaaaa:{}",JSONObject.toJSONString(homeList));
         return JSONObject.toJSONString(homeList);
     }
 
