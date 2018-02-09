@@ -69,6 +69,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 thirdHomeList.add(homeVO);
             }
         }
+        Log.info("*********************ll111111111...........thirdhomeList:{}:",thirdHomeList);
         //水滴的房源信息
         List<HomeVO> localHomeList = null;
         //判断是分散式(0是集中式，1是分散式)
@@ -93,6 +94,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
 
         }
+        Log.info("*********************2222222222222...........thirdhomeList:{}:",thirdHomeList);
         //房间关联数据处理
         for (HomeVO localHomeVO : localHomeList) {
             List<RoomVO> localRooms = localHomeVO.getRooms();
@@ -116,6 +118,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 }
             }
         }
+        Log.info("*********************33333333333333...........thirdhomeList:{}:",thirdHomeList);
         Map<String, List<HomeVO>> map = new HashMap<String, List<HomeVO>>();
         map.put("thirdHomeList", thirdHomeList);
         map.put("localHomeList", localHomeList);
