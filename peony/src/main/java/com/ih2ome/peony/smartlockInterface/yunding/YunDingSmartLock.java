@@ -279,7 +279,7 @@ public class YunDingSmartLock implements ISmartLock {
                 yunDingRoomInfoVO.setRoomDescription(roomJsonObject.getString("description"));
                 yunDingRoomInfoVO.setSpState(roomJsonObject.getString("sp_state"));
                 yunDingRoomInfoVO.setInstallState(roomJsonObject.getString("install_state"));
-
+                roomList.add(yunDingRoomInfoVO);
             }
             //封装该房屋下的设备
             List<YunDingDeviceInfoVO> deviceList = new ArrayList<YunDingDeviceInfoVO>();
