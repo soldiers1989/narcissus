@@ -51,6 +51,10 @@ public class YunDingSmartLockCallBackController extends BaseController{
 
     final static String TOKEN_YUNDING_USER_CODE = "yunding_user_code_token";
 
+    public final static String ACCESS_TOKEN_KEY = "access_token_key";
+
+    public final static String REFRESH_TOKEN_KEY = "refresh_token_key";
+
     private static String CALLBACK_PATH="http://rose.ih2ome.cn/api/yunDing/callBack/smartLock";
 
     @RequestMapping(value="/setOAuthCode",produces = {"application/json"})
@@ -61,6 +65,8 @@ public class YunDingSmartLockCallBackController extends BaseController{
         if(StringUtils.isNotBlank(userId)){
             //用户授权code存redis，有效期4分30秒（文档中为5分钟，防止边界）
             CacheUtils.set(TOKEN_YUNDING_USER_CODE+"_"+userId,code, ExpireTime.FIVE_MIN.getTime()-30);
+            CacheUtils.del(ACCESS_TOKEN_KEY+"_"+userId);
+            CacheUtils.del(REFRESH_TOKEN_KEY+"_"+userId);
             return structureSuccessResponseVO(null,new Date().toString(),"授权成功");
 
         }
