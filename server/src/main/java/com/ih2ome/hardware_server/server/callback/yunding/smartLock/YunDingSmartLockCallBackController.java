@@ -275,6 +275,8 @@ public class YunDingSmartLockCallBackController extends BaseController{
      */
     private void asyncBattery(CallbackRequestVo apiRequestVO){
         LockInfoVo lockInfoVo = new LockInfoVo();
+        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa{}",apiRequestVO.getDetail());
+        Log.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb{}",apiRequestVO.getDetail().getString("battery"));
         String battery = apiRequestVO.getDetail().getString("battery");
         String uuid = apiRequestVO.getUuid();
         lockInfoVo.setUuid(uuid);
