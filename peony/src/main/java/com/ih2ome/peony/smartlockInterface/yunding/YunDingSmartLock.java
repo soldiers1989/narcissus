@@ -269,6 +269,7 @@ public class YunDingSmartLock implements ISmartLock {
             //封装该房屋下的房间
             List<YunDingRoomInfoVO> roomList = new ArrayList<YunDingRoomInfoVO>();
             JSONArray rooms = homeJsonObject.getJSONArray("rooms");
+            Log.info("***********{}",rooms);
             for (Object roomObject : rooms) {
                 YunDingRoomInfoVO yunDingRoomInfoVO = new YunDingRoomInfoVO();
                 JSONObject roomJsonObject = JSONObject.parseObject(roomObject.toString());
@@ -278,7 +279,10 @@ public class YunDingSmartLock implements ISmartLock {
                 yunDingRoomInfoVO.setRoomDescription(roomJsonObject.getString("description"));
                 yunDingRoomInfoVO.setSpState(roomJsonObject.getString("sp_state"));
                 yunDingRoomInfoVO.setInstallState(roomJsonObject.getString("install_state"));
+                Log.info("**********************{}",yunDingRoomInfoVO);
                 roomList.add(yunDingRoomInfoVO);
+                Log.info("**********************{}",roomList);
+
             }
             //封装该房屋下的设备
             List<YunDingDeviceInfoVO> deviceList = new ArrayList<YunDingDeviceInfoVO>();
