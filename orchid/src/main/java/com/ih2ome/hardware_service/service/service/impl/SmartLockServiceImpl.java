@@ -221,6 +221,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
         }
         List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
+        Log.info("----------------------gatewayBindInnerLocks:{}",gatewayBindInnerLocks);
         //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
         smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
 
@@ -260,8 +261,8 @@ public class SmartLockServiceImpl implements SmartLockService {
                     String smartGatewayId = smartGatewayV2.getSmartGatewayId();
                     Long gatewayId = gateWayHadBindInnerLockVO.getGatewayId();
                     Long innerLockId = gateWayHadBindInnerLockVO.getInnerLockId();
+                    Log.info("--------smartGatewayId:{},gatewayId:{},innerLockId:{}",smartGatewayId,gatewayId,innerLockId);
                     smartLockDao.updateInnerLockBindGateway(smartGatewayId, gatewayId, innerLockId);
-                    break;
                 }
 
             }
