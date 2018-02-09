@@ -235,6 +235,7 @@ public class YunDingSmartLockUtil {
      */
     public static String getAccessToken(String userId) throws SmartLockException {
         String accessToken = CacheUtils.getStr(ACCESS_TOKEN_KEY + "_" + userId);
+        Log.info("***********accessToken:{}",accessToken);
         if (StringUtils.isNotBlank(accessToken)) {
             return accessToken;
 
