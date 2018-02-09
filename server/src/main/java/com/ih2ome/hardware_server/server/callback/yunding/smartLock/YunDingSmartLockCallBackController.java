@@ -76,50 +76,64 @@ public class YunDingSmartLockCallBackController extends BaseController{
         String sign = apiRequestVO.getSign();
         boolean flag=checkSign(sign,apiRequestVO);
         if(!flag){
+            Log.error("云丁回调参数错误");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
         }
         String event = apiRequestVO.getEvent();
         switch (event){
             case "batteryAlarm":
+                Log.info("低电量回调");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "clearBatteryAlarm":
+                Log.info("电量恢复回调");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "brokenAlarm":
+                Log.info("门锁被破坏报警");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "wrongPwdAlarm":
+                Log.info("密码输错三次报警");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "pwdSync":
                 //TODO:本次没有密码同步需求，暂时不做实现
                 break;
             case "pwdAddLocal":
+                Log.info("密码更新");
                 updateSmartLockPassword(apiRequestVO);
                 break;
             case "pwdDelLocal":
+                Log.info("密码删除");
                 deleteSmartLockPassword(apiRequestVO);
                 break;
             case "pwdUpdateLocal":
+                Log.info("密码更新");
                 updateSmartLockPassword(apiRequestVO);
                 break;
             case "lockerOpenAlarm":
+                Log.info("门锁开启");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "clearCenterOfflineAlarm":
+                Log.info("网关在线");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "clearLockOfflineAlarm":
+                Log.info("门锁在线");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "centerOfflineAlarm":
+                Log.info("网关离线");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "lockOfflineAlarm":
+                Log.info("门锁离线");
                 saveSmartLockAlarm(apiRequestVO);
                 break;
             case "batteryAsync":
+                Log.info("电量同步");
                 asyncBattery(apiRequestVO);
                 break;
             case "deviceUninstall":
