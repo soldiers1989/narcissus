@@ -81,10 +81,11 @@ public class YunDingSmartLockCallBackController extends BaseController{
         Log.info("云丁门锁回调接口开始:{}",apiRequestVO.toString());
         String sign = apiRequestVO.getSign();
         boolean flag=checkSign(sign,apiRequestVO);
-        if(!flag){
-            Log.error("云丁回调参数错误");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
-        }
+//        if(!flag){
+//            Log.error("云丁回调参数错误");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
+//        }
+        //TODO:签名校验暂时取消
         String event = apiRequestVO.getEvent();
         switch (event){
             case "batteryAlarm":
@@ -143,6 +144,8 @@ public class YunDingSmartLockCallBackController extends BaseController{
                 asyncBattery(apiRequestVO);
                 break;
             case "deviceUninstall":
+                Log.info("设备解绑");
+                deviceUninstall(apiRequestVO);
                 break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
