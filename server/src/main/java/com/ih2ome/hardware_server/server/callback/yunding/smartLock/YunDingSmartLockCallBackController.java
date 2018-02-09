@@ -275,8 +275,7 @@ public class YunDingSmartLockCallBackController extends BaseController{
      */
     private void asyncBattery(CallbackRequestVo apiRequestVO){
         LockInfoVo lockInfoVo = new LockInfoVo();
-        String battery = apiRequestVO.getDetail().getJSONObject("detail").getString("battery");
-        Log.info("***************************************battery:{}",battery);
+        String battery = apiRequestVO.getDetail().getString("battery");
         String uuid = apiRequestVO.getUuid();
         lockInfoVo.setUuid(uuid);
         lockInfoVo.setRemainingBattery(battery);
@@ -291,9 +290,9 @@ public class YunDingSmartLockCallBackController extends BaseController{
     private void deviceUninstall(CallbackRequestVo apiRequestVO){
         JSONObject detail = apiRequestVO.getDetail().getJSONObject("detail");
         //网关
-        if(detail.getJSONObject("detail").getString("type").equals("1")){
+        if(detail.getString("type").equals("1")){
             smartLockGatewayService.uninstallSmartLockGateway(detail.getString("uuid"));
-        }else if(detail.getJSONObject("detail").getString("type").equals("4")){
+        }else if(detail.getString("type").equals("4")){
             smartLockService.uninstallSmartLock(detail.getString("uuid"));
         }
     }
