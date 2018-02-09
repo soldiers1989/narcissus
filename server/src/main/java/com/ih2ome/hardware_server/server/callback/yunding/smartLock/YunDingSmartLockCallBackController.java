@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_server.server.callback.yunding.smartLock;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.enums.ExpireTime;
@@ -275,8 +276,9 @@ public class YunDingSmartLockCallBackController extends BaseController{
      */
     private void asyncBattery(CallbackRequestVo apiRequestVO){
         LockInfoVo lockInfoVo = new LockInfoVo();
-        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa{}",apiRequestVO.getDetail());
-        Log.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb{}",apiRequestVO.getDetail().getString("battery"));
+        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        Log.info(JSON.toJSON(apiRequestVO).toString());
+        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         String battery = apiRequestVO.getDetail().getString("battery");
         String uuid = apiRequestVO.getUuid();
         lockInfoVo.setUuid(uuid);
