@@ -300,6 +300,7 @@ public class YunDingSmartLock implements ISmartLock {
             yunDingHomeInfoVO.setDevices(deviceList);
             homeList.add(yunDingHomeInfoVO);
         }
+        Log.info("第三方第三方第三方第三方第三方第三方第三方:{}",JSONObject.toJSONString(homeList));
         return JSONObject.toJSONString(homeList);
     }
 
