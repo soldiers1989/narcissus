@@ -81,6 +81,7 @@
         AND nsdv2.public_zone_ID = npz.public_zone_ID
         AND va.id = npz.parent_ID
         AND npz.data_type = '1'
+        and nsdv2.manage_status='0'
         AND va.id = #{homeId}
 
     </select>
@@ -127,6 +128,7 @@
         AND nsdv2.public_zone_ID = npz.public_zone_ID
         AND ch.id = npz.parent_ID
         AND npz.data_type = '3'
+        and nsdv2.manage_status='0'
         AND ch.id = #{homeId}
     </select>
 
