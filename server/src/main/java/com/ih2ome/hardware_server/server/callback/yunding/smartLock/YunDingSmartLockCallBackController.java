@@ -81,10 +81,11 @@ public class YunDingSmartLockCallBackController extends BaseController{
         Log.info("云丁门锁回调接口开始:{}",apiRequestVO.toString());
         String sign = apiRequestVO.getSign();
         boolean flag=checkSign(sign,apiRequestVO);
-        if(!flag){
-            Log.error("云丁回调参数错误");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
-        }
+//        if(!flag){
+//            Log.error("云丁回调参数错误");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
+//        }
+        //TODO:签名校验暂时取消
         String event = apiRequestVO.getEvent();
         switch (event){
             case "batteryAlarm":
@@ -143,6 +144,8 @@ public class YunDingSmartLockCallBackController extends BaseController{
                 asyncBattery(apiRequestVO);
                 break;
             case "deviceUninstall":
+                Log.info("设备解绑");
+                deviceUninstall(apiRequestVO);
                 break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
@@ -272,7 +275,9 @@ public class YunDingSmartLockCallBackController extends BaseController{
      */
     private void asyncBattery(CallbackRequestVo apiRequestVO){
         LockInfoVo lockInfoVo = new LockInfoVo();
-        String battery = apiRequestVO.getDetail().getJSONObject("detail").getString("battery");
+        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa{}",apiRequestVO.getDetail());
+        Log.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb{}",apiRequestVO.getDetail().getString("battery"));
+        String battery = apiRequestVO.getDetail().getString("battery");
         String uuid = apiRequestVO.getUuid();
         lockInfoVo.setUuid(uuid);
         lockInfoVo.setRemainingBattery(battery);
@@ -287,9 +292,9 @@ public class YunDingSmartLockCallBackController extends BaseController{
     private void deviceUninstall(CallbackRequestVo apiRequestVO){
         JSONObject detail = apiRequestVO.getDetail().getJSONObject("detail");
         //网关
-        if(detail.getJSONObject("detail").getString("type").equals("1")){
+        if(detail.getString("type").equals("1")){
             smartLockGatewayService.uninstallSmartLockGateway(detail.getString("uuid"));
-        }else if(detail.getJSONObject("detail").getString("type").equals("4")){
+        }else if(detail.getString("type").equals("4")){
             smartLockService.uninstallSmartLock(detail.getString("uuid"));
         }
     }
