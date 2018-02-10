@@ -74,7 +74,6 @@ public class SmartLockController extends BaseController {
         responseJson.put("thirdHomeList", results.get("thirdHomeList"));
         responseJson.put("localHomeList", results.get("localHomeList"));
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
-        Log.info("***********************aaaaaaaaaaaaaaaaaaaaaa:{}",result);
         return result;
 
     }
