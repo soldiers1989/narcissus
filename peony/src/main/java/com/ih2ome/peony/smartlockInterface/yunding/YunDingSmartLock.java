@@ -11,9 +11,7 @@ import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
 import com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2;
 import com.ih2ome.sunflower.entity.narcissus.SmartLock;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
-import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
-import com.ih2ome.sunflower.vo.pageVo.enums.SmartLockPasswordIsDefaultEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.*;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.GatewayInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
@@ -235,7 +233,7 @@ public class YunDingSmartLock implements ISmartLock {
      */
     @Override
     public String searchHomeInfo(Map<String, Object> params) throws SmartLockException {
-        Log.info("查询该用户所有的房源和设备信息,用户ID:{}",YunDingSmartLockUtil.getAccessToken(params.get("userId").toString()));
+        Log.info("查询该用户所有的房源和设备信息,用户ID:{}", YunDingSmartLockUtil.getAccessToken(params.get("userId").toString()));
         String url = BASE_URL + "/search_home_info";
         Map<String, Object> map = new HashMap<String, Object>();
         String access_token = YunDingSmartLockUtil.getAccessToken(params.get("userId").toString());
@@ -251,7 +249,6 @@ public class YunDingSmartLock implements ISmartLock {
         }
         List<YunDingHomeInfoVO> homeList = new ArrayList<YunDingHomeInfoVO>();
         JSONArray homes = resJson.getJSONArray("home_list");
-        Log.info("homes:{}",homes);
         //遍历所有的房源信息，封装成对象。
         for (Object homeObject : homes) {
             YunDingHomeInfoVO yunDingHomeInfoVO = new YunDingHomeInfoVO();
@@ -300,7 +297,6 @@ public class YunDingSmartLock implements ISmartLock {
             yunDingHomeInfoVO.setDevices(deviceList);
             homeList.add(yunDingHomeInfoVO);
         }
-        Log.info("第三方第三方第三方第三方第三方第三方第三方:{}",JSONObject.toJSONString(homeList));
         return JSONObject.toJSONString(homeList);
     }
 
@@ -472,7 +468,7 @@ public class YunDingSmartLock implements ISmartLock {
                 SmartLockPassword smartLockPassword = new SmartLockPassword();
                 smartLockPassword.setThreeId(password.getString("id"));
                 smartLockPassword.setLock3Id(uuid);
-                smartLockPassword.setName(password.getString("name"));
+                smartLockPassword.setPwdUserName(password.getString("name"));
                 smartLockPassword.setStatus(password.getString("pwd_state"));
                 smartLockPassword.setPwdType(password.getJSONObject("permission").getString("status"));
                 smartLockPassword.setSendToMobile(password.getString("send_to"));
@@ -487,6 +483,9 @@ public class YunDingSmartLock implements ISmartLock {
                     JSONObject managerPasswordJson = JSONObject.parseObject(managerPasswordJsonStr);
                     String passwordStr = managerPasswordJson.getString("password");
                     smartLockPassword.setPassword(passwordStr);
+                    smartLockPassword.setName(SmartLockPwdTypeEnum.MANAGER_PASSWORD.getName());
+                } else {
+                    smartLockPassword.setName(SmartLockPwdTypeEnum.ROOMER_PASSWORD.getName());
                 }
                 smartLockPassword.setDescription(password.getString("description"));
                 smartLockPassword.setIsDefault(password.getString("is_default"));
