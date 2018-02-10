@@ -101,8 +101,9 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                     roomAndPublicZoneVo.setRoomNo("外门锁");
                     roomAndPublicZoneVoList.add(roomAndPublicZoneVo);
                     floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
-                    smartLockHadBindHouseVo.getFloorVoList().add(floorVo);
+//                    smartLockHadBindHouseVo.getFloorVoList().add(floorVo);
                     List <FloorVo> floorVoList = smartLockHadBindHouseVo.getFloorVoList();
+                    floorVoList.add(0,floorVo);
                     for (FloorVo floorModel:floorVoList){
                         if(floorModel.getFloorId()==0){
                             floorModel.setLockCount(smartLockGatewayDao.getCountOfZoneLock(smartLockHadBindHouseVo.getHomeId()));
@@ -112,6 +113,7 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                             floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(floorModel.getFloorId()));
                         }
                     }
+
                     smartLockHadBindHouseVo.setOutSmartLockVo(null);
                 }
                 return smartLockHadBindHouseVoList;
