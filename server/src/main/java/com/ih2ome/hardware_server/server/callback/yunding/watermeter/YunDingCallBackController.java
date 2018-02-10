@@ -1,4 +1,4 @@
-package com.ih2ome.hardware_server.server.callback;
+package com.ih2ome.hardware_server.server.callback.yunding.watermeter;
 
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_server.server.callback.help.YunDingCallBackHelp;
