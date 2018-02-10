@@ -8,10 +8,10 @@
     </insert>
     <!--添加报警信息-->
     <insert id="saveAlarmList" parameterType="java.util.List">
-        insert into narcissus_test.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type) values
+        insert into narcissus_test.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type,smart_lock_password_id) values
         <foreach collection="list" item="smartMistakeInfo" index="index" separator =",">
             (
-            NOW(),#{smartMistakeInfo.smartDeviceType},#{smartMistakeInfo.uuid},#{smartMistakeInfo.exceptionType}
+            NOW(),#{smartMistakeInfo.smartDeviceType},#{smartMistakeInfo.uuid},#{smartMistakeInfo.exceptionType},#{smartMistakeInfo.smartLockPasswordId}
             )
         </foreach>
     </insert>
