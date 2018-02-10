@@ -69,7 +69,6 @@ public class SmartLockServiceImpl implements SmartLockService {
                 thirdHomeList.add(homeVO);
             }
         }
-        Log.info("*********************ll111111111...........thirdhomeList:{}:",thirdHomeList);
         //水滴的房源信息
         List<HomeVO> localHomeList = null;
         //判断是分散式(0是集中式，1是分散式)
@@ -94,7 +93,6 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
 
         }
-        Log.info("*********************2222222222222...........thirdhomeList:{}:",thirdHomeList);
         //房间关联数据处理
         for (HomeVO localHomeVO : localHomeList) {
             List<RoomVO> localRooms = localHomeVO.getRooms();
@@ -118,7 +116,6 @@ public class SmartLockServiceImpl implements SmartLockService {
                 }
             }
         }
-        Log.info("*********************33333333333333...........thirdhomeList:{}:",thirdHomeList);
         Map<String, List<HomeVO>> map = new HashMap<String, List<HomeVO>>();
         map.put("thirdHomeList", thirdHomeList);
         map.put("localHomeList", localHomeList);
@@ -224,7 +221,6 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
         }
         List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
-        Log.info("----------------------gatewayBindInnerLocks:{}",gatewayBindInnerLocks);
         //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
         smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
 
@@ -250,7 +246,6 @@ public class SmartLockServiceImpl implements SmartLockService {
 //            新增设备(网关)记录绑定公共区域
             smartLockDao.addSmartDevice(gatewayDevice);
             String gatewayDeviceId = gatewayDevice.getSmartDeviceId();
-            Log.info("*********gatewayDeviceId:{}", gatewayDeviceId);
             smartGatewayV2.setSmartGatewayId(gatewayDeviceId);
             //新增网关记录
             smartLockDao.addSmartGateway(smartGatewayV2);
@@ -264,7 +259,6 @@ public class SmartLockServiceImpl implements SmartLockService {
                     String smartGatewayId = smartGatewayV2.getSmartGatewayId();
                     Long gatewayId = gateWayHadBindInnerLockVO.getGatewayId();
                     Long innerLockId = gateWayHadBindInnerLockVO.getInnerLockId();
-                    Log.info("--------smartGatewayId:{},gatewayId:{},innerLockId:{}",smartGatewayId,gatewayId,innerLockId);
                     smartLockDao.updateInnerLockBindGateway(smartGatewayId, gatewayId, innerLockId);
                 }
 
