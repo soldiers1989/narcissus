@@ -16,7 +16,7 @@ public interface LockManagerDao {
     //门锁列表（集中式）
     List<LockListVo> findConcentrateLock(LockListVo lockListVo);
 
-    //门锁列表（分散式）
+    //门锁列表（分散式））
     List<LockListVo> findDispersedLock(LockListVo lockListVo);
 
     //门锁基本信息(分散式)
