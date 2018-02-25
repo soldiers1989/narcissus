@@ -10,6 +10,7 @@ import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -119,7 +120,7 @@ public interface SmartLockService {
      * @param lockId
      * @return
      */
-    List<SmartMistakeInfo> findOpenLockRecord(String lockId) throws SmartLockException;
+    Map<String,ArrayList<SmartMistakeInfo>> findOpenLockRecord(String lockId) throws SmartLockException;
 
     /**
      * 查询操作记录
@@ -127,7 +128,7 @@ public interface SmartLockService {
      * @param lockId
      * @return
      */
-    List<SmartMistakeInfo> findHistoryOperations(String lockId) throws SmartLockException;
+    Map<String,ArrayList<SmartMistakeInfo>> findHistoryOperations(String lockId) throws SmartLockException;
 
     /**
      * 查询异常记录
@@ -135,7 +136,7 @@ public interface SmartLockService {
      * @param lockId
      * @return
      */
-    List<SmartMistakeInfo> findExceptionRecords(String lockId) throws SmartLockException;
+    Map<String,ArrayList<SmartMistakeInfo>> findExceptionRecords(String lockId) throws SmartLockException;
 
     /**
      * 更新门锁剩余电量

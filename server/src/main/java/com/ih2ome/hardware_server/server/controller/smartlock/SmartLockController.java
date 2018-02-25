@@ -20,6 +20,7 @@ import org.springframework.data.redis.core.convert.RedisData;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -411,7 +412,7 @@ public class SmartLockController extends BaseController {
     public String getOpenLockRecord(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         String lockId = dt.getString("serial_id");
-        List<SmartMistakeInfo> openRecords = null;
+        Map<String,ArrayList<SmartMistakeInfo>> openRecords = null;
         try {
             openRecords = smartLockService.findOpenLockRecord(lockId);
         } catch (SmartLockException e) {
@@ -433,7 +434,7 @@ public class SmartLockController extends BaseController {
     public String getLockHistoryOperations(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         String lockId = dt.getString("serial_id");
-        List<SmartMistakeInfo> historyOperations = null;
+        Map<String,ArrayList<SmartMistakeInfo>> historyOperations = null;
         try {
             historyOperations = smartLockService.findHistoryOperations(lockId);
         } catch (SmartLockException e) {
@@ -454,7 +455,7 @@ public class SmartLockController extends BaseController {
     public String getLockExceptionRecords(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         String lockId = dt.getString("serial_id");
-        List<SmartMistakeInfo> exceptions = null;
+        Map<String,ArrayList<SmartMistakeInfo>> exceptions = null;
         try {
             exceptions = smartLockService.findExceptionRecords(lockId);
         } catch (SmartLockException e) {
