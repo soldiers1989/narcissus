@@ -69,7 +69,7 @@ public class YunDingSmartLock implements ISmartLock {
             pwdJson.put("permission_begin", DateUtils.stringToLong(lockPassword.getEnableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
             pwdJson.put("permission_end", DateUtils.stringToLong(lockPassword.getDisableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
         }
-        pwdJson.put("name", lockPassword.getName());
+        pwdJson.put("name", lockPassword.getUserName());
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
