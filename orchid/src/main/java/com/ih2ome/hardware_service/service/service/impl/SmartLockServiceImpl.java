@@ -623,6 +623,9 @@ public class SmartLockServiceImpl implements SmartLockService {
     @Override
     public List<SmartMistakeInfo> findOpenLockRecord(String lockId) throws SmartLockException {
         List<SmartMistakeInfo> list = smartLockDao.findOpenLockRecord(lockId);
+        for(SmartMistakeInfo info:list){
+            info.splitCreatedTime();
+        }
         return list;
     }
 
@@ -635,6 +638,9 @@ public class SmartLockServiceImpl implements SmartLockService {
     @Override
     public List<SmartMistakeInfo> findHistoryOperations(String lockId) {
         List<SmartMistakeInfo> list = smartLockDao.findHistoryOperations(lockId);
+        for(SmartMistakeInfo info:list){
+            info.splitCreatedTime();
+        }
         return list;
     }
 
@@ -648,6 +654,9 @@ public class SmartLockServiceImpl implements SmartLockService {
     @Override
     public List<SmartMistakeInfo> findExceptionRecords(String lockId) throws SmartLockException {
         List<SmartMistakeInfo> list = smartLockDao.findExceptionRecords(lockId);
+        for(SmartMistakeInfo info:list){
+            info.splitCreatedTime();
+        }
         return list;
     }
 

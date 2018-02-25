@@ -490,7 +490,7 @@
         WHEN '5' THEN
         '已冻结'
         END status,
-        IFNULL(password,'') as password,
+        IFNULL(password,'无') as password,
         IFNULL(valid_time_start,'') AS validTimeStart,
         IFNULL(valid_time_end,'') AS validTimeEnd,
         IFNULL(description,'') as description

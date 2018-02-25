@@ -23,5 +23,13 @@ public class SmartMistakeInfo {
     private String createdTime;
     private String operatorType;
 
+    private String yearMonthDay;
+    private String hourMinuteSecond;
 
+
+    public void splitCreatedTime() {
+        String[] array = this.createdTime.split(" ");
+        this.yearMonthDay=array[0];
+        this.hourMinuteSecond=array[1];
+    }
 }
