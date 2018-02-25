@@ -621,12 +621,10 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @return
      */
     @Override
-    public List<SmartMistakeInfo> findOpenLockRecord(String lockId) throws SmartLockException {
+    public Map<String, ArrayList<SmartMistakeInfo>> findOpenLockRecord(String lockId) throws SmartLockException {
         List<SmartMistakeInfo> list = smartLockDao.findOpenLockRecord(lockId);
-        for(SmartMistakeInfo info:list){
-            info.splitCreatedTime();
-        }
-        return list;
+        Map<String, ArrayList<SmartMistakeInfo>> map = handleRecords(list);
+        return map;
     }
 
     /**
@@ -636,12 +634,10 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @return
      */
     @Override
-    public List<SmartMistakeInfo> findHistoryOperations(String lockId) {
+    public Map<String, ArrayList<SmartMistakeInfo>> findHistoryOperations(String lockId) {
         List<SmartMistakeInfo> list = smartLockDao.findHistoryOperations(lockId);
-        for(SmartMistakeInfo info:list){
-            info.splitCreatedTime();
-        }
-        return list;
+        Map<String, ArrayList<SmartMistakeInfo>> map = handleRecords(list);
+        return map;
     }
 
     /**
@@ -652,12 +648,10 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @throws SmartLockException
      */
     @Override
-    public List<SmartMistakeInfo> findExceptionRecords(String lockId) throws SmartLockException {
+    public Map<String, ArrayList<SmartMistakeInfo>> findExceptionRecords(String lockId) throws SmartLockException {
         List<SmartMistakeInfo> list = smartLockDao.findExceptionRecords(lockId);
-        for(SmartMistakeInfo info:list){
-            info.splitCreatedTime();
-        }
-        return list;
+        Map<String, ArrayList<SmartMistakeInfo>> map = handleRecords(list);
+        return map;
     }
 
     @Override
@@ -670,4 +664,25 @@ public class SmartLockServiceImpl implements SmartLockService {
         smartLockDao.deleteSmartLockByUuid(uuid);
     }
 
+    /**
+     * 处理记录方法
+     *
+     * @return
+     */
+    public Map<String, ArrayList<SmartMistakeInfo>> handleRecords(List<SmartMistakeInfo> list) {
+        Map<String, ArrayList<SmartMistakeInfo>> map = new LinkedHashMap<String, ArrayList<SmartMistakeInfo>>();
+        for (SmartMistakeInfo info : list) {
+            info.splitCreatedTime();
+            String yearMonthDay = info.getYearMonthDay();
+            if (map.containsKey(yearMonthDay)) {
+                ArrayList<SmartMistakeInfo> smartMistakeInfos = map.get(yearMonthDay);
+                smartMistakeInfos.add(info);
+            } else {
+                ArrayList<SmartMistakeInfo> smartMistakeInfos = new ArrayList<SmartMistakeInfo>();
+                smartMistakeInfos.add(info);
+                map.put(yearMonthDay, smartMistakeInfos);
+            }
+        }
+        return map;
+    }
 }

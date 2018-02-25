@@ -41,18 +41,26 @@ public class ConstInfoController extends BaseController{
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         if(StringUtils.isNotBlank(userId)){
             StringBuilder url = new StringBuilder();
-            url.append(yunDingLoginBaseUrl)
-                    .append("?client_id=")
-                    .append(yunDingClientId)
-                    .append("&redirect_uri=")
-                    .append(yunDingCallBackUrl)
-                    .append("&scope=")
-                    .append(yunDingPermissionGroup)
-                    .append("&state=")
-                    .append(userId);
+            String tokenKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
+            String code = CacheUtils.getStr(tokenKey);
             JSONObject urlObject = new JSONObject();
-            urlObject.put("url",url);
-            return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+            if(StringUtils.isNotBlank(code)){
+                urlObject.put("loginStatus","0");
+                return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+            }else{
+                url.append(yunDingLoginBaseUrl)
+                        .append("?client_id=")
+                        .append(yunDingClientId)
+                        .append("&redirect_uri=")
+                        .append(yunDingCallBackUrl)
+                        .append("&scope=")
+                        .append(yunDingPermissionGroup)
+                        .append("&state=")
+                        .append(userId);
+                urlObject.put("url",url);
+                urlObject.put("loginStatus","1");
+                return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+            }
         }
         return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"userId为空");
 
