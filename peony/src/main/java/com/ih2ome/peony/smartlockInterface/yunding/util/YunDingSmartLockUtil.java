@@ -175,6 +175,39 @@ public class YunDingSmartLockUtil {
     }
 
 
+    public static void flushRefreshTokenByToken(String refreshToken) throws SmartLockException {
+        String userId = refreshToken.split("_")[3];
+        String url = OPEN_BASE_URL + "/oauth/token";
+        //组装post参数
+        Map<String, Object> req = new HashMap<>();
+        req.put("client_id", OPEN_CLIENT_ID);
+        req.put("client_secret", OPEN_SECRET);
+        req.put("refresh_token", refreshToken);
+        req.put("grant_type", "authorization_code");
+
+        //组装头部
+        Map<String, String> header = new HashMap<>();
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+
+        String res;
+        try {
+            res = HttpClientUtil.doPost(url, req, header);
+
+        } catch (Exception e) {
+            throw new SmartLockException("门锁获取第三方accessToken失败", e);
+
+        }
+
+        JSONObject resJson = JSONObject.parseObject(res);
+        System.out.println(resJson);
+        String accessToken = resJson.getString("access_token");
+        String expiresIn = resJson.getString("expires_in");
+        refreshToken = resJson.getString("refresh_token");
+
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
+
+    }
     /**
      * 刷新token
      *
