@@ -487,7 +487,7 @@ AND nsdv2Indoor.manage_status = '0'
         deviceCount.smart_device_ID = lockCount.smart_lock_ID
         AND deviceCount.public_zone_ID = zoneCount.public_zone_ID
         AND zoneCount.parent_ID = #{homeId}
-        AND lockCount.power &lt; '10'
+        AND lockCount.power+0 &lt; 10
         AND deviceCount.connection_status = '1'
         AND deviceCount.manage_status = '0'
         )

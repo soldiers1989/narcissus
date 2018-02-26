@@ -105,12 +105,12 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                     List <FloorVo> floorVoList = smartLockHadBindHouseVo.getFloorVoList();
                     floorVoList.add(0,floorVo);
                     for (FloorVo floorModel:floorVoList){
-                        if(floorModel.getFloorId()==0){
+                        if(floorModel.getFloorId()==000){
                             floorModel.setLockCount(smartLockGatewayDao.getCountOfZoneLock(smartLockHadBindHouseVo.getHomeId()));
                             floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(smartLockHadBindHouseVo.getHomeId()));
                         }else{
                             floorModel.setLockCount(smartLockGatewayDao.getCountOfFloorLock(floorModel.getFloorId()));
-                            floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(floorModel.getFloorId()));
+                            floorModel.setOnlineCount(smartLockGatewayDao.getCountOfOnlineFloorLock(floorModel.getFloorId()));
                         }
                     }
 
