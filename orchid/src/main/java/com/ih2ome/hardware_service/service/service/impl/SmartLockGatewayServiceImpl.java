@@ -126,4 +126,9 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
     public void uninstallSmartLockGateway(String uuid) {
         smartLockGatewayDao.deleteSmartLockGateway(uuid);
     }
+
+    @Override
+    public void installSmartLockGateway(String homeId, String uuid) {
+        
+    }
 }
