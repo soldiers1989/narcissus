@@ -474,6 +474,7 @@ AND nsdv2Indoor.manage_status = '0'
         AND floorCount.apartment_id =#{homeId}
         AND deviceCount.manage_status = '0'
         AND deviceCount.connection_status = '1'
+        AND lockCount.power+0 &lt; 10
         )
         UNION
         (
