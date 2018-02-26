@@ -167,8 +167,8 @@ public class YunDingSmartLockUtil {
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
         String refreshToken = resJson.getString("refresh_token");
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
 
         return accessToken;
 
@@ -204,8 +204,8 @@ public class YunDingSmartLockUtil {
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
 
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
 
     }
     /**
@@ -248,8 +248,8 @@ public class YunDingSmartLockUtil {
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
 
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn) - 3 * 60 * 1000);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
 
         return accessToken;
     }
