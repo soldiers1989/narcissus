@@ -2,7 +2,6 @@ package com.ih2ome.hardware_server.server.callback.yunding.smartLock;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
@@ -25,6 +24,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
