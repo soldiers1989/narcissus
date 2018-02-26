@@ -4,6 +4,7 @@ import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo;
+import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public interface SmartLockGatewayService {
     /**
      * 根据房源查询网关列表
+     *
      * @param homeId
      * @param type
      * @return
@@ -25,6 +27,7 @@ public interface SmartLockGatewayService {
 
     /**
      * 查询已绑定网关的门锁
+     *
      * @param gatewayId
      * @return
      */
@@ -32,6 +35,7 @@ public interface SmartLockGatewayService {
 
     /**
      * 查询网关基本信息
+     *
      * @param gatewayId
      * @return
      */
@@ -39,6 +43,7 @@ public interface SmartLockGatewayService {
 
     /**
      * 获取已绑定房源列表
+     *
      * @param type
      * @param userId
      * @return
@@ -47,7 +52,16 @@ public interface SmartLockGatewayService {
 
     /**
      * 解绑网关
+     *
      * @param uuid
      */
     void uninstallSmartLockGateway(String uuid);
+
+    /**
+     * 绑定网关
+     *
+     * @param homeId
+     * @param uuid
+     */
+    void installSmartLockGateway(String homeId, String uuid);
 }

@@ -8,6 +8,7 @@ import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
+import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -120,7 +121,7 @@ public interface SmartLockService {
      * @param lockId
      * @return
      */
-    Map<String,ArrayList<SmartMistakeInfo>> findOpenLockRecord(String lockId) throws SmartLockException;
+    Map<String, ArrayList<SmartMistakeInfo>> findOpenLockRecord(String lockId) throws SmartLockException;
 
     /**
      * 查询操作记录
@@ -128,7 +129,7 @@ public interface SmartLockService {
      * @param lockId
      * @return
      */
-    Map<String,ArrayList<SmartMistakeInfo>> findHistoryOperations(String lockId) throws SmartLockException;
+    Map<String, ArrayList<SmartMistakeInfo>> findHistoryOperations(String lockId) throws SmartLockException;
 
     /**
      * 查询异常记录
@@ -136,7 +137,7 @@ public interface SmartLockService {
      * @param lockId
      * @return
      */
-    Map<String,ArrayList<SmartMistakeInfo>> findExceptionRecords(String lockId) throws SmartLockException;
+    Map<String, ArrayList<SmartMistakeInfo>> findExceptionRecords(String lockId) throws SmartLockException;
 
     /**
      * 更新门锁剩余电量
@@ -147,7 +148,17 @@ public interface SmartLockService {
 
     /**
      * 解绑门锁
+     *
      * @param uuid
      */
     void uninstallSmartLock(String uuid);
+
+    /**
+     * 绑定门锁
+     *
+     * @param homeId
+     * @param roomId
+     * @param uuid
+     */
+    void installSmartLock(String homeId, String roomId, String uuid);
 }

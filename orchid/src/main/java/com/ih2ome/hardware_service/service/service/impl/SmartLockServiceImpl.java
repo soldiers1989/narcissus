@@ -654,14 +654,36 @@ public class SmartLockServiceImpl implements SmartLockService {
         return map;
     }
 
+    /**
+     * 更新电量
+     *
+     * @param lockInfoVo
+     */
     @Override
     public void updateBatteryInfo(LockInfoVo lockInfoVo) {
         smartLockDao.updateBatteryInfo(lockInfoVo);
     }
 
+    /**
+     * 解绑门锁
+     *
+     * @param uuid
+     */
     @Override
     public void uninstallSmartLock(String uuid) {
         smartLockDao.deleteSmartLockByUuid(uuid);
+    }
+
+    /**
+     * 绑定门锁
+     *
+     * @param homeId
+     * @param roomId
+     * @param uuid
+     */
+    @Override
+    public void installSmartLock(String homeId, String roomId, String uuid) {
+
     }
 
     /**
