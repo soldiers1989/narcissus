@@ -517,7 +517,7 @@ AND nsdv2Indoor.manage_status = '0'
         where nsdv2.smart_device_ID=nsl.smart_lock_ID
         and nsdv2.room_ID=vr.id
         and vr.floor_id=#{floorId}
-        and nsdv2.connection_status='2'
+        and nsdv2.connection_status='1'
     </select>
 
     <select id="getCountOfZoneLock" resultType="long">
@@ -544,6 +544,6 @@ AND nsdv2Indoor.manage_status = '0'
         and nsdv2.public_zone_ID=npz.public_zone_ID
         and npz.parent_ID=#{homeId}
         and nsdv2.manage_status='0'
-        and nsdv2.connection_status='2'
+        and nsdv2.connection_status='1'
     </select>
 </mapper>
