@@ -43,7 +43,7 @@
           SELECT
             nsgv2.smart_gateway_ID gatewayId,
             nsdv2.`name` gatewayCode,
-            va.address houseAddress,
+            va.name houseAddress,
             nsdv2.connection_status connectionState,
             CONCAT(
             (
@@ -90,7 +90,7 @@
         SELECT
             nsgv2.smart_gateway_ID gatewayId,
             nsdv2.`name` gatewayCode,
-            ch.address houseAddress,
+            ch.area houseAddress,
             nsdv2.connection_status connectionState,
             CONCAT(
                 (
