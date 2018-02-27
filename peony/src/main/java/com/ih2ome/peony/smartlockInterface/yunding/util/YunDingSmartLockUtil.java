@@ -1,6 +1,7 @@
 package com.ih2ome.peony.smartlockInterface.yunding.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.common.utils.StringUtils;
@@ -167,9 +168,8 @@ public class YunDingSmartLockUtil {
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
         String refreshToken = resJson.getString("refresh_token");
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
-        Log.info(REFRESH_TOKEN_KEY + "_" + userId+"*********:*********"+(Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000));
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON);
         return accessToken;
 
     }
@@ -204,8 +204,8 @@ public class YunDingSmartLockUtil {
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
 
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON);
 
     }
     /**
@@ -248,8 +248,8 @@ public class YunDingSmartLockUtil {
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
 
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON);
 
         return accessToken;
     }
