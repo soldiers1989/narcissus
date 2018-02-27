@@ -169,7 +169,7 @@ public class YunDingSmartLockUtil {
         String refreshToken = resJson.getString("refresh_token");
         CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
         CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000);
-
+        Log.info(REFRESH_TOKEN_KEY + "_" + userId+"*********:*********"+(Integer.valueOf(expiresIn)*1000 - 3 * 60 * 1000));
         return accessToken;
 
     }
