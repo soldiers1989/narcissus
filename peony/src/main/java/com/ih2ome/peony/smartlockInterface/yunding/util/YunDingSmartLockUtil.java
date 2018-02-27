@@ -168,8 +168,9 @@ public class YunDingSmartLockUtil {
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
         String refreshToken = resJson.getString("refresh_token");
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
+        Log.info(REFRESH_TOKEN_KEY + "_" + userId+"*************************"+(ExpireTime.ONE_MON.getTime()-3*24*60*60));
         return accessToken;
 
     }
@@ -204,8 +205,8 @@ public class YunDingSmartLockUtil {
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
 
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
 
     }
     /**
@@ -248,8 +249,8 @@ public class YunDingSmartLockUtil {
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
 
-        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON);
-        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON);
+        CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
+        CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
 
         return accessToken;
     }
