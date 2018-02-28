@@ -58,6 +58,7 @@
                     AND nsgbv2.smart_gateway_ID = nsgv2.smart_gateway_ID
                     AND nsdv2l.smart_device_ID = nsl.smart_lock_ID
                     AND nsdv2l.connection_status = '1'
+                    AND nsdv2l.manage_status='0'
                 ),
                 '/',
                 (
@@ -65,10 +66,16 @@
                         count(*)
                     FROM
                         narcissus_test.smart_gateway_bind_v2 nsgbv2,
-                        narcissus_test.smart_lock nsl
+                        narcissus_test.smart_lock nsl,
+                        narcissus_test.smart_device_v2 ntsdl,
+                        narcissus_test.smart_device_v2 ntsdg
                     WHERE
                         nsgbv2.smart_device_ID = nsl.smart_lock_ID
-                    AND nsgbv2.smart_gateway_ID = nsgv2.smart_gateway_ID
+                    AND nsgbv2.smart_gateway_ID = nsgbv2.smart_gateway_ID
+                    AND ntsdl.smart_device_ID=nsl.smart_lock_ID
+                    AND ntsdg.smart_device_ID=nsgbv2.smart_gateway_ID
+                    AND ntsdl.manage_status='0'
+                    AND ntsdg.manage_status='0'
                 )
             ) bindOnlineDeviceCountPercentage
         FROM
