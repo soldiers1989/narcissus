@@ -41,10 +41,12 @@ public class ConstInfoController extends BaseController{
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         if(StringUtils.isNotBlank(userId)){
             StringBuilder url = new StringBuilder();
-            String tokenKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
-            String code = CacheUtils.getStr(tokenKey);
+            String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
+            String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
+            String token = CacheUtils.getStr(tokenKey);
+            String code = CacheUtils.getStr(codeKey);
             JSONObject urlObject = new JSONObject();
-            if(StringUtils.isNotBlank(code)){
+            if(StringUtils.isNotBlank(code)||StringUtils.isNotBlank(token)){
                 urlObject.put("loginStatus","0");
                 return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
             }else{
@@ -72,8 +74,10 @@ public class ConstInfoController extends BaseController{
         String result = "";
         if(StringUtils.isNotBlank(userId)){
             String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
-            String code = CacheUtils.getStr(tokenKey);
-            if(StringUtils.isNotBlank(code)){
+            String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
+            String token = CacheUtils.getStr(tokenKey);
+            String code = CacheUtils.getStr(codeKey);
+            if(StringUtils.isNotBlank(code)||StringUtils.isNotBlank(token)){
                 result = structureSuccessResponseVO(new JSONObject(),new Date().toString(),"授权成功");
             }else{
                 result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"授权失败");
