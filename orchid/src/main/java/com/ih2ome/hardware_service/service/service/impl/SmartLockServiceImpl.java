@@ -144,6 +144,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             //取消该公共区域所属房源下的房间的关联
             for (SmartHouseMappingVO smartHouseMappingVO1 : roomMappingList) {
                 smartLockDao.cancelAssociation(smartHouseMappingVO1);
+                //清除该房间下的设备
             }
             //取消公共区域的关联
             smartLockDao.cancelAssociation(houseMapping);
