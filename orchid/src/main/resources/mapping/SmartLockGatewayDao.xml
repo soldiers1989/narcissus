@@ -208,6 +208,7 @@
 	AND nsdv2.room_ID = vr.id
 	AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
 	AND nsgbv2.smart_gateway_ID = #{gatewayId}
+	AND nsdv2.manage_status = '0'
 
 )
 UNION
@@ -228,6 +229,7 @@ UNION
 		AND nsdv2.room_ID = cr.id
 		AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
 		AND nsgbv2.smart_gateway_ID = #{gatewayId}
+		AND nsdv2.manage_status = '0'
 	)union(
 	SELECT
 	ntsl.smart_lock_ID smartLockId,
@@ -244,6 +246,7 @@ WHERE
 	nsgbv2.smart_device_ID = ntsl.smart_lock_ID
 AND nsdv2.public_zone_ID = npz.public_zone_ID
 AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
+AND nsdv2.manage_status = '0'
 AND nsgbv2.smart_gateway_ID = #{gatewayId}
 )
     </select>
