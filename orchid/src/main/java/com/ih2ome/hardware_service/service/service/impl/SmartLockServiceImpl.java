@@ -67,24 +67,24 @@ public class SmartLockServiceImpl implements SmartLockService {
             String result = iSmartLock.searchHomeInfo(params);
             List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
             //处理云丁的房源数据，将房源下房间中没有设备的房间移除
-            for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
-                List<YunDingRoomInfoVO> rooms = yunDingHomeInfoVO.getRooms();
-                List<YunDingDeviceInfoVO> devices = yunDingHomeInfoVO.getDevices();
-                Iterator<YunDingRoomInfoVO> roomIterator = rooms.iterator();
-                while (roomIterator.hasNext()) {
-                    boolean flag = true;
-                    YunDingRoomInfoVO roomInfo = roomIterator.next();
-                    for (YunDingDeviceInfoVO deviceInfo : devices) {
-                        if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        roomIterator.remove();
-                    }
-                }
-            }
+//            for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
+//                List<YunDingRoomInfoVO> rooms = yunDingHomeInfoVO.getRooms();
+//                List<YunDingDeviceInfoVO> devices = yunDingHomeInfoVO.getDevices();
+//                Iterator<YunDingRoomInfoVO> roomIterator = rooms.iterator();
+//                while (roomIterator.hasNext()) {
+//                    boolean flag = true;
+//                    YunDingRoomInfoVO roomInfo = roomIterator.next();
+//                    for (YunDingDeviceInfoVO deviceInfo : devices) {
+//                        if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())) {
+//                            flag = false;
+//                            break;
+//                        }
+//                    }
+//                    if (flag) {
+//                        roomIterator.remove();
+//                    }
+//                }
+//            }
 
             for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
                 HomeVO homeVO = YunDingHomeInfoVO.toH2ome(yunDingHomeInfoVO);
