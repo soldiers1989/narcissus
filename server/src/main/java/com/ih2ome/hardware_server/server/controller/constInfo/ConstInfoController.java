@@ -41,7 +41,7 @@ public class ConstInfoController extends BaseController{
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         if(StringUtils.isNotBlank(userId)){
             StringBuilder url = new StringBuilder();
-            String tokenKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
+            String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
             String code = CacheUtils.getStr(tokenKey);
             JSONObject urlObject = new JSONObject();
             if(StringUtils.isNotBlank(code)){
