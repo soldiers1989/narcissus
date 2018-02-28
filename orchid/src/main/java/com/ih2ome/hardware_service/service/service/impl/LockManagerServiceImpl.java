@@ -3,19 +3,20 @@ package com.ih2ome.hardware_service.service.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.ih2ome.hardware_service.service.dao.LockManagerDao;
-import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
-import com.ih2ome.hardware_service.service.enums.LockDigitPwdTypeEnum;
-import com.ih2ome.hardware_service.service.enums.LockStatusEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.LockDigitPwdTypeEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.LockStatusEnum;
 import com.ih2ome.hardware_service.service.service.LockManagerService;
-import com.ih2ome.hardware_service.service.vo.*;
 import com.ih2ome.peony.SMSInterface.SMSUtil;
-import com.ih2ome.peony.SMSInterface.enums.SMSCodeEnum;
-import com.ih2ome.peony.smartlockInterface.enums.GuoJiaLockStatusEnum;
-import com.ih2ome.peony.smartlockInterface.vo.LockPasswordVo;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
+import com.ih2ome.sunflower.vo.thirdVo.sms.enums.SMSCodeEnum;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.GuoJiaLockStatusEnum;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.*;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
-import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
+
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.peony.smartlockInterface.vo.GuoJiaLockInfoVo;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,11 +68,11 @@ public class LockManagerServiceImpl implements LockManagerService {
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             lockInfoVo = lockManagerDao.findConcentrateLockByLockNo(id);
         }
-        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
-        GuoJiaLockInfoVo guoJiaLockInfo = iSmartLock.getGuoJiaLockInfo(lockInfoVo.getSerialNum());
-        Long guaranteeTimeStart = guoJiaLockInfo.getGuaranteeTimeStart();
-        Long guaranteeTimeEnd = guoJiaLockInfo.getGuaranteeTimeEnd();
-        Long comuStatusUpdateTime = guoJiaLockInfo.getComuStatusUpdateTime();
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirmEnum.GUO_JIA.getClazz()).newInstance();
+        LockVO lockVO = iSmartLock.getLockInfo(lockInfoVo.getSerialNum());
+        Long guaranteeTimeStart = lockVO.getGuaranteeTimeStart();
+        Long guaranteeTimeEnd = lockVO.getGuaranteeTimeEnd();
+        Long comuStatusUpdateTime = lockVO.getComuStatusUpdateTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         lockInfoVo.setGuaranteeTimeStart(simpleDateFormat.format(new Date(guaranteeTimeStart)));
         lockInfoVo.setGuaranteeTimeEnd(simpleDateFormat.format(new Date(guaranteeTimeEnd)));
@@ -118,7 +119,7 @@ public class LockManagerServiceImpl implements LockManagerService {
             serialNum = lockManagerDao.findConSerialNumById(lockPasswordVo.getId());
         }
         lockPasswordVo.setSerialNum(serialNum);
-        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirmEnum.GUO_JIA.getClazz()).newInstance();
         //请求果家第三方的新增密码接口
         String result = iSmartLock.addLockPassword(lockPasswordVo);
         JSONObject resJson = JSONObject.parseObject(result);
@@ -163,7 +164,7 @@ public class LockManagerServiceImpl implements LockManagerService {
         }
         lockPasswordVo.setSerialNum(model.getSerialNum());
         lockPasswordVo.setPwdNo(model.getPwdNo());
-        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirmEnum.GUO_JIA.getClazz()).newInstance();
         //请求果家第三方的修改接口
         String result = iSmartLock.updateLockPassword(lockPasswordVo);
         JSONObject resJson = JSONObject.parseObject(result);
@@ -195,7 +196,7 @@ public class LockManagerServiceImpl implements LockManagerService {
     @Transactional
     @Override
     public void deletePassword(LockPasswordVo lockPasswordVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException, ParseException {
-        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
+        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirmEnum.GUO_JIA.getClazz()).newInstance();
         //请求果家第三方的删除密码接口
         String result = iSmartLock.deleteLockPassword(lockPasswordVo);
         JSONObject resJson = JSONObject.parseObject(result);

@@ -4,15 +4,15 @@ import com.github.pagehelper.PageHelper;
 import com.ih2ome.common.utils.MyConstUtils;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.dao.AmmeterMannagerDao;
-import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.AmmeterManagerService;
-import com.ih2ome.hardware_service.service.vo.AmmeterMannagerVo;
-import com.ih2ome.hardware_service.service.vo.DeviceIdAndNameVo;
+import com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterMannagerVo;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.DeviceIdAndNameVo;
 import com.ih2ome.peony.ammeterInterface.IAmmeter;
-import com.ih2ome.peony.ammeterInterface.enums.AmmeterFirm;
-import com.ih2ome.peony.ammeterInterface.enums.PayMod;
+import com.ih2ome.sunflower.vo.thirdVo.ammeter.enums.AmmeterFirm;
+import com.ih2ome.sunflower.vo.thirdVo.ammeter.enums.PayMod;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
-import com.ih2ome.peony.ammeterInterface.vo.AmmeterInfoVo;
+import com.ih2ome.sunflower.vo.thirdVo.ammeter.AmmeterInfoVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -181,7 +181,7 @@ public class AmmeterManagerServiceImpl implements AmmeterManagerService{
      */
     private AmmeterInfoVo initFenTan(AmmeterInfoVo ammeterInfoVo) throws ClassNotFoundException, IllegalAccessException, InstantiationException, AmmeterException {
         IAmmeter iAmmeter = (IAmmeter) Class.forName(AmmeterFirm.POWER_BEE.getClazz()).newInstance();
-        com.ih2ome.hardware_service.service.model.caspain.SmartDevice master = ammeterMannagerDao.getMasterAmmeter(ammeterInfoVo.getId());
+        com.ih2ome.sunflower.entity.caspain.SmartDevice master = ammeterMannagerDao.getMasterAmmeter(ammeterInfoVo.getId());
         AmmeterInfoVo model = iAmmeter.getAmmeterInfo(master.getUuid());
         Double powerDay = model.getPowerDay();
         Double powerMonth = model.getPowerDay();

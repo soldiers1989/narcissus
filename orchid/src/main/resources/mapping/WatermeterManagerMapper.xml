@@ -20,27 +20,27 @@
 
     <!--配置resultMap -->
     <!--!分散式水表列表VO-->
-    <resultMap type="com.ih2ome.hardware_service.service.vo.HMWatermeterListVO" id="hmWatermeterListResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.HMWatermeterListVO" id="hmWatermeterListResultMap" autoMapping="true">
         <id column="room_id" property="roomId" />
 
         <collection property="watermeterDetailVOS" javaType="List"
-                    ofType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" autoMapping="true">
+                    ofType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterDetailVO" autoMapping="true">
             <id column="smart_watermeter_id" property="smartWatermeterId" />
         </collection>
     </resultMap>
 
     <!--集中式水表列表VO-->
-    <resultMap type="com.ih2ome.hardware_service.service.vo.JZWatermeterDetailVO" id="jzWatermeterListResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterDetailVO" id="jzWatermeterListResultMap" autoMapping="true">
         <id column="room_id" property="roomId" />
 
         <collection property="watermeterDetailVOS" javaType="List"
-                    ofType="com.ih2ome.hardware_service.service.vo.WatermeterDetailVO" autoMapping="true">
+                    ofType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterDetailVO" autoMapping="true">
             <id column="smart_watermeter_id" property="smartWatermeterId" />
         </collection>
     </resultMap>
 
     <!--网关详情VO-->
-    <resultMap type="com.ih2ome.hardware_service.service.vo.GatewayWebDetailVO" id="GatewayDetailResultMap" autoMapping="true">
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.GatewayWebDetailVO" id="GatewayDetailResultMap" autoMapping="true">
         <id column="smart_gateway_id" property="smartGatewayId" />
     </resultMap>
 
@@ -49,7 +49,7 @@
 <!--查-->
     <!--查询集中式web水表list-->
     <!-- 条件：公寓id，水表uuid，房东手机号（username），租客姓名，租客电话， -->
-    <select id="findJzWatermeterWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo" resultType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo">
+    <select id="findJzWatermeterWebListVoList" parameterType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterWebListVo" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterWebListVo">
         SELECT
         watermeter.smart_watermeter_id watermeter_id,
         gateway.smart_gateway_id AS gateway_id,
@@ -110,7 +110,7 @@
 
     <!--查询分散式web水表list-->
     <!-- 条件：公寓id，水表uuid，房东手机号（username），租客姓名，租客电话， -->
-    <select id="findHmWatermeterWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo" resultType="com.ih2ome.hardware_service.service.vo.WatermeterWebListVo">
+    <select id="findHmWatermeterWebListVoList" parameterType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterWebListVo" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterWebListVo">
         SELECT
         watermeter.smart_watermeter_id watermeterId,
         gateway.smart_gateway_id AS gateway_id,
@@ -170,7 +170,7 @@
     </select>
 
     <!-- 查询分散式水表详情byuuid -->
-    <select id="selectHmWatermeterDetailByUuid"  resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
+    <select id="selectHmWatermeterDetailByUuid"  resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterManagerDetailVO">
         SELECT w.uuid,CONCAT(h.area,h.building_num,unit_num) AS home_name,h.floor_num AS floor_name,h.house_num AS room_name,w.meter_type,w.created_at,w.meter_updated_at,(w.last_amount-w.meter_amount) AS amount,w.onoff_status,g.uuid AS gateway_uuid
         FROM
         <include refid="smart_watermeter" /> AS w
@@ -190,7 +190,7 @@
     </select>
 
  <!-- 查询集中式水表详情byuuid -->
-    <select id="selectJzWatermeterDetailByUuid" resultType="com.ih2ome.hardware_service.service.vo.WatermeterManagerDetailVO">
+    <select id="selectJzWatermeterDetailByUuid" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterManagerDetailVO">
         SELECT
         w.uuid,
         a.`name` AS house_name,
@@ -215,7 +215,7 @@
     </select>
 
     <!--查询水表抄表记录by水表id-->
-    <select id="selectWatermeterRecordByWatermeterIdAndTime" resultType="com.ih2ome.hardware_service.service.vo.WatermeterRecordManagerVO">
+    <select id="selectWatermeterRecordByWatermeterIdAndTime" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterRecordManagerVO">
         SELECT
         wr.created_at,
         wr.device_amount,
@@ -232,7 +232,7 @@
 
     <!--查询分散式web网关list-->
     <!-- 条件：公寓id，网关uuid，房东手机号（username），租客姓名，租客电话， -->
-    <select id="findHmGatewayWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.GatewayWebListVo" resultType="com.ih2ome.hardware_service.service.vo.GatewayWebListVo">
+    <select id="findHmGatewayWebListVoList" parameterType="com.ih2ome.sunflower.vo.pageVo.watermeter.GatewayWebListVo" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.GatewayWebListVo">
         SELECT
         gateway.smart_gateway_id smartGatewayId,
         house.area apartmentName,
@@ -282,7 +282,7 @@
 
     <!--查询集中式web网关list-->
     <!-- 条件：公寓id，网关uuid，地址，房东手机号（username） -->
-    <select id="findJzGatewayWebListVoList" parameterType="com.ih2ome.hardware_service.service.vo.GatewayWebListVo" resultType="com.ih2ome.hardware_service.service.vo.GatewayWebListVo">
+    <select id="findJzGatewayWebListVoList" parameterType="com.ih2ome.sunflower.vo.pageVo.watermeter.GatewayWebListVo" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.GatewayWebListVo">
         SELECT
         gateway.smart_gateway_id smartGatewayId,
         apartment.`name` apartmentName,
@@ -351,7 +351,7 @@
     </select>
 
     <!--查询分散式网关详情下的水表listby网关id-->
-    <select id="selectHmGatewayWatermeterListByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.GatewayWatermeterWebListVO">
+    <select id="selectHmGatewayWatermeterListByGatewayId" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.GatewayWatermeterWebListVO">
         SELECT
         watermeter.uuid AS watermeter_uuid,room. NAME AS room_name
         FROM
@@ -363,7 +363,7 @@
     </select>
 
     <!--查询集中式网关详情下的水表listby网关id-->
-    <select id="selectJzGatewayWatermeterListByGatewayId" resultType="com.ih2ome.hardware_service.service.vo.GatewayWatermeterWebListVO">
+    <select id="selectJzGatewayWatermeterListByGatewayId" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.GatewayWatermeterWebListVO">
         SELECT
         watermeter.uuid AS watermeter_uuid,room. NAME AS room_name
         FROM
@@ -375,7 +375,7 @@
     </select>
 
     <!--查询分散式房源同步状态-->
-    <select id="selectHmHomeSynchronousStatus" parameterType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
+    <select id="selectHmHomeSynchronousStatus" parameterType="com.ih2ome.sunflower.vo.pageVo.watermeter.SynchronousHomeWebVo" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.SynchronousHomeWebVo">
         SELECT
         house.id AS home_id,
         house.area AS home_Name,
@@ -408,7 +408,7 @@
     </select>
 
     <!--查询集中式房源同步状态-->
-    <select id="selectJzHomeSynchronousStatus" parameterType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo" resultType="com.ih2ome.hardware_service.service.vo.SynchronousHomeWebVo">
+    <select id="selectJzHomeSynchronousStatus" parameterType="com.ih2ome.sunflower.vo.pageVo.watermeter.SynchronousHomeWebVo" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.SynchronousHomeWebVo">
         SELECT
         apartment.id AS home_id,
         apartment.name AS home_Name,
@@ -441,7 +441,7 @@
     </select>
 
     <!--查询分散式房间同步状态-->
-    <select id="selectHmRoomSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+    <select id="selectHmRoomSynchronousStatus" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HmRoomSyncVO">
         SELECT  room.id, room.`name`,room.house_id,room.synchronous
         FROM <include refid="room" /> AS room
         WHERE room.house_id = #{homeId}
@@ -454,7 +454,7 @@
     </select>
 
     <!--查询集中式floor同步状态-->
-    <select id="selectJzFloorSynchronousStatus" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+    <select id="selectJzFloorSynchronousStatus" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HmRoomSyncVO">
         SELECT  floor.id, floor.`name`,floor.apartment_id AS house_id
         FROM <include refid="floor" /> AS floor
         INNER JOIN <include refid="jzroom" /> room
@@ -470,7 +470,7 @@
     </select>
 
     <!--查询分散式房间是否全同步-->
-    <select id="selectHmRoomIsAllSynchronous" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+    <select id="selectHmRoomIsAllSynchronous" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HmRoomSyncVO">
         SELECT  room.id, room.`name`,room.house_id,room.synchronous
         FROM <include refid="room" /> AS room
         WHERE room.house_id = #{homeId}
@@ -484,7 +484,7 @@
     </select>
 
     <!--查询集中式房间是否全同步-->
-    <select id="selectJzRoomIsAllSynchronous" resultType="com.ih2ome.hardware_service.service.vo.HmRoomSyncVO">
+    <select id="selectJzRoomIsAllSynchronous" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HmRoomSyncVO">
         SELECT  room.id, room.`name`,room.apartment_id,room.synchronous
         FROM <include refid="jzroom" /> AS room
         WHERE room.apartment_id = #{homeId}
@@ -498,12 +498,12 @@
     </select>
 
     <!--网关异常记录by网关id-->
-    <select id="findwebWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
+    <select id="findwebWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionWebVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
     </select>
 
     <!--水表异常记录by水表id-->
-    <select id="findwebWatermeterExceptionByWatermeterId" parameterType="int" resultType="com.ih2ome.hardware_service.service.vo.ExceptionWebVO">
+    <select id="findwebWatermeterExceptionByWatermeterId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionWebVO">
         SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
     </select>
 

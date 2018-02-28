@@ -1,10 +1,12 @@
 package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.model.volga.Apartment;
-import com.ih2ome.hardware_service.service.vo.*;
-import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
-import com.ih2ome.peony.watermeterInterface.vo.AddRoomVO;
+import com.ih2ome.sunflower.entity.volga.Apartment;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.ApartmentVO;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.HouseVO;
+import com.ih2ome.sunflower.vo.thirdVo.watermeter.AddHomeVo;
+import com.ih2ome.sunflower.vo.thirdVo.watermeter.AddRoomVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

@@ -2,9 +2,9 @@ package com.ih2ome.hardware_server.server.scheduled;
 
 import com.ih2ome.hardware_service.service.service.WatermeterScheduledService;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
-import com.ih2ome.hardware_service.service.vo.UuidAndManufactoryVO;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.UuidAndManufactoryVO;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
-import com.ih2ome.peony.watermeterInterface.enums.WATERMETER_FIRM;
+import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

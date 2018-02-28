@@ -18,7 +18,7 @@
 
 <!-- 增  -->
     <!-- 添加抄表记录 -->
-    <insert id="insertWatermeterRecord" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord">
+    <insert id="insertWatermeterRecord" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord">
         insert into <include refid="smart_watermeter_record" />(created_at,device_amount,smart_watermeter_id)
         values(#{createdAt},#{deviceAmount},#{smartWatermeterId})
     </insert>
@@ -26,7 +26,7 @@
 
 <!-- 改 -->
     <!-- 更新抄表记录 -->
-    <update id="updataWatermeterRecord" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeterRecord" >
+    <update id="updataWatermeterRecord" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord" >
         UPDATE <include refid="smart_watermeter_record" /> SET device_amount=#{deviceAmount},created_at=#{createdAt}
         WHERE smart_watermeter_id = #{smartWatermeterId} AND date_format(created_at,'%Y-%m-%d')= date_format(#{createdAt},'%Y-%m-%d')
     </update>

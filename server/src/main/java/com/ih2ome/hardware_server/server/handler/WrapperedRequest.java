@@ -43,11 +43,9 @@ public class WrapperedRequest extends HttpServletRequestWrapper {
                 return false;
             }
 
-
             public boolean isReady() {
                 return false;
             }
-
 
             public void setReadListener(ReadListener readListener) {
 
@@ -56,7 +54,6 @@ public class WrapperedRequest extends HttpServletRequestWrapper {
             private InputStream in = new ByteArrayInputStream(
                     requestBody.getBytes(req.getCharacterEncoding()));
 
-            @Override
             public int read() throws IOException {
                 return in.read();
             }

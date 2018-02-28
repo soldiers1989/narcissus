@@ -1,7 +1,8 @@
 package com.ih2ome.hardware_service.service.dao;
 
+
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
+import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

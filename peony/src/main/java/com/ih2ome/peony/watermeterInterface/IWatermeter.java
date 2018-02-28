@@ -1,8 +1,8 @@
 package com.ih2ome.peony.watermeterInterface;
 
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
-import com.ih2ome.peony.watermeterInterface.vo.AddHomeVo;
-import com.ih2ome.peony.watermeterInterface.vo.AddRoomVO;
+import com.ih2ome.sunflower.vo.thirdVo.watermeter.AddHomeVo;
+import com.ih2ome.sunflower.vo.thirdVo.watermeter.AddRoomVO;
 
 import java.util.List;
 import java.util.Map;

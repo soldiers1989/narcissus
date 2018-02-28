@@ -5,7 +5,7 @@
     <!--SELECT-->
 
     <!--查询分散式操作列表-->
-    <select id="findDispersedSmartLockOperationRecordList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockOperationRecordVO">
+    <select id="findDispersedSmartLockOperationRecordList" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockOperationRecordVO">
 SELECT
 	csl.id lockId,
 	cslg.id gatewayId,
@@ -84,7 +84,7 @@ AND crc.`status` = 'active'
     </select>
 
     <!--查询集中式操作列表-->
-    <select id="findConcentratSmartLockOperationRecordList" resultType="com.ih2ome.hardware_service.service.vo.SmartLockOperationRecordVO">
+    <select id="findConcentratSmartLockOperationRecordList" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockOperationRecordVO">
 SELECT
 	vsl.id lockId,
 	vslg.id gatewayId,

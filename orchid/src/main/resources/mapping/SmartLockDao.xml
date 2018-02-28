@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockDao">
+
+    <resultMap type="com.ih2ome.sunflower.model.backup.HomeVO" id="dispersedResultMap" autoMapping="true">
+        <id column="homeId" property="homeId"/>
+        <result property="userId" column="userId"></result>
+        <result property="homeName" column="homeName"></result>
+        <result property="homeType" column="homeType"></result>
+
+        <collection property="rooms" javaType="List"
+                    ofType="com.ih2ome.sunflower.model.backup.RoomVO" autoMapping="true">
+            <id column="roomId" property="roomId"/>
+            <result property="homeId" column="homeId"></result>
+            <result property="roomName" column="roomName"></result>
+            <result property="roomAssociationStatus" column="roomAssociationStatus"></result>
+            <result property="thirdRoomId" column="thirdRoomId"></result>
+            <result property="dataType" column="dataType"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.ih2ome.sunflower.model.backup.HomeVO" id="concentrateResultMap" autoMapping="true">
+        <id column="homeId" property="homeId"/>
+        <result property="userId" column="userId"></result>
+        <result property="homeName" column="homeName"></result>
+        <result property="homeType" column="homeType"></result>
+
+        <collection property="rooms" javaType="List"
+                    ofType="com.ih2ome.sunflower.model.backup.RoomVO" autoMapping="true">
+            <id column="roomId" property="roomId"/>
+            <result property="homeId" column="homeId"></result>
+            <result property="roomName" column="roomName"></result>
+            <result property="roomAssociationStatus" column="roomAssociationStatus"></result>
+            <result property="thirdRoomId" column="thirdRoomId"></result>
+            <result property="dataType" column="dataType"></result>
+        </collection>
+    </resultMap>
+
+    <!--insert-->
+    <!--新增房间关联记录-->
+    <insert id="addAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO narcissus_test.smart_house_mapping (
+        house_catalog,
+        data_type,
+        h2omeID,
+        provider_code,
+        threeID,
+        STATUS
+        )
+        VALUES(#{houseCatalog},#{dataType},#{h2omeId},#{providerCode},#{threeId},1);
+    </insert>
+
+    <!--新增设备记录-->
+    <insert id="addSmartDevice" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2"
+            useGeneratedKeys="true" keyProperty="smartDeviceId" keyColumn="smart_device_ID">
+        INSERT INTO narcissus_test.smart_device_v2 (
+        brand,
+        connection_status,
+        connection_status_update_time,
+        created_at,
+        created_by,
+        house_catalog,
+        manage_status,
+        name,
+        provider_code,
+        public_zone_ID,
+        room_ID,
+        smart_device_type,
+        threeID
+        )
+        VALUES(#{brand},#{connectionStatus},#{connectionStatusUpdateTime},now(),
+        #{createdBy},#{houseCatalog},'0',#{name},#{providerCode},#{publicZoneId},#{roomId},#{smartDeviceType},#{threeId})
+    </insert>
+    <!--新增网关记录-->
+    <insert id="addSmartGateway" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2"
+            useGeneratedKeys="true" keyProperty="smartGatewayId" keyColumn="smart_gateway_ID">
+        INSERT INTO narcissus_test.smart_gateway_v2 (
+        smart_gateway_ID,
+        uuid,
+        sn,
+        mac,
+        model,
+        model_name,
+        install_time,
+        brand,
+        versions
+        )VALUES(#{smartGatewayId},#{uuid},#{sn},#{mac},#{model},#{modelName},#{installTime},#{brand},#{versions})
+    </insert>
+
+    <!--新增门锁记录-->
+    <insert id="addSmartLock" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartLock"
+            useGeneratedKeys="true" keyProperty="smartLockId" keyColumn="smart_lock_ID">
+        INSERT INTO narcissus_test.smart_lock (
+        smart_lock_ID,
+        sn,
+        mac,
+        model,
+        model_name,
+        power,
+        power_refreshtime,
+        onoff_time,
+        lqi,
+        lqi_refreshtime,
+        bind_time,
+        versions
+        )VALUES(#{smartLockId},#{sn},#{mac},#{model},#{modelName},#{power},#{powerRefreshtime},#{onoffTime},#{lqi},#{lqiRefreshtime},#{bindTime},#{versions});
+    </insert>
+
+    <!--新增网关和设备绑定记录-->
+    <insert id="addSmartDeviceBind">
+        INSERT INTO narcissus_test.smart_gateway_bind_v2 (
+        smart_device_ID,
+        smart_gateway_ID
+        )VALUES(#{lockDeviceId},#{gatewayDeviceId})
+
+    </insert>
+    <!--新增密码记录(同步第三方设备)-->
+    <insert id="addSmartLockPassword" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartLockPassword"
+            useGeneratedKeys="true" keyProperty="smartLockPasswordId" keyColumn="smart_lock_password_ID">
+        INSERT INTO narcissus_test.smart_lock_password (
+        smart_lock_ID,
+        provider_code,
+        threeID,
+        lock3ID,
+        created_at,
+        NAME,
+        pwd_user_name,
+        STATUS,
+        pwd_type,
+        valid_time_start,
+        valid_time_end,
+        PASSWORD,
+        description,
+        is_default,
+        send_to_mobile
+        )VALUES(#{smartLockId},#{providerCode},#{threeId},#{lock3Id},NOW(),#{name},#{pwdUserName},#{status},#{pwdType},#{validTimeStart},#{validTimeEnd},#{password},#{description},#{isDefault},#{sendToMobile})
+    </insert>
+
+    <!--新增门锁密码-->
+    <insert id="addLockPassword" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="smart_lock_password_ID">
+        INSERT INTO narcissus_test.smart_lock_password (
+        smart_lock_ID,
+        provider_code,
+        threeID,
+        lock3ID,
+        created_at,
+        NAME,
+        STATUS,
+        pwd_type,
+        valid_time_start,
+        valid_time_end,
+        send_to_mobile,
+        pwd_user_name,
+        password,
+        description,
+        is_default
+        )values(#{serialNum},#{provideCode},#{pwdNo},#{uuid},NOW(),#{name},#{status},#{pwdType},#{enableTime},#{disableTime},#{mobile},#{userName},#{password},#{remark},#{isDefault});
+    </insert>
+
+    <!--新增门锁密码操作记录-->
+    <insert id="addSmartLockOperationLog" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartLockLog">
+      INSERT INTO narcissus_test.smart_lock_log(created_at,created_by,smart_lock_password_ID,smart_lock_ID,operator_type)
+      VALUES (NOW(),#{createdBy},#{smartLockPasswordId}, #{smartLockId},#{operatorType});
+    </insert>
+
+    <!--delete-->
+    <!--删除密码记录-->
+    <update id="deleteLockPassword" parameterType="string">
+        UPDATE narcissus_test.smart_lock_password
+        SET `status` = '6'
+        WHERE
+        smart_lock_password_ID = #{passwordId};
+    </update>
+    <update id="deleteLockPasswordByUuid" parameterType="string">
+        UPDATE narcissus_test.smart_lock_password
+        SET `status` = '6'
+        WHERE
+        threeID = #{uuid};
+    </update>
+    <!--update-->
+    <!--修改房间关联记录-->
+    <update id="updateAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
+        UPDATE narcissus_test.smart_house_mapping nshm
+        SET nshm.`status` = '1',nshm.threeID=#{threeId}
+        WHERE
+        nshm.provider_code = #{providerCode}
+        AND nshm.house_catalog = #{houseCatalog}
+        AND nshm.data_type =#{dataType}
+        AND nshm.h2omeID = #{h2omeId}
+    </update>
+
+    <!--房间(公共区域)取消关联(分散式,集中式)-->
+    <update id="cancelAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
+        UPDATE narcissus_test.smart_house_mapping nshm
+        SET nshm.`status` = '2'
+        WHERE
+        nshm.provider_code = #{providerCode}
+        AND nshm.house_catalog = #{houseCatalog}
+        AND nshm.data_type =#{dataType}
+        AND nshm.h2omeID = #{h2omeId}
+        AND nshm.threeID=#{threeId}
+    </update>
+
+    <!--通过roomId删除该房间下的设备记录(修改字段)-->
+    <update id="clearDevicesByRoomId">
+        UPDATE narcissus_test.smart_device_v2
+        SET manage_status = 1
+        WHERE
+        room_ID= #{roomId}
+        AND house_catalog = #{type} AND provider_code=#{providerCode}
+    </update>
+
+    <!--通过publicZoneId删除该公共区域下的设备记录(修改字段)-->
+    <update id="clearDevicesByPublicZoneId">
+        UPDATE narcissus_test.smart_device_v2
+        SET manage_status = 1
+        WHERE
+        public_zone_ID = #{publicZoneId}
+        AND house_catalog =#{type}  AND provider_code=#{providerCode}
+    </update>
+
+    <!--修改门锁密码-->
+    <update id="updateLockPassword" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
+        UPDATE narcissus_test.smart_lock_password
+        <set>
+            <if test="userName!=null and userName.trim()!=''">pwd_user_name = #{userName},</if>
+            <if test="password!=null and password.trim()!=''">password = #{password},</if>
+            <if test="mobile!=null and mobile.trim()!=''">send_to_mobile = #{mobile},</if>
+            <if test="remark!=null and remark.trim()!=''">description = #{remark},</if>
+            <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
+            <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
+        </set>
+        WHERE smart_lock_password_ID=#{id}
+
+    </update>
+
+    <update id="updateLockPasswordByUuid" parameterType="com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo">
+        UPDATE narcissus_test.smart_lock_password
+        <set>
+            <if test="userName!=null and userName.trim()!=''">pwd_user_name = #{userName},</if>
+            <if test="password!=null and password.trim()!=''">password = #{password},</if>
+            <if test="mobile!=null and mobile.trim()!=''">send_to_mobile = #{mobile},</if>
+            <if test="remark!=null and remark.trim()!=''">description = #{remark},</if>
+            <if test="enableTime!=null and enableTime!=''">valid_time_start = #{enableTime},</if>
+            <if test="disableTime!=null and disableTime!=''">valid_time_end = #{disableTime},</if>
+        </set>
+        WHERE and threeID=#{uuid}
+    </update>
+
+    <!--冻结门锁密码-->
+    <update id="frozenLockPassword" parameterType="string">
+        UPDATE narcissus_test.smart_lock_password SET `status`='5' where smart_lock_password_ID=#{passwordId}
+    </update>
+
+    <!--解冻门锁密码-->
+    <update id="unFrozenLockPassword" parameterType="string">
+        UPDATE narcissus_test.smart_lock_password SET `status`='2' where smart_lock_password_ID=#{passwordId}
+    </update>
+
+    <!--修改电量信息-->
+    <update id="updateBatteryInfo" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo">
+        update
+        narcissus_test.smart_device_v2 nsdv2,
+        narcissus_test.smart_lock nsl set nsl.power=#{remainingBattery}
+        where
+        nsdv2.smart_device_ID=nsl.smart_lock_ID
+        and nsdv2.manage_status='0'
+        and nsdv2.threeID=#{uuid}
+    </update>
+    <!--解绑门锁-->
+    <update id="deleteSmartLockByUuid">
+        update
+        narcissus_test.smart_device_v2 nsdv2,
+        narcissus_test.smart_lock nsl set nsdv2.manage_status='1'
+        where
+        nsdv2.smart_device_ID=nsl.smart_lock_ID
+        and nsdv2.threeID=#{uuid}
+    </update>
+
+    <!--修改内门锁与网关的绑定关系-->
+    <update id="updateInnerLockBindGateway">
+        UPDATE narcissus_test.smart_gateway_bind_v2 ntsgbv2
+          SET ntsgbv2.smart_gateway_ID=#{smartGatewayId}
+        where ntsgbv2.smart_device_ID=#{innerLockId}
+    </update>
+    <!--select-->
+    <!--查询房源信息(分散式)-->
+    <select id="findDispersedHomes" parameterType="string" resultMap="dispersedResultMap">
+        SELECT * FROM((
+        SELECT
+        cth.created_by_id AS userId,
+        cth.id AS homeId,
+        cth.area AS homeName,
+        '1' AS homeType,
+        ntpz.public_zone_ID AS roomId,
+        ntpz.`name` AS roomName,
+        nshm.`status` AS roomAssociationStatus,
+        nshm.threeID AS thirdRoomId,
+        '5' AS dataType
+        FROM
+        `caspain_test`.house cth
+        LEFT JOIN narcissus_test.public_zone ntpz ON cth.id = ntpz.parent_ID
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
+        AND nshm.data_type = 5
+        AND nshm.house_catalog = 1 AND  nshm.status= 1
+        WHERE
+        ntpz.data_type = 3
+        AND cth.created_by_id =#{userId}
+        )
+        UNION ALL
+        (
+        SELECT
+        cth.created_by_id AS userId,
+        cth.id AS homeId,
+        cth.area AS homeName,
+        '1' AS homeType,
+        ctr.id AS roomId,
+        ctr.`name` AS roomName,
+        nshm.`status` AS roomAssociationStatus,
+        nshm.threeID AS thirdRoomId,
+        '4' AS dataType
+        FROM
+        `caspain_test`.house cth
+        LEFT JOIN `caspain_test`.room ctr ON cth.id = ctr.house_id
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
+        AND nshm.data_type = 4
+        AND nshm.house_catalog = 1 AND nshm.status= 1
+        WHERE
+        cth.created_by_id=#{userId}
+        ORDER BY thirdRoomId DESC LIMIT 99999999999
+        )) AS allrecord
+
+    </select>
+
+    <!--查询房源信息(集中式)-->
+    <select id="findConcentrateHomes" parameterType="string" resultMap="concentrateResultMap">
+        SELECT * FROM((
+        SELECT
+        vta.created_by AS userId,
+        vta.id AS homeId,
+        vta.`name` AS homeName,
+        '0' AS homeType,
+        ntpz.public_zone_ID AS roomId,
+        ntpz.`name` AS roomName,
+        nshm.`status` AS roomAssociationStatus,
+        nshm.threeID AS thirdRoomId,
+        '5' AS dataType
+        FROM
+        `volga_test`.apartment vta
+        LEFT JOIN narcissus_test.public_zone ntpz ON vta.id = ntpz.parent_ID
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
+        AND nshm.data_type = 5
+        AND nshm.house_catalog = 0 AND  nshm.status= 1
+        WHERE
+        ntpz.data_type = 1
+        AND vta.created_by = #{userId}
+        )
+        UNION ALL
+        (
+        SELECT
+        vta.created_by AS userId,
+        vta.id AS homeId,
+        vta.`name` AS homeName,
+        '0' AS homeType,
+        vtr.id AS roomId,
+        vtr.`name` AS roomName,
+        nshm.`status` AS roomAssociationStatus,
+        nshm.threeID AS thirdRoomId,
+        '4' AS dataType
+        FROM
+        `volga_test`.apartment vta
+        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON vtr.id = nshm.h2omeID
+        AND nshm.data_type = 4
+        AND nshm.house_catalog = 0 AND  nshm.status= 1
+        WHERE
+        vta.created_by = #{userId}
+        ORDER BY thirdRoomId DESC LIMIT 99999999999
+        )) AS allrecord
+    </select>
+
+    <!--查询房源映射表记录-->
+    <select id="findHouseMappingRecord"
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
+        SELECT
+        house_catalog as houseCatalog,
+        data_type as dataType,
+        h2omeID as h2omeId,
+        provider_code as providerCode,
+        threeID as threeId,
+        `status`
+        FROM
+        narcissus_test.smart_house_mapping nshm
+        WHERE
+        nshm.h2omeID = #{h2omeId}
+        AND nshm.data_type = #{dataType}
+        AND nshm.house_catalog = #{houseCatalog} AND nshm.provider_code=#{providerCode}
+    </select>
+
+    <!--根据公共区域查询房间映射记录(分散式)-->
+    <select id="findDispersedRoomMappingByPublicZone"
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
+        SELECT
+        nshm.data_type AS dataType,
+        nshm.h2omeID AS h2omeId,
+        nshm.house_catalog AS houseCatalog,
+        nshm.provider_code AS providerCode,
+        nshm.threeID AS threeId
+        FROM
+        narcissus_test.public_zone ntpz
+        LEFT JOIN caspain_test.house cth ON ntpz.parent_ID = cth.id
+        LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ctr.id
+        WHERE
+        ntpz.public_zone_ID = #{h2omeId}
+        AND ntpz.data_type = 3
+        AND nshm.data_type = 4
+        AND nshm.house_catalog = 1
+        AND nshm.provider_code = #{providerCode}
+    </select>
+
+    <!--根据公共区域查询房间映射记录(集中式)-->
+    <select id="findConcentrateRoomMappingByPublicZone"
+            parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
+        SELECT
+        nshm.data_type AS dataType,
+        nshm.h2omeID AS h2omeId,
+        nshm.house_catalog as houseCatalog,
+        nshm.provider_code as providerCode,
+        nshm.threeID as threeId
+        FROM
+        narcissus_test.public_zone ntpz
+        LEFT JOIN `volga_test`.apartment vta ON ntpz.parent_ID = vta.id
+        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = vtr.id
+        WHERE
+        ntpz.public_zone_ID = #{h2omeId}
+        AND ntpz.data_type = 1
+        AND nshm.data_type = 4
+        AND nshm.house_catalog = 0
+        AND nshm.provider_code = #{providerCode}
+    </select>
+
+    <!--根据房间ID查询公共区域ID(集中式)-->
+    <select id="findDispersedPublicZoneByRoomId" parameterType="string" resultType="string">
+        SELECT
+        npz.public_zone_ID
+        FROM
+        caspain_test.room ctr
+        LEFT JOIN caspain_test.house cth ON ctr.house_id = cth.id
+        LEFT JOIN narcissus_test.public_zone npz ON cth.id = npz.parent_ID
+        WHERE
+        npz.data_type = 3
+        AND ctr.id = #{roomId}
+    </select>
+
+    <!--根据房间ID查询公共区域ID(集中式)-->
+    <select id="findConcentratePublicZoneByRoomId" parameterType="string" resultType="string">
+        SELECT
+        npz.public_zone_ID
+        FROM
+        `volga_test`.room vtr
+        LEFT JOIN `volga_test`.apartment vta ON vtr.apartment_id = vta.id
+        LEFT JOIN narcissus_test.public_zone npz ON vta.id=npz.parent_ID
+        WHERE npz.data_type=1 AND vtr.id=#{roomId}
+    </select>
+
+    <!--根据门锁Id查询密码列表-->
+    <select id="findPasswordListByLockId" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartLockPassword">
+        SELECT
+        smart_lock_password_ID AS smartLockPasswordId,
+        IFNULL(send_to_mobile,'') AS sendToMobile,
+        name,
+        IFNULL(pwd_user_name,'') AS pwdUserName,
+        CASE STATUS
+        WHEN '1' THEN
+        '初始状态'
+        WHEN '2' THEN
+        '已生效'
+        WHEN '3' THEN
+        '将生效'
+        WHEN '4' THEN
+        '已过期'
+        WHEN '5' THEN
+        '已冻结'
+        END status,
+        IFNULL(password,'无') as password,
+        IFNULL(valid_time_start,'') AS validTimeStart,
+        IFNULL(valid_time_end,'') AS validTimeEnd,
+        IFNULL(description,'') as description
+        FROM
+        narcissus_test.smart_lock_password
+        WHERE
+        smart_lock_ID = #{lockId} AND status !='6';
+    </select>
+
+    <!--根据门锁Id查询第三方门锁的uuid-->
+    <select id="findThirdLockUuid" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2">
+        SELECT
+        threeID as threeId,
+        provider_code as providerCode
+        FROM
+        narcissus_test.smart_device_v2
+        WHERE
+        smart_device_ID = #{smartLockId}
+    </select>
+
+    <!--查询该门锁的管理密码是否存在-->
+    <select id="findLockManagePassword" resultType="string">
+        select smart_lock_password_ID from narcissus_test.smart_lock_password WHERE smart_lock_ID=#{smartLockId} AND threeID=#{passwordId}
+    </select>
+
+    <!--根据门锁密码id查询该密码记录-->
+    <select id="findPasswordById" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartLockPassword">
+        SELECT
+        smart_lock_ID AS smartLockId,
+        smart_lock_password_ID AS smartLockPasswordId,
+        provider_code as providerCode,
+        lock3ID AS lock3Id,
+        threeID as threeId,
+        `name`,
+        pwd_user_name as pwdUserName,
+        send_to_mobile as sendToMobile,
+        `password`,
+        valid_time_start AS validTimeStart,
+        valid_time_end AS validTimeEnd,
+        description
+        FROM
+        narcissus_test.smart_lock_password
+        WHERE
+        smart_lock_password_ID = #{passwordId}
+    </select>
+
+    <!--根据门锁id查询该门锁详情-->
+    <select id="findSmartLockDetail" parameterType="string"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
+        SELECT
+        ntsl.smart_lock_ID AS lockId,
+        ntsl.sn AS lockCode,
+        ntsv2l.connection_status AS connectionStatus,
+        ntsl.power AS power,
+        ntsl.lqi AS lqi,
+        ntsl.lqi_refreshtime AS lqiRefreshtime,
+        ntsgv2.smart_gateway_ID AS gatewayId,
+        ntsgv2.sn AS gatewayCode,
+        ntsl.bind_time as bindTime,
+        CASE ntsv2l.provider_code
+        WHEN 'YD' THEN '云丁'
+        WHEN 'GJ' THEN '果加'
+        END provider,
+        ntsl.model_name AS modelName,
+        ntsl.versions as versionJson,
+        ntsv2l.house_catalog AS houseCatalog,
+        ntsv2l.room_ID as roomId,
+        ntsv2l.public_zone_ID as publicZoneId
+        FROM
+        narcissus_test.smart_lock ntsl
+        LEFT JOIN narcissus_test.smart_device_v2 ntsv2l ON ntsv2l.smart_device_ID = ntsl.smart_lock_ID
+        LEFT JOIN narcissus_test.smart_gateway_bind_v2 ntsgbv2 ON ntsv2l.smart_device_ID = ntsgbv2.smart_device_ID
+        LEFT JOIN narcissus_test.smart_gateway_v2 ntsgv2 ON ntsgv2.smart_gateway_ID=ntsgbv2.smart_gateway_ID
+        LEFT JOIN narcissus_test.smart_device_v2 ntsv2g ON ntsv2g.smart_device_ID=ntsgv2.smart_gateway_ID
+        WHERE
+        ntsv2l.manage_status = 0 AND ntsv2g.manage_status=0 AND  ntsl.smart_lock_ID=#{lockId}
+    </select>
+
+    <!--通过公共区域id查询房源名称（集中式）-->
+    <select id="findConcentrateHomeInfoByPublicZoneId" parameterType="string"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
+        SELECT
+        vta.`name` as homeName,
+        ntpz.`name` as roomName
+        FROM
+        narcissus_test.public_zone ntpz
+        LEFT JOIN `volga_test`.apartment vta ON vta.id=ntpz.parent_ID
+        where ntpz.public_zone_ID=#{publicZoneId} and ntpz.data_type=1
+    </select>
+
+    <!--通过公共区域Id查询房源名称（分散式）-->
+    <select id="findDispersedHomeInfoByPublicZoneId" parameterType="string"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
+        SELECT
+        cth.area as homeName,
+        ntpz.`name` as roomName
+        FROM
+        narcissus_test.public_zone ntpz
+        LEFT JOIN caspain_test.house cth ON cth.id=ntpz.parent_ID
+        where ntpz.public_zone_ID=#{publicZoneId} AND ntpz.data_type=3
+    </select>
+
+    <!--通过房间id查询房源名称（集中式）-->
+    <select id="findConcentrateHomeInfoByRoomId" parameterType="string"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
+        SELECT
+        vta.`name` AS homeName,
+        vtr.`name` AS roomName
+        FROM
+        `volga_test`.apartment vta
+        LEFT JOIN `volga_test`.room vtr ON vta.id=vtr.apartment_id where vtr.id=#{roomId}
+    </select>
+
+    <!--通过房间id查询房源名称（分散式）-->
+    <select id="findDispersedHomeInfoByRoomId" parameterType="string"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
+        SELECT
+        cth.area as homeName,
+        ctr.`name` as roomName
+        FROM
+        caspain_test.room ctr
+        LEFT JOIN caspain_test.house cth ON ctr.house_id = cth.id
+        WHERE  ctr.id =#{roomId}
+    </select>
+
+    <!--通过门锁id查询开门记录-->
+    <select id="findOpenLockRecord" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
+        SELECT
+        ntslp.`name` AS passwordName,
+        ntsmi.created_at AS createdTime,
+        IFNULL(ntslp.pwd_user_name,'') AS userName,
+        IFNULL(ntslp.send_to_mobile,'') AS mobile
+        FROM
+        narcissus_test.smart_lock_password ntslp
+        LEFT JOIN narcissus_test.smart_mistake_info ntsmi ON ntslp.threeID = ntsmi.smart_lock_password_id
+        WHERE
+        ntslp.smart_lock_ID = #{lockId}
+        AND ntsmi.smart_device_type = 3
+        AND ntsmi.exception_type = 13 ORDER BY ntsmi.created_at desc
+    </select>
+
+
+    <!--通过门锁id查询操作记录-->
+    <select id="findHistoryOperations" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
+        SELECT
+        ctup.`name` as userName,
+        ctup.phone as mobile,
+        ntsl.created_at as createdTime,
+        CASE ntsl.operator_type
+        WHEN 1 THEN '新增密码'
+        WHEN 2 THEN '更新密码'
+        WHEN 3 THEN '删除密码'
+        WHEN 4 THEN '冻结密码'
+        WHEN 5 THEN '冻结密码'
+        END operatorType
+        FROM
+            narcissus_test.smart_lock_log ntsl
+        LEFT JOIN caspain_test.auth_user ctau ON ntsl.created_by = ctau.id
+        LEFT JOIN caspain_test.user_profile ctup ON ctup.user_id = ctau.id
+        where ntsl.smart_lock_ID=#{lockId} ORDER BY ntsl.created_at DESC
+    </select>
+
+    <!--通过门锁id查询异常记录-->
+    <select id="findExceptionRecords" parameterType="string"
+            resultType="com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo">
+        SELECT
+        CASE ntsmi.exception_type
+        WHEN 9 THEN
+        '低电提示'
+        WHEN 10 THEN
+        '电量恢复'
+        WHEN 11 THEN
+        '门锁破坏报警'
+        WHEN 12 THEN
+        '门锁密码连输三次错误'
+        WHEN 16 THEN
+        '通讯状态'
+        WHEN 17 THEN
+        '通讯状态'
+        END exceptionName,
+        ntsmi.created_at AS createdTime,
+        CASE ntsmi.exception_type
+        WHEN 9 THEN
+        '电量过低'
+        WHEN 10 THEN
+        '电量恢复正常'
+        WHEN 11 THEN
+        '门锁被暴力破坏'
+        WHEN 12 THEN
+        '门锁密码连输三次错误'
+        WHEN 16 THEN
+        '门锁在线'
+        WHEN 17 THEN
+        '门锁离线'
+        END description
+        FROM
+        narcissus_test.smart_device_v2 ntsv2
+        LEFT JOIN narcissus_test.smart_mistake_info ntsmi ON ntsv2.threeID = ntsmi.uuid
+        WHERE
+        ntsv2.smart_device_ID =#{lockId}
+        AND ntsmi.smart_device_type = 3
+        AND ntsmi.exception_type IN (9, 10, 11, 12,16,17)
+    </select>
+
+    <!--通过公区id查询网关已绑定的内门锁-->
+    <select id="findGatewayBindInnerLock"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGateWayHadBindInnerLockVO">
+      SELECT
+        ntsdv2g.smart_device_ID AS gatewayId,
+        ntsdv2g.threeID AS gatewayThirdId,
+        ntsgbv2.smart_device_ID AS innerLockId
+        FROM
+            narcissus_test.smart_device_v2 ntsdv2g
+        LEFT JOIN narcissus_test.smart_gateway_bind_v2 ntsgbv2 ON ntsdv2g.smart_device_ID = ntsgbv2.smart_gateway_ID
+        LEFT JOIN narcissus_test.smart_device_v2 ntsdv2l ON ntsdv2l.smart_device_ID = ntsgbv2.smart_device_ID
+        WHERE
+            ntsdv2g.public_zone_ID = #{publicZoneId}
+        AND ntsdv2g.provider_code = #{providerCode}
+        AND ntsdv2g.house_catalog = #{type}
+        AND ntsdv2g.smart_device_type = 4
+        AND ntsdv2g.manage_status=0
+        AND ntsdv2l.room_ID IS NOT NULL;
+    </select>
+
+</mapper>

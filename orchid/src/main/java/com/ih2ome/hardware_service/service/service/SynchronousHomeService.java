@@ -1,11 +1,11 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.vo.ApartmentVO;
-import com.ih2ome.hardware_service.service.vo.HomeSyncVO;
-import com.ih2ome.hardware_service.service.vo.HouseVO;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.ApartmentVO;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.HouseVO;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
-import com.ih2ome.peony.watermeterInterface.vo.YunDingResponseVo;
+import com.ih2ome.sunflower.vo.thirdVo.watermeter.YunDingResponseVo;
 
 import java.util.List;
 

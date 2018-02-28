@@ -3,15 +3,15 @@
 <mapper namespace="com.ih2ome.hardware_service.service.dao.AmmeterAlarmDao">
     <!--- insert -->
     <!--添加报警规则-->
-    <insert id="addAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+    <insert id="addAmmeterAlarmRules" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule">
         INSERT INTO narcissus_test.smart_alarm_rule (report_name,report_param,switch_status) VALUES(#{reportName},#{reportParam},#{switchStatus});
     </insert>
     <!--添加报警信息-->
     <insert id="saveAlarmList" parameterType="java.util.List">
-        insert into narcissus_test.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type) values
+        insert into narcissus_test.`smart_mistake_info`(created_at,smart_device_type,uuid,exception_type,smart_lock_password_id) values
         <foreach collection="list" item="smartMistakeInfo" index="index" separator =",">
             (
-            NOW(),#{smartMistakeInfo.smartDeviceType},#{smartMistakeInfo.uuid},#{smartMistakeInfo.exceptionType}
+            NOW(),#{smartMistakeInfo.smartDeviceType},#{smartMistakeInfo.uuid},#{smartMistakeInfo.exceptionType},#{smartMistakeInfo.smartLockPasswordId}
             )
         </foreach>
     </insert>
@@ -22,7 +22,7 @@
     </delete>
 
     <!--更新电表报警规则-->
-    <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+    <update id="updateAmmeterAlarmRules" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule">
         UPDATE narcissus_test.smart_alarm_rule nsar
           SET
         <trim prefix="set" suffixOverrides=",">
@@ -35,18 +35,18 @@
 
 
     <!--获取所有有效电表报警规则-->
-    <select id="getAllSmartAlarmRules" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+    <select id="getAllSmartAlarmRules" resultType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule">
         select * FROM  narcissus_test.smart_alarm_rule nsar WHERE nsar.switch_status='0'
     </select>
 
     <!--根据报警类型查找报警规则 -->
-    <select id="getByReportName" parameterType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartAlarmRule">
+    <select id="getByReportName" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule" resultType="com.ih2ome.sunflower.entity.narcissus.SmartAlarmRule">
         SELECT * from narcissus_test.smart_alarm_rule nsar where nsar.report_name=#{reportName} and nsar.switch_status='0'
     </select>
 
 
     <!--集中式房源电表报警信息列表（模糊查询）-->
-    <select id="findDispersedAmmeterAlarm" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo">
+    <select id="findDispersedAmmeterAlarm" parameterType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterAlarmVo" resultType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterAlarmVo">
         SELECT
         csd.id ammeterId,
         ch.area apartmentName,
@@ -125,7 +125,7 @@
     </select>
 
     <!--分散式房源电表报警信息列表（模糊查询）-->
-    <select id="findConcentratAmmeter" parameterType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo" resultType="com.ih2ome.hardware_service.service.vo.AmmeterAlarmVo">
+    <select id="findConcentratAmmeter" parameterType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterAlarmVo" resultType="com.ih2ome.sunflower.vo.pageVo.ammeter.AmmeterAlarmVo">
         SELECT
         vsd.id ammeterId,
         va.`name` apartmentName,

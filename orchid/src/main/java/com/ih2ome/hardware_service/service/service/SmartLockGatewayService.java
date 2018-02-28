@@ -1,8 +1,10 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
-import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo;
+import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 
 import java.util.List;
 
@@ -10,13 +12,56 @@ import java.util.List;
  * <br>
  *
  * @author Lucius
- * create by 2017/12/28
+ * create by 2018/1/24
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public interface SmartLockGatewayService {
-    List<SmartDoorLockGatewayVO> gatewayList(SmartDoorLockGatewayVO smartDoorLockGatewayVO);
+    /**
+     * 根据房源查询网关列表
+     *
+     * @param homeId
+     * @param type
+     * @return
+     */
+    List<SmartLockGatewayAndHouseInfoVO> getSmartLockGatewayList(String homeId, String type);
 
-    SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException;
+    /**
+     * 查询已绑定网关的门锁
+     *
+     * @param gatewayId
+     * @return
+     */
+    SmartLockGatewayHadBindVO getSmartLockHadBindGateway(String gatewayId);
 
-    List<LockListVo> getSmartDoorLockByGatewayId(String id, String type, Integer page, Integer rows);
+    /**
+     * 查询网关基本信息
+     *
+     * @param gatewayId
+     * @return
+     */
+    SmartLockDetailVO getSmartLockGatewayDetailInfo(String gatewayId);
+
+    /**
+     * 获取已绑定房源列表
+     *
+     * @param type
+     * @param userId
+     * @return
+     */
+    List<SmartLockHadBindHouseVo> getHadBindHouseList(String type, String userId);
+
+    /**
+     * 解绑网关
+     *
+     * @param uuid
+     */
+    void uninstallSmartLockGateway(String uuid);
+
+    /**
+     * 绑定网关
+     *
+     * @param homeId
+     * @param uuid
+     */
+    void installSmartLockGateway(String homeId, String uuid);
 }

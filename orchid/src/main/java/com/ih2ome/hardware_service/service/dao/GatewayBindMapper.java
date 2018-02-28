@@ -1,7 +1,8 @@
 package com.ih2ome.hardware_service.service.dao;
 
+
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.hardware_service.service.model.narcissus.SmartGatewayBind;
+import com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind;
 import org.springframework.stereotype.Repository;
 
 @Repository

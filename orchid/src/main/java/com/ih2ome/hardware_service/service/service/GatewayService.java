@@ -1,7 +1,8 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.hardware_service.service.model.narcissus.SmartGateway;
-import com.ih2ome.hardware_service.service.model.narcissus.SmartMistakeInfo;
+
+import com.ih2ome.sunflower.entity.narcissus.SmartGateway;
+import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 
 public interface GatewayService {
     /**

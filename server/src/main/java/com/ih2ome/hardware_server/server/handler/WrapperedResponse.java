@@ -70,21 +70,17 @@ public class WrapperedResponse extends HttpServletResponseWrapper {
             bos = stream;
         }
 
-        @Override
         public void write(int b) throws IOException {
             bos.write(b);
         }
 
-        @Override
         public void write(byte[] b) throws IOException {
             bos.write(b, 0, b.length);
         }
 
-
         public boolean isReady() {
             return false;
         }
-
 
         public void setWriteListener(WriteListener writeListener) {
 

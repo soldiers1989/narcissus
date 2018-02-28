@@ -1,80 +1,134 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
-import com.github.pagehelper.PageHelper;
+import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao;
-import com.ih2ome.hardware_service.service.enums.HouseStyleEnum;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
-import com.ih2ome.hardware_service.service.vo.LockListVo;
-import com.ih2ome.hardware_service.service.vo.SmartDoorLockGatewayVO;
-import com.ih2ome.peony.smartlockInterface.ISmartLock;
-import com.ih2ome.peony.smartlockInterface.enums.SmartLockFirm;
-import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.peony.smartlockInterface.vo.GuoJiaGateWayVo;
+import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * <br>
  *
  * @author Lucius
- * create by 2017/12/28
+ * create by 2018/1/24
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 @Service
-public class SmartLockGatewayServiceImpl implements SmartLockGatewayService {
+public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
 
     @Resource
     SmartLockGatewayDao smartLockGatewayDao;
 
+
     @Override
-    public List<SmartDoorLockGatewayVO> gatewayList(SmartDoorLockGatewayVO smartDoorLockGatewayVO) {
-        if(smartDoorLockGatewayVO.getPage()!= null && smartDoorLockGatewayVO.getRows() != null){
-            PageHelper.startPage(smartDoorLockGatewayVO.getPage(),smartDoorLockGatewayVO.getRows());
+    public List<SmartLockGatewayAndHouseInfoVO> getSmartLockGatewayList(String homeId, String type) {
+        if(StringUtils.isNotBlank(homeId)&&StringUtils.isNotBlank(type)){
+
+            if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+                return smartLockGatewayDao.getDispersedGatewayModelByHomeId(homeId);
+            }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+                return smartLockGatewayDao.getConcentrateGatewayModelByHomeId(homeId);
+            }else{
+                return null;
+            }
+
         }
-        if(smartDoorLockGatewayVO.getType().equals(HouseStyleEnum.DISPERSED.getCode())){
-            return smartLockGatewayDao.findDispersedGateway(smartDoorLockGatewayVO);
-        }else if(smartDoorLockGatewayVO.getType().equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            return smartLockGatewayDao.findConcentratGateway(smartDoorLockGatewayVO);
-        }else{
-            return null;
-        }
+        return null;
+
     }
 
     @Override
-    public SmartDoorLockGatewayVO getSmartDoorLockGatewayVOById(String type, String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
-        ISmartLock iSmartLock = (ISmartLock) Class.forName(SmartLockFirm.GUO_JIA.getClazz()).newInstance();
-        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getSmartDispersedDoorLockGatewayVOById(id);
-            GuoJiaGateWayVo guoJiaGateWayVo = iSmartLock.getGuoJiaGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
-            smartDoorLockGatewayVO.setGuaranteeTimeStart(guoJiaGateWayVo.getGuaranteeTimeStart());
-            smartDoorLockGatewayVO.setGuaranteeTimeEnd(guoJiaGateWayVo.getGuaranteeTimeEnd());
-            return smartDoorLockGatewayVO;
-        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            SmartDoorLockGatewayVO smartDoorLockGatewayVO = smartLockGatewayDao.getConcentratSmartDoorLockGatewayVOById(id);
-            GuoJiaGateWayVo guoJiaGateWayVo = iSmartLock.getGuoJiaGateWayInfo(smartDoorLockGatewayVO.getGatewayCode());
-            smartDoorLockGatewayVO.setGuaranteeTimeStart(guoJiaGateWayVo.getGuaranteeTimeStart());
-            smartDoorLockGatewayVO.setGuaranteeTimeEnd(guoJiaGateWayVo.getGuaranteeTimeEnd());
-            return smartDoorLockGatewayVO;
-        }else{
-            return null;
+    public SmartLockGatewayHadBindVO getSmartLockHadBindGateway(String gatewayId) {
+        if(StringUtils.isNotBlank(gatewayId)){
+            SmartLockGatewayHadBindVO smartLockGatewayHadBindVO = smartLockGatewayDao.getSmartLockHadBindGateway(gatewayId);
+            if(smartLockGatewayHadBindVO!=null){
+                List <SmartLockGatewayHadBindRoomVO> smartLockGatewayHadBindRoomVOList = smartLockGatewayDao.getSmartLockAndRoomListByGatewayId(gatewayId);
+                smartLockGatewayHadBindVO.setSmartLockGatewayHadBindRoomVOList(smartLockGatewayHadBindRoomVOList);
+            }
+            return smartLockGatewayHadBindVO;
+
         }
+        return null;
+
     }
 
     @Override
-    public List<LockListVo> getSmartDoorLockByGatewayId(String id, String type, Integer page, Integer rows) {
-        if(page!= null && rows != null){
-            PageHelper.startPage(page,rows);
-        }else{
-            PageHelper.startPage(1,10);
+    public SmartLockDetailVO getSmartLockGatewayDetailInfo(String gatewayId) {
+        if(StringUtils.isNotBlank(gatewayId)){
+            SmartLockDetailVO smartLockDetailVO = smartLockGatewayDao.getSmartLockGatewayDetailInfo(gatewayId);
+            if(smartLockDetailVO != null){
+                smartLockDetailVO.splitVersion();
+
+            }
+            return smartLockDetailVO;
+
         }
-        if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-            return smartLockGatewayDao.getDispersedSmartDoorLockByGatewayId(id);
-        }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-            return smartLockGatewayDao.getConcentratSmartDoorLockByGatewayId(id);
-        }else{
-            return null;
+        return null;
+
+    }
+
+    @Override
+    public List<SmartLockHadBindHouseVo> getHadBindHouseList(String type, String userId) {
+        if(StringUtils.isNotBlank(userId)&&StringUtils.isNotBlank(type)){
+            if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
+                return smartLockGatewayDao.getDispersedHadBindHouseList(userId);
+            }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
+                List<SmartLockHadBindHouseVo> smartLockHadBindHouseVoList = smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
+                for(SmartLockHadBindHouseVo smartLockHadBindHouseVo:smartLockHadBindHouseVoList){
+
+                    long lockCount = smartLockGatewayDao.getCountOfApartmentLock(smartLockHadBindHouseVo.getHomeId());
+                    long onlineCount = smartLockGatewayDao.getCountOfApartmentOnlineLock(smartLockHadBindHouseVo.getHomeId());
+                    long offlineCount = lockCount-onlineCount;
+                    long lowerPowerCount = smartLockGatewayDao.getCountOfApartmentLowPowerLock(smartLockHadBindHouseVo.getHomeId());
+                    smartLockHadBindHouseVo.setLockCount(lockCount);
+                    smartLockHadBindHouseVo.setOnlineCount(onlineCount);
+                    smartLockHadBindHouseVo.setOfflineCount(offlineCount);
+                    smartLockHadBindHouseVo.setLowerPowerCount(lowerPowerCount);
+                    FloorVo floorVo = new FloorVo();
+                    List<RoomAndPublicZoneVo> roomAndPublicZoneVoList = new ArrayList<>();
+                    RoomAndPublicZoneVo roomAndPublicZoneVo = new RoomAndPublicZoneVo();
+                    floorVo.setFloorId(000);
+                    floorVo.setFloorName("公共区域");
+                    roomAndPublicZoneVo.setCommunicationStatus(smartLockHadBindHouseVo.getOutSmartLockVo().getCommunicationStatus());
+                    roomAndPublicZoneVo.setLockName(smartLockHadBindHouseVo.getOutSmartLockVo().getLockName());
+                    roomAndPublicZoneVo.setPowerRate(smartLockHadBindHouseVo.getOutSmartLockVo().getPowerRate());
+                    roomAndPublicZoneVo.setSmartLockId(smartLockHadBindHouseVo.getOutSmartLockVo().getSmartLockId());
+                    roomAndPublicZoneVo.setRoomNo("外门锁");
+                    roomAndPublicZoneVoList.add(roomAndPublicZoneVo);
+                    floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
+//                    smartLockHadBindHouseVo.getFloorVoList().add(floorVo);
+                    List <FloorVo> floorVoList = smartLockHadBindHouseVo.getFloorVoList();
+                    floorVoList.add(0,floorVo);
+                    for (FloorVo floorModel:floorVoList){
+                        if(floorModel.getFloorId()==000){
+                            floorModel.setLockCount(smartLockGatewayDao.getCountOfZoneLock(smartLockHadBindHouseVo.getHomeId()));
+                            floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(smartLockHadBindHouseVo.getHomeId()));
+                        }else{
+                            floorModel.setLockCount(smartLockGatewayDao.getCountOfFloorLock(floorModel.getFloorId()));
+                            floorModel.setOnlineCount(smartLockGatewayDao.getCountOfOnlineFloorLock(floorModel.getFloorId()));
+                        }
+                    }
+
+                    smartLockHadBindHouseVo.setOutSmartLockVo(null);
+                }
+                return smartLockHadBindHouseVoList;
+            }
         }
+        return null;
+    }
+
+    @Override
+    public void uninstallSmartLockGateway(String uuid) {
+        smartLockGatewayDao.deleteSmartLockGateway(uuid);
+    }
+
+    @Override
+    public void installSmartLockGateway(String homeId, String uuid) {
+        
     }
 }
