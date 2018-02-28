@@ -43,7 +43,7 @@
           SELECT
             nsgv2.smart_gateway_ID gatewayId,
             nsdv2.`name` gatewayCode,
-            va.address houseAddress,
+            va.name houseAddress,
             nsdv2.connection_status connectionState,
             CONCAT(
             (
@@ -90,7 +90,7 @@
         SELECT
             nsgv2.smart_gateway_ID gatewayId,
             nsdv2.`name` gatewayCode,
-            ch.address houseAddress,
+            ch.area houseAddress,
             nsdv2.connection_status connectionState,
             CONCAT(
                 (
@@ -519,6 +519,7 @@ AND nsdv2Indoor.manage_status = '0'
         and nsdv2.room_ID=vr.id
         and vr.floor_id=#{floorId}
         and nsdv2.connection_status='1'
+        and nsdv2.manage_status='0'
     </select>
 
     <select id="getCountOfZoneLock" resultType="long">
