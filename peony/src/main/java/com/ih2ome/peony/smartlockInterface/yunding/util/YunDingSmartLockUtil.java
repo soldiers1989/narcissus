@@ -255,7 +255,11 @@ public class YunDingSmartLockUtil {
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
-
+        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        Log.info(resJson.getIntValue("ErrNo")+"");
+        Log.info(accessToken);
+        Log.info(refreshToken);
+        Log.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
         CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
 
