@@ -6,7 +6,6 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
-import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,25 +63,27 @@ public class ConstInfoController extends BaseController{
                 urlObject.put("loginStatus","1");
                 return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
             }else{
-                try {
-                    YunDingSmartLockUtil.flushRefreshToken(userId);
-                    urlObject.put("loginStatus","0");
-                    return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
-                } catch (SmartLockException e) {
-                    e.getMessage();
-                    url.append(yunDingLoginBaseUrl)
-                            .append("?client_id=")
-                            .append(yunDingClientId)
-                            .append("&redirect_uri=")
-                            .append(yunDingCallBackUrl)
-                            .append("&scope=")
-                            .append(yunDingPermissionGroup)
-                            .append("&state=")
-                            .append(userId);
-                    urlObject.put("url",url);
-                    urlObject.put("loginStatus","1");
-                    return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
-                }
+                urlObject.put("loginStatus","0");
+                return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+//                try {
+//                    YunDingSmartLockUtil.flushRefreshToken(userId);
+//                    urlObject.put("loginStatus","0");
+//                    return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+//                } catch (SmartLockException e) {
+//                    e.getMessage();
+//                    url.append(yunDingLoginBaseUrl)
+//                            .append("?client_id=")
+//                            .append(yunDingClientId)
+//                            .append("&redirect_uri=")
+//                            .append(yunDingCallBackUrl)
+//                            .append("&scope=")
+//                            .append(yunDingPermissionGroup)
+//                            .append("&state=")
+//                            .append(userId);
+//                    urlObject.put("url",url);
+//                    urlObject.put("loginStatus","1");
+//                    return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+//                }
 
             }
 
