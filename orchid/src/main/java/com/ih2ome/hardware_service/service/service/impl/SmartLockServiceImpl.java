@@ -558,8 +558,9 @@ public class SmartLockServiceImpl implements SmartLockService {
         String result = smartLock.frozenLockPassword(passwordVo);
         JSONObject jsonObject = JSONObject.parseObject(result);
         String errNo = jsonObject.getString("ErrNo");
+        String errMsg = jsonObject.getString("ErrMsg");
         if (!errNo.equals("0")) {
-            throw new SmartLockException("第三方密码修改失败");
+            throw new SmartLockException(errMsg);
         }
         smartLockDao.frozenLockPassword(password_id);
         SmartLockLog smartLockLog = new SmartLockLog();
