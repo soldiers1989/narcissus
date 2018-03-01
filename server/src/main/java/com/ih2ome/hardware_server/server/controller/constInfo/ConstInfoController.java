@@ -65,6 +65,11 @@ public class ConstInfoController extends BaseController{
                 return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
             }
             try {
+                Thread.sleep(3*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
                 YunDingSmartLockUtil.flushRefreshToken(userId);
             } catch (SmartLockException e) {
                 e.getMessage();
