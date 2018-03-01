@@ -256,6 +256,7 @@ public class YunDingSmartLockUtil {
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
         Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        Log.info(resJson.toJSONString());
         Log.info(resJson.getIntValue("ErrNo")+"");
         Log.info(accessToken);
         Log.info(refreshToken);
