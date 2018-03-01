@@ -185,8 +185,8 @@ public class YunDingSmartLock implements ISmartLock {
         String code = resJson.get("ErrNo").toString();
         if (!code.equals("0")) {
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败/n", msg);
-            throw new SmartLockException("第三方请求失败/n" + msg);
+            Log.error("第三方请求失败:", msg);
+            throw new SmartLockException(msg);
         }
         return result;
     }
@@ -219,7 +219,7 @@ public class YunDingSmartLock implements ISmartLock {
         if (!code.equals("0")) {
             String msg = resJson.get("ErrMsg").toString();
             Log.error("第三方请求失败/n", msg);
-            throw new SmartLockException("第三方请求失败/n" + msg);
+            throw new SmartLockException(msg);
         }
         return result;
     }
@@ -240,6 +240,7 @@ public class YunDingSmartLock implements ISmartLock {
         map.put("access_token", access_token);
         map.put("count", YunDingPullHomeCountEnum.ONE_THOUSAND.getCount());
         String result = HttpClientUtil.doGet(url, map);
+        Log.info("============result:{}",result);
         JSONObject resJson = null;
         try {
             resJson = JSONObject.parseObject(result);
@@ -248,6 +249,7 @@ public class YunDingSmartLock implements ISmartLock {
             throw new SmartLockException("第三方json格式解析错误" + e.getMessage());
         }
         List<YunDingHomeInfoVO> homeList = new ArrayList<YunDingHomeInfoVO>();
+        Log.info("==================homeList:{}",homeList);
         JSONArray homes = resJson.getJSONArray("home_list");
         //遍历所有的房源信息，封装成对象。
         for (Object homeObject : homes) {
@@ -295,6 +297,7 @@ public class YunDingSmartLock implements ISmartLock {
             }
             yunDingHomeInfoVO.setRooms(roomList);
             yunDingHomeInfoVO.setDevices(deviceList);
+//            Log.info("====================该房源下的设备信息：{}",deviceList);
             homeList.add(yunDingHomeInfoVO);
         }
         return JSONObject.toJSONString(homeList);
@@ -530,7 +533,7 @@ public class YunDingSmartLock implements ISmartLock {
         if (!code.equals("0")) {
             String msg = resJson.get("ErrMsg").toString();
             Log.error("第三方请求失败", msg);
-            throw new SmartLockException("第三方请求失败/n" + msg);
+            throw new SmartLockException("第三方请求失败:" + msg);
 
         }
         YunDingGataWayInfoVO yunDingGataWayInfoVO = YunDingGataWayInfoVO.jsonToObject(resJson);

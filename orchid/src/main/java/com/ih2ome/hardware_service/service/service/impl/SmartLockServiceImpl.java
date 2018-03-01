@@ -17,7 +17,9 @@ import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGateWayHadBindInnerLock
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingDeviceInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingRoomInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +53,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public Map<String, List<HomeVO>> searchHome(String userId, String type, String factoryType) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
+        Log.info("==========查询房源信息userId:{}",userId);
         //查询第三方房源信息
         SmartLockFirmEnum smartLockFirmEnum = SmartLockFirmEnum.getByCode(factoryType);
         if (smartLockFirmEnum == null) {
@@ -64,6 +67,9 @@ public class SmartLockServiceImpl implements SmartLockService {
             params.put("userId", userId);
             String result = iSmartLock.searchHomeInfo(params);
             List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
+            //处理云丁的房源数据，将房源下房间中没有设备的房间移除
+            removeNoDevicesRoom(yunDingHomes);
+
             for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
                 HomeVO homeVO = YunDingHomeInfoVO.toH2ome(yunDingHomeInfoVO);
                 thirdHomeList.add(homeVO);
@@ -122,6 +128,30 @@ public class SmartLockServiceImpl implements SmartLockService {
         return map;
     }
 
+    //处理云丁的房源数据，将房源下房间中没有设备的房间移除
+    private void removeNoDevicesRoom(List<YunDingHomeInfoVO> yunDingHomes) {
+        for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
+            List<YunDingRoomInfoVO> rooms = yunDingHomeInfoVO.getRooms();
+            List<YunDingDeviceInfoVO> devices = yunDingHomeInfoVO.getDevices();
+            Iterator<YunDingRoomInfoVO> roomIterator = rooms.iterator();
+            while (roomIterator.hasNext()) {
+                boolean flag = true;
+                YunDingRoomInfoVO roomInfo = roomIterator.next();
+                for (YunDingDeviceInfoVO deviceInfo : devices) {
+                    if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null) {
+//                        Log.info("========roomInfo:{}", roomInfo);
+//                        Log.info("========deviceInfo:{}", deviceInfo);
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    roomIterator.remove();
+                }
+            }
+        }
+    }
+
     /**
      * 取消房间关联
      */
@@ -145,12 +175,19 @@ public class SmartLockServiceImpl implements SmartLockService {
             for (SmartHouseMappingVO smartHouseMappingVO1 : roomMappingList) {
                 smartLockDao.cancelAssociation(smartHouseMappingVO1);
                 //清除该房间下的设备
+                smartLockDao.clearDevicesByRoomId(smartHouseMappingVO1.getHouseCatalog(),
+                        smartHouseMappingVO1.getH2omeId(), smartHouseMappingVO1.getProviderCode());
             }
             //取消公共区域的关联
             smartLockDao.cancelAssociation(houseMapping);
+            //清除该公共区域下的设备
+            smartLockDao.clearDevicesByPublicZoneId(houseMapping.getHouseCatalog(),
+                    houseMapping.getH2omeId(), houseMapping.getProviderCode());
             //判断取消关联的是房间之间的关联
         } else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
             smartLockDao.cancelAssociation(houseMapping);
+            smartLockDao.clearDevicesByRoomId(houseMapping.getHouseCatalog(),
+                    houseMapping.getH2omeId(), houseMapping.getProviderCode());
         }
 
     }
@@ -521,6 +558,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         String result = smartLock.frozenLockPassword(passwordVo);
         JSONObject jsonObject = JSONObject.parseObject(result);
         String errNo = jsonObject.getString("ErrNo");
+        String errMsg = jsonObject.getString("ErrMsg");
         if (!errNo.equals("0")) {
             throw new SmartLockException("第三方密码修改失败");
         }
