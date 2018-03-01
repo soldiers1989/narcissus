@@ -139,8 +139,8 @@ public class SmartLockServiceImpl implements SmartLockService {
                 YunDingRoomInfoVO roomInfo = roomIterator.next();
                 for (YunDingDeviceInfoVO deviceInfo : devices) {
                     if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null) {
-                        Log.info("========roomInfo:{}", roomInfo);
-                        Log.info("========deviceInfo:{}", deviceInfo);
+//                        Log.info("========roomInfo:{}", roomInfo);
+//                        Log.info("========deviceInfo:{}", deviceInfo);
                         flag = false;
                         break;
                     }
@@ -560,7 +560,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         String errNo = jsonObject.getString("ErrNo");
         String errMsg = jsonObject.getString("ErrMsg");
         if (!errNo.equals("0")) {
-            throw new SmartLockException(errMsg);
+            throw new SmartLockException("第三方密码修改失败");
         }
         smartLockDao.frozenLockPassword(password_id);
         SmartLockLog smartLockLog = new SmartLockLog();
