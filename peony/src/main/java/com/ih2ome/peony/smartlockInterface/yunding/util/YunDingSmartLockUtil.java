@@ -164,9 +164,6 @@ public class YunDingSmartLockUtil {
         }
 
         JSONObject resJson = JSONObject.parseObject(res);
-        if(resJson.getString("ErrNo")==null||!"0".equals(resJson.getString("ErrNo"))||resJson.getIntValue("code")==400){
-            throw new SmartLockException("登陆失败");
-        }
         System.out.println(resJson);
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
@@ -202,9 +199,6 @@ public class YunDingSmartLockUtil {
         }
 
         JSONObject resJson = JSONObject.parseObject(res);
-        if(resJson.getString("ErrNo")==null||!"0".equals(resJson.getString("ErrNo"))||resJson.getIntValue("code")==400){
-            throw new SmartLockException("登陆失败");
-        }
         System.out.println(resJson);
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
