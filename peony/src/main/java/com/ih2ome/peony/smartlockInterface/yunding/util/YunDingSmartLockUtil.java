@@ -249,7 +249,7 @@ public class YunDingSmartLockUtil {
         }
         JSONObject resJson = JSONObject.parseObject(res);
         System.out.println(resJson);
-        if(resJson.getIntValue("ErrNo")!=0){
+        if(resJson.getIntValue("ErrNo")!=0||resJson.getIntValue("code")==400){
             throw new SmartLockException("登陆失败");
         }
         String accessToken = resJson.getString("access_token");
