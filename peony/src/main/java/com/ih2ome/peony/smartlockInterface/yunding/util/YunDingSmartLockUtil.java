@@ -275,7 +275,7 @@ public class YunDingSmartLockUtil {
 
         }
 
-        accessToken = flushRefreshToken(userId);
+        accessToken = getAccessTokenFromThrid(userId);
         return accessToken;
 
     }
