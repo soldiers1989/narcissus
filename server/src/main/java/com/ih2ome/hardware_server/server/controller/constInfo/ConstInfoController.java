@@ -46,9 +46,26 @@ public class ConstInfoController extends BaseController{
             String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
             String token = CacheUtils.getStr(tokenKey);
             String code = CacheUtils.getStr(codeKey);
+            String refrashToken = CacheUtils.getStr(YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId);
+
             JSONObject urlObject = new JSONObject();
+
+            if(StringUtils.isEmpty(refrashToken)){
+                url.append(yunDingLoginBaseUrl)
+                        .append("?client_id=")
+                        .append(yunDingClientId)
+                        .append("&redirect_uri=")
+                        .append(yunDingCallBackUrl)
+                        .append("&scope=")
+                        .append(yunDingPermissionGroup)
+                        .append("&state=")
+                        .append(userId);
+                urlObject.put("url",url);
+                urlObject.put("loginStatus","1");
+                return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+            }
             try {
-                YunDingSmartLockUtil.flushRefreshTokenByToken(YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId);
+                YunDingSmartLockUtil.flushRefreshTokenByToken(refrashToken);
             } catch (SmartLockException e) {
                 e.getMessage();
                 url.append(yunDingLoginBaseUrl)
