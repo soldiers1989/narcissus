@@ -48,7 +48,7 @@ public class ConstInfoController extends BaseController{
             String code = CacheUtils.getStr(codeKey);
             JSONObject urlObject = new JSONObject();
             try {
-                YunDingSmartLockUtil.flushRefreshToken(userId);
+                YunDingSmartLockUtil.flushRefreshTokenByToken(YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId);
             } catch (SmartLockException e) {
                 e.getMessage();
                 url.append(yunDingLoginBaseUrl)
