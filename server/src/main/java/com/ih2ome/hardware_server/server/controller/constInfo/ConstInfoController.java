@@ -69,6 +69,18 @@ public class ConstInfoController extends BaseController{
 
     }
 
+    @RequestMapping(value="/del/yunding/user/token/{userId}",method = RequestMethod.GET,produces = {"application/json"})
+    public String delYunDingUserToken(@PathVariable String userId){
+        Log.info("清除登陆缓存{}",userId);
+        String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
+        String refrashTokenKey = YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId;
+        String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
+        CacheUtils.del(tokenKey);
+        CacheUtils.del(refrashTokenKey);
+        CacheUtils.del(codeKey);
+        return "success";
+    }
+
     @RequestMapping(value="/getYunDingLoginStatus",method = RequestMethod.POST,produces = {"application/json"})
     public String getYunDingLoginStatus(@RequestBody ApiRequestVO apiRequestVO){
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
