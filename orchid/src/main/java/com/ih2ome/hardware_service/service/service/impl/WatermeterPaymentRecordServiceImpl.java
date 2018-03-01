@@ -32,27 +32,29 @@ public class WatermeterPaymentRecordServiceImpl implements WatermeterPaymentReco
     public List<WatermeterPaymentRecord> findPaymentAmountByRoomId(Integer roomId) {
         //查询水表读数，水表单价
         List<SmartWatermeter> watermeterList= watermeterPaymentRecordMapper.selectWatermeterByRoomId(roomId);
-        List<WatermeterPaymentRecord> watermeterPaymentRecordList = new ArrayList<>();
 
-        for (SmartWatermeter watermeter:watermeterList) {
-            Long lastAmount = watermeter.getLastAmount();
-            Long price = watermeter.getPrice();
-            int smartWatermeterId = watermeter.getSmartWatermeterId();
-            //查询上次缴费水表读数
-            Long paylastAmouny =watermeterPaymentRecordMapper.selectWatermeterLastAmountBySmartWatermeterId(smartWatermeterId);
-            if (paylastAmouny == null){
-                paylastAmouny=0L;
+        List<WatermeterPaymentRecord> watermeterPaymentRecordList = new ArrayList<>();
+        if(!watermeterList.isEmpty() || watermeterList != null){
+            for (SmartWatermeter watermeter:watermeterList) {
+                Long lastAmount = watermeter.getLastAmount();
+                Long price = watermeter.getPrice();
+                int smartWatermeterId = watermeter.getSmartWatermeterId();
+                //查询上次缴费水表读数
+                Long paylastAmouny =watermeterPaymentRecordMapper.selectWatermeterLastAmountBySmartWatermeterId(smartWatermeterId);
+                if (paylastAmouny == null){
+                    paylastAmouny=0L;
+                }
+                //计算水费
+                long amount=lastAmount - paylastAmouny;
+                WatermeterPaymentRecord watermeterPaymentRecord = new WatermeterPaymentRecord();
+                watermeterPaymentRecord.setSmartWatermeterId(smartWatermeterId);
+                watermeterPaymentRecord.setAmount(Math.toIntExact(amount));
+                watermeterPaymentRecord.setLastNum(Math.toIntExact(lastAmount));
+                watermeterPaymentRecord.setMeterUpdateAt(watermeter.getMeterUpdatedAt());
+                watermeterPaymentRecord.setPrice(price);
+                watermeterPaymentRecord.setMeterType(watermeter.getMeterType());
+                watermeterPaymentRecordList.add(watermeterPaymentRecord);
             }
-            //计算水费
-            long amount=lastAmount - paylastAmouny;
-            WatermeterPaymentRecord watermeterPaymentRecord = new WatermeterPaymentRecord();
-            watermeterPaymentRecord.setSmartWatermeterId(smartWatermeterId);
-            watermeterPaymentRecord.setAmount(Math.toIntExact(amount));
-            watermeterPaymentRecord.setLastNum(Math.toIntExact(lastAmount));
-            watermeterPaymentRecord.setMeterUpdateAt(watermeter.getMeterUpdatedAt());
-            watermeterPaymentRecord.setPrice(price);
-            watermeterPaymentRecord.setMeterType(watermeter.getMeterType());
-            watermeterPaymentRecordList.add(watermeterPaymentRecord);
         }
         //返回数据
         return watermeterPaymentRecordList;
