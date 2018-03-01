@@ -199,6 +199,19 @@ public class YunDingSmartLockUtil {
         }
 
         JSONObject resJson = JSONObject.parseObject(res);
+        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        Log.info(resJson.toJSONString());
+        Log.info(resJson.getIntValue("ErrNo")+"");
+        Log.info(refreshToken);
+        Log.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+        System.out.println(resJson);
+        if(resJson.getString("ErrNo")==null||!"0".equals(resJson.getString("ErrNo"))||resJson.getIntValue("code")==400){
+            Log.info("**********************************");
+            Log.info(resJson.getString("ErrNo"));
+            Log.info(resJson.getString("code"));
+            Log.info("###################################");
+            throw new SmartLockException("登陆失败");
+        }
         System.out.println(resJson);
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
@@ -216,10 +229,10 @@ public class YunDingSmartLockUtil {
      */
     public static String flushRefreshToken(String userId) throws SmartLockException {
         String refreshToken = CacheUtils.getStr(REFRESH_TOKEN_KEY + "_" + userId);
-        if (StringUtils.isEmpty(refreshToken)) {
-            return getAccessTokenFromThrid(userId);
-
-        }
+//        if (StringUtils.isEmpty(refreshToken)) {
+//            return getAccessTokenFromThrid(userId);
+//
+//        }
         String url = OPEN_BASE_URL + "/oauth/token";
 
         //组装post参数
@@ -241,9 +254,7 @@ public class YunDingSmartLockUtil {
             throw new SmartLockException("门锁获取第三方accessToken失败", e);
 
         }
-
         JSONObject resJson = JSONObject.parseObject(res);
-        System.out.println(resJson);
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
@@ -268,7 +279,7 @@ public class YunDingSmartLockUtil {
 
         }
 
-        accessToken = flushRefreshToken(userId);
+        accessToken = getAccessTokenFromThrid(userId);
         return accessToken;
 
     }
