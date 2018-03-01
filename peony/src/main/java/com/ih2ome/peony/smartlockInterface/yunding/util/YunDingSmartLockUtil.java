@@ -216,10 +216,10 @@ public class YunDingSmartLockUtil {
      */
     public static String flushRefreshToken(String userId) throws SmartLockException {
         String refreshToken = CacheUtils.getStr(REFRESH_TOKEN_KEY + "_" + userId);
-        if (StringUtils.isEmpty(refreshToken)) {
-            return getAccessTokenFromThrid(userId);
-
-        }
+//        if (StringUtils.isEmpty(refreshToken)) {
+//            return getAccessTokenFromThrid(userId);
+//
+//        }
         String url = OPEN_BASE_URL + "/oauth/token";
 
         //组装post参数
