@@ -30,7 +30,7 @@
         SELECT * FROM <include refid="smart_watermeter" /> WHERE room_id=#{roomid}
     </select>
 
-    <select id="selectWatermeterLastAmountBySmartWatermeterId" resultType="java.lang.Integer">
+    <select id="selectWatermeterLastAmountBySmartWatermeterId" resultType="java.lang.Long">
         SELECT last_num FROM <include refid="smart_watermeter_payment_record" /> WHERE smart_watermeter_id=#{smartWatermeterId}
     </select>
 
