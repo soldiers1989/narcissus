@@ -138,7 +138,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 boolean flag = true;
                 YunDingRoomInfoVO roomInfo = roomIterator.next();
                 for (YunDingDeviceInfoVO deviceInfo : devices) {
-                    if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())) {
+                    if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null) {
                         Log.info("========roomInfo:{}", roomInfo);
                         Log.info("========deviceInfo:{}", deviceInfo);
                         flag = false;
