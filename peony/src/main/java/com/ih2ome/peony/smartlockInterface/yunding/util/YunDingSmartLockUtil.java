@@ -248,6 +248,11 @@ public class YunDingSmartLockUtil {
 
         }
         JSONObject resJson = JSONObject.parseObject(res);
+        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        Log.info(resJson.toJSONString());
+        Log.info(resJson.getIntValue("ErrNo")+"");
+        Log.info(refreshToken);
+        Log.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         System.out.println(resJson);
         if(resJson.getIntValue("ErrNo")!=0||resJson.getIntValue("code")==400){
             throw new SmartLockException("登陆失败");
@@ -255,12 +260,7 @@ public class YunDingSmartLockUtil {
         String accessToken = resJson.getString("access_token");
         String expiresIn = resJson.getString("expires_in");
         refreshToken = resJson.getString("refresh_token");
-        Log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        Log.info(resJson.toJSONString());
-        Log.info(resJson.getIntValue("ErrNo")+"");
-        Log.info(accessToken);
-        Log.info(refreshToken);
-        Log.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+
         CacheUtils.set(ACCESS_TOKEN_KEY + "_" + userId, accessToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
         CacheUtils.set(REFRESH_TOKEN_KEY + "_" + userId, refreshToken, ExpireTime.ONE_MON.getTime()-3*24*60*60);
 
