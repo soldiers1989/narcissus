@@ -47,6 +47,7 @@ public class ConstInfoController extends BaseController{
             String code = CacheUtils.getStr(codeKey);
             JSONObject urlObject = new JSONObject();
             if(StringUtils.isNotBlank(code)||StringUtils.isNotBlank(token)){
+                Log.info(code+"*************************************"+token);
                 urlObject.put("loginStatus","0");
                 return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
             }else{
