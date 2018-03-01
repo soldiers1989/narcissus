@@ -53,6 +53,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public Map<String, List<HomeVO>> searchHome(String userId, String type, String factoryType) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
+        Log.info("==========查询房源信息userId:{}",userId);
         //查询第三方房源信息
         SmartLockFirmEnum smartLockFirmEnum = SmartLockFirmEnum.getByCode(factoryType);
         if (smartLockFirmEnum == null) {
@@ -67,24 +68,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             String result = iSmartLock.searchHomeInfo(params);
             List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
             //处理云丁的房源数据，将房源下房间中没有设备的房间移除
-//            for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
-//                List<YunDingRoomInfoVO> rooms = yunDingHomeInfoVO.getRooms();
-//                List<YunDingDeviceInfoVO> devices = yunDingHomeInfoVO.getDevices();
-//                Iterator<YunDingRoomInfoVO> roomIterator = rooms.iterator();
-//                while (roomIterator.hasNext()) {
-//                    boolean flag = true;
-//                    YunDingRoomInfoVO roomInfo = roomIterator.next();
-//                    for (YunDingDeviceInfoVO deviceInfo : devices) {
-//                        if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())) {
-//                            flag = false;
-//                            break;
-//                        }
-//                    }
-//                    if (flag) {
-//                        roomIterator.remove();
-//                    }
-//                }
-//            }
+            removeNoDevicesRoom(yunDingHomes);
 
             for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
                 HomeVO homeVO = YunDingHomeInfoVO.toH2ome(yunDingHomeInfoVO);
@@ -142,6 +126,30 @@ public class SmartLockServiceImpl implements SmartLockService {
         map.put("thirdHomeList", thirdHomeList);
         map.put("localHomeList", localHomeList);
         return map;
+    }
+
+    //处理云丁的房源数据，将房源下房间中没有设备的房间移除
+    private void removeNoDevicesRoom(List<YunDingHomeInfoVO> yunDingHomes) {
+        for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
+            List<YunDingRoomInfoVO> rooms = yunDingHomeInfoVO.getRooms();
+            List<YunDingDeviceInfoVO> devices = yunDingHomeInfoVO.getDevices();
+            Iterator<YunDingRoomInfoVO> roomIterator = rooms.iterator();
+            while (roomIterator.hasNext()) {
+                boolean flag = true;
+                YunDingRoomInfoVO roomInfo = roomIterator.next();
+                for (YunDingDeviceInfoVO deviceInfo : devices) {
+                    if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null) {
+                        Log.info("========roomInfo:{}", roomInfo);
+                        Log.info("========deviceInfo:{}", deviceInfo);
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    roomIterator.remove();
+                }
+            }
+        }
     }
 
     /**
@@ -550,8 +558,9 @@ public class SmartLockServiceImpl implements SmartLockService {
         String result = smartLock.frozenLockPassword(passwordVo);
         JSONObject jsonObject = JSONObject.parseObject(result);
         String errNo = jsonObject.getString("ErrNo");
+        String errMsg = jsonObject.getString("ErrMsg");
         if (!errNo.equals("0")) {
-            throw new SmartLockException("第三方密码修改失败");
+            throw new SmartLockException(errMsg);
         }
         smartLockDao.frozenLockPassword(password_id);
         SmartLockLog smartLockLog = new SmartLockLog();

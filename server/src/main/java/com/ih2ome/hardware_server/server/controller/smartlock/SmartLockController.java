@@ -322,7 +322,7 @@ public class SmartLockController extends BaseController {
             return result;
         } catch (SmartLockException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), e.getMessage());
             return result;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(), e);
@@ -361,7 +361,7 @@ public class SmartLockController extends BaseController {
             return result;
         } catch (SmartLockException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), e.getMessage());
             return result;
         } catch (InstantiationException e) {
             Log.error(e.getMessage(), e);
