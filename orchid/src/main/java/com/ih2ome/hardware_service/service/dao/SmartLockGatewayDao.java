@@ -64,6 +64,10 @@ public interface SmartLockGatewayDao {
      */
     List<SmartLockHadBindHouseVo> getConcentrateHadBindHouseList(String userId);
 
+    List<SmartLockHadBindHouseVo>findHomeInfoByUserId(String userId);
+
+    List<RoomAndPublicZoneVo>findRoomByHomeId(long homeId);
+
     /**
      * 解绑网关
      * @param uuid

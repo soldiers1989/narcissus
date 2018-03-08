@@ -50,7 +50,7 @@ public class ConstInfoController extends BaseController{
 
             JSONObject urlObject = new JSONObject();
 
-            if(StringUtils.isEmpty(refrashToken)){
+            if(StringUtils.isBlank(code)&&StringUtils.isBlank(token)){
                 url.append(yunDingLoginBaseUrl)
                         .append("?client_id=")
                         .append(yunDingClientId)
@@ -62,43 +62,30 @@ public class ConstInfoController extends BaseController{
                         .append(userId);
                 urlObject.put("url",url);
                 urlObject.put("loginStatus","1");
-                return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
-            }
-            try {
-                YunDingSmartLockUtil.flushRefreshTokenByToken(refrashToken);
-            } catch (SmartLockException e) {
-                e.getMessage();
-                url.append(yunDingLoginBaseUrl)
-                        .append("?client_id=")
-                        .append(yunDingClientId)
-                        .append("&redirect_uri=")
-                        .append(yunDingCallBackUrl)
-                        .append("&scope=")
-                        .append(yunDingPermissionGroup)
-                        .append("&state=")
-                        .append(userId);
-                urlObject.put("url",url);
-                urlObject.put("loginStatus","1");
-                return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
-            }
-            if(StringUtils.isNotBlank(code)||StringUtils.isNotBlank(token)){
-                Log.info(code+"*************************************"+token);
-                urlObject.put("loginStatus","0");
                 return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
             }else{
-                url.append(yunDingLoginBaseUrl)
-                        .append("?client_id=")
-                        .append(yunDingClientId)
-                        .append("&redirect_uri=")
-                        .append(yunDingCallBackUrl)
-                        .append("&scope=")
-                        .append(yunDingPermissionGroup)
-                        .append("&state=")
-                        .append(userId);
-                urlObject.put("url",url);
-                urlObject.put("loginStatus","1");
-                return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+                try {
+                    YunDingSmartLockUtil.flushRefreshToken(userId);
+                    urlObject.put("loginStatus","0");
+                    return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+                } catch (SmartLockException e) {
+                    e.getMessage();
+                    url.append(yunDingLoginBaseUrl)
+                            .append("?client_id=")
+                            .append(yunDingClientId)
+                            .append("&redirect_uri=")
+                            .append(yunDingCallBackUrl)
+                            .append("&scope=")
+                            .append(yunDingPermissionGroup)
+                            .append("&state=")
+                            .append(userId);
+                    urlObject.put("url",url);
+                    urlObject.put("loginStatus","1");
+                    return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
+                }
+
             }
+
         }
         return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"userId为空");
 
@@ -134,9 +121,7 @@ public class ConstInfoController extends BaseController{
         }else{
             result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"授权失败");
         }
-        Log.info("*********************************");
-        Log.info(result);
-        Log.info("*********************************");
+
         return result;
 
     }

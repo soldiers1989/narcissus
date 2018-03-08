@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao">
 
-    <resultMap id="HadBindHouseMap" type="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo" autoMapping="true">
+    <resultMap id="HadBindHouseMap" type="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo"
+               autoMapping="true">
         <id column="homeId" property="homeId"/>
         <result property="gatewayId" column="gatewayId"></result>
         <result property="homeName" column="homeName"></result>
@@ -19,14 +20,27 @@
             <collection property="roomAndPublicZoneVoList" javaType="List"
                         ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomAndPublicZoneVo" autoMapping="true">
                 <id property="smartLockId" column="smartLockId"></id>
-                <result property="roomNo" column="roomNo" ></result>
+                <result property="roomNo" column="roomNo"></result>
                 <result property="communicationStatus" column="communicationStatus"></result>
                 <result property="powerRate" column="powerRate"></result>
                 <result property="lockName" column="lockName"></result>
             </collection>
         </collection>
-
     </resultMap>
+
+    <!--&lt;!&ndash;分散式查询该用户下的房源和门锁&ndash;&gt;-->
+    <!--<resultMap type="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo" id="dispersedHadBindHouseMap"-->
+               <!--autoMapping="true">-->
+        <!--<id column="homeId" property="homeId"/>-->
+        <!--<result property="homeName" column="homeName"></result>-->
+        <!--<association property="outSmartLockVo" javaType="com.ih2ome.sunflower.vo.pageVo.smartLock.OutSmartLockVo">-->
+            <!--<id column="smartLockId" property="smartLockId"/>-->
+            <!--<result column="communicationStatus" property="communicationStatus"/>-->
+            <!--<result column="powerRate" property="powerRate"/>-->
+            <!--<result column="lockName" property="lockName"/>-->
+        <!--</association>-->
+    <!--</resultMap>-->
+
 
     <update id="deleteSmartLockGateway">
         UPDATE narcissus_test.smart_device_v2 nsdv2,
@@ -39,7 +53,8 @@
 
     <!--SELECT-->
 
-    <select id="getConcentrateGatewayModelByHomeId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO">
+    <select id="getConcentrateGatewayModelByHomeId"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO">
           SELECT
             nsgv2.smart_gateway_ID gatewayId,
             nsdv2.`name` gatewayCode,
@@ -93,7 +108,8 @@
 
     </select>
 
-    <select id="getDispersedGatewayModelByHomeId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO">
+    <select id="getDispersedGatewayModelByHomeId"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO">
         SELECT
             nsgv2.smart_gateway_ID gatewayId,
             nsdv2.`name` gatewayCode,
@@ -146,7 +162,8 @@
         AND ch.id = #{homeId}
     </select>
 
-    <select id="getSmartLockHadBindGateway" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO">
+    <select id="getSmartLockHadBindGateway"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO">
            (
             SELECT
                 nsg.smart_gateway_id gatewayId,
@@ -190,7 +207,8 @@
             )
     </select>
 
-    <select id="getSmartLockAndRoomListByGatewayId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO">
+    <select id="getSmartLockAndRoomListByGatewayId"
+            resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindRoomVO">
         (
 	SELECT
 		ntsl.smart_lock_ID smartLockId,
@@ -269,45 +287,65 @@ AND nsgbv2.smart_gateway_ID = #{gatewayId}
         AND nsdv2.manage_status='0'
     </select>
 
-    <select id="getDispersedHadBindHouseList" resultMap="HadBindHouseMap">
-        SELECT
-            ch.id homeId,
-            ch.address homeName,
-            nslOutSmartLock.smart_lock_ID outSmartLockId,
-            nsdv2OutSmartLock.connection_status outCommunicationStatus,
-            nslOutSmartLock.power outPowerRate,
-            nsdv2.smart_device_ID gatewayId,
-            nsdv2Indoor.smart_device_ID smartLockId,
-            cr.`name` roomNo,
-            nsdv2Indoor.connection_status communicationStatus,
-            nslIndoor.power powerRate,
-            nslIndoor.sn lockName,
-			nslOutSmartLock.sn outLockName
-        FROM
-            narcissus_test.smart_device_v2 nsdv2,
-            narcissus_test.smart_gateway_v2 nsg,
-            narcissus_test.public_zone npz,
-            caspain_test.house ch,
-            narcissus_test.smart_device_v2 nsdv2OutSmartLock,
-            narcissus_test.smart_lock nslOutSmartLock,
-            caspain_test.room cr,
-            narcissus_test.smart_lock nslIndoor,
-            narcissus_test.smart_device_v2 nsdv2Indoor,
-            caspain_test.auth_user cau
-        WHERE
-            nsdv2.smart_device_ID = nsg.smart_gateway_ID
-        AND nsdv2.public_zone_ID = npz.public_zone_ID
-        AND npz.parent_ID = ch.id
-        AND nsdv2OutSmartLock.smart_device_ID = nslOutSmartLock.smart_lock_ID
-        AND nsdv2OutSmartLock.public_zone_ID = npz.public_zone_ID
-        AND cr.house_id = ch.id
-        AND nslIndoor.smart_lock_ID = nsdv2Indoor.smart_device_ID
-        AND nsdv2Indoor.room_ID = cr.id
-        AND ch.created_by_id = cau.id
-        AND nsdv2.manage_status = '0'
-        AND nsdv2OutSmartLock.manage_status = '0'
-        AND nsdv2Indoor.manage_status = '0'
-        AND cau.id = #{userId}
+    <!--根据用户id查询存在网关的房屋-->
+    <select id="findHomeInfoByUserId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo">
+      SELECT
+        ch.id AS homeId,
+        ch.address AS homeName
+    FROM
+        narcissus_test.smart_device_v2 nsdv2g,
+        narcissus_test.smart_gateway_v2 nsgv2,
+        narcissus_test.public_zone npz,
+        caspain_test.house ch,
+        caspain_test.auth_user cau
+    WHERE
+        nsdv2g.smart_device_ID = nsgv2.smart_gateway_ID
+    AND nsdv2g.public_zone_ID = npz.public_zone_ID
+    AND npz.parent_ID = ch.id
+    AND ch.created_by_id = cau.id
+    AND cau.id = #{userId}
+    AND nsdv2g.manage_status = '0';
+    </select>
+
+
+    <select id="findRoomByHomeId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomAndPublicZoneVo">
+      (
+	SELECT
+		nsdv2.smart_device_ID smartLockId,
+		'公共区域' roomNo,
+		nsdv2.connection_status communicationStatus,
+		nsl.power powerRate,
+		nsl.sn lockName
+	FROM
+		narcissus_test.public_zone npz,
+		narcissus_test.smart_device_v2 nsdv2,
+		narcissus_test.smart_lock nsl
+	WHERE
+		nsdv2.smart_device_ID = nsl.smart_lock_ID
+	AND nsdv2.public_zone_ID = npz.public_zone_ID
+	AND npz.parent_ID = #{homeId}
+	AND nsdv2.manage_status = '0'
+    )
+    UNION
+        (
+            SELECT
+                nsdv2.smart_device_ID smartLockId,
+                cr.`name` roomNo,
+                nsdv2.connection_status communicationStatus,
+                nsl.power powerRate,
+                nsl.sn lockName
+            FROM
+                caspain_test.room cr,
+                narcissus_test.smart_device_v2 nsdv2,
+                narcissus_test.smart_lock nsl
+            WHERE
+                nsdv2.room_ID = cr.id
+            AND nsl.smart_lock_ID = nsdv2.smart_device_ID
+            AND cr.house_id = #{homeId}
+            AND nsdv2.manage_status = '0'
+        )
+
+
     </select>
 
     <select id="getConcentrateHadBindHouseList" resultMap="HadBindHouseMap">

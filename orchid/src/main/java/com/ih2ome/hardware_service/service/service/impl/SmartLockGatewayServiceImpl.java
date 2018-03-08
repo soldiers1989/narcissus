@@ -76,7 +76,18 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
     public List<SmartLockHadBindHouseVo> getHadBindHouseList(String type, String userId) {
         if(StringUtils.isNotBlank(userId)&&StringUtils.isNotBlank(type)){
             if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-                return smartLockGatewayDao.getDispersedHadBindHouseList(userId);
+                List <SmartLockHadBindHouseVo> homeList = smartLockGatewayDao.findHomeInfoByUserId(userId);
+                for(SmartLockHadBindHouseVo smartLockHadBindHouseVo:homeList){
+                    List <RoomAndPublicZoneVo> roomAndPublicZoneVoList =smartLockGatewayDao.findRoomByHomeId(smartLockHadBindHouseVo.getHomeId());
+                    FloorVo floorVo = new FloorVo();
+                    floorVo.setFloorId(000);
+                    List<FloorVo>floorVoList = new ArrayList<>();
+                    floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
+                    floorVoList.add(floorVo);
+                    smartLockHadBindHouseVo.setFloorVoList(floorVoList);
+
+                }
+                return homeList;
             }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
                 List<SmartLockHadBindHouseVo> smartLockHadBindHouseVoList = smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
                 for(SmartLockHadBindHouseVo smartLockHadBindHouseVo:smartLockHadBindHouseVoList){
