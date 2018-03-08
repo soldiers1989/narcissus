@@ -27,7 +27,7 @@
 
 <!--查-->
     <select id="selectWatermeterByRoomId" resultType="com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter">
-        SELECT * FROM <include refid="smart_watermeter" /> WHERE room_id=#{roomid}
+        SELECT * FROM <include refid="smart_watermeter" /> WHERE room_id=#{roomid} AND house_catalog=#{type}
     </select>
 
     <select id="selectWatermeterLastAmountBySmartWatermeterId" resultType="java.lang.Long">

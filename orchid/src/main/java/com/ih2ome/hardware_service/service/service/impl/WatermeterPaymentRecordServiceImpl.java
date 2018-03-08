@@ -26,12 +26,13 @@ public class WatermeterPaymentRecordServiceImpl implements WatermeterPaymentReco
     /**
      * 查询水费金额
      * @param roomId
+     * @param type
      * @return
      */
     @Override
-    public List<WatermeterPaymentRecord> findPaymentAmountByRoomId(Integer roomId) {
+    public List<WatermeterPaymentRecord> findPaymentAmountByRoomId(Integer roomId, Integer type) {
         //查询水表读数，水表单价
-        List<SmartWatermeter> watermeterList= watermeterPaymentRecordMapper.selectWatermeterByRoomId(roomId);
+        List<SmartWatermeter> watermeterList= watermeterPaymentRecordMapper.selectWatermeterByRoomId(roomId,type);
 
         List<WatermeterPaymentRecord> watermeterPaymentRecordList = new ArrayList<>();
         if(!watermeterList.isEmpty() || watermeterList != null){

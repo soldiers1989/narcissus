@@ -11,7 +11,7 @@ import java.util.List;
  * @create 2018/2/28
  */
 public interface WatermeterPaymentRecordService {
-    List<WatermeterPaymentRecord> findPaymentAmountByRoomId(Integer roomId);
+    List<WatermeterPaymentRecord> findPaymentAmountByRoomId(Integer roomId, Integer type);
 
     Boolean createWatermeterPaymentRecord(WatermeterPaymentRecord watermeterPaymentRecord);
 }

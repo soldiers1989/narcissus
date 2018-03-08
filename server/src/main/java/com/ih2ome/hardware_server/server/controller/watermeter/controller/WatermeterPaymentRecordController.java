@@ -38,8 +38,9 @@ public class WatermeterPaymentRecordController extends BaseController {
     public String getPaymentAmount(@RequestBody ApiRequestVO apiRequestVO)  {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         Integer roomId = dt.getIntValue("roomId");
+        Integer type = dt.getIntValue("type");
 
-        List<WatermeterPaymentRecord> paymentRecordList = watermeterPaymentRecordService.findPaymentAmountByRoomId(roomId);
+        List<WatermeterPaymentRecord> paymentRecordList = watermeterPaymentRecordService.findPaymentAmountByRoomId(roomId,type);
 
         return JSONObject.toJSONString(paymentRecordList);
     }
