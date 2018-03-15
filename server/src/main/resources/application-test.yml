@@ -58,7 +58,7 @@ yd:
   login:
     url: http://dev-gate.dding.net:7080/public/oauth/index.html
     client_id: shuidiceshi
-    client_secret: 3a5aacee5f45fc4f2cc14e8a904cdb79
+    client_secret: b3a19f6ba2e99046582a9cb5de334de6
   smart_lock:
     permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op
     call_back:
