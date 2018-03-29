@@ -67,7 +67,6 @@ public class ConstInfoController extends BaseController{
                 try {
                     YunDingSmartLockUtil.flushRefreshToken(userId);
                     urlObject.put("loginStatus","0");
-                    return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
                 } catch (SmartLockException e) {
                     e.getMessage();
                     url.append(yunDingLoginBaseUrl)
@@ -81,9 +80,9 @@ public class ConstInfoController extends BaseController{
                             .append(userId);
                     urlObject.put("url",url);
                     urlObject.put("loginStatus","1");
-                    return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
-                }
 
+                }
+                return structureSuccessResponseVO(urlObject,new Date().toString(),"获取成功");
             }
 
         }
