@@ -44,10 +44,10 @@ public class ConstInfoController extends BaseController{
             StringBuilder url = new StringBuilder();
             String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
             String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
-            String token= null;
-            String code=null;
-            JSONObject urlObject = new JSONObject();
+            String token = CacheUtils.getStr(tokenKey);
+            String code = CacheUtils.getStr(codeKey);
             //String refrashToken = CacheUtils.getStr(YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId);
+            JSONObject urlObject = new JSONObject();
             if(StringUtils.isBlank(code)&&StringUtils.isBlank(token)){
                 url.append(yunDingLoginBaseUrl)
                         .append("?client_id=")
