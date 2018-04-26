@@ -42,31 +42,11 @@ public class ConstInfoController extends BaseController{
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         if(StringUtils.isNotBlank(userId)){
             StringBuilder url = new StringBuilder();
-//            String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
-//            String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
+            String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
+            String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
             String token= null;
             String code=null;
             JSONObject urlObject = new JSONObject();
-            try {
-                token = YunDingSmartLockUtil.getAccessToken(userId);
-                code=YunDingSmartLockUtil.getLicenseCode(userId);
-            } catch (SmartLockException e) {
-                e.getMessage();
-                url.append(yunDingLoginBaseUrl)
-                        .append("?client_id=")
-                        .append(yunDingClientId)
-                        .append("&redirect_uri=")
-                        .append(yunDingCallBackUrl)
-                        .append("&scope=")
-                        .append(yunDingPermissionGroup)
-                        .append("&state=")
-                        .append(userId);
-                urlObject.put("url",url);
-                urlObject.put("loginStatus","1");
-                return structureSuccessResponseVO(urlObject,new Date().toString(),"去登陆");
-            }
-//            String token = CacheUtils.getStr(tokenKey);
-//            String code = CacheUtils.getStr(codeKey);
             //String refrashToken = CacheUtils.getStr(YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId);
             if(StringUtils.isBlank(code)&&StringUtils.isBlank(token)){
                 url.append(yunDingLoginBaseUrl)
