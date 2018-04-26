@@ -42,11 +42,19 @@ public class ConstInfoController extends BaseController{
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         if(StringUtils.isNotBlank(userId)){
             StringBuilder url = new StringBuilder();
-            String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
-            String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
-            String token = CacheUtils.getStr(tokenKey);
-            String code = CacheUtils.getStr(codeKey);
-            String refrashToken = CacheUtils.getStr(YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId);
+//            String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
+//            String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
+            String token= null;
+            String code=null;
+            try {
+                token = YunDingSmartLockUtil.getAccessToken(userId);
+                code=YunDingSmartLockUtil.getLicenseCode(userId);
+            } catch (SmartLockException e) {
+                e.printStackTrace();
+            }
+//            String token = CacheUtils.getStr(tokenKey);
+//            String code = CacheUtils.getStr(codeKey);
+            //String refrashToken = CacheUtils.getStr(YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId);
 
             JSONObject urlObject = new JSONObject();
 
@@ -90,16 +98,22 @@ public class ConstInfoController extends BaseController{
 
     }
 
-    @RequestMapping(value="/del/yunding/user/token/{userId}",method = RequestMethod.GET,produces = {"application/json"})
-    public String delYunDingUserToken(@PathVariable String userId){
-        Log.info("清除登陆缓存{}",userId);
-        String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY+"_"+userId;
-        String refrashTokenKey = YunDingSmartLockUtil.REFRESH_TOKEN_KEY+"_"+userId;
-        String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE+"_"+userId;
-        CacheUtils.del(tokenKey);
-        CacheUtils.del(refrashTokenKey);
-        CacheUtils.del(codeKey);
-        return "success";
+    @RequestMapping(value="/del/yunding/user/token/",method = RequestMethod.POST,produces = {"application/json"})
+    public String delYunDingUserToken(@RequestBody ApiRequestVO apiRequestVO){
+        String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
+        String result = "";
+        if(StringUtils.isNotBlank(userId)) {
+            String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY + "_" + userId;
+            String refrashTokenKey = YunDingSmartLockUtil.REFRESH_TOKEN_KEY + "_" + userId;
+            String codeKey = YunDingSmartLockUtil.TOKEN_YUNDING_USER_CODE + "_" + userId;
+            CacheUtils.del(tokenKey);
+            CacheUtils.del(refrashTokenKey);
+            CacheUtils.del(codeKey);
+            result = structureSuccessResponseVO(new JSONObject(),new Date().toString(),"清除登陆缓存成功");
+        }else{
+            result = structureSuccessResponseVO(new JSONObject(),new Date().toString(),"userId为空");
+        }
+        return result;
     }
 
     @RequestMapping(value="/getYunDingLoginStatus",method = RequestMethod.POST,produces = {"application/json"})

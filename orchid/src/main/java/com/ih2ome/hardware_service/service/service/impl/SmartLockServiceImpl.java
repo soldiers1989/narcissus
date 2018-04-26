@@ -243,7 +243,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         //2 清除该房间下的所有设备信息和该房间所在房源的公共区域的设备信息
         //2.1 清除该非公共区域下的设备信息(外门锁,网关设备)
         if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
-            //清除该房间下的设备信息(内门锁)
+            //清除 该房间下的设备信息(内门锁)
             smartLockDao.clearDevicesByRoomId(type, roomId, providerCode);
             //公共区域之间建立映射。
             SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
