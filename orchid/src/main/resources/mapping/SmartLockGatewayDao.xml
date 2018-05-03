@@ -30,15 +30,15 @@
 
     <!--&lt;!&ndash;分散式查询该用户下的房源和门锁&ndash;&gt;-->
     <!--<resultMap type="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo" id="dispersedHadBindHouseMap"-->
-               <!--autoMapping="true">-->
-        <!--<id column="homeId" property="homeId"/>-->
-        <!--<result property="homeName" column="homeName"></result>-->
-        <!--<association property="outSmartLockVo" javaType="com.ih2ome.sunflower.vo.pageVo.smartLock.OutSmartLockVo">-->
-            <!--<id column="smartLockId" property="smartLockId"/>-->
-            <!--<result column="communicationStatus" property="communicationStatus"/>-->
-            <!--<result column="powerRate" property="powerRate"/>-->
-            <!--<result column="lockName" property="lockName"/>-->
-        <!--</association>-->
+    <!--autoMapping="true">-->
+    <!--<id column="homeId" property="homeId"/>-->
+    <!--<result property="homeName" column="homeName"></result>-->
+    <!--<association property="outSmartLockVo" javaType="com.ih2ome.sunflower.vo.pageVo.smartLock.OutSmartLockVo">-->
+    <!--<id column="smartLockId" property="smartLockId"/>-->
+    <!--<result column="communicationStatus" property="communicationStatus"/>-->
+    <!--<result column="powerRate" property="powerRate"/>-->
+    <!--<result column="lockName" property="lockName"/>-->
+    <!--</association>-->
     <!--</resultMap>-->
 
 
@@ -277,6 +277,10 @@ AND nsgbv2.smart_gateway_ID = #{gatewayId}
             nsdv2.connection_status connectionStatus,
             nsdv2.connection_status_update_time updateTime,
             nsdv2.provider_code provider,
+            CASE nsdv2.provider_code
+            WHEN 'YD' THEN '云丁'
+            WHEN 'GJ' THEN '果加'
+            END provider,
             nsgv2.versions versionJson
         FROM
             narcissus_test.smart_device_v2 nsdv2,
