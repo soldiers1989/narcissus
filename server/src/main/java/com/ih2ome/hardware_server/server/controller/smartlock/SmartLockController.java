@@ -231,7 +231,7 @@ public class SmartLockController extends BaseController {
             smartLockService.deleteLockPassword(password_id, userId);
         } catch (SmartLockException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败");
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "删除失败，请稍后再试");
             return result;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(), e);
