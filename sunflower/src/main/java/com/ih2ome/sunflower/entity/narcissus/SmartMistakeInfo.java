@@ -17,7 +17,7 @@ public class SmartMistakeInfo {
     private String passwordName;
     private String userName;
     private String mobile;
-
+    private String passname;
     private String exceptionName;
     private String description;
     private String createdTime;
