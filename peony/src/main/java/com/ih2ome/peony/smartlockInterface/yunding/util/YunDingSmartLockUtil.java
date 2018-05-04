@@ -183,7 +183,7 @@ public class YunDingSmartLockUtil {
         req.put("client_id", OPEN_CLIENT_ID);
         req.put("client_secret", OPEN_SECRET);
         req.put("refresh_token", refreshToken);
-        req.put("grant_type", "authorization_code");
+        req.put("grant_type", "refresh_token");
 
         //组装头部
         Map<String, String> header = new HashMap<>();
@@ -265,7 +265,6 @@ public class YunDingSmartLockUtil {
             return accessToken;
 
         }
-
         accessToken = getAccessTokenFromThrid(userId);
         return accessToken;
 
