@@ -122,6 +122,13 @@ public class SmartLockServiceImpl implements SmartLockService {
                 if (thirdRoomId != null) {
                     for (HomeVO thirdHomeVO : thirdHomeList) {
                         List<RoomVO> thirdRooms = thirdHomeVO.getRooms();
+                        for(RoomVO thirdRoom:thirdRooms ){
+                            if (thirdRoomId.equals(thirdRoom.getThirdRoomId())) {
+                                thirdRoom.setRoomId(thirdRoomId);
+                                thirdRoom.setRoomName(localRoom.getRoomName());
+                                thirdRoom.setDataType(localRoom.getDataType());
+                            }
+                        }
                         Iterator<RoomVO> iterator = thirdRooms.iterator();
                         while (iterator.hasNext()) {
                             RoomVO roomVO = iterator.next();

@@ -89,7 +89,7 @@ public class ConstInfoController extends BaseController{
 
     }
 
-    @RequestMapping(value="/del/yunding/user/token/",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value="/del/yunding/user/token",method = RequestMethod.POST,produces = {"application/json"})
     public String delYunDingUserToken(@RequestBody ApiRequestVO apiRequestVO){
         String userId = apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
         String result = "";
