@@ -640,8 +640,8 @@
         ctup.`name` as userName,
         ctup.phone as mobile,
         ntsl.created_at as createdTime,
-				slp.`name` as passwordName,
-				slp.pwd_user_name as passname,
+        slp.`name` as passwordName,
+		slp.pwd_user_name as passname,
         CASE ntsl.operator_type
         WHEN 1 THEN '新增密码'
         WHEN 2 THEN '更新密码'
@@ -650,11 +650,11 @@
         WHEN 5 THEN '冻结密码'
         END operatorType
         FROM
-            narcissus.smart_lock_log ntsl
-        LEFT JOIN caspain_pro.auth_user ctau ON ntsl.created_by = ctau.id
-        LEFT JOIN caspain_pro.user_profile ctup ON ctup.user_id = ctau.id
+            narcissus_test.smart_lock_log ntsl
+        LEFT JOIN caspain_test.auth_user ctau ON ntsl.created_by = ctau.id
+        LEFT JOIN caspain_test.user_profile ctup ON ctup.user_id = ctau.id
         LEFT  JOIN narcissus.smart_lock_password slp ON ntsl.smart_lock_password_ID=slp.smart_lock_password_ID
-        where ntsl.smart_lock_ID=#{lockId} ORDER BY ntsl.created_at DESC;
+        where ntsl.smart_lock_ID=#{lockId} ORDER BY ntsl.created_at DESC
     </select>
 
     <!--通过门锁id查询异常记录-->
