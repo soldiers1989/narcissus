@@ -719,4 +719,82 @@
         AND ntsdv2l.room_ID IS NOT NULL;
     </select>
 
+
+    <!-- 添加公共区域 -->
+    <insert id="dispersiveAddition" parameterType="String">
+        INSERT INTO narcissus_test.public_zone VALUES(null,3,'公共区域',#{roomId});
+    </insert>
+
+     <!--查询没有公共区域的分散式房源id -->
+    <select id="findDispersedHomesAndPublicZone" resultType="String">
+         SELECT
+        	r.id AS id
+        FROM
+        	caspain_test.room r
+        WHERE
+        	r.house_id IN (
+        		SELECT
+        			id
+        		FROM
+        			caspain_test.house h
+        		WHERE
+							h.created_by_id=#{userId}
+        	)
+        AND id NOT IN (
+        	SELECT
+        		p.parent_ID AS id
+        	FROM
+        		narcissus_test.public_zone p
+        	WHERE
+        		p.data_type = 3
+        	AND p.parent_ID IN (
+        		SELECT
+        			r.id
+        		FROM
+        			caspain_test.room r
+        		WHERE
+        			r.house_id IN (
+        				SELECT
+        					id
+        				FROM
+        					caspain_test.house h
+        				WHERE
+        					h.created_by_id=#{userId}
+        			)
+        	)
+        )ORDER BY r.id ASC
+    </select>
+
+    <!--查询没有公共区域的集中式房源id -->
+    <select id="centralizedFindDispersedHomes" resultType="String">
+              SELECT
+              	id
+              FROM
+              	`volga_test`.apartment a
+              WHERE
+              	a.created_by = #{roomId}
+              AND id NOT IN (
+              	SELECT
+              		p.parent_ID AS id
+              	FROM
+              		narcissus_test.public_zone p
+              	WHERE
+              		p.data_type = 1
+              	AND p.parent_ID IN (
+              		SELECT
+              			id
+              		FROM
+              			`volga_test`.apartment a
+              		WHERE
+              			a.created_by = #{roomId}
+              	)
+              )
+              ORDER BY
+              	id ASC
+    </select>
+
+    <!-- 添加集中式公共区域 -->
+    <insert id="centralizedAddition" parameterType="String">
+        INSERT INTO narcissus_test.public_zone VALUES(null,1,'公共区域',#{roomId});
+    </insert>
 </mapper>

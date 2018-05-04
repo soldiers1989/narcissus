@@ -61,24 +61,32 @@ public class SmartLockServiceImpl implements SmartLockService {
         }
         //第三方房源信息(包括了分散式和集中式)
         List<HomeVO> thirdHomeList = new ArrayList<HomeVO>();
-        if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals(SmartLockFirmEnum.YUN_DING.getCode())) {
-            ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("userId", userId);
-            String result = iSmartLock.searchHomeInfo(params);
-            List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
-            //处理云丁的房源数据，将房源下房间中没有设备的房间移除
-            removeNoDevicesRoom(yunDingHomes);
-
-            for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
-                HomeVO homeVO = YunDingHomeInfoVO.toH2ome(yunDingHomeInfoVO);
-                thirdHomeList.add(homeVO);
-            }
-        }
+//        if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals(SmartLockFirmEnum.YUN_DING.getCode())) {
+//            ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
+//            Map<String, Object> params = new HashMap<String, Object>();
+//            params.put("userId", userId);
+//            String result = iSmartLock.searchHomeInfo(params);
+//            List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
+//            //处理云丁的房源数据，将房源下房间中没有设备的房间移除
+//            removeNoDevicesRoom(yunDingHomes);
+//
+//            for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
+//                HomeVO homeVO = YunDingHomeInfoVO.toH2ome(yunDingHomeInfoVO);
+//                thirdHomeList.add(homeVO);
+//            }
+//        }
         //水滴的房源信息
         List<HomeVO> localHomeList = null;
+        List<String> list=null;
         //判断是分散式(0是集中式，1是分散式)
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
+            //查询没有公共区域的分散式房源id并给它添加公共区域
+            list=smartLockDao.findDispersedHomesAndPublicZone(userId);
+            if(list!=null){
+                for(String roomId:list){
+                    smartLockDao.dispersiveAddition(roomId);
+                }
+            }
             localHomeList = smartLockDao.findDispersedHomes(userId);
             Iterator<HomeVO> iterator = thirdHomeList.iterator();
             while (iterator.hasNext()) {
@@ -89,6 +97,13 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
+            //查询没有公共区域的集中式房源id并给它添加公共区域
+            list=smartLockDao.centralizedFindDispersedHomes(userId);
+            if(list!=null){
+                for(String roomId:list){
+                    smartLockDao.centralizedAddition(roomId);
+                }
+            }
             localHomeList = smartLockDao.findConcentrateHomes(userId);
             Iterator<HomeVO> iterator = thirdHomeList.iterator();
             while (iterator.hasNext()) {

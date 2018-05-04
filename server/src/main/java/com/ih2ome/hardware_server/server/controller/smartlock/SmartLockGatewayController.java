@@ -53,7 +53,6 @@ public class SmartLockGatewayController extends BaseController{
         responseJson.put("smartLockGatewayAndHouseInfoVOList", smartLockGatewayAndHouseInfoVOList);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
         return result;
-
     }
 
     /**

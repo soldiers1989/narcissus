@@ -336,4 +336,31 @@ public interface SmartLockDao {
      */
     void updateInnerLockBindGateway
     (@Param("smartGatewayId") String smartGatewayId, @Param("gatewayId") Long gatewayId, @Param("innerLockId") Long innerLockId);
+
+    /**
+     * 根据分散式房源id添加公共区域
+     * @param roomId
+     */
+    void dispersiveAddition(String roomId);
+
+    /**
+     *  根据用户id查询该用户下的分散式房源信息中没有公共区域的房源id
+     * @param userId
+     * @return
+     */
+    List<String> findDispersedHomesAndPublicZone(String userId);
+
+    /**
+     * 根据用户id查询该用户下的集中式房源信息中没有公共区域的房源id
+     * @param userId
+     * @return
+     */
+    List<String> centralizedFindDispersedHomes(String userId);
+
+    /**
+     * 根据集中式房源id添加公共区域
+     * @param roomId
+     */
+    void centralizedAddition(String roomId);
+
 }
