@@ -552,10 +552,7 @@
         ntsgv2.smart_gateway_ID AS gatewayId,
         ntsgv2.sn AS gatewayCode,
         ntsl.bind_time as bindTime,
-        CASE ntsv2l.provider_code
-        WHEN 'YD' THEN '云丁'
-        WHEN 'GJ' THEN '果加'
-        END provider,
+        CASE ntsv2l.provider_code as provider,
         ntsl.model_name AS modelName,
         ntsl.versions as versionJson,
         ntsv2l.house_catalog AS houseCatalog,

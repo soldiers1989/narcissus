@@ -277,10 +277,6 @@ AND nsgbv2.smart_gateway_ID = #{gatewayId}
             nsdv2.connection_status connectionStatus,
             nsdv2.connection_status_update_time updateTime,
             nsdv2.provider_code provider,
-            CASE nsdv2.provider_code
-            WHEN 'YD' THEN '云丁'
-            WHEN 'GJ' THEN '果加'
-            END provider,
             nsgv2.versions versionJson
         FROM
             narcissus_test.smart_device_v2 nsdv2,
