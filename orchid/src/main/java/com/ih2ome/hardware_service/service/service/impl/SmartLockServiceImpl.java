@@ -127,6 +127,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                                 thirdRoom.setRoomId(thirdRoomId);
                                 thirdRoom.setRoomName(localRoom.getRoomName());
                                 thirdRoom.setDataType(localRoom.getDataType());
+                                thirdRoom.setRoomAssociationStatus("1");
                             }
                         }
                         Iterator<RoomVO> iterator = thirdRooms.iterator();
