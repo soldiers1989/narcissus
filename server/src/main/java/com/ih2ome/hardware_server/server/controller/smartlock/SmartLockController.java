@@ -434,7 +434,7 @@ public class SmartLockController extends BaseController {
     public String getLockHistoryOperations(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         String lockId = dt.getString("serial_id");
-        Map<String,ArrayList<String>> historyOperations = null;
+        Map<String,ArrayList<SmartMistakeInfo>> historyOperations = null;
         try {
             historyOperations = smartLockService.findHistoryOperations(lockId);
         } catch (SmartLockException e) {

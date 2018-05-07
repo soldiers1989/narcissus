@@ -28,12 +28,25 @@ public interface SmartLockDao {
     List<HomeVO> findDispersedHomes(String userId);
 
     /**
+     * 根据房源id查询该用户下的分散式房源信息
+     * @param houseId
+     * @return
+     */
+    List<HomeVO> findDispersedSubaccountHomes(String houseId);
+
+    /**
      * 根据用户id查询该用户下的集中式房源信息
-     *
      * @param userId
      * @return
      */
     List<HomeVO> findConcentrateHomes(String userId);
+
+    /**
+     * 根据房源id查询该用户下的集中式房源信息
+     * @param apartmentId
+     * @return
+     */
+    List<HomeVO> findCentralizedHomes(String apartmentId);
 
     /**
      * 取消关联房源(分散式，集中式)
@@ -363,4 +376,31 @@ public interface SmartLockDao {
      */
     void centralizedAddition(String roomId);
 
+    /**
+     * 根据id查询分散式子账号信息
+     * @param userId
+     * @return
+     */
+    String queryEmployer(String userId);
+
+    /**
+     * 查询分散式子账号可控房源id
+     * @param employerId
+     * @return
+     */
+    List<String> queryEmployerHouses(String employerId);
+
+    /**
+     * 根据id查询集中式子账号信息
+     * @param userId
+     * @return
+     */
+    String findEmployer(String userId);
+
+    /**
+     * 查询集中式子账号可控房源id
+     * @param employerId
+     * @return
+     */
+    List<String> findEmployerApatments(String employerId);
 }

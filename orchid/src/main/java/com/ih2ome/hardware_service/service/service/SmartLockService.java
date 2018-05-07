@@ -129,7 +129,7 @@ public interface SmartLockService {
      * @param lockId
      * @return
      */
-    Map<String, ArrayList<String>> findHistoryOperations(String lockId) throws SmartLockException;
+    Map<String, ArrayList<SmartMistakeInfo>> findHistoryOperations(String lockId) throws SmartLockException;
     /**
      * 查询异常记录
      *

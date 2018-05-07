@@ -87,7 +87,17 @@ public class SmartLockServiceImpl implements SmartLockService {
                     smartLockDao.dispersiveAddition(roomId);
                 }
             }
-            localHomeList = smartLockDao.findDispersedHomes(userId);
+            //查询子账号信息
+            String employerId=smartLockDao.queryEmployer(userId);
+            if(employerId==null){
+                localHomeList = smartLockDao.findDispersedHomes(userId);
+            }else{
+                //查询子账号可控房源
+                List<String> housesIdList=smartLockDao.queryEmployerHouses(employerId);
+                for(String housesId : housesIdList){
+                    localHomeList=smartLockDao.findDispersedSubaccountHomes(housesId);
+                }
+            }
             Iterator<HomeVO> iterator = thirdHomeList.iterator();
             while (iterator.hasNext()) {
                 HomeVO homeVO = iterator.next();
@@ -101,10 +111,20 @@ public class SmartLockServiceImpl implements SmartLockService {
             list=smartLockDao.centralizedFindDispersedHomes(userId);
             if(list!=null){
                 for(String roomId:list){
-//                    smartLockDao.centralizedAddition(roomId);
+                    smartLockDao.centralizedAddition(roomId);
                 }
             }
-            localHomeList = smartLockDao.findConcentrateHomes(userId);
+            //查询子账号信息
+            String employerId=smartLockDao.findEmployer(userId);
+            if(employerId==null){
+                localHomeList = smartLockDao.findConcentrateHomes(userId);
+            }else{
+                //子账号，根据子账号查询apatment
+                List<String> apatmentIdList=smartLockDao.findEmployerApatments(employerId);
+                for(String apatmentId : apatmentIdList){
+                    localHomeList=smartLockDao.findCentralizedHomes(apatmentId);
+                }
+            }
             Iterator<HomeVO> iterator = thirdHomeList.iterator();
             while (iterator.hasNext()) {
                 HomeVO homeVO = iterator.next();
@@ -122,6 +142,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 if (thirdRoomId != null) {
                     for (HomeVO thirdHomeVO : thirdHomeList) {
                         List<RoomVO> thirdRooms = thirdHomeVO.getRooms();
+                        //遍历判断第三方房源是否关联并添加关联信息
                         for(RoomVO thirdRoom:thirdRooms ){
                             if (thirdRoomId.equals(thirdRoom.getThirdRoomId())) {
                                 thirdRoom.setRoomId(thirdRoomId);
@@ -697,9 +718,9 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @return
      */
     @Override
-    public Map<String, ArrayList<String>> findHistoryOperations(String lockId) {
+    public Map<String, ArrayList<SmartMistakeInfo>> findHistoryOperations(String lockId) {
         List<SmartMistakeInfo> list = smartLockDao.findHistoryOperations(lockId);
-        Map<String, ArrayList<String>> map = handleRecord(list);
+        Map<String, ArrayList<SmartMistakeInfo>> map = handleRecords(list);
         return map;
     }
 
@@ -761,9 +782,13 @@ public class SmartLockServiceImpl implements SmartLockService {
             String yearMonthDay = info.getYearMonthDay();
             if (map.containsKey(yearMonthDay)) {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = map.get(yearMonthDay);
+                String describe=info.getUserName()+info.getOperatorType()+info.getPasswordName()+"("+info.getPassname()+")";
+                info.setDescribe(describe);
                 smartMistakeInfos.add(info);
             } else {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = new ArrayList<SmartMistakeInfo>();
+                String describe=info.getUserName()+info.getOperatorType()+info.getPasswordName()+"("+info.getPassname()+")";
+                info.setDescribe(describe);
                 smartMistakeInfos.add(info);
                 map.put(yearMonthDay, smartMistakeInfos);
             }

@@ -333,7 +333,53 @@
         )) AS allrecord
 
     </select>
+    <!-- 根据房源id查询房源信息(分散式) -->
+    <select id="findDispersedSubaccountHomes" parameterType="string" resultMap="dispersedResultMap">
+        SELECT * FROM((
+        SELECT
+        cth.created_by_id AS userId,
+        cth.id AS homeId,
+        cth.area AS homeName,
+        '1' AS homeType,
+        ntpz.public_zone_ID AS roomId,
+        ntpz.`name` AS roomName,
+        nshm.`status` AS roomAssociationStatus,
+        nshm.threeID AS thirdRoomId,
+        '5' AS dataType
+        FROM
+        `caspain_test`.house cth
+        LEFT JOIN narcissus_test.public_zone ntpz ON cth.id = ntpz.parent_ID
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
+        AND nshm.data_type = 5
+        AND nshm.house_catalog = 1 AND  nshm.status= 1
+        WHERE
+        ntpz.data_type = 3
+        AND cth.id =#{houseId}
+        )
+        UNION ALL
+        (
+        SELECT
+        cth.created_by_id AS userId,
+        cth.id AS homeId,
+        cth.area AS homeName,
+        '1' AS homeType,
+        ctr.id AS roomId,
+        ctr.`name` AS roomName,
+        nshm.`status` AS roomAssociationStatus,
+        nshm.threeID AS thirdRoomId,
+        '4' AS dataType
+        FROM
+        `caspain_test`.house cth
+        LEFT JOIN `caspain_test`.room ctr ON cth.id = ctr.house_id
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
+        AND nshm.data_type = 4
+        AND nshm.house_catalog = 1 AND nshm.status= 1
+        WHERE
+        cth.id=#{houseId}
+        ORDER BY thirdRoomId DESC LIMIT 99999999999
+        )) AS allrecord
 
+    </select>
     <!--查询房源信息(集中式)-->
     <select id="findConcentrateHomes" parameterType="string" resultMap="concentrateResultMap">
         SELECT * FROM((
@@ -377,6 +423,53 @@
         AND nshm.house_catalog = 0 AND  nshm.status= 1
         WHERE
         vta.created_by = #{userId}
+        ORDER BY thirdRoomId DESC LIMIT 99999999999
+        )) AS allrecord
+    </select>
+
+    <!--根据房源id查询房源信息(集中式)-->
+    <select id="findCentralizedHomes" parameterType="string" resultMap="concentrateResultMap">
+        SELECT * FROM((
+        SELECT
+        vta.created_by AS userId,
+        vta.id AS homeId,
+        vta.`name` AS homeName,
+        '0' AS homeType,
+        ntpz.public_zone_ID AS roomId,
+        ntpz.`name` AS roomName,
+        nshm.`status` AS roomAssociationStatus,
+        nshm.threeID AS thirdRoomId,
+        '5' AS dataType
+        FROM
+        `volga_test`.apartment vta
+        LEFT JOIN narcissus_test.public_zone ntpz ON vta.id = ntpz.parent_ID
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
+        AND nshm.data_type = 5
+        AND nshm.house_catalog = 0 AND  nshm.status= 1
+        WHERE
+        ntpz.data_type = 1
+        AND vta.id = #{apartmentId}
+        )
+        UNION ALL
+        (
+        SELECT
+        vta.created_by AS userId,
+        vta.id AS homeId,
+        vta.`name` AS homeName,
+        '0' AS homeType,
+        vtr.id AS roomId,
+        vtr.`name` AS roomName,
+        nshm.`status` AS roomAssociationStatus,
+        nshm.threeID AS thirdRoomId,
+        '4' AS dataType
+        FROM
+        `volga_test`.apartment vta
+        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON vtr.id = nshm.h2omeID
+        AND nshm.data_type = 4
+        AND nshm.house_catalog = 0 AND  nshm.status= 1
+        WHERE
+        vta.id = #{apartmentId}
         ORDER BY thirdRoomId DESC LIMIT 99999999999
         )) AS allrecord
     </select>
@@ -797,4 +890,20 @@
     <insert id="centralizedAddition" parameterType="String">
         INSERT INTO narcissus_test.public_zone VALUES(null,1,'公共区域',#{roomId});
     </insert>
+    <!-- 根据userId查询分散式子账号信息 -->
+    <select id="queryEmployer" parameterType="String">
+       SELECT id FROM caspain_test.employer e WHERE e.is_delete=0 and e.user_id=#{userId};
+    </select>
+    <!-- 查询分散式可控房源 -->
+    <select id="queryEmployerHouses" parameterType="String">
+        SELECT house_id from caspain_test.employer_houses eh WHERE eh.employer_id=#{employerId};
+    </select>
+    <!-- 根据userId查询集中式子账号信息 -->
+    <select id="findEmployer" parameterType="String">
+        SELECT id FROM `volga_test`.employer e WHERE e.is_delete=0 and e.user_id=#{userId};
+    </select>
+    <!-- 查询集中试可控房源 -->
+    <select id="findEmployerApatments" parameterType="String">
+        SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerId}；
+    </select>
 </mapper>

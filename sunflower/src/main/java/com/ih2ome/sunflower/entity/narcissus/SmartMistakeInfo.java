@@ -25,7 +25,7 @@ public class SmartMistakeInfo {
 
     private String yearMonthDay;
     private String hourMinuteSecond;
-
+    private String describe;
 
     public void splitCreatedTime() {
         String[] array = this.createdTime.split(" ");
