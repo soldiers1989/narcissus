@@ -900,7 +900,7 @@
     </select>
     <!-- 根据userId查询集中式子账号信息 -->
     <select id="findEmployer" parameterType="String">
-        SELECT id FROM `volga_test`.employer e WHERE e.is_delete=0 and e.user_id=#{userId};
+        SELECT id FROM `volga_test`.employer_apatments ea WHERE  e.user_id=#{userId};
     </select>
     <!-- 查询集中试可控房源 -->
     <select id="findEmployerApatments" parameterType="String">
