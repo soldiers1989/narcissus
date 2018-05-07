@@ -782,12 +782,12 @@ public class SmartLockServiceImpl implements SmartLockService {
             String yearMonthDay = info.getYearMonthDay();
             if (map.containsKey(yearMonthDay)) {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = map.get(yearMonthDay);
-                String describe=info.getUserName()+info.getOperatorType()+info.getPasswordName()+"("+info.getPassname()+")";
+                String describe=info.getUserName()+info.getOperatorType().substring(0,1)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
                 info.setDescribe(describe);
                 smartMistakeInfos.add(info);
             } else {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = new ArrayList<SmartMistakeInfo>();
-                String describe=info.getUserName()+info.getOperatorType()+info.getPasswordName()+"("+info.getPassname()+")";
+                String describe=info.getUserName()+info.getOperatorType().substring(0,1)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
                 info.setDescribe(describe);
                 smartMistakeInfos.add(info);
                 map.put(yearMonthDay, smartMistakeInfos);
