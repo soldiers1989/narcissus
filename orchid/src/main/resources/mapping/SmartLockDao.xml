@@ -962,7 +962,7 @@ AND id NOT IN (
 				FROM
 					`volgatest`.employer_apatments_apartments eaa
 				WHERE
-					eaa.employerapatments_id =#{employerId}
+					eaa.employerapatments_id =#{employerapatmentsid}
 			)
 	)
 )
@@ -989,6 +989,6 @@ ORDER BY
     </select>
     <!-- 查询集中试可控房源 -->
     <select id="findEmployerApatments" parameterType="String">
-        SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerId};
+        SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerapatmentsid};
     </select>
 </mapper>

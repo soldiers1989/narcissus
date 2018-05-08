@@ -101,7 +101,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 //查询子账号可控房源
                 List<String> housesIdList=smartLockDao.queryEmployerHouses(employerId);
                 for(String housesId : housesIdList){
-                    localHomeList=smartLockDao.findDispersedSubaccountHomes(housesId);
+                    localHomeList.addAll(smartLockDao.findDispersedSubaccountHomes(housesId));
                 }
             }
             Iterator<HomeVO> iterator = thirdHomeList.iterator();
@@ -134,7 +134,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 //子账号，根据子账号查询apatment
                 List<String> apatmentIdList=smartLockDao.findEmployerApatments(employerapatmentsid);
                 for(String apatmentId : apatmentIdList){
-                    localHomeList=smartLockDao.findCentralizedHomes(apatmentId);
+                    localHomeList.addAll(smartLockDao.findCentralizedHomes(apatmentId));
                 }
             }
             Iterator<HomeVO> iterator = thirdHomeList.iterator();

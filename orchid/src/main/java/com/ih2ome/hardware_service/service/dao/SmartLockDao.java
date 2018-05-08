@@ -416,5 +416,5 @@ public interface SmartLockDao {
      * @param employerId
      * @return
      */
-    List<String> findEmployerApatments(String employerId);
+    List<String> findEmployerApatments(String employerapatmentsid);
 }
