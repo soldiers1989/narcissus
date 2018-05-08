@@ -76,7 +76,18 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
     public List<SmartLockHadBindHouseVo> getHadBindHouseList(String type, String userId) {
         if(StringUtils.isNotBlank(userId)&&StringUtils.isNotBlank(type)){
             if(type.equals(HouseStyleEnum.DISPERSED.getCode())){
-                List <SmartLockHadBindHouseVo> homeList = smartLockGatewayDao.findHomeInfoByUserId(userId);
+                List <SmartLockHadBindHouseVo> homeList=new ArrayList<>();
+                //查询子账号信息
+                String employerId=smartLockGatewayDao.queryEmployer(userId);
+                if(employerId==null){
+                    homeList= smartLockGatewayDao.findHomeInfoByUserId(userId);
+                }else{
+                    //子账号用可控房源遍历查询已绑定房源列表
+                    List<String> houseIds=smartLockGatewayDao.queryEmployerHouses(employerId);
+                    for(String houseId:houseIds){
+                        homeList.addAll(smartLockGatewayDao.findHomeInfoByemployerId(houseId));
+                    }
+                }
                 for(SmartLockHadBindHouseVo smartLockHadBindHouseVo:homeList){
                     List <RoomAndPublicZoneVo> roomAndPublicZoneVoList =smartLockGatewayDao.findRoomByHomeId(smartLockHadBindHouseVo.getHomeId());
                     FloorVo floorVo = new FloorVo();
@@ -89,9 +100,17 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                 }
                 return homeList;
             }else if(type.equals(HouseStyleEnum.CONCENTRAT.getCode())){
-                List<SmartLockHadBindHouseVo> smartLockHadBindHouseVoList = smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
+                String employerapatmentsid=smartLockGatewayDao.findEmployer(userId);
+                List<SmartLockHadBindHouseVo> smartLockHadBindHouseVoList=new ArrayList<>();
+                if(employerapatmentsid==null){
+                    smartLockHadBindHouseVoList = smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
+                }else{
+                 List<String> apartmentsId=smartLockGatewayDao.findEmployerApatments(employerapatmentsid);
+                 for(String apartment:apartmentsId){
+                     smartLockHadBindHouseVoList.addAll(smartLockGatewayDao.findByApartmentId(apartment));
+                 }
+                }
                 for(SmartLockHadBindHouseVo smartLockHadBindHouseVo:smartLockHadBindHouseVoList){
-
                     long lockCount = smartLockGatewayDao.getCountOfApartmentLock(smartLockHadBindHouseVo.getHomeId());
                     long onlineCount = smartLockGatewayDao.getCountOfApartmentOnlineLock(smartLockHadBindHouseVo.getHomeId());
                     long offlineCount = lockCount-onlineCount;

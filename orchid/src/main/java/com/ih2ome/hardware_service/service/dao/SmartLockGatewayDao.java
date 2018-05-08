@@ -64,7 +64,47 @@ public interface SmartLockGatewayDao {
      */
     List<SmartLockHadBindHouseVo> getConcentrateHadBindHouseList(String userId);
 
+    /**
+     * 根据子账号可控房源获取集中式已绑定房源列表
+     * @param apartment
+     * @return
+     */
+    List<SmartLockHadBindHouseVo> findByApartmentId(String apartment);
+
     List<SmartLockHadBindHouseVo>findHomeInfoByUserId(String userId);
+
+    /**
+     * 根据子账号信息查询
+     * @param houseId
+     * @return
+     */
+    List<SmartLockHadBindHouseVo> findHomeInfoByemployerId(String houseId);
+    /**
+     * 根据id查询分散式子账号信息
+     * @param userId
+     * @return
+     */
+    String queryEmployer(String userId);
+
+    /**
+     * 查询分散式子账号可控房源id
+     * @param employerId
+     * @return
+     */
+    List<String> queryEmployerHouses(String employerId);
+
+    /**
+     * 根据id查询集中式子账号信息
+     * @param userId
+     * @return
+     */
+    String findEmployer(String userId);
+    /**
+     * 查询集中式子账号可控房源id
+     * @param employerapatmentsid
+     * @return
+     */
+    List<String> findEmployerApatments(String employerapatmentsid);
 
     List<RoomAndPublicZoneVo>findRoomByHomeId(long homeId);
 

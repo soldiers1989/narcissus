@@ -307,6 +307,26 @@ AND nsgbv2.smart_gateway_ID = #{gatewayId}
     AND nsdv2g.manage_status = '0';
     </select>
 
+    <!--根据子账户id查询存在网关的房屋-->
+    <select id="findHomeInfoByemployerId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo">
+        SELECT
+        ch.id AS homeId,
+        ch.address AS homeName
+        FROM
+        narcissus_test.smart_device_v2 nsdv2g,
+        narcissus_test.smart_gateway_v2 nsgv2,
+        narcissus_test.public_zone npz,
+        caspain_test.house ch,
+        caspain_test.auth_user cau
+        WHERE
+        nsdv2g.smart_device_ID = nsgv2.smart_gateway_ID
+        AND nsdv2g.public_zone_ID = npz.public_zone_ID
+        AND npz.parent_ID = ch.id
+        AND ch.created_by_id = cau.id
+        AND npz.parent_ID=#{houseId}
+        AND nsdv2g.manage_status = '0';
+    </select>
+
 
     <select id="findRoomByHomeId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomAndPublicZoneVo">
       (
@@ -391,6 +411,52 @@ AND vf.apartment_id = va.id
 AND nsdv2.manage_status = '0'
 AND nsdv2OutSmartLock.manage_status = '0'
 AND nsdv2Indoor.manage_status = '0'
+    </select>
+
+
+    <select id="findByApartmentId" resultMap="HadBindHouseMap">
+        SELECT
+        va.id homeId,
+        va.`name` homeName,
+        nslOutSmartLock.smart_lock_ID outSmartLockId,
+        nsdv2OutSmartLock.connection_status outCommunicationStatus,
+        nslOutSmartLock.power outPowerRate,
+        nsdv2.smart_device_ID gatewayId,
+        vf.id floorId,
+        vf.`name` floorName,
+        nsdv2Indoor.smart_device_ID smartLockId,
+        vr.`name` roomNo,
+        nsdv2Indoor.connection_status communicationStatus,
+        nslIndoor.power powerRate,
+        nslIndoor.sn lockName,
+        nslOutSmartLock.sn outLockName
+        FROM
+        `volga_test`.apartment va,
+        caspain_test.auth_user cau,
+        narcissus_test.smart_device_v2 nsdv2,
+        narcissus_test.smart_gateway_v2 nsg,
+        narcissus_test.public_zone npz,
+        narcissus_test.smart_device_v2 nsdv2OutSmartLock,
+        narcissus_test.smart_lock nslOutSmartLock,
+        `volga_test`.floor vf,
+        `volga_test`.room vr,
+        narcissus_test.smart_lock nslIndoor,
+        narcissus_test.smart_device_v2 nsdv2Indoor
+        WHERE
+        va.created_by = cau.id
+        AND npz.parent_ID=#{apartment}
+        AND nsdv2.smart_device_ID = nsg.smart_gateway_ID
+        AND nsdv2.public_zone_ID = npz.public_zone_ID
+        AND npz.parent_ID = va.id
+        AND nsdv2OutSmartLock.public_zone_ID = npz.public_zone_ID
+        AND nslOutSmartLock.smart_lock_ID = nsdv2OutSmartLock.smart_device_ID
+        AND nslIndoor.smart_lock_ID = nsdv2Indoor.smart_device_ID
+        AND nsdv2Indoor.room_ID = vr.id
+        AND vr.floor_id = vf.id
+        AND vf.apartment_id = va.id
+        AND nsdv2.manage_status = '0'
+        AND nsdv2OutSmartLock.manage_status = '0'
+        AND nsdv2Indoor.manage_status = '0'
     </select>
 
     <!--查询公寓下门锁数量-->
@@ -602,5 +668,22 @@ AND nsdv2Indoor.manage_status = '0'
         and npz.parent_ID=#{homeId}
         and nsdv2.manage_status='0'
         and nsdv2.connection_status='1'
+    </select>
+    <!-- 根据userId查询分散式子账号信息 -->
+    <select id="queryEmployer" parameterType="string" resultType="string">
+        SELECT id FROM caspain_test.employer e WHERE e.is_delete=0 and e.user_id=#{userId};
+    </select>
+    <!-- 查询分散式可控房源 -->
+    <select id="queryEmployerHouses" parameterType="String" resultType="string">
+        SELECT house_id from caspain_test.employer_houses eh WHERE eh.employer_id=#{employerId};
+    </select>
+
+    <!-- 根据userId查询集中式子账号信息 -->
+    <select id="findEmployer" parameterType="string" resultType="string">
+        SELECT employer_id FROM `volga_test`.employer_apatments ea WHERE  ea.user_id=#{userId};
+    </select>
+    <!-- 查询集中试可控房源 -->
+    <select id="findEmployerApatments" parameterType="string" resultType="string">
+        SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerapatmentsid};
     </select>
 </mapper>
