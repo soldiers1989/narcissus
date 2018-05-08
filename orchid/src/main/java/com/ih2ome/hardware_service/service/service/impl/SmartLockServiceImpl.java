@@ -61,20 +61,20 @@ public class SmartLockServiceImpl implements SmartLockService {
         }
         //第三方房源信息(包括了分散式和集中式)
         List<HomeVO> thirdHomeList = new ArrayList<HomeVO>();
-//        if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals(SmartLockFirmEnum.YUN_DING.getCode())) {
-//            ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
-//            Map<String, Object> params = new HashMap<String, Object>();
-//            params.put("userId", userId);
-//            String result = iSmartLock.searchHomeInfo(params);
-//            List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
-//            //处理云丁的房源数据，将房源下房间中没有设备的房间移除
-//            removeNoDevicesRoom(yunDingHomes);
-//
-//            for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
-//                HomeVO homeVO = YunDingHomeInfoVO.toH2ome(yunDingHomeInfoVO);
-//                thirdHomeList.add(homeVO);
-//            }
-//        }
+        if (smartLockFirmEnum != null && smartLockFirmEnum.getCode().equals(SmartLockFirmEnum.YUN_DING.getCode())) {
+            ISmartLock iSmartLock = (ISmartLock) Class.forName(smartLockFirmEnum.getClazz()).newInstance();
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("userId", userId);
+            String result = iSmartLock.searchHomeInfo(params);
+            List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
+            //处理云丁的房源数据，将房源下房间中没有设备的房间移除
+            removeNoDevicesRoom(yunDingHomes);
+
+            for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
+                HomeVO homeVO = YunDingHomeInfoVO.toH2ome(yunDingHomeInfoVO);
+                thirdHomeList.add(homeVO);
+            }
+        }
         //水滴的房源信息
         List<HomeVO> localHomeList = new ArrayList<>();
         List<String> list;
