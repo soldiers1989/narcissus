@@ -929,7 +929,7 @@ ORDER BY
     </select>
 
     <!--根据子账号查询没有公共区域的集中式房源id -->
-    <select id="centralizedqueryDispersedHomes" resultType="String">
+    <select id="centralizedqueryDispersedHomes" resultType="String" parameterType="String">
         SELECT
 	id
 FROM
@@ -960,7 +960,7 @@ AND id NOT IN (
 				SELECT
 					apartment_id
 				FROM
-					`volgatest`.employer_apatments_apartments eaa
+					`volga_test`.employer_apatments_apartments eaa
 				WHERE
 					eaa.employerapatments_id =#{employerapatmentsid}
 			)
@@ -976,19 +976,19 @@ ORDER BY
         INSERT INTO narcissus_test.public_zone VALUES(null,1,'公共区域',#{roomId});
     </insert>
     <!-- 根据userId查询分散式子账号信息 -->
-    <select id="queryEmployer" parameterType="String">
+    <select id="queryEmployer" parameterType="string" resultType="string">
        SELECT id FROM caspain_test.employer e WHERE e.is_delete=0 and e.user_id=#{userId};
     </select>
     <!-- 查询分散式可控房源 -->
-    <select id="queryEmployerHouses" parameterType="String">
+    <select id="queryEmployerHouses" parameterType="String" resultType="string">
         SELECT house_id from caspain_test.employer_houses eh WHERE eh.employer_id=#{employerId};
     </select>
     <!-- 根据userId查询集中式子账号信息 -->
-    <select id="findEmployer" parameterType="String">
+    <select id="findEmployer" parameterType="string" resultType="string">
         SELECT employer_id FROM `volga_test`.employer_apatments ea WHERE  ea.user_id=#{userId};
     </select>
     <!-- 查询集中试可控房源 -->
-    <select id="findEmployerApatments" parameterType="String">
+    <select id="findEmployerApatments" parameterType="string" resultType="string">
         SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerapatmentsid};
     </select>
 </mapper>

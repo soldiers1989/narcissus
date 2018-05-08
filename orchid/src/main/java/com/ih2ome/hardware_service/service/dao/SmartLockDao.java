@@ -413,7 +413,7 @@ public interface SmartLockDao {
 
     /**
      * 查询集中式子账号可控房源id
-     * @param employerId
+     * @param employerapatmentsid
      * @return
      */
     List<String> findEmployerApatments(String employerapatmentsid);
