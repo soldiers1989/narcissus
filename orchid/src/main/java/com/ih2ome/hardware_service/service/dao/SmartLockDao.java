@@ -364,11 +364,25 @@ public interface SmartLockDao {
     List<String> findDispersedHomesAndPublicZone(String userId);
 
     /**
+     *  根据子帐号id查询该用户下的分散式房源信息中没有公共区域的房源id
+     * @param employerId
+     * @return
+     */
+    List<String> queryDispersedHomesAndPublicZone(String employerId);
+
+    /**
      * 根据用户id查询该用户下的集中式房源信息中没有公共区域的房源id
      * @param userId
      * @return
      */
     List<String> centralizedFindDispersedHomes(String userId);
+
+    /**
+     * 根据子账号id查询该用户下的集中式房源信息中没有公共区域的房源id
+     * @param employerapatmentsid
+     * @return
+     */
+    List<String> centralizedqueryDispersedHomes(String employerapatmentsid);
 
     /**
      * 根据集中式房源id添加公共区域

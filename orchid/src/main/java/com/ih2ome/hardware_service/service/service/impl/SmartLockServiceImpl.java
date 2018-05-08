@@ -80,18 +80,24 @@ public class SmartLockServiceImpl implements SmartLockService {
         List<String> list=null;
         //判断是分散式(0是集中式，1是分散式)
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
-            //查询没有公共区域的分散式房源id并给它添加公共区域
-            list=smartLockDao.findDispersedHomesAndPublicZone(userId);
-            if(list!=null){
-                for(String roomId:list){
-                    smartLockDao.dispersiveAddition(roomId);
-                }
-            }
             //查询子账号信息
             String employerId=smartLockDao.queryEmployer(userId);
             if(employerId==null){
+                list=smartLockDao.findDispersedHomesAndPublicZone(userId);
+                //查询没有公共区域的分散式房源id并给它添加公共区域
+                if(list!=null){
+                    for(String roomId:list){
+                        smartLockDao.dispersiveAddition(roomId);
+                    }
+                }
                 localHomeList = smartLockDao.findDispersedHomes(userId);
             }else{
+                list=smartLockDao.queryDispersedHomesAndPublicZone(employerId);
+                if(list!=null){
+                    for(String roomId:list){
+                        smartLockDao.dispersiveAddition(roomId);
+                    }
+                }
                 //查询子账号可控房源
                 List<String> housesIdList=smartLockDao.queryEmployerHouses(employerId);
                 for(String housesId : housesIdList){
@@ -107,20 +113,26 @@ public class SmartLockServiceImpl implements SmartLockService {
             }
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
-            //查询没有公共区域的集中式房源id并给它添加公共区域
-            list=smartLockDao.centralizedFindDispersedHomes(userId);
-            if(list!=null){
-                for(String roomId:list){
-                    smartLockDao.centralizedAddition(roomId);
-                }
-            }
             //查询子账号信息
-            String employerId=smartLockDao.findEmployer(userId);
-            if(employerId==null){
+            String employerapatmentsid=smartLockDao.findEmployer(userId);
+            if(employerapatmentsid==null){
+                //查询没有公共区域的集中式房源id并给它添加公共区域
+                list=smartLockDao.centralizedFindDispersedHomes(userId);
+                if(list!=null){
+                    for(String roomId:list){
+                        smartLockDao.centralizedAddition(roomId);
+                    }
+                }
                 localHomeList = smartLockDao.findConcentrateHomes(userId);
             }else{
+                list=smartLockDao.centralizedqueryDispersedHomes(employerapatmentsid);
+                if(list!=null){
+                    for(String roomId:list){
+                        smartLockDao.centralizedAddition(roomId);
+                    }
+                }
                 //子账号，根据子账号查询apatment
-                List<String> apatmentIdList=smartLockDao.findEmployerApatments(employerId);
+                List<String> apatmentIdList=smartLockDao.findEmployerApatments(employerapatmentsid);
                 for(String apatmentId : apatmentIdList){
                     localHomeList=smartLockDao.findCentralizedHomes(apatmentId);
                 }
