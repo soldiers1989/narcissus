@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="hardware-server" />
+        <module name="hardware-service" />
+        <module name="peony" />
+        <module name="sunflower" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="hardware-server" target="1.8" />
+      <module name="hardware-service" target="1.8" />
+      <module name="narcissus" target="1.8" />
+      <module name="peony" target="1.8" />
+      <module name="sunflower" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -900,10 +900,10 @@
     </select>
     <!-- 根据userId查询集中式子账号信息 -->
     <select id="findEmployer" parameterType="String">
-        SELECT id FROM `volga_test`.employer_apatments ea WHERE  e.user_id=#{userId};
+        SELECT employer_id FROM `volga_test`.employer_apatments ea WHERE  ea.user_id=#{userId};
     </select>
     <!-- 查询集中试可控房源 -->
     <select id="findEmployerApatments" parameterType="String">
-        SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerId}；
+        SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerId};
     </select>
 </mapper>
