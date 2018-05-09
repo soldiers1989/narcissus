@@ -733,7 +733,7 @@ public class SmartLockServiceImpl implements SmartLockService {
     @Override
     public Map<String, ArrayList<SmartMistakeInfo>> findHistoryOperations(String lockId) {
         List<SmartMistakeInfo> list = smartLockDao.findHistoryOperations(lockId);
-        Map<String, ArrayList<SmartMistakeInfo>> map = handleRecords(list);
+        Map<String, ArrayList<SmartMistakeInfo>> map = handleRecord(list);
         return map;
     }
 
@@ -795,13 +795,9 @@ public class SmartLockServiceImpl implements SmartLockService {
             String yearMonthDay = info.getYearMonthDay();
             if (map.containsKey(yearMonthDay)) {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = map.get(yearMonthDay);
-                String describe=info.getUserName()+info.getOperatorType().substring(0,2)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
-                info.setDescribe(describe);
                 smartMistakeInfos.add(info);
             } else {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = new ArrayList<SmartMistakeInfo>();
-                String describe=info.getUserName()+info.getOperatorType().substring(0,2)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
-                info.setDescribe(describe);
                 smartMistakeInfos.add(info);
                 map.put(yearMonthDay, smartMistakeInfos);
             }
@@ -814,17 +810,21 @@ public class SmartLockServiceImpl implements SmartLockService {
      * @param list
      * @return
      */
-    public Map<String, ArrayList<String>> handleRecord(List<SmartMistakeInfo> list) {
-        Map<String, ArrayList<String>> map = new LinkedHashMap<String, ArrayList<String>>();
+    public Map<String, ArrayList<SmartMistakeInfo>> handleRecord(List<SmartMistakeInfo> list) {
+        Map<String, ArrayList<SmartMistakeInfo>> map = new LinkedHashMap<String, ArrayList<SmartMistakeInfo>>();
         for (SmartMistakeInfo info : list) {
             info.splitCreatedTime();
             String yearMonthDay = info.getYearMonthDay();
             if (map.containsKey(yearMonthDay)) {
-                ArrayList<String> smartMistakeInfos = map.get(yearMonthDay);
-                smartMistakeInfos.add(info.getUserName()+info.getOperatorType()+info.getPasswordName()+"("+info.getPassname()+")");
+                ArrayList<SmartMistakeInfo> smartMistakeInfos = map.get(yearMonthDay);
+                String describe=info.getUserName()+info.getOperatorType().substring(0,2)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
+                info.setDescribe(describe);
+                smartMistakeInfos.add(info);
             } else {
-                ArrayList<String> smartMistakeInfos = new ArrayList<String>();
-                smartMistakeInfos.add(info.getUserName()+info.getOperatorType()+info.getPasswordName()+"("+info.getPassname()+")");
+                ArrayList<SmartMistakeInfo> smartMistakeInfos = new ArrayList<SmartMistakeInfo>();
+                String describe=info.getUserName()+info.getOperatorType().substring(0,2)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
+                info.setDescribe(describe);
+                smartMistakeInfos.add(info);
                 map.put(yearMonthDay, smartMistakeInfos);
             }
         }

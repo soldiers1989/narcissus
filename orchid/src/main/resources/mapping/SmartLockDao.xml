@@ -301,8 +301,8 @@
         '5' AS dataType
         FROM
         `caspain_test`.house cth
-        LEFT JOIN narcissus.public_zone ntpz ON cth.id = ntpz.parent_ID
-        LEFT JOIN narcissus.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
+        LEFT JOIN narcissus_test.public_zone ntpz ON cth.id = ntpz.parent_ID
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
         AND nshm.data_type = 5
         AND nshm.house_catalog = 1 AND  nshm.status= 1
         WHERE
@@ -324,7 +324,7 @@
         FROM
         `caspain_test`.house cth
         LEFT JOIN `caspain_test`.room ctr ON cth.id = ctr.house_id
-        LEFT JOIN narcissus.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
+        LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
         AND nshm.data_type = 4
         AND nshm.house_catalog = 1 AND nshm.status= 1
         WHERE
@@ -645,7 +645,7 @@
         ntsgv2.smart_gateway_ID AS gatewayId,
         ntsgv2.sn AS gatewayCode,
         ntsl.bind_time as bindTime,
-        CASE ntsv2l.provider_code as provider,
+        ntsv2l.provider_code as provider,
         ntsl.model_name AS modelName,
         ntsl.versions as versionJson,
         ntsv2l.house_catalog AS houseCatalog,
@@ -746,7 +746,7 @@
             narcissus_test.smart_lock_log ntsl
         LEFT JOIN caspain_test.auth_user ctau ON ntsl.created_by = ctau.id
         LEFT JOIN caspain_test.user_profile ctup ON ctup.user_id = ctau.id
-        LEFT  JOIN narcissus.smart_lock_password slp ON ntsl.smart_lock_password_ID=slp.smart_lock_password_ID
+        LEFT  JOIN narcissus_test.smart_lock_password slp ON ntsl.smart_lock_password_ID=slp.smart_lock_password_ID
         where ntsl.smart_lock_ID=#{lockId} ORDER BY ntsl.created_at DESC
     </select>
 
