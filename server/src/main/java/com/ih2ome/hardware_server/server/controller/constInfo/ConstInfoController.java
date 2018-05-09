@@ -129,5 +129,10 @@ public class ConstInfoController extends BaseController{
         return result;
 
     }
-
+//    @RequestMapping(value="/test",method = RequestMethod.POST,produces = {"application/json"})
+//    public String test(@RequestBody ApiRequestVO apiRequestVO) throws SmartLockException {
+//        String userId=apiRequestVO.getDataRequestBodyVO().getDt().getString("id");
+//        String accessTokenFromThrid = YunDingSmartLockUtil.getAccessTokenFromThrid(userId);
+//        return accessTokenFromThrid;
+//    }
 }

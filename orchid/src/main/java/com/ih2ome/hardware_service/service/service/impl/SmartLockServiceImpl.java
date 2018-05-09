@@ -157,10 +157,11 @@ public class SmartLockServiceImpl implements SmartLockService {
                         //遍历判断第三方房源是否关联并添加关联信息
                         for(RoomVO thirdRoom:thirdRooms ){
                             if (thirdRoomId.equals(thirdRoom.getThirdRoomId())) {
-                                thirdRoom.setRoomId(thirdRoomId);
+                                thirdRoom.setRoomId(localRoom.getRoomId());
                                 thirdRoom.setRoomName(localRoom.getRoomName());
                                 thirdRoom.setDataType(localRoom.getDataType());
                                 thirdRoom.setRoomAssociationStatus("1");
+                                break;
                             }
                         }
                         Iterator<RoomVO> iterator = thirdRooms.iterator();
@@ -170,7 +171,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                                 localRoom.setThirdRoomName(roomVO.getThirdRoomName());
                                 localHomeVO.setThirdHomeId(thirdHomeVO.getHomeId());
                                 thirdHomeVO.setLocalHomeId(localHomeVO.getHomeId());
-                                roomVO.setRoomAssociationStatus("1");
+//                                roomVO.setRoomAssociationStatus("1");
 //                                iterator.remove();
                                 break;
                             }
@@ -179,7 +180,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 }
             }
         }
-        Map<String, List<HomeVO>> map = new HashMap<String, List<HomeVO>>();
+        Map<String, List<HomeVO>> map = new HashMap<>();
         map.put("thirdHomeList", thirdHomeList);
         map.put("localHomeList", localHomeList);
         return map;
@@ -794,12 +795,12 @@ public class SmartLockServiceImpl implements SmartLockService {
             String yearMonthDay = info.getYearMonthDay();
             if (map.containsKey(yearMonthDay)) {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = map.get(yearMonthDay);
-                String describe=info.getUserName()+info.getOperatorType().substring(0,1)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
+                String describe=info.getUserName()+info.getOperatorType().substring(0,2)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
                 info.setDescribe(describe);
                 smartMistakeInfos.add(info);
             } else {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = new ArrayList<SmartMistakeInfo>();
-                String describe=info.getUserName()+info.getOperatorType().substring(0,1)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
+                String describe=info.getUserName()+info.getOperatorType().substring(0,2)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
                 info.setDescribe(describe);
                 smartMistakeInfos.add(info);
                 map.put(yearMonthDay, smartMistakeInfos);
