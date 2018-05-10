@@ -740,7 +740,7 @@
         WHEN 2 THEN '更新密码'
         WHEN 3 THEN '删除密码'
         WHEN 4 THEN '冻结密码'
-        WHEN 5 THEN '冻结密码'
+        WHEN 5 THEN '解冻密码'
         END operatorType
         FROM
             narcissus_test.smart_lock_log ntsl
