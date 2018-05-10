@@ -388,7 +388,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
                 smartLockPassword.setSmartLockId(lockDeviceId);
                 smartLockPassword.setProviderCode(providerCode);
-                if(smartLockPassword.getPassword().length()>2){
+                if(smartLockPassword.getPassword()!=null){
                     smartLockDao.addSmartLockPassword(smartLockPassword);
                 }
 
@@ -426,7 +426,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
                     smartLockPassword.setSmartLockId(lockDeviceId);
                     smartLockPassword.setProviderCode(providerCode);
-                    if(smartLockPassword.getPassword().length()>2){
+                    if(smartLockPassword.getPassword()!=null){
                         smartLockDao.addSmartLockPassword(smartLockPassword);
                     }
                 }
