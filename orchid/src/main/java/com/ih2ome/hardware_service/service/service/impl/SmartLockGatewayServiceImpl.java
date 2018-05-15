@@ -61,6 +61,11 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
     public SmartLockDetailVO getSmartLockGatewayDetailInfo(String gatewayId) {
         if(StringUtils.isNotBlank(gatewayId)){
             SmartLockDetailVO smartLockDetailVO = smartLockGatewayDao.getSmartLockGatewayDetailInfo(gatewayId);
+            SmartLockGatewayHadBindVO smartLockGatewayHadBindVO=smartLockGatewayDao.getSmartLockHadBindGateway(gatewayId);
+            smartLockDetailVO.setHomeName(smartLockGatewayHadBindVO.getHouseName());
+            smartLockDetailVO.setHouseAddress(smartLockGatewayHadBindVO.getHouseAddress());
+            smartLockDetailVO.setGatewayName(smartLockGatewayHadBindVO.getGatewayName());
+            smartLockDetailVO.setGatewayCode(smartLockGatewayHadBindVO.getGatewayCode());
             if(smartLockDetailVO != null){
                 smartLockDetailVO.splitVersion();
 

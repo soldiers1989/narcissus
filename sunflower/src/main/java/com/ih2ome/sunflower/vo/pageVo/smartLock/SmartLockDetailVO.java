@@ -21,6 +21,10 @@ public class SmartLockDetailVO {
      */
     private String homeName;
     /**
+     * 公寓地址
+     */
+    private  String houseAddress;
+    /**
      * 公共区域id
      */
     private String publicZoneId;
@@ -64,6 +68,10 @@ public class SmartLockDetailVO {
      * 网关编号
      */
     private String gatewayCode;
+    /**
+     * 网关名称
+     */
+    private String gatewayName;
     /**
      * 绑定时间
      */
