@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
+import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayHadBindVO;
@@ -29,26 +32,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/smartLockGateway")
 @CrossOrigin
-public class SmartLockGatewayController extends BaseController{
+public class SmartLockGatewayController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     SmartLockGatewayService smartLockGatewayService;
+
     /**
      * 取当前房源下的所有网关
+     *
      * @param apiRequestVO
      * @return
      */
     @RequestMapping(value = "/search/gatewayList", method = RequestMethod.POST, produces = {"application/json"})
-    public String getGatewayList(@RequestBody ApiRequestVO apiRequestVO){
+    public String getGatewayList(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         String homeId = dt.getString("homeId");
         String type = dt.getString("type");
-        if(StringUtils.isEmpty(homeId)){
-            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"homeId为空");
+        if (StringUtils.isEmpty(homeId)) {
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "homeId为空");
 
         }
-        List <SmartLockGatewayAndHouseInfoVO> smartLockGatewayAndHouseInfoVOList = smartLockGatewayService.getSmartLockGatewayList(homeId,type);
+        List<SmartLockGatewayAndHouseInfoVO> smartLockGatewayAndHouseInfoVOList = smartLockGatewayService.getSmartLockGatewayList(homeId, type);
         JSONObject responseJson = new JSONObject();
         responseJson.put("smartLockGatewayAndHouseInfoVOList", smartLockGatewayAndHouseInfoVOList);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
@@ -57,15 +62,16 @@ public class SmartLockGatewayController extends BaseController{
 
     /**
      * 查询当前网关绑定的门锁
+     *
      * @param apiRequestVO
      * @return
      */
     @RequestMapping(value = "/search/smartLockHadBindGatewayList", method = RequestMethod.POST, produces = {"application/json"})
-    public String getSmartLockHadBindGateway(@RequestBody ApiRequestVO apiRequestVO){
+    public String getSmartLockHadBindGateway(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         String gatewayId = dt.getString("gatewayId");
-        if(StringUtils.isEmpty(gatewayId)){
-            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"gatewayId为空");
+        if (StringUtils.isEmpty(gatewayId)) {
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "gatewayId为空");
 
         }
         SmartLockGatewayHadBindVO model = smartLockGatewayService.getSmartLockHadBindGateway(gatewayId);
@@ -78,15 +84,16 @@ public class SmartLockGatewayController extends BaseController{
 
     /**
      * 查询当前网关的详细信息
+     *
      * @param apiRequestVO
      * @return
      */
     @RequestMapping(value = "/search/getSmartLockGatewayDetailInfo", method = RequestMethod.POST, produces = {"application/json"})
-    public String getSmartLockGatewayDetailInfo(@RequestBody ApiRequestVO apiRequestVO){
+    public String getSmartLockGatewayDetailInfo(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         String gatewayId = dt.getString("gatewayId");
-        if(StringUtils.isEmpty(gatewayId)){
-            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"gatewayId为空");
+        if (StringUtils.isEmpty(gatewayId)) {
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "gatewayId为空");
 
         }
         SmartLockDetailVO smartLockDetailVO = smartLockGatewayService.getSmartLockGatewayDetailInfo(gatewayId);
@@ -98,23 +105,32 @@ public class SmartLockGatewayController extends BaseController{
 
     /**
      * 查询已绑定的房源列表
+     *
      * @param apiRequestVO
      * @return
      */
     @RequestMapping(value = "/search/getHadBindHouseList", method = RequestMethod.POST, produces = {"application/json"})
-    public String getHadBindHouseList(@RequestBody ApiRequestVO apiRequestVO){
+    public String getHadBindHouseList(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         String type = dt.getString("type");
         String userId = dt.getString("id");
-        if(StringUtils.isEmpty(type)){
-            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"type为空");
+        if (StringUtils.isEmpty(type)) {
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "type为空");
 
         }
-        if(StringUtils.isEmpty(userId)){
-            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"userId为空");
+        if (StringUtils.isEmpty(userId)) {
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "userId为空");
 
         }
-        List<SmartLockHadBindHouseVo> smartLockGatewayServiceHadBindHouseList = smartLockGatewayService.getHadBindHouseList(type,userId);
+        String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY + "_" + userId;
+        String token = CacheUtils.getStr(tokenKey);
+        if (StringUtils.isBlank(token)) {
+            JSONObject responseJson = new JSONObject();
+            responseJson.put("smartLockGatewayServiceHadBindHouseList", null);
+            String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+            return result;
+        }
+        List<SmartLockHadBindHouseVo> smartLockGatewayServiceHadBindHouseList = smartLockGatewayService.getHadBindHouseList(type, userId);
         JSONObject responseJson = new JSONObject();
         responseJson.put("smartLockGatewayServiceHadBindHouseList", smartLockGatewayServiceHadBindHouseList);
         String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
@@ -122,7 +138,6 @@ public class SmartLockGatewayController extends BaseController{
         return result;
 
     }
-
 
 
 }
