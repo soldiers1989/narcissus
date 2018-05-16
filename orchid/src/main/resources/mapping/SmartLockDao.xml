@@ -1052,7 +1052,7 @@ WHERE
 	sdv.created_by = #{userId}
 AND sdv.house_catalog = 0
 AND sdv.manage_status = 0
-AND sdv.smart_device_type=3;;
+AND sdv.smart_device_type=3;
     </select>
 
 
@@ -1066,6 +1066,6 @@ AND sdv.smart_device_type=3;;
         sdv.created_by = #{userId}
         AND sdv.house_catalog = 1
         AND sdv.manage_status = 0
-        AND sdv.smart_device_type=3;;
+        AND sdv.smart_device_type=3;
     </select>
 </mapper>

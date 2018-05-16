@@ -20,6 +20,13 @@ public class SaasLockController {
     @Autowired
     private SaasSmartLockService saasSmartLockService;
 
+    /**
+     * 根据roomid获取门锁信息
+     * @param userId
+     * @param type
+     * @param roomId
+     * @return
+     */
     @GetMapping(value = "/search/lock")
     public String getSmartLock( @RequestParam  String userId,
                                 @RequestParam  String type,
@@ -31,6 +38,13 @@ public class SaasLockController {
         String result = structureSuccessResponseVO(jsonObject, new Date().toString(), "查询成功");
         return result;
     }
+
+    /**
+     * 获取账户下门锁数
+     * @param userId
+     * @param type
+     * @return
+     */
     @GetMapping(value = "/search/lockcount")
     public String existAmmeter( @RequestParam  String userId,
                                 @RequestParam  String type) {
