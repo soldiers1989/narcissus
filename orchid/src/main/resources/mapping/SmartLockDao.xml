@@ -38,7 +38,6 @@
     <resultMap type="com.ih2ome.sunflower.model.backup.SaasSmartLock" id="saasSmartLockResultMap" autoMapping="true">
         <id column="smart_lock_ID" property="smart_lock_ID"/>
         <result property="sn" column="sn"></result>
-
     </resultMap>
     <!--insert-->
     <!--新增房间关联记录-->
@@ -383,6 +382,7 @@
         AND nshm.house_catalog = 1 AND nshm.status= 1
         WHERE
         cth.id=#{houseId}
+        AND cth.is_delete=0
         ORDER BY thirdRoomId DESC LIMIT 99999999999
         )) AS allrecord
 
@@ -480,6 +480,7 @@
         AND nshm.house_catalog = 0 AND  nshm.status= 1
         WHERE
         vta.id =  #{apartmentId}
+        AND vta.is_delete=0
         ORDER BY thirdRoomId DESC LIMIT 99999999999
         )) AS allrecord
     </select>
@@ -1002,9 +1003,9 @@ ORDER BY
         SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerapatmentsid};
     </select>
     <!-- 集中式查询门锁编码-->
-    <select id="findSmartLock" parameterType="string" resultMap="saasSmartLockResultMap">
+    <select id="findSmartLock" parameterType="String" resultMap="saasSmartLockResultMap">
       SELECT
-	sn
+	sn,smart_lock_ID
 FROM
 	narcissus_test.smart_lock nsl
 WHERE
@@ -1048,9 +1049,10 @@ WHERE
 FROM
 	narcissus_test.smart_device_v2 sdv
 WHERE
-	sdv.created_by = 13157
+	sdv.created_by = #{userId}
 AND sdv.house_catalog = 0
-AND sdv.manage_status = 0;
+AND sdv.manage_status = 0
+AND sdv.smart_device_type=3;;
     </select>
 
 
@@ -1061,8 +1063,9 @@ AND sdv.manage_status = 0;
         FROM
         narcissus_test.smart_device_v2 sdv
         WHERE
-        sdv.created_by = 13157
+        sdv.created_by = #{userId}
         AND sdv.house_catalog = 1
-        AND sdv.manage_status = 0;
+        AND sdv.manage_status = 0
+        AND sdv.smart_device_type=3;;
     </select>
 </mapper>

@@ -21,9 +21,9 @@ public class SaasLockController {
     private SaasSmartLockService saasSmartLockService;
 
     @GetMapping(value = "/search/lock")
-    public String getSmartLock( @PathVariable  String userId,
-                                @PathVariable  String type,
-                                @PathVariable  String roomId) {
+    public String getSmartLock( @RequestParam  String userId,
+                                @RequestParam  String type,
+                                @RequestParam  String roomId) {
         SaasSmartLock smartLock=saasSmartLockService.getSmartLock(userId,type, roomId);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("smartCode",smartLock.getSn());
@@ -32,8 +32,8 @@ public class SaasLockController {
         return result;
     }
     @GetMapping(value = "/search/lockcount")
-    public String existAmmeter( @PathVariable  String userId,
-                                @PathVariable  String type) {
+    public String existAmmeter( @RequestParam  String userId,
+                                @RequestParam  String type) {
         String count=saasSmartLockService.getSmartLockCount(userId,type);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("count",count);
