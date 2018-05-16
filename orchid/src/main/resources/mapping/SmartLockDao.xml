@@ -407,7 +407,7 @@
         AND nshm.house_catalog = 0 AND  nshm.status= 1
         WHERE
         ntpz.data_type = 1
-        AND vat.is_delete=0
+        AND vta.is_delete=0
         AND vta.created_by = #{userId}
         )
         UNION ALL
