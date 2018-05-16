@@ -334,6 +334,7 @@
         AND nshm.house_catalog = 1 AND nshm.status= 1
         WHERE
         cth.created_by_id=#{userId}
+        AND cth.is_delete=0
         ORDER BY thirdRoomId DESC LIMIT 99999999999
         )) AS allrecord
 
@@ -430,6 +431,7 @@
         AND nshm.house_catalog = 0 AND  nshm.status= 1
         WHERE
         vta.created_by = #{userId}
+        AND vta.is_delete=0
         ORDER BY thirdRoomId DESC LIMIT 99999999999
         )) AS allrecord
     </select>
