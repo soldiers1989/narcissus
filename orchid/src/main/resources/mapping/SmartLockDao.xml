@@ -474,10 +474,10 @@
         `volga_test`.apartment vta
         LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON vtr.id = nshm.h2omeID
-        AND nshm.data_type = 4
+        AND  nshm.data_type = 4
         AND nshm.house_catalog = 0 AND  nshm.status= 1
         WHERE
-        vta.id = #{apartmentId}
+        vta.id =  #{apartmentId}
         ORDER BY thirdRoomId DESC LIMIT 99999999999
         )) AS allrecord
     </select>
