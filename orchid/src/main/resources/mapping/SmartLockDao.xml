@@ -35,7 +35,11 @@
             <result property="dataType" column="dataType"></result>
         </collection>
     </resultMap>
+    <resultMap type="com.ih2ome.sunflower.model.backup.SaasSmartLock" id="saasSmartLockResultMap" autoMapping="true">
+        <id column="smart_lock_ID" property="smart_lock_ID"/>
+        <result property="sn" column="sn"></result>
 
+    </resultMap>
     <!--insert-->
     <!--新增房间关联记录-->
     <insert id="addAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
@@ -307,6 +311,7 @@
         AND nshm.house_catalog = 1 AND  nshm.status= 1
         WHERE
         ntpz.data_type = 3
+        AND cth.is_delete=0
         AND cth.created_by_id =#{userId}
         )
         UNION ALL
@@ -354,6 +359,7 @@
         AND nshm.house_catalog = 1 AND  nshm.status= 1
         WHERE
         ntpz.data_type = 3
+        AND cth.is_delete=0
         AND cth.id =#{houseId}
         )
         UNION ALL
@@ -401,6 +407,7 @@
         AND nshm.house_catalog = 0 AND  nshm.status= 1
         WHERE
         ntpz.data_type = 1
+        AND vat.is_delete=0
         AND vta.created_by = #{userId}
         )
         UNION ALL
@@ -448,6 +455,7 @@
         AND nshm.house_catalog = 0 AND  nshm.status= 1
         WHERE
         ntpz.data_type = 1
+        AND vat.is_delete=0
         AND vta.id = #{apartmentId}
         )
         UNION ALL
@@ -990,5 +998,69 @@ ORDER BY
     <!-- 查询集中试可控房源 -->
     <select id="findEmployerApatments" parameterType="string" resultType="string">
         SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerapatmentsid};
+    </select>
+    <!-- 集中式查询门锁编码-->
+    <select id="findSmartLock" parameterType="string" resultMap="saasSmartLockResultMap">
+      SELECT
+	sn
+FROM
+	narcissus_test.smart_lock nsl
+WHERE
+	nsl.smart_lock_ID IN (
+		SELECT
+			smart_device_ID
+		FROM
+			narcissus_test.smart_device_v2 sdv
+		WHERE
+			sdv.manage_status = 0
+		AND sdv.provider_code = 'YD'
+		AND sdv.smart_device_type = 3
+		AND sdv.house_catalog=0
+		AND sdv.room_ID =#{roomId}
+);
+    </select>
+    <!-- 分散式查看门锁编码 -->
+    <select id="findSmartLockCode" parameterType="string" resultMap="saasSmartLockResultMap">
+        SELECT
+        sn,smart_lock_ID
+        FROM
+        narcissus_test.smart_lock nsl
+        WHERE
+        nsl.smart_lock_ID IN (
+        SELECT
+        smart_device_ID
+        FROM
+        narcissus_test.smart_device_v2 sdv
+        WHERE
+        sdv.manage_status = 0
+        AND sdv.provider_code = 'YD'
+        AND sdv.smart_device_type = 3
+        AND sdv.house_catalog=1
+        AND sdv.room_ID =#{roomId}
+        );
+    </select>
+    <!-- 集中式查询门锁总数 -->
+    <select id="findSmartLockCount" parameterType="string" resultType="string">
+        SELECT
+	count(smart_device_ID)
+FROM
+	narcissus_test.smart_device_v2 sdv
+WHERE
+	sdv.created_by = 13157
+AND sdv.house_catalog = 0
+AND sdv.manage_status = 0;
+    </select>
+
+
+    <!-- 分散式式查询门锁总数 -->
+    <select id="QuerySmartLockCount" parameterType="string" resultType="string">
+        SELECT
+        count(smart_device_ID)
+        FROM
+        narcissus_test.smart_device_v2 sdv
+        WHERE
+        sdv.created_by = 13157
+        AND sdv.house_catalog = 1
+        AND sdv.manage_status = 0;
     </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
+import com.ih2ome.sunflower.model.backup.SaasSmartLock;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
@@ -9,6 +10,7 @@ import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGateWayHadBindInnerLock
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
 
 import java.util.List;
 
@@ -417,4 +419,33 @@ public interface SmartLockDao {
      * @return
      */
     List<String> findEmployerApatments(String employerapatmentsid);
+
+
+    /**
+     * 集中式根据roomid查看门锁编码
+     * @param roomId
+     * @return
+     */
+    SaasSmartLock findSmartLock(String roomId);
+
+    /**
+     * 分散式根据roomid查看门锁编码
+     * @param roomId
+     * @return
+     */
+    SaasSmartLock findSmartLockCode(String roomId);
+
+    /**
+     * 集中式查询门锁总数
+     * @param userId
+     * @return
+     */
+    String findSmartLockCount(String userId);
+
+    /**
+     * 分散式查询门锁总数
+     * @param userId
+     * @return
+     */
+    String QuerySmartLockCount(String userId);
 }

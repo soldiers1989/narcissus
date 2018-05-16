@@ -469,5 +469,4 @@ public class SmartLockController extends BaseController {
         return result;
     }
 
-
 }
