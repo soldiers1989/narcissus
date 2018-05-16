@@ -2,13 +2,11 @@ package com.ih2ome.hardware_service.service.service.impl;
 
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SaasSmartLockService;
-import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.SaasSmartLock;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,8 +55,8 @@ public class SaasSmartLockServiceImpl implements SaasSmartLockService{
                 List<String> list=smartLockDao.findUserId(userId);
                 list.add(userId);
                 for(String id:list){
-                    count+=Integer.parseInt(smartLockDao.findSmartLockCount(id));
-                    gatWay+=Integer.parseInt(smartLockDao.findSmartGateWayCount(id));
+                    count+=Integer.parseInt(smartLockDao.QuerySmartLockCount(id));
+                    gatWay+=Integer.parseInt(smartLockDao.querySmartGatWayCount(id));
                 }
                 saasSmartLock.setCount(count+"");
                 saasSmartLock.setGatWay(gatWay+"");

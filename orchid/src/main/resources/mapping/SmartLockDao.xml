@@ -1096,6 +1096,6 @@ AND sdv.smart_device_type=3;
 
     <!-- 查询主账号下所有子账户id -->
     <select id="findUserId" parameterType="string" resultType="string">
-SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_pro.user_profile up WHERE up.user_id=#{userId})
+SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_test.user_profile up WHERE up.user_id=#{userId})
     </select>
 </mapper>
