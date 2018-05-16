@@ -1054,6 +1054,18 @@ AND sdv.house_catalog = 0
 AND sdv.manage_status = 0
 AND sdv.smart_device_type=3;
     </select>
+    <!-- 集中式查询网关总数 -->
+    <select id="findSmartGateWayCount" parameterType="string" resultType="string">
+        SELECT
+        count(smart_device_ID)
+        FROM
+        narcissus_test.smart_device_v2 sdv
+        WHERE
+        sdv.created_by = #{userId}
+        AND sdv.house_catalog = 0
+        AND sdv.manage_status = 0
+        AND sdv.smart_device_type=4;
+    </select>
 
 
     <!-- 分散式式查询门锁总数 -->
@@ -1067,5 +1079,23 @@ AND sdv.smart_device_type=3;
         AND sdv.house_catalog = 1
         AND sdv.manage_status = 0
         AND sdv.smart_device_type=3;
+    </select>
+
+    <!-- 分散式式查询网关总数 -->
+    <select id="querySmartGatWayCount" parameterType="string" resultType="string">
+        SELECT
+        count(smart_device_ID)
+        FROM
+        narcissus_test.smart_device_v2 sdv
+        WHERE
+        sdv.created_by = #{userId}
+        AND sdv.house_catalog = 1
+        AND sdv.manage_status = 0
+        AND sdv.smart_device_type=4;
+    </select>
+
+    <!-- 查询主账号下所有子账户id -->
+    <select id="findUserId" parameterType="string" resultType="string">
+SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_pro.user_profile up WHERE up.user_id=#{userId})
     </select>
 </mapper>

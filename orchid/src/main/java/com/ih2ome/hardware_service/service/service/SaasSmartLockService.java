@@ -12,5 +12,5 @@ public interface SaasSmartLockService {
      */
     SaasSmartLock getSmartLock(String userId, String type, String roomId);
 
-    String getSmartLockCount(String userId,String type);
+    SaasSmartLock getSmartLockCount(String userId,String type);
 }

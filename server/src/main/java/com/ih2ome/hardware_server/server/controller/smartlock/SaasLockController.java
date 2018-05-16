@@ -48,9 +48,10 @@ public class SaasLockController {
     @GetMapping(value = "/search/lockcount")
     public String existAmmeter( @RequestParam  String userId,
                                 @RequestParam  String type) {
-        String count=saasSmartLockService.getSmartLockCount(userId,type);
+        SaasSmartLock count=saasSmartLockService.getSmartLockCount(userId,type);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("count",count);
+        jsonObject.put("count",count.getCount());
+        jsonObject.put("gatway",count.getGatWay());
         String result =structureSuccessResponseVO(jsonObject,new Date().toString(),"查询成功");
         return result;
     }

@@ -31,14 +31,42 @@ public class SaasSmartLockServiceImpl implements SaasSmartLockService{
     }
 
     @Override
-    public String getSmartLockCount(String userId, String type) {
-        String count=null;
+    public SaasSmartLock getSmartLockCount(String userId, String type) {
+        int count=0;
+        int gatWay=0;
+        SaasSmartLock saasSmartLock=new SaasSmartLock();
         if(HouseStyleEnum.CONCENTRAT.getCode().equals(type)){
-            count=smartLockDao.findSmartLockCount(userId);
+            String employerapatmentsid=smartLockDao.findEmployer(userId);
+            //判断子账号权限
+            if(employerapatmentsid==null) {
+                List<String> list=smartLockDao.findUserId(userId);
+                list.add(userId);
+                for(String id:list){
+                    count+=Integer.parseInt(smartLockDao.findSmartLockCount(id));
+                    gatWay+=Integer.parseInt(smartLockDao.findSmartGateWayCount(id));
+                }
+                saasSmartLock.setCount(count+"");
+                saasSmartLock.setGatWay(gatWay+"");
+            }else{
+                saasSmartLock.setCount(smartLockDao.findSmartLockCount(userId));
+                saasSmartLock.setGatWay(smartLockDao.findSmartGateWayCount(userId));
+            }
         }else if(HouseStyleEnum.DISPERSED.getCode().equals(type)){
-            count=smartLockDao.QuerySmartLockCount(userId);
+            String employerId=smartLockDao.queryEmployer(userId);
+            if(employerId==null) {
+                List<String> list=smartLockDao.findUserId(userId);
+                list.add(userId);
+                for(String id:list){
+                    count+=Integer.parseInt(smartLockDao.findSmartLockCount(id));
+                    gatWay+=Integer.parseInt(smartLockDao.findSmartGateWayCount(id));
+                }
+                saasSmartLock.setCount(count+"");
+                saasSmartLock.setGatWay(gatWay+"");
+            }else{
+                saasSmartLock.setCount(smartLockDao.QuerySmartLockCount(userId));
+                saasSmartLock.setGatWay(smartLockDao.querySmartGatWayCount(userId));
+            }
         }
-
-        return count;
+        return saasSmartLock;
     }
 }

@@ -443,9 +443,25 @@ public interface SmartLockDao {
     String findSmartLockCount(String userId);
 
     /**
+     * 集中式查询网关总数
+     * @param userId
+     * @return
+     */
+    String findSmartGateWayCount(String userId);
+
+    /**
      * 分散式查询门锁总数
      * @param userId
      * @return
      */
     String QuerySmartLockCount(String userId);
+
+    /**
+     * 分散式查询网关总数
+     * @param userId
+     * @return
+     */
+    String querySmartGatWayCount(String userId);
+
+    List<String> findUserId(String userId);
 }

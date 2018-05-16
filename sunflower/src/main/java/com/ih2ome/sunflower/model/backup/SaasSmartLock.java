@@ -6,4 +6,6 @@ import lombok.Data;
 public class SaasSmartLock {
     private  String sn;
     private  int smart_lock_ID;
+    private  String gatWay;
+    private  String count;
 }
