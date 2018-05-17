@@ -123,13 +123,13 @@ public class SmartLockGatewayController extends BaseController {
 
         }
         String tokenKey = YunDingSmartLockUtil.ACCESS_TOKEN_KEY + "_" + userId;
-        String token = CacheUtils.getStr(tokenKey);
-        if (StringUtils.isBlank(token)) {
-            JSONObject responseJson = new JSONObject();
-            responseJson.put("smartLockGatewayServiceHadBindHouseList", null);
-            String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
-            return result;
-        }
+//        String token = CacheUtils.getStr(tokenKey);
+//        if (StringUtils.isBlank(token)) {
+//            JSONObject responseJson = new JSONObject();
+//            responseJson.put("smartLockGatewayServiceHadBindHouseList", null);
+//            String result = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+//            return result;
+//        }
         List<SmartLockHadBindHouseVo> smartLockGatewayServiceHadBindHouseList = smartLockGatewayService.getHadBindHouseList(type, userId);
         JSONObject responseJson = new JSONObject();
         responseJson.put("smartLockGatewayServiceHadBindHouseList", smartLockGatewayServiceHadBindHouseList);

@@ -86,6 +86,7 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                 String employerId=smartLockGatewayDao.queryEmployer(userId);
                 if(employerId==null){
                     homeList= smartLockGatewayDao.findHomeInfoByUserId(userId);
+
                 }else{
                     //子账号用可控房源遍历查询已绑定房源列表
                     List<String> houseIds=smartLockGatewayDao.queryEmployerHouses(employerId);
@@ -109,6 +110,9 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                 List<SmartLockHadBindHouseVo> smartLockHadBindHouseVoList=new ArrayList<>();
                 if(employerapatmentsid==null){
                     smartLockHadBindHouseVoList = smartLockGatewayDao.getConcentrateHadBindHouseList(userId);
+                    if(smartLockHadBindHouseVoList.size()==0){
+                        smartLockHadBindHouseVoList.addAll(smartLockGatewayDao.getDoorLock(userId));
+                    }
                 }else{
                  List<String> apartmentsId=smartLockGatewayDao.findEmployerApatments(employerapatmentsid);
                  for(String apartment:apartmentsId){
@@ -124,33 +128,35 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                     smartLockHadBindHouseVo.setOnlineCount(onlineCount);
                     smartLockHadBindHouseVo.setOfflineCount(offlineCount);
                     smartLockHadBindHouseVo.setLowerPowerCount(lowerPowerCount);
-                    FloorVo floorVo = new FloorVo();
-                    List<RoomAndPublicZoneVo> roomAndPublicZoneVoList = new ArrayList<>();
-                    RoomAndPublicZoneVo roomAndPublicZoneVo = new RoomAndPublicZoneVo();
-                    floorVo.setFloorId(000);
-                    floorVo.setFloorName("公共区域");
-                    roomAndPublicZoneVo.setCommunicationStatus(smartLockHadBindHouseVo.getOutSmartLockVo().getCommunicationStatus());
-                    roomAndPublicZoneVo.setLockName(smartLockHadBindHouseVo.getOutSmartLockVo().getLockName());
-                    roomAndPublicZoneVo.setPowerRate(smartLockHadBindHouseVo.getOutSmartLockVo().getPowerRate());
-                    roomAndPublicZoneVo.setSmartLockId(smartLockHadBindHouseVo.getOutSmartLockVo().getSmartLockId());
-                    roomAndPublicZoneVo.setRoomNo("外门锁");
-                    roomAndPublicZoneVoList.add(roomAndPublicZoneVo);
-                    floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
+                    if(smartLockHadBindHouseVo.getOutSmartLockVo().getLockName()!=null){
+                        FloorVo floorVo = new FloorVo();
+                        List<RoomAndPublicZoneVo> roomAndPublicZoneVoList = new ArrayList<>();
+                        RoomAndPublicZoneVo roomAndPublicZoneVo = new RoomAndPublicZoneVo();
+                        floorVo.setFloorId(000);
+                        floorVo.setFloorName("公共区域");
+                        roomAndPublicZoneVo.setCommunicationStatus(smartLockHadBindHouseVo.getOutSmartLockVo().getCommunicationStatus());
+                        roomAndPublicZoneVo.setLockName(smartLockHadBindHouseVo.getOutSmartLockVo().getLockName());
+                        roomAndPublicZoneVo.setPowerRate(smartLockHadBindHouseVo.getOutSmartLockVo().getPowerRate());
+                        roomAndPublicZoneVo.setSmartLockId(smartLockHadBindHouseVo.getOutSmartLockVo().getSmartLockId());
+                        roomAndPublicZoneVo.setRoomNo("外门锁");
+                        roomAndPublicZoneVoList.add(roomAndPublicZoneVo);
+                        floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
 //                    smartLockHadBindHouseVo.getFloorVoList().add(floorVo);
-                    List <FloorVo> floorVoList = smartLockHadBindHouseVo.getFloorVoList();
-                    floorVoList.add(0,floorVo);
-                    for (FloorVo floorModel:floorVoList){
-                        if(floorModel.getFloorId()==000){
-                            floorModel.setLockCount(smartLockGatewayDao.getCountOfZoneLock(smartLockHadBindHouseVo.getHomeId()));
-                            floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(smartLockHadBindHouseVo.getHomeId()));
-                        }else{
-                            floorModel.setLockCount(smartLockGatewayDao.getCountOfFloorLock(floorModel.getFloorId()));
-                            floorModel.setOnlineCount(smartLockGatewayDao.getCountOfOnlineFloorLock(floorModel.getFloorId()));
+                        List <FloorVo> floorVoList = smartLockHadBindHouseVo.getFloorVoList();
+                        floorVoList.add(0,floorVo);
+                        for (FloorVo floorModel:floorVoList){
+                            if(floorModel.getFloorId()==000){
+                                floorModel.setLockCount(smartLockGatewayDao.getCountOfZoneLock(smartLockHadBindHouseVo.getHomeId()));
+                                floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(smartLockHadBindHouseVo.getHomeId()));
+                            }else{
+                                floorModel.setLockCount(smartLockGatewayDao.getCountOfFloorLock(floorModel.getFloorId()));
+                                floorModel.setOnlineCount(smartLockGatewayDao.getCountOfOnlineFloorLock(floorModel.getFloorId()));
+                            }
                         }
                     }
-
                     smartLockHadBindHouseVo.setOutSmartLockVo(null);
                 }
+
                 return smartLockHadBindHouseVoList;
             }
         }

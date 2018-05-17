@@ -3,30 +3,30 @@
 <mapper namespace="com.ih2ome.hardware_service.service.dao.SmartLockGatewayDao">
 
     <resultMap id="HadBindHouseMap" type="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo"
-               autoMapping="true">
-        <id column="homeId" property="homeId"/>
-        <result property="gatewayId" column="gatewayId"></result>
-        <result property="homeName" column="homeName"></result>
-        <collection property="outSmartLockVo" ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.OutSmartLockVo">
-            <id property="smartLockId" column="outSmartLockId"></id>
-            <result property="communicationStatus" column="outCommunicationStatus"></result>
-            <result property="powerRate" column="outPowerRate"></result>
-            <result property="lockName" column="outLockName"></result>
+                           autoMapping="true">
+    <id column="homeId" property="homeId"/>
+    <result property="gatewayId" column="gatewayId"></result>
+    <result property="homeName" column="homeName"></result>
+    <collection property="outSmartLockVo" ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.OutSmartLockVo">
+        <id property="smartLockId" column="outSmartLockId"></id>
+        <result property="communicationStatus" column="outCommunicationStatus"></result>
+        <result property="powerRate" column="outPowerRate"></result>
+        <result property="lockName" column="outLockName"></result>
+    </collection>
+    <collection property="floorVoList" javaType="List"
+                ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.FloorVo" autoMapping="true">
+        <id column="floorId" property="floorId"/>
+        <result property="floorName" column="floorName"></result>
+        <collection property="roomAndPublicZoneVoList" javaType="List"
+                    ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomAndPublicZoneVo" autoMapping="true">
+            <id property="smartLockId" column="smartLockId"></id>
+            <result property="roomNo" column="roomNo"></result>
+            <result property="communicationStatus" column="communicationStatus"></result>
+            <result property="powerRate" column="powerRate"></result>
+            <result property="lockName" column="lockName"></result>
         </collection>
-        <collection property="floorVoList" javaType="List"
-                    ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.FloorVo" autoMapping="true">
-            <id column="floorId" property="floorId"/>
-            <result property="floorName" column="floorName"></result>
-            <collection property="roomAndPublicZoneVoList" javaType="List"
-                        ofType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomAndPublicZoneVo" autoMapping="true">
-                <id property="smartLockId" column="smartLockId"></id>
-                <result property="roomNo" column="roomNo"></result>
-                <result property="communicationStatus" column="communicationStatus"></result>
-                <result property="powerRate" column="powerRate"></result>
-                <result property="lockName" column="lockName"></result>
-            </collection>
-        </collection>
-    </resultMap>
+    </collection>
+</resultMap>
 
     <!--&lt;!&ndash;分散式查询该用户下的房源和门锁&ndash;&gt;-->
     <!--<resultMap type="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo" id="dispersedHadBindHouseMap"-->
@@ -413,6 +413,48 @@ AND nsdv2OutSmartLock.manage_status = '0'
 AND nsdv2Indoor.manage_status = '0'
     </select>
 
+    <select id="getDoorLock" resultMap="HadBindHouseMap" >
+        SELECT
+	va.id homeId,
+	va.`name` homeName,
+    0 outSmartLockId,
+	nsdv2OutSmartLock.connection_status outCommunicationStatus,
+	nslOutSmartLock.power outPowerRate,
+	nsdv2.smart_device_ID gatewayId,
+	0 floorId,
+	'公共区域' floorName,
+	nsdv2Indoor.smart_device_ID smartLockId,
+    '外门锁' roomNo,
+	nsdv2Indoor.connection_status communicationStatus,
+	nslIndoor.power powerRate,
+	nslIndoor.sn lockName,
+	NULL outLockName
+FROM
+	`volga_test`.apartment va,
+	caspain_test.auth_user cau,
+	narcissus_test.smart_device_v2 nsdv2,
+	narcissus_test.smart_gateway_v2 nsg,
+	narcissus_test.public_zone npz,
+	narcissus_test.smart_device_v2 nsdv2OutSmartLock,
+	narcissus_test.smart_lock nslOutSmartLock,
+	narcissus_test.smart_lock nslIndoor,
+	narcissus_test.smart_device_v2 nsdv2Indoor
+WHERE
+	va.created_by = cau.id
+AND cau.id = #{userId}
+AND nsdv2.smart_device_ID = nsg.smart_gateway_ID
+AND nsdv2.public_zone_ID = npz.public_zone_ID
+AND npz.parent_ID = va.id
+AND nsdv2OutSmartLock.public_zone_ID = npz.public_zone_ID
+AND nslOutSmartLock.smart_lock_ID = nsdv2OutSmartLock.smart_device_ID
+AND nslIndoor.smart_lock_ID = nsdv2Indoor.smart_device_ID
+AND nsdv2Indoor.public_zone_ID=npz.public_zone_ID
+AND nsdv2.manage_status = '0'
+AND nsdv2OutSmartLock.manage_status = '0'
+AND nsdv2Indoor.manage_status = '0'
+;
+
+    </select>
 
     <select id="findByApartmentId" resultMap="HadBindHouseMap">
         SELECT
@@ -458,6 +500,7 @@ AND nsdv2Indoor.manage_status = '0'
         AND nsdv2OutSmartLock.manage_status = '0'
         AND nsdv2Indoor.manage_status = '0'
     </select>
+
 
     <!--查询公寓下门锁数量-->
     <select id="getCountOfApartmentLock" resultType="long">
@@ -686,4 +729,7 @@ AND nsdv2Indoor.manage_status = '0'
     <select id="findEmployerApatments" parameterType="string" resultType="string">
         SELECT apartment_id FROM `volga_test`.employer_apatments_apartments eaa WHERE eaa.employerapatments_id=#{employerapatmentsid};
     </select>
+
+    <!--  -->
+
 </mapper>

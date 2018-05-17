@@ -65,6 +65,12 @@ public interface SmartLockGatewayDao {
     List<SmartLockHadBindHouseVo> getConcentrateHadBindHouseList(String userId);
 
     /**
+     * 获取外门锁信息
+     * @param userId
+     * @return
+     */
+    List<SmartLockHadBindHouseVo> getDoorLock(String userId);
+    /**
      * 根据子账号可控房源获取集中式已绑定房源列表
      * @param apartment
      * @return
@@ -129,4 +135,6 @@ public interface SmartLockGatewayDao {
     long getCountOfZoneLock(long floorId);
 
     long getCountOfZoneOnlineLock(long floorId);
+
+
 }
