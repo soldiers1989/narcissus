@@ -251,7 +251,7 @@ public class SmartLockController extends BaseController {
             return result;
         }
 
-        String result = structureSuccessResponseVO(null, new Date().toString(), "删除成功");
+        String result = structureSuccessResponseVO(new JSONObject(), new Date().toString(), "删除成功");
         return result;
     }
 
@@ -299,7 +299,7 @@ public class SmartLockController extends BaseController {
             String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "修改失败");
             return result;
         }
-        String result = structureSuccessResponseVO(null, new Date().toString(), "修改成功");
+        String result = structureSuccessResponseVO(new JSONObject(), new Date().toString(), "修改成功");
         return result;
     }
 
@@ -337,7 +337,7 @@ public class SmartLockController extends BaseController {
             String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
             return result;
         }
-        String result = structureSuccessResponseVO(null, new Date().toString(), "冻结成功");
+        String result = structureSuccessResponseVO(new JSONObject(), new Date().toString(), "冻结成功");
         return result;
     }
 
@@ -376,7 +376,7 @@ public class SmartLockController extends BaseController {
             String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
             return result;
         }
-        String result = structureSuccessResponseVO(null, new Date().toString(), "解冻成功");
+        String result = structureSuccessResponseVO(new JSONObject(), new Date().toString(), "解冻成功");
         return result;
     }
 
