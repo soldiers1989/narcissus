@@ -33,8 +33,10 @@ public class SaasLockController {
                                 @RequestParam  String roomId) {
         SaasSmartLock smartLock=saasSmartLockService.getSmartLock(userId,type, roomId);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("smartCode",smartLock.getSn());
-        jsonObject.put("serial_id",smartLock.getSmart_lock_ID());
+        if(smartLock!=null){
+            jsonObject.put("smartCode",smartLock.getSn());
+            jsonObject.put("serial_id",smartLock.getSmart_lock_ID());
+        }
         String result = structureSuccessResponseVO(jsonObject, new Date().toString(), "查询成功");
         return result;
     }
@@ -50,8 +52,10 @@ public class SaasLockController {
                                 @RequestParam  String type) {
         SaasSmartLock count=saasSmartLockService.getSmartLockCount(userId,type);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("count",count.getCount());
-        jsonObject.put("gatway",count.getGatWay());
+        if(count!=null){
+            jsonObject.put("count",count.getCount());
+            jsonObject.put("gatway",count.getGatWay());
+        }
         String result =structureSuccessResponseVO(jsonObject,new Date().toString(),"查询成功");
         return result;
     }
