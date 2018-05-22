@@ -60,6 +60,12 @@ public class YunDingHomeInfoVO {
                 roomVO.setThirdRoomName(yunDingRoomInfoVO.getRoomName());
                 roomVO.setDataType(HouseMappingDataTypeEnum.ROOM.getCode());
             }
+            for(YunDingDeviceInfoVO yunDingDeviceInfoVO:yunDingHomeInfoVO.getDevices()){
+                if(yunDingDeviceInfoVO.getRoomId().equals(yunDingRoomInfoVO.getRoomId())){
+                    roomVO.setUuid(yunDingDeviceInfoVO.getUuid());
+                    roomVO.setManufactory(yunDingDeviceInfoVO.getManufactory());
+                }
+            }
             rooms.add(roomVO);
         }
         homeVO.setRooms(rooms);

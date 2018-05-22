@@ -464,4 +464,16 @@ public interface SmartLockDao {
     String querySmartGatWayCount(String userId);
 
     List<String> findUserId(String userId);
+
+    /**
+     * 新增门锁网关记录
+     * @param smartGatewayV2
+     */
+    void  saveGatWay(SmartGatewayV2 smartGatewayV2);
+
+    /**
+     * 新增水表记录
+     * @param smartWatermeter
+     */
+    void  saveWaterMeter(SmartWatermeter smartWatermeter);
 }

@@ -22,4 +22,8 @@ public class RoomVO {
     private String thirdRoomId;
     //第三方房间名称
     private String thirdRoomName;
+    //设备uuid
+    private  String uuid;
+
+    private  String manufactory;
 }

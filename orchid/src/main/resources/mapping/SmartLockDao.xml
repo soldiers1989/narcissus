@@ -91,6 +91,18 @@
         )VALUES(#{smartGatewayId},#{uuid},#{sn},#{mac},#{model},#{modelName},#{installTime},#{brand},#{versions})
     </insert>
 
+    <!--新增水表网关记录-->
+    <insert id="saveGatWay" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2"
+            useGeneratedKeys="true" keyProperty="smartGatewayId" keyColumn="smart_gateway_ID">
+        INSERT INTO narcissus_test.smart_gateway_v2 (
+        smart_gateway_ID,
+        uuid,
+        install_time,
+        brand,
+        description
+        )VALUES(#{smartGatewayId},#{uuid},now(),#{brand},#{model})
+    </insert>
+
     <!--新增门锁记录-->
     <insert id="addSmartLock" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartLock"
             useGeneratedKeys="true" keyProperty="smartLockId" keyColumn="smart_lock_ID">
@@ -108,6 +120,23 @@
         bind_time,
         versions
         )VALUES(#{smartLockId},#{sn},#{mac},#{model},#{modelName},#{power},#{powerRefreshtime},#{onoffTime},#{lqi},#{lqiRefreshtime},#{bindTime},#{versions});
+    </insert>
+    <!-- 新增水表记录 -->
+    <insert id="saveWaterMeter" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter"
+               >
+    INSERT INTO narcissus_test.smart_watermeter(
+    smart_watermeter_id,
+    created_at,
+    created_by,
+    updated_at,
+    updated_by,
+    room_id,
+    house_catalog,
+    meter_type,
+    uuid,
+    onoff_status,
+    manufactory
+    )VALUES (#{smartWatermeterId},#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{roomId},#{houseCatalog},#{meterType},#{uuid},#{onoffStatus},#{manufactory});
     </insert>
 
     <!--新增网关和设备绑定记录-->
