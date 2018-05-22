@@ -291,7 +291,7 @@ AND nsgbv2.smart_gateway_ID = #{gatewayId}
     <select id="findHomeInfoByUserId" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockHadBindHouseVo">
       SELECT
         ch.id AS homeId,
-        ch.address AS homeName
+        ch.area AS homeName
     FROM
         narcissus_test.smart_device_v2 nsdv2g,
         narcissus_test.smart_gateway_v2 nsgv2,
