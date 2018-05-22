@@ -1,0 +1,12 @@
+/bin
+.*
+!.gitignore
+build
+/logs
+target
+*.iml
+*.ipr
+*.iws
+logs
+/.idea/
+/.gradle/

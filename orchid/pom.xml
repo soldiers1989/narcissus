@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.ih2ome.hardware</groupId>
-	<artifactId>hardware-service</artifactId>
+	<artifactId>orchid</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 

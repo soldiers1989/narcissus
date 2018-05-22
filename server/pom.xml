@@ -3,11 +3,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ih2ome.hardware</groupId>
-	<artifactId>hardware-server</artifactId>
+	<artifactId>server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>hardware-server</name>
+	<name>server</name>
 	<description>Demo project for Spring Boot</description>
 	<parent>
 		<groupId>com.ih2ome</groupId>
@@ -23,7 +23,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.ih2ome.hardware</groupId>
-			<artifactId>hardware-service</artifactId>
+			<artifactId>orchid</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
