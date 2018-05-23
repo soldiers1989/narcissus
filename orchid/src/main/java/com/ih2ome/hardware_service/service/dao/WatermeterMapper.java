@@ -228,4 +228,20 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @return
      */
     List<String> selectWatermeterIdByGatewayUuid(String uuid);
+
+    /**
+     * 根据userId和第三方厂商
+     * 查询已绑定设备（包括网关）的房源
+     * @param userId 用户Id
+     * @param brand 第三方标识符
+     * @return 房源列表
+     */
+    List<HomeVO> getHomeListByUserId(@Param("userId") int userId,@Param("brand") String brand);
+
+    /**
+     * 集中式：根据公寓Id查询公寓内楼层水表数
+     * @param apartmentId 公寓Id
+     * @return 公寓水表数 + 各楼层水表数
+     */
+    List<FloorVO> getFloorWithWater(int apartmentId);
 }

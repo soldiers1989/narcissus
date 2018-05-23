@@ -6,8 +6,7 @@ import lombok.Data;
 public class FloorVO {
 
     private int watermeterNum;//楼层水表总数
-    private int watermeterOnoffNum;//水表在线数
+    private int watermeterOnLineNum;//水表在线数
     private String floorName;
     private int floorId;
-
 }

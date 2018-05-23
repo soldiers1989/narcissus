@@ -12,6 +12,7 @@ import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -419,5 +420,27 @@ public class WatermeterServiceImpl implements WatermeterService {
         watermeterDao.updataWatermeterMeterAmount(watermeterId,meterAmount);
     }
 
+    /**
+     * 根据userId和第三方
+     * 查询已绑定设备（包括网关）的房源
+     * @param userId 用户Id
+     * @param brand 第三方标识符
+     * @return 房源列表
+     */
+    @Override
+    public List<HomeVO> getHomeListByUserId(int userId, String brand) {
+        Log.info("查询已绑定设备（包括网关）的房源,userId：{}, brand:{}", userId, brand);
+        return watermeterDao.getHomeListByUserId(userId, brand);
+    }
 
+    /**
+     * 集中式：根据公寓Id查询公寓内楼层水表数
+     * @param apartmentId 公寓Id
+     * @return 公寓水表数 + 各楼层水表数
+     */
+    @Override
+    public List<FloorVO> getFloorWithWater(int apartmentId){
+        Log.info("根据公寓Id查询公寓内楼层水表数,apartmentId：{}", apartmentId);
+        return watermeterDao.getFloorWithWater(apartmentId);
+    }
 }

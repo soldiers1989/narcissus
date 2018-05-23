@@ -12,6 +12,8 @@ import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
+import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/watermeter")
 @CrossOrigin
+@Api("水表Controller")
 public class WaterMeterController extends BaseController {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
@@ -241,43 +244,40 @@ public class WaterMeterController extends BaseController {
 
     }
 
-    /**
-     * 查询集中式楼层列表by公寓id C2-1
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/jz/floorlist/byapartmentid",method = RequestMethod.POST,produces = {"application/json"})
-    public String floorListByapartmentId(@RequestBody ApiRequestVO apiRequestVO)  {
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int apartmentId = dt.getIntValue("apartmentId");
-        //通过用户id查询用户公寓
-        ApartmentVO apartmentVO = synchronousHomeService.findApartmentIdByApartmentId(apartmentId);
-        //通过公寓查询楼层id
-        if (apartmentVO != null) {
-            //计算水表总数和在线数
-            List<FloorVO> floorVOS = apartmentVO.getFloorVOS();
-            int watermeterNum=0;
-            int watermeterOnLineNum=0;
-            if(!floorVOS.isEmpty() || floorVOS!=null) {
-                for (FloorVO floor : floorVOS) {
-                    watermeterNum += floor.getWatermeterNum();
-                    watermeterOnLineNum += floor.getWatermeterOnoffNum();
-                }
-            }
-            //int floorId = apartmentVO.getFloorVOS().get(0).getFloorId();
-
-            JSONObject responseJson = new JSONObject();
-            responseJson.put("floorVO",apartmentVO.getFloorVOS());
-            responseJson.put("watermeterNum",watermeterNum);
-            responseJson.put("watermeterOnLineNum",watermeterOnLineNum);
-            String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-            return res;
-        }
-        return structureErrorResponse(null,new Date().toString(),"");
-
-    }
-
-
+//    /**
+//     * 查询集中式楼层列表by公寓id C2-1
+//     * @param apiRequestVO
+//     * @return
+//     */
+//    @RequestMapping(value="/jz/floorlist/byapartmentid",method = RequestMethod.POST,produces = {"application/json"})
+//    public String floorListByapartmentId(@RequestBody ApiRequestVO apiRequestVO)  {
+//        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+//        int apartmentId = dt.getIntValue("apartmentId");
+//        //通过用户id查询用户公寓
+//        ApartmentVO apartmentVO = synchronousHomeService.findApartmentIdByApartmentId(apartmentId);
+//        //通过公寓查询楼层id
+//        if (apartmentVO != null) {
+//            //计算水表总数和在线数
+//            List<FloorVO> floorVOS = apartmentVO.getFloorVOS();
+//            int watermeterNum=0;
+//            int watermeterOnLineNum=0;
+//            if(!floorVOS.isEmpty() || floorVOS!=null) {
+//                for (FloorVO floor : floorVOS) {
+//                    watermeterNum += floor.getWatermeterNum();
+//                    watermeterOnLineNum += floor.getWatermeterOnLineNum();
+//                }
+//            }
+//
+//            JSONObject responseJson = new JSONObject();
+//            responseJson.put("floorVO",apartmentVO.getFloorVOS());
+//            responseJson.put("watermeterNum",watermeterNum);
+//            responseJson.put("watermeterOnLineNum",watermeterOnLineNum);
+//            responseJson.put("watermeterOffLineNum",watermeterNum - watermeterOnLineNum);
+//            String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+//            return res;
+//        }
+//        return structureErrorResponse(null,new Date().toString(),"");
+//    }
 
     /**
      * 根据楼层查询集中式水表列表 C2-2
@@ -410,6 +410,73 @@ public class WaterMeterController extends BaseController {
 
     }
 
+    /**
+     * 根据用户Id查询有水表（或水表网关）的房源列表
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/home/list",method = RequestMethod.POST,produces = {"application/json"})
+    public String getHomeList(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int userId = dt.getIntValue("userId");
+        String brand = dt.getString("brand") == null ? "dding" : dt.getString("brand");
+        List<HomeVO> homeList = watermeterService.getHomeListByUserId(userId, brand);
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(homeList));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("homeList", homeList);
+        String res = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+        return res;
+    }
 
+    /**
+     * 集中式：查询公寓下楼层水表数和总水表数
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/floor/list",method = RequestMethod.POST,produces = {"application/json"})
+    public String getFloorWithWater(@RequestBody ApiRequestVO apiRequestVO)  {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int apartmentId = dt.getIntValue("apartmentId");
+        List<FloorVO> floorList = watermeterService.getFloorWithWater(apartmentId);
 
+        if (floorList != null) {
+            int watermeterNum = 0;
+            int watermeterOnLineNum = 0;
+            for (FloorVO floor : floorList) {
+                watermeterNum += floor.getWatermeterNum();
+                watermeterOnLineNum += floor.getWatermeterOnLineNum();
+            }
+            JSONObject responseJson = new JSONObject();
+            responseJson.put("floorList", floorList);
+            responseJson.put("watermeterNum", watermeterNum);
+            responseJson.put("watermeterOnLineNum", watermeterOnLineNum);
+            responseJson.put("watermeterOffLineNum", watermeterNum - watermeterOnLineNum);
+            String res = structureSuccessResponseVO(responseJson, new Date().toString(), "");
+            return res;
+        }
+        return structureErrorResponse(null,new Date().toString(),"");
+    }
+
+    /**
+     * 根据楼层查询集中式水表列表 C2-2
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/room/list",method = RequestMethod.POST,produces = {"application/json"})
+    public String getRoomWithWater(@RequestBody ApiRequestVO apiRequestVO)  {
+        //获取楼层id
+//        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+//        int floorId = dt.getIntValue("floorId");
+//
+//        //通过楼层id列表查询水表信息列表
+//        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
+//
+//        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(jzWatermeterDetailVOS));
+//        JSONObject responseJson = new JSONObject();
+//        responseJson.put("jzWatermeterDetailVOS",jsonArray);
+//        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+//        return res;
+        return "";
+        //TODO
+    }
 }
