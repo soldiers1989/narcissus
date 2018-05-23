@@ -273,10 +273,10 @@
         WHERE gateway.uuid=#{uuid}
   </select>
 
-    <!--根据userId和第三方厂商 查询已绑定设备（包括网关）的房源-->
-    <select id="getHomeListByUserId" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeVO" >
+    <!--根据userId和第三方厂商 查询已绑定设备（包括网关）的集中式房源-->
+    <select id="getApartmentListByUserId" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeVO" >
         SELECT DISTINCT a.id,a.name, 'apartment' AS `type`
-        FROM narcissus.smart_device_v2 d
+        FROM narcissus_test.smart_device_v2 d
           JOIN `volga_test`.room r ON d.room_ID = r.id
           JOIN `volga_test`.apartment a ON r.apartment_id = a.id
         WHERE d.created_by = #{userId}
@@ -285,47 +285,46 @@
           AND d.house_catalog = 0
           AND d.smart_device_type IN (2,5)
         UNION
-        SELECT DISTINCT h.id,h.area AS `name`, 'house' AS `type`
-        FROM narcissus.smart_device_v2 d
-          JOIN caspain_test.room r ON d.room_ID = r.id
-          JOIN caspain_test.house h ON r.house_id = h.id
-        WHERE d.created_by = #{userId}
-          AND d.room_ID > 0
-          AND d.brand = #{brand}
-          AND d.house_catalog = 1
-          AND d.smart_device_type IN (2,5)
-        UNION
         SELECT DISTINCT a.id,a.name, 'apartment' AS `type`
-        FROM narcissus.smart_device_v2 d
-          JOIN narcissus.public_zone p ON d.public_zone_ID = p.public_zone_ID
+        FROM narcissus_test.smart_device_v2 d
+          JOIN narcissus_test.public_zone p ON d.public_zone_ID = p.public_zone_ID
           JOIN `volga_test`.apartment a ON a.id = p.parent_ID
         WHERE d.created_by = #{userId}
           AND d.public_zone_ID > 0
           AND d.brand = #{brand}
           AND p.data_type = 1
           AND d.smart_device_type IN (2,5)
-        UNION
-        SELECT DISTINCT h.id,h.area AS `name`, 'house' AS `type`
-        FROM narcissus.smart_device_v2 d
-          JOIN narcissus.public_zone p ON d.public_zone_ID = p.public_zone_ID
-          JOIN caspain_test.house h ON h.id = p.parent_ID
-        WHERE d.created_by = #{userId}
-          AND d.public_zone_ID > 0
-          AND d.brand = #{brand}
-          AND p.data_type = 3
-          AND d.smart_device_type IN (2,5)
     </select>
 
-    <!--查询带水表数量的楼层信息 by 公寓d-->
+    <!--查询带水表数量的楼层信息 by 公寓Id-->
     <select id="getFloorWithWater" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.FloorVO">
         SELECT a.id,a.`name`,f.id AS floorId,f.`name` AS floorName,COUNT(d.smart_device_ID) AS watermeterNum,SUM(w.onoff_status) AS watermeterOnLineNum
         FROM `volga_test`.apartment AS a
         LEFT JOIN `volga_test`.floor AS f ON f.apartment_id = a.id
         LEFT JOIN `volga_test`.room AS r ON r.floor_id = f.id
-        LEFT JOIN narcissus.smart_device_v2 AS d ON d.room_ID = r.id AND d.smart_device_type = 2
-        LEFT JOIN narcissus.smart_watermeter AS w ON w.smart_watermeter_id = d.smart_device_ID
+        LEFT JOIN narcissus_test.smart_device_v2 AS d ON d.room_ID = r.id AND d.smart_device_type = 2
+        LEFT JOIN narcissus_test.smart_watermeter AS w ON w.smart_watermeter_id = d.smart_device_ID
         WHERE a.id = #{apartmentId}
         GROUP BY f.id
     </select>
+
+    <!--查询集中式房间水表列表 by 楼层Id-->
+    <select id="getRoomWithWater" parameterType="int" resultMap="roomWithWaterMap" >
+        SELECT r.id AS roomId,r.name AS roomName,d.smart_device_ID AS waterId,w.meter_type,w.updated_at AS updateAt,w.last_amount,w.onoff_status
+        FROM narcissus_test.smart_device_v2 d
+        LEFT JOIN narcissus_test.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
+        JOIN volga_test.room r ON r.id = d.room_ID
+        JOIN volga_test.floor f ON f.id = r.floor_id
+        WHERE f.id = #{floorId} AND d.smart_device_type = 2
+    </select>
+
+    <!--集中式水表列表VO-->
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomSimpleVO" id="roomWithWaterMap" autoMapping="true">
+        <id column="roomId" property="roomId" />
+        <collection property="waterSimpleList" javaType="List"
+                    ofType="com.ih2ome.sunflower.vo.pageVo.watermeter.WaterSimpleVO" autoMapping="true">
+            <id column="waterId" property="waterId" />
+        </collection>
+    </resultMap>
 
 </mapper>

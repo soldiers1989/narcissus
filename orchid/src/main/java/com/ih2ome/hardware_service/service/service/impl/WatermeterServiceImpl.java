@@ -422,15 +422,15 @@ public class WatermeterServiceImpl implements WatermeterService {
 
     /**
      * 根据userId和第三方
-     * 查询已绑定设备（包括网关）的房源
+     * 查询已绑定设备（包括网关）的集中式房源
      * @param userId 用户Id
      * @param brand 第三方标识符
      * @return 房源列表
      */
     @Override
-    public List<HomeVO> getHomeListByUserId(int userId, String brand) {
+    public List<HomeVO> getApartmentListByUserId(int userId, String brand) {
         Log.info("查询已绑定设备（包括网关）的房源,userId：{}, brand:{}", userId, brand);
-        return watermeterDao.getHomeListByUserId(userId, brand);
+        return watermeterDao.getApartmentListByUserId(userId, brand);
     }
 
     /**
@@ -442,5 +442,16 @@ public class WatermeterServiceImpl implements WatermeterService {
     public List<FloorVO> getFloorWithWater(int apartmentId){
         Log.info("根据公寓Id查询公寓内楼层水表数,apartmentId：{}", apartmentId);
         return watermeterDao.getFloorWithWater(apartmentId);
+    }
+
+    /**
+     * 集中式：根据楼层Id查询楼层下房间水表列表
+     * @param floorId 楼层Id
+     * @return 房间列表内嵌水表列表
+     */
+    @Override
+    public List<RoomSimpleVO> getRoomWithWater(int floorId){
+        Log.info("查询集中式楼层下房间水表列表,floorId：{}",floorId);
+        return watermeterDao.getRoomWithWater(floorId);
     }
 }

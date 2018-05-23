@@ -411,16 +411,16 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 根据用户Id查询有水表（或水表网关）的房源列表
+     * 根据用户Id查询有水表（或水表网关）的集中式房源列表
      * @param apiRequestVO
      * @return
      */
-    @RequestMapping(value="/home/list",method = RequestMethod.POST,produces = {"application/json"})
-    public String getHomeList(@RequestBody ApiRequestVO apiRequestVO) {
+    @RequestMapping(value="/apartment/list",method = RequestMethod.POST,produces = {"application/json"})
+    public String getApartmentList(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int userId = dt.getIntValue("userId");
         String brand = dt.getString("brand") == null ? "dding" : dt.getString("brand");
-        List<HomeVO> homeList = watermeterService.getHomeListByUserId(userId, brand);
+        List<HomeVO> homeList = watermeterService.getApartmentListByUserId(userId, brand);
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(homeList));
         JSONObject responseJson = new JSONObject();
         responseJson.put("homeList", homeList);
@@ -458,25 +458,21 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 根据楼层查询集中式水表列表 C2-2
+     * 集中式：根据楼层Id查询楼层下房间水表列表
      * @param apiRequestVO
      * @return
      */
     @RequestMapping(value="/jz/room/list",method = RequestMethod.POST,produces = {"application/json"})
     public String getRoomWithWater(@RequestBody ApiRequestVO apiRequestVO)  {
-        //获取楼层id
-//        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-//        int floorId = dt.getIntValue("floorId");
-//
-//        //通过楼层id列表查询水表信息列表
-//        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
-//
-//        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(jzWatermeterDetailVOS));
-//        JSONObject responseJson = new JSONObject();
-//        responseJson.put("jzWatermeterDetailVOS",jsonArray);
-//        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-//        return res;
-        return "";
-        //TODO
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int floorId = dt.getIntValue("floorId");
+
+        List<RoomSimpleVO> roomSimpleList = watermeterService.getRoomWithWater(floorId);
+
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(roomSimpleList));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("roomSimpleList",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
     }
 }
