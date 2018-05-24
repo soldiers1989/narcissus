@@ -338,7 +338,7 @@
     <!--查询房间下水表详情-->
     <select id="getWaterInRoom" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WaterDetailVO">
         SELECT d.smart_device_ID AS waterId, d.threeID AS waterUuid,w.meter_type AS meterType, w.meter_updated_at AS updateAt,
-        w.last_amount - w.meter_amount AS currentAmount,w.price,w.onoff_status,gb.smart_gateway_ID,g.uuid AS gatewayUuId
+        w.last_amount - w.meter_amount AS currentAmount,w.price/100 AS price,w.onoff_status,gb.smart_gateway_ID,g.uuid AS gatewayUuId
         FROM narcissus_test.smart_device_v2 d
         JOIN narcissus_test.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
         JOIN narcissus_test.smart_gateway_bind_v2 gb ON d.smart_device_ID = gb.smart_device_ID

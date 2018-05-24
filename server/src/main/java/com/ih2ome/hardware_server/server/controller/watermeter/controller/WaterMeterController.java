@@ -365,6 +365,14 @@ public class WaterMeterController extends BaseController {
         List<WaterDetailVO> waterDetailList = watermeterService.getWaterInRoom(roomId);
         RoomDetailVO roomDetail = watermeterService.getRoomDetail(roomId);
 
+        for(WaterDetailVO waterDetail : waterDetailList) {
+            if (waterDetail.getMeterType() == 1) {
+                roomDetail.setColdPrice(waterDetail.getPrice());
+            } else if (waterDetail.getMeterType() == 2) {
+                roomDetail.setHotPrice(waterDetail.getPrice());
+            }
+        }
+
         JSONObject responseJson = new JSONObject();
         responseJson.put("waterDetailList",waterDetailList);
         responseJson.put("roomDetail",roomDetail);

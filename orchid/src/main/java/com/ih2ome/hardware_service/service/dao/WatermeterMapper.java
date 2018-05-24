@@ -298,7 +298,6 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
     /**
      * 更新房间内冷热水单价
-     *
      * @param price     用水单价（分/吨）
      * @param roomId    房间Id
      * @param meterType 水表类型 1-冷 2-热
