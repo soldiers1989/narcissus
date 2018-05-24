@@ -62,6 +62,14 @@
         UPDATE <include refid="smart_watermeter" /> SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
     </update>
 
+    <!--改房间水费单价-->
+    <update id="updateRoomPrice" >
+        UPDATE narcissus_test.smart_watermeter w
+        JOIN narcissus_test.smart_device_v2 d ON w.smart_watermeter_id = d.smart_device_ID
+        SET w.price = #{price}
+        WHERE d.room_ID = #{roomId} AND w.meter_type = #{meterType}
+    </update>
+
     <!--更新水表抄表读数-->
     <update id="updataWaterLastAmount"  >
         UPDATE <include refid="smart_watermeter" /> SET last_amount=#{amount},meter_updated_at= FROM_UNIXTIME(#{time}/1000) WHERE uuid = #{uuid};
@@ -310,7 +318,7 @@
 
     <!--查询集中式房间水表列表 by 楼层Id-->
     <select id="getRoomWithWater" parameterType="int" resultMap="roomWithWaterMap" >
-        SELECT r.id AS roomId,r.name AS roomName,d.smart_device_ID AS waterId,w.meter_type,w.updated_at AS updateAt,w.last_amount,w.onoff_status
+        SELECT r.id AS roomId,r.name AS roomName,d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,w.last_amount-w.meter_amount AS lastAmount,w.onoff_status
         FROM narcissus_test.smart_device_v2 d
         LEFT JOIN narcissus_test.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
         JOIN volga_test.room r ON r.id = d.room_ID

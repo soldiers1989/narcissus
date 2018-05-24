@@ -81,47 +81,6 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 水费单价修改  C6
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/detail/updata_water_price",method = RequestMethod.POST,produces = {"application/json"})
-    public String updataWaterPrice(@RequestBody ApiRequestVO apiRequestVO ){
-        //获取更改价格
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        Float price = dt.getFloatValue("price");
-
-        int watermeterId = dt.getIntValue("watermeterId");
-        Boolean flag;
-        try {
-            flag = watermeterService.updataWaterPrice((int) (price*100),watermeterId);
-        } catch (AmmeterException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        } catch (InstantiationException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        } catch (ClassNotFoundException e) {
-            Log.error(e.getMessage(),e);
-            String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi,new Date().toString(),"修改失败"+e.getMessage());
-            return res;
-        }
-
-       JSONObject responseJson = new JSONObject();
-        if (flag == true) {
-            responseJson.put("result", "success");
-        }
-        String res = structureSuccessResponseVO(responseJson, new Date().toString(), "");
-        return res;
-    }
-
-    /**
      * 水表读数明细每月每天累计水量列表
      * @param apiRequestVO
      * @return
@@ -214,88 +173,6 @@ public class WaterMeterController extends BaseController {
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(smartWatermeterRecords));
         JSONObject responseJson = new JSONObject();
         responseJson.put("smartWatermeterRecords",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
-    }
-
-    /**
-     * 查询集中式公寓列表 C3
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/jz/apartmentlist",method = RequestMethod.POST,produces = {"application/json"})
-    public String jzList(@RequestBody ApiRequestVO apiRequestVO)  {
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int id = dt.getIntValue("id");
-        //通过用户id查询用户公寓列表
-        List<ApartmentVO> apartmentVOS = synchronousHomeService.findApartmentIdByUserId(id);
-        //通过公寓id查询公寓
-        //ApartmentVO apartmentVO = synchronousHomeService.findApartmentIdByApartmentId(apartmentVOS.get(0).getId());
-        //通过公寓查询楼层id
-        if (!apartmentVOS.isEmpty()|| apartmentVOS!=null) {
-            JSONObject responseJson = new JSONObject();
-            responseJson.put("apartmentVOS",apartmentVOS);
-           /*responseJson.put("watermeterNum",watermeterNum);
-            responseJson.put("watermeterOnLineNum",watermeterOnLineNum);*/
-            String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-            return res;
-        }
-        return null;
-
-    }
-
-//    /**
-//     * 查询集中式楼层列表by公寓id C2-1
-//     * @param apiRequestVO
-//     * @return
-//     */
-//    @RequestMapping(value="/jz/floorlist/byapartmentid",method = RequestMethod.POST,produces = {"application/json"})
-//    public String floorListByapartmentId(@RequestBody ApiRequestVO apiRequestVO)  {
-//        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-//        int apartmentId = dt.getIntValue("apartmentId");
-//        //通过用户id查询用户公寓
-//        ApartmentVO apartmentVO = synchronousHomeService.findApartmentIdByApartmentId(apartmentId);
-//        //通过公寓查询楼层id
-//        if (apartmentVO != null) {
-//            //计算水表总数和在线数
-//            List<FloorVO> floorVOS = apartmentVO.getFloorVOS();
-//            int watermeterNum=0;
-//            int watermeterOnLineNum=0;
-//            if(!floorVOS.isEmpty() || floorVOS!=null) {
-//                for (FloorVO floor : floorVOS) {
-//                    watermeterNum += floor.getWatermeterNum();
-//                    watermeterOnLineNum += floor.getWatermeterOnLineNum();
-//                }
-//            }
-//
-//            JSONObject responseJson = new JSONObject();
-//            responseJson.put("floorVO",apartmentVO.getFloorVOS());
-//            responseJson.put("watermeterNum",watermeterNum);
-//            responseJson.put("watermeterOnLineNum",watermeterOnLineNum);
-//            responseJson.put("watermeterOffLineNum",watermeterNum - watermeterOnLineNum);
-//            String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-//            return res;
-//        }
-//        return structureErrorResponse(null,new Date().toString(),"");
-//    }
-
-    /**
-     * 根据楼层查询集中式水表列表 C2-2
-     * @param apiRequestVO
-     * @return
-     */
-    @RequestMapping(value="/jz/list/byfloor",method = RequestMethod.POST,produces = {"application/json"})
-    public String jzListFind(@RequestBody ApiRequestVO apiRequestVO)  {
-        //获取楼层id
-        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int floorId = dt.getIntValue("floorId");
-
-        //通过楼层id列表查询水表信息列表
-        List<JZWatermeterDetailVO> jzWatermeterDetailVOS = watermeterService.findWatermetersByFloorId(floorId);
-
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(jzWatermeterDetailVOS));
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("jzWatermeterDetailVOS",jsonArray);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
     }
@@ -474,5 +351,44 @@ public class WaterMeterController extends BaseController {
         responseJson.put("roomSimpleList",jsonArray);
         String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
         return res;
+    }
+
+    /**
+     * 集中式：根据房间Id查询房间详细信息
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/jz/room/detail",method = RequestMethod.POST,produces = {"application/json"})
+    public String getRoomDetail(@RequestBody ApiRequestVO apiRequestVO)  {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int floorId = dt.getIntValue("roomId");
+
+        List<RoomSimpleVO> roomSimpleList = watermeterService.getRoomWithWater(floorId);
+
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(roomSimpleList));
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("roomSimpleList",jsonArray);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
+    }
+
+    /**
+     * 按房间修改冷热水费单价
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/price/update/room",method = RequestMethod.POST,produces = {"application/json"})
+    public String updateRoomPrice(@RequestBody ApiRequestVO apiRequestVO ) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        Float price = dt.getFloatValue("price");
+        int roomId = dt.getIntValue("roomId");
+        int meterType = dt.getIntValue("meterType");
+        Boolean flag = watermeterService.updateRoomPrice((int) (price * 100), roomId, meterType);
+
+        JSONObject responseJson = new JSONObject();
+        if (flag) {
+            responseJson.put("result", "success");
+        }
+        return structureSuccessResponseVO(responseJson, new Date().toString(), "");
     }
 }
