@@ -456,12 +456,35 @@ public class WatermeterServiceImpl implements WatermeterService {
     }
 
     /**
+     * 集中式：根据房间Id查询水表详情
+     * @param roomId 房间Id
+     * @return 水表详情列表
+     */
+    @Override
+    public List<WaterDetailVO> getWaterInRoom(int roomId){
+        Log.info("查询集中式水表详情,roomId：{}",roomId);
+        return watermeterDao.getWaterInRoom(roomId);
+    }
+
+    /**
+     * 查询房间详情
+     * @param roomId 房间Id
+     * @return 房间信息
+     */
+    @Override
+    public RoomDetailVO getRoomDetail(int roomId){
+        Log.info("查询房间详情,roomId：{}",roomId);
+        return watermeterDao.getRoomDetail(roomId);
+    }
+
+    /**
      * 更新房间内冷热水单价
      * @param price 用水单价（分/吨）
      * @param roomId 房间Id
      * @param meterType 水表类型 1-冷 2-热
      * @return 结果
      */
+    @Override
     public Boolean updateRoomPrice(int price, int roomId, int meterType) {
         Log.info("修改房间水价,price:{},roomId:{},meterType:{}", price, roomId, meterType);
         Integer flag = watermeterDao.updateRoomPrice(price, roomId, meterType);

@@ -349,8 +349,7 @@ public class WaterMeterController extends BaseController {
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(roomSimpleList));
         JSONObject responseJson = new JSONObject();
         responseJson.put("roomSimpleList",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
+        return structureSuccessResponseVO(responseJson,new Date().toString(),"");
     }
 
     /**
@@ -361,15 +360,16 @@ public class WaterMeterController extends BaseController {
     @RequestMapping(value="/jz/room/detail",method = RequestMethod.POST,produces = {"application/json"})
     public String getRoomDetail(@RequestBody ApiRequestVO apiRequestVO)  {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
-        int floorId = dt.getIntValue("roomId");
+        int roomId = dt.getIntValue("roomId");
 
-        List<RoomSimpleVO> roomSimpleList = watermeterService.getRoomWithWater(floorId);
+        List<WaterDetailVO> waterDetailList = watermeterService.getWaterInRoom(roomId);
+        RoomDetailVO roomDetail = watermeterService.getRoomDetail(roomId);
 
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(roomSimpleList));
         JSONObject responseJson = new JSONObject();
-        responseJson.put("roomSimpleList",jsonArray);
-        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
-        return res;
+        responseJson.put("waterDetailList",waterDetailList);
+        responseJson.put("roomDetail",roomDetail);
+
+        return structureSuccessResponseVO(responseJson,new Date().toString(),"");
     }
 
     /**
