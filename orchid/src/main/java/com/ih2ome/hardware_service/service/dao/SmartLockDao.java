@@ -476,4 +476,12 @@ public interface SmartLockDao {
      * @param smartWatermeter
      */
     void  saveWaterMeter(SmartWatermeter smartWatermeter);
+
+    /**
+     * 根据公共区查device_ID
+     * @param publicZoneId
+     * @return
+     */
+    String querySmartGatWayid(@Param("publicZoneId") String publicZoneId );
+
 }

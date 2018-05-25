@@ -188,7 +188,7 @@ public interface WatermeterService {
      * @param smartGatewayId
      * @return
      */
-    List<JZWatermeterDetailVO> findJzWatermetersByGatewayId(int smartGatewayId);
+    List<JZWaterMeterVO> findJzWatermetersByGatewayId(int smartGatewayId);
 
     /**
      * 分散式网关listbyUserId

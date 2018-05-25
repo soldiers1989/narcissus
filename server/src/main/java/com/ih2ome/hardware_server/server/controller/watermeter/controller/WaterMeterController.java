@@ -362,7 +362,7 @@ public class WaterMeterController extends BaseController {
         //查询网关详情
         WatermeterGatewayDetailVO watermeterGatewayDetailVO = watermeterService.findGatewaybyId(smartGatewayId);
         //查询网关绑定的水表
-        List<JZWatermeterDetailVO> watermeterDetailVOS = watermeterService.findJzWatermetersByGatewayId(smartGatewayId);
+        List<JZWaterMeterVO> watermeterDetailVOS = watermeterService.findJzWatermetersByGatewayId(smartGatewayId);
 
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(watermeterDetailVOS));
         JSONObject responseJson = new JSONObject();

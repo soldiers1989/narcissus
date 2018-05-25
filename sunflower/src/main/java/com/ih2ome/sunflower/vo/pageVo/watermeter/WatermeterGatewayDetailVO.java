@@ -19,6 +19,14 @@ public class WatermeterGatewayDetailVO {
     private Date createdAt;
     private String brand;//绑定型号 （品牌名称）
     //private List watermeterList;//所绑定的水表列表
-
-
+    //房源地址（安装地址）
+    private  String address;
+    //安装时间
+    private String createTime;
+    //更新时间
+    private String updateTime;
+    //设备名称
+    private String description;
+    //通讯状态
+    private String connection_status;
 }

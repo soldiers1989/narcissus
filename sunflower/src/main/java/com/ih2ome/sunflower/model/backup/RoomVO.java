@@ -24,6 +24,6 @@ public class RoomVO {
     private String thirdRoomName;
     //设备uuid
     private  String uuid;
-
+    //
     private  String manufactory;
 }

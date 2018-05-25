@@ -1,5 +1,9 @@
 package com.ih2ome.hardware_service.service.service;
 
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.sunflower.model.backup.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGatewayAndHouseInfoVO;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.ApartmentVO;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.HomeSyncVO;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.HouseVO;
@@ -7,7 +11,9 @@ import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.YunDingResponseVo;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface SynchronousHomeService {
     /**
@@ -139,4 +145,37 @@ public interface SynchronousHomeService {
      * @return
      *//*
     List<ApartmentVO> findApartmentByUserId(int id);*/
+
+    /**
+     * 获取第三方及本地房源信息
+     * @param userId
+     * @param type
+     * @param factoryType
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws SmartLockException
+     */
+
+    Map<String, List<HomeVO>> serchWater(String userId, String type, String factoryType)throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException;
+
+    /**
+     * 房间关联
+     * @param smartHouseMappingVO
+     * @throws SmartLockException
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws ParseException
+     */
+    void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException;
+
+    /**
+     * 取消关联
+     * @param smartHouseMappingVO
+     * @throws SmartLockException
+     */
+    void cancelRelation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException;
+
 }

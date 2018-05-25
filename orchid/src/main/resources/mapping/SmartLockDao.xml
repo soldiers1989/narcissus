@@ -57,7 +57,7 @@
     <!--新增设备记录-->
     <insert id="addSmartDevice" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2"
             useGeneratedKeys="true" keyProperty="smartDeviceId" keyColumn="smart_device_ID">
-        INSERT INTO narcissus_test.smart_device_v2 (
+        INSERT INTO narcissus.smart_device_v2 (
         brand,
         connection_status,
         connection_status_update_time,
@@ -73,7 +73,7 @@
         threeID
         )
         VALUES(#{brand},#{connectionStatus},#{connectionStatusUpdateTime},now(),
-        #{createdBy},#{houseCatalog},'0',#{name},#{providerCode},#{publicZoneId},#{roomId},#{smartDeviceType},#{threeId})
+        #{createdBy},#{houseCatalog},0,#{name},#{providerCode},#{publicZoneId},#{roomId},#{smartDeviceType},#{threeId})
     </insert>
     <!--新增网关记录-->
     <insert id="addSmartGateway" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2"
@@ -100,7 +100,7 @@
         install_time,
         brand,
         description
-        )VALUES(#{smartGatewayId},#{uuid},now(),#{brand},#{model})
+        )VALUES(#{smartGatewayId},#{uuid},#{installTime},#{brand},#{model})
     </insert>
 
     <!--新增门锁记录-->
@@ -123,7 +123,7 @@
     </insert>
     <!-- 新增水表记录 -->
     <insert id="saveWaterMeter" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter"
-               >
+            useGeneratedKeys="true" keyProperty="smartWatermeterId" keyColumn="smart_watermeter_id">
     INSERT INTO narcissus_test.smart_watermeter(
     smart_watermeter_id,
     created_at,
@@ -136,7 +136,7 @@
     uuid,
     onoff_status,
     manufactory
-    )VALUES (#{smartWatermeterId},#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{roomId},#{houseCatalog},#{meterType},#{uuid},#{onoffStatus},#{manufactory});
+    )VALUES (#{smartWatermeterId},#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{roomId},#{houseCatalog},#{meter},#{uuid},#{onoffStatus},#{manufactory});
     </insert>
 
     <!--新增网关和设备绑定记录-->
@@ -332,7 +332,7 @@
         nshm.threeID AS thirdRoomId,
         '5' AS dataType
         FROM
-        `caspain_test`.house cth
+        caspain_test.house cth
         LEFT JOIN narcissus_test.public_zone ntpz ON cth.id = ntpz.parent_ID
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
         AND nshm.data_type = 5
@@ -355,8 +355,8 @@
         nshm.threeID AS thirdRoomId,
         '4' AS dataType
         FROM
-        `caspain_test`.house cth
-        LEFT JOIN `caspain_test`.room ctr ON cth.id = ctr.house_id
+        caspain_test.house cth
+        LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
         AND nshm.data_type = 4
         AND nshm.house_catalog = 1 AND nshm.status= 1
@@ -381,7 +381,7 @@
         nshm.threeID AS thirdRoomId,
         '5' AS dataType
         FROM
-        `caspain_test`.house cth
+        `caspain-pro`.house cth
         LEFT JOIN narcissus_test.public_zone ntpz ON cth.id = ntpz.parent_ID
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
         AND nshm.data_type = 5
@@ -404,8 +404,8 @@
         nshm.threeID AS thirdRoomId,
         '4' AS dataType
         FROM
-        `caspain_test`.house cth
-        LEFT JOIN `caspain_test`.room ctr ON cth.id = ctr.house_id
+        `caspain-pro`.house cth
+        LEFT JOIN `caspain-pro`.room ctr ON cth.id = ctr.house_id
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
         AND nshm.data_type = 4
         AND nshm.house_catalog = 1 AND nshm.status= 1
@@ -530,7 +530,8 @@
         WHERE
         nshm.h2omeID = #{h2omeId}
         AND nshm.data_type = #{dataType}
-        AND nshm.house_catalog = #{houseCatalog} AND nshm.provider_code=#{providerCode}
+        AND nshm.house_catalog = #{houseCatalog}
+        AND nshm.provider_code=#{providerCode}
     </select>
 
     <!--根据公共区域查询房间映射记录(分散式)-->
@@ -545,8 +546,8 @@
         nshm.threeID AS threeId
         FROM
         narcissus_test.public_zone ntpz
-        LEFT JOIN caspain_test.house cth ON ntpz.parent_ID = cth.id
-        LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
+        LEFT JOIN caspain.house cth ON ntpz.parent_ID = cth.id
+        LEFT JOIN caspain.room ctr ON cth.id = ctr.house_id
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ctr.id
         WHERE
         ntpz.public_zone_ID = #{h2omeId}
@@ -700,6 +701,7 @@
         WHERE
         ntsv2l.manage_status = 0 AND ntsv2g.manage_status=0 AND  ntsl.smart_lock_ID=#{lockId}
     </select>
+
 
     <!--通过公共区域id查询房源名称（集中式）-->
     <select id="findConcentrateHomeInfoByPublicZoneId" parameterType="string"
@@ -858,7 +860,7 @@
         INSERT INTO narcissus_test.public_zone VALUES(null,3,'公共区域',#{roomId});
     </insert>
 
-     <!--查询没有公共区域的分散式房源id -->
+    <!--查询没有公共区域的分散式房源id -->
     <select id="findDispersedHomesAndPublicZone" resultType="String">
          SELECT
         	r.id AS id
@@ -1125,6 +1127,14 @@ AND sdv.smart_device_type=3;
 
     <!-- 查询主账号下所有子账户id -->
     <select id="findUserId" parameterType="string" resultType="string">
-SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_test.user_profile up WHERE up.user_id=#{userId})
+        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_test.user_profile up WHERE up.user_id=#{userId})
     </select>
+    <!-- 查询 -->
+    <select id="querySmartGatWayid"  parameterType="string" resultType="string">
+        SELECT smart_device_ID FROM narcissus_test.smart_device_v2 sdv
+        WHERE sdv.manage_status = 0
+        AND sdv.public_zone_ID= #{publicZoneId}
+        AND  sdv.smart_device_type = 5
+    </select>
+
 </mapper>

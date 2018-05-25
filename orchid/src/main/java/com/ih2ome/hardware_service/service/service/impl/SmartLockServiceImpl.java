@@ -203,7 +203,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 boolean flag = true;
                 YunDingRoomInfoVO roomInfo = roomIterator.next();
                 for (YunDingDeviceInfoVO deviceInfo : devices) {
-                    if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null) {
+                    if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null&&(deviceInfo.getType().equals("gateway")||deviceInfo.getType().equals("lock"))) {
 //                        Log.info("========roomInfo:{}", roomInfo);
 //                        Log.info("========deviceInfo:{}", deviceInfo);
                         flag = false;
@@ -256,19 +256,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         }
 
     }
-    private IWatermeter getIWatermeter(){
-        IWatermeter iWatermeter = null;
-        try {
-            iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-        } catch (InstantiationException e) {
-            Log.error("获取水表类失败",e);
-        } catch (IllegalAccessException e) {
-            Log.error("获取水表类失败",e);
-        } catch (ClassNotFoundException e) {
-            Log.error("获取水表类失败",e);
-        }
-        return iWatermeter;
-    }
+
     /**
      * 房间或公共区域关联
      *
@@ -336,79 +324,11 @@ public class SmartLockServiceImpl implements SmartLockService {
             } else {
                 smartLockDao.addAssociation(houseMapping);
             }
+            //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
+            smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
         }
+
         List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
-        //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
-        smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
-        IWatermeter iWatermeter = getIWatermeter();
-        try {
-            Date day=new Date();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            if(publicZoneId==roomId){
-                String res=iWatermeter.getWaterGatewayInfo(Uuid);
-                JSONObject resJsonObject = JSONObject.parseObject(res);
-                String resInfo =  resJsonObject.getString("info");
-                JSONObject json = JSONObject.parseObject(resInfo);
-                String off=json.getString("onoff");
-                String description=json.getString("description");
-                String mtime=json.getString("mtime");
-                SmartDeviceV2 smartDevice=new SmartDeviceV2();
-                smartDevice.setBrand("dding");
-                smartDevice.setConnectionStatus(off);
-                smartDevice.setConnectionStatusUpdateTime(df.format(day));
-                smartDevice.setCreatedBy(userId);
-                smartDevice.setHouseCatalog(type);
-                smartDevice.setName(description);
-                smartDevice.setProviderCode("YD");
-                smartDevice.setPublicZoneId(publicZoneId);
-                smartDevice.setSmartDeviceType("4");
-                smartDevice.setThreeId(Uuid);
-                smartLockDao.addSmartDevice(smartDevice);
-                SmartGatewayV2 smartGatewayV2=new SmartGatewayV2();
-                smartGatewayV2.setSmartGatewayId(smartDevice.getSmartDeviceId());
-                smartGatewayV2.setUuid(Uuid);
-                smartGatewayV2.setInstallTime(mtime);
-                smartGatewayV2.setBrand("dding");
-                smartGatewayV2.setModel(description);
-                smartLockDao.saveGatWay(smartGatewayV2);
-            }else {
-                String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode);
-                JSONObject resJson = JSONObject.parseObject(watermeterInfo);
-                String info =  resJson.getString("info");
-                JSONObject jsonObject = JSONObject.parseObject(info);
-                String meter_type = jsonObject.getString("meter_type");
-                String onoff = jsonObject.getString("onoff");
-                String manufactory=jsonObject.getString("manufactory");
-                SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
-                smartDeviceV2.setBrand("dding");
-                smartDeviceV2.setConnectionStatus(onoff);
-                smartDeviceV2.setConnectionStatusUpdateTime(df.format(day));
-                smartDeviceV2.setCreatedBy(userId);
-                smartDeviceV2.setHouseCatalog(type);
-                smartDeviceV2.setName(meter_type);
-                smartDeviceV2.setProviderCode("YD");
-                smartDeviceV2.setRoomId(roomId);
-                smartDeviceV2.setSmartDeviceType("2");
-                smartDeviceV2.setThreeId(Uuid);
-                //新增水表关联记录
-                smartLockDao.addSmartDevice(smartDeviceV2);
-                SmartWatermeter smartWatermeter=new SmartWatermeter();
-                smartWatermeter.setSmartWatermeterId(Long.parseLong(smartDeviceV2.getSmartDeviceId()));
-                smartWatermeter.setCreatedAt(new Date());
-                smartWatermeter.setCreatedBy(Long.parseLong(userId));
-                smartWatermeter.setUpdatedAt(new Date());
-                smartWatermeter.setUpdatedBy(Long.parseLong(userId));
-                smartWatermeter.setRoomId(Long.parseLong(roomId));
-                smartWatermeter.setHouseCatalog(Long.parseLong(type));
-                smartWatermeter.setMeterType(Long.parseLong(meter_type));
-                smartWatermeter.setUuid(Uuid);
-                smartWatermeter.setOnoffStatus(Long.parseLong(onoff));
-                smartWatermeter.setManufactory(manufactory);
-                smartLockDao.saveWaterMeter(smartWatermeter);
-            }
-        } catch (WatermeterException e) {
-            e.printStackTrace();
-        }
 
 //        JSONObject resJson = JSONObject.parseObject(watermeterInfo);
 //
@@ -419,61 +339,93 @@ public class SmartLockServiceImpl implements SmartLockService {
 //        Long time=detail.getLong("time");
         //3 根据厂商建立关联
         //3.1 获取云丁相关信息
-        if(SmartLockFirmEnum.YUN_DING.equals(providerCode)){
-            SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(providerCode);
-            ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
-            Map<String, Object> houseDeviceInfoMap = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
 
-            //获得云丁该房屋下的网关信息
-            List<SmartGatewayV2> publicGatewayList = (List<SmartGatewayV2>) houseDeviceInfoMap.get("gatewayInfoVOList");
-            //获得云丁该房屋下的外门锁信息
-            List<SmartLock> publicLockList = (List<SmartLock>) houseDeviceInfoMap.get("lockVOList");
-
-            //3.2 房间下的设备关联
-            //3.2.1 将网关信息插入数据库
+        SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(providerCode);
+        ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
+        Map<String, Object> houseDeviceInfoMap = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
+        //获得云丁该房屋下的网关信息
+        List<SmartGatewayV2> publicGatewayList = (List<SmartGatewayV2>) houseDeviceInfoMap.get("gatewayInfoVOList");
+        //获得云丁该房屋下的外门锁信息
+        List<SmartLock> publicLockList = (List<SmartLock>) houseDeviceInfoMap.get("lockVOList");
+        //3.2 房间下的设备关联
+        //3.2.1 将网关信息插入数据库
+        for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
+            SmartDeviceV2 gatewayDevice = smartGatewayV2.getSmartDeviceV2();
+            gatewayDevice.setPublicZoneId(publicZoneId);
+            gatewayDevice.setCreatedBy(userId);
+            gatewayDevice.setHouseCatalog(type);
+            gatewayDevice.setProviderCode(providerCode);
+//           新增设备(网关)记录绑定公共区域
+            smartLockDao.addSmartDevice(gatewayDevice);
+            String gatewayDeviceId = gatewayDevice.getSmartDeviceId();
+            smartGatewayV2.setSmartGatewayId(gatewayDeviceId);
+            //新增网关记录
+            smartLockDao.addSmartGateway(smartGatewayV2);
+        }
+        //3.2.2 修改内门锁与网关的绑定信息
+        for (SmartLockGateWayHadBindInnerLockVO gateWayHadBindInnerLockVO : gatewayBindInnerLocks) {
+            String gatewayThirdId = gateWayHadBindInnerLockVO.getGatewayThirdId();
             for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
-                SmartDeviceV2 gatewayDevice = smartGatewayV2.getSmartDeviceV2();
-                gatewayDevice.setPublicZoneId(publicZoneId);
-                gatewayDevice.setCreatedBy(userId);
-                gatewayDevice.setHouseCatalog(type);
-                gatewayDevice.setProviderCode(providerCode);
-//            新增设备(网关)记录绑定公共区域
-                smartLockDao.addSmartDevice(gatewayDevice);
-                String gatewayDeviceId = gatewayDevice.getSmartDeviceId();
-                smartGatewayV2.setSmartGatewayId(gatewayDeviceId);
-                //新增网关记录
-                smartLockDao.addSmartGateway(smartGatewayV2);
-            }
-            //3.2.2 修改内门锁与网关的绑定信息
-            for (SmartLockGateWayHadBindInnerLockVO gateWayHadBindInnerLockVO : gatewayBindInnerLocks) {
-                String gatewayThirdId = gateWayHadBindInnerLockVO.getGatewayThirdId();
-                for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
-                    String uuid = smartGatewayV2.getUuid();
-                    if (gatewayThirdId.equals(uuid)) {
-                        String smartGatewayId = smartGatewayV2.getSmartGatewayId();
-                        Long gatewayId = gateWayHadBindInnerLockVO.getGatewayId();
-                        Long innerLockId = gateWayHadBindInnerLockVO.getInnerLockId();
-                        smartLockDao.updateInnerLockBindGateway(smartGatewayId, gatewayId, innerLockId);
-                    }
-
+                String uuid = smartGatewayV2.getUuid();
+                if (gatewayThirdId.equals(uuid)) {
+                    String smartGatewayId = smartGatewayV2.getSmartGatewayId();
+                    Long gatewayId = gateWayHadBindInnerLockVO.getGatewayId();
+                    Long innerLockId = gateWayHadBindInnerLockVO.getInnerLockId();
+                    smartLockDao.updateInnerLockBindGateway(smartGatewayId, gatewayId, innerLockId);
                 }
             }
-
-            //3.2.3 将外门锁信息插入数据库
-            for (SmartLock publicLock : publicLockList) {
+        }
+        //3.2.3 将外门锁信息插入数据库
+        for (SmartLock publicLock : publicLockList) {
+            //获取该门锁下的网关uuid
+            String gatewayUuid = publicLock.getGatewayUuid();
+            SmartDeviceV2 publicLockDevice = publicLock.getSmartDeviceV2();
+            publicLockDevice.setPublicZoneId(publicZoneId);
+            publicLockDevice.setCreatedBy(userId);
+            publicLockDevice.setHouseCatalog(type);
+            publicLockDevice.setProviderCode(providerCode);
+            //新增设备(外门锁)记录绑定公共区域
+            smartLockDao.addSmartDevice(publicLockDevice);
+            String lockDeviceId = publicLockDevice.getSmartDeviceId();
+            publicLock.setSmartLockId(lockDeviceId);
+            //新增门锁记录
+            smartLockDao.addSmartLock(publicLock);
+            for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
+                String uuid = smartGatewayV2.getUuid();
+                if (uuid.equals(gatewayUuid)) {
+                    String gatewayDeviceId = smartGatewayV2.getSmartGatewayId();
+                    smartLockDao.addSmartDeviceBind(lockDeviceId, gatewayDeviceId);
+                    break;
+                }
+            }
+            List<SmartLockPassword> smartLockPasswordList = publicLock.getSmartLockPasswordList();
+            for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
+                smartLockPassword.setSmartLockId(lockDeviceId);
+                smartLockPassword.setProviderCode(providerCode);
+                if(smartLockPassword.getPassword()!=null){
+                    smartLockDao.addSmartLockPassword(smartLockPassword);
+                }
+            }
+        }
+        //3.2.4 表明是房间
+        if (!publicZoneId.equals(roomId)) {
+            //获取该房间下的内门锁
+            List<SmartLock> innerLockList = iSmartLock.searchRoomDeviceInfo(userId, thirdRoomId);
+            //将内门锁信息插入数据库
+            for (SmartLock innerLock : innerLockList) {
                 //获取该门锁下的网关uuid
-                String gatewayUuid = publicLock.getGatewayUuid();
-                SmartDeviceV2 publicLockDevice = publicLock.getSmartDeviceV2();
-                publicLockDevice.setPublicZoneId(publicZoneId);
-                publicLockDevice.setCreatedBy(userId);
-                publicLockDevice.setHouseCatalog(type);
-                publicLockDevice.setProviderCode(providerCode);
-                //新增设备(外门锁)记录绑定公共区域
-                smartLockDao.addSmartDevice(publicLockDevice);
-                String lockDeviceId = publicLockDevice.getSmartDeviceId();
-                publicLock.setSmartLockId(lockDeviceId);
+                String gatewayUuid = innerLock.getGatewayUuid();
+                SmartDeviceV2 innerLockDevice = innerLock.getSmartDeviceV2();
+                innerLockDevice.setRoomId(roomId);
+                innerLockDevice.setCreatedBy(userId);
+                innerLockDevice.setHouseCatalog(type);
+                innerLockDevice.setProviderCode(providerCode);
+                //新增设备(内门锁)记录绑定房间
+                smartLockDao.addSmartDevice(innerLockDevice);
+                String lockDeviceId = innerLockDevice.getSmartDeviceId();
+                innerLock.setSmartLockId(lockDeviceId);
                 //新增门锁记录
-                smartLockDao.addSmartLock(publicLock);
+                smartLockDao.addSmartLock(innerLock);
                 for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
                     String uuid = smartGatewayV2.getUuid();
                     if (uuid.equals(gatewayUuid)) {
@@ -482,58 +434,19 @@ public class SmartLockServiceImpl implements SmartLockService {
                         break;
                     }
                 }
-                List<SmartLockPassword> smartLockPasswordList = publicLock.getSmartLockPasswordList();
+                List<SmartLockPassword> smartLockPasswordList = innerLock.getSmartLockPasswordList();
                 for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
                     smartLockPassword.setSmartLockId(lockDeviceId);
                     smartLockPassword.setProviderCode(providerCode);
                     if(smartLockPassword.getPassword()!=null){
                         smartLockDao.addSmartLockPassword(smartLockPassword);
                     }
-
-                }
-
-            }
-            //3.2.4 表明是房间
-            if (!publicZoneId.equals(roomId)) {
-                //获取该房间下的内门锁
-                List<SmartLock> innerLockList = iSmartLock.searchRoomDeviceInfo(userId, thirdRoomId);
-                //将内门锁信息插入数据库
-                for (SmartLock innerLock : innerLockList) {
-                    //获取该门锁下的网关uuid
-                    String gatewayUuid = innerLock.getGatewayUuid();
-                    SmartDeviceV2 innerLockDevice = innerLock.getSmartDeviceV2();
-                    innerLockDevice.setRoomId(roomId);
-                    innerLockDevice.setCreatedBy(userId);
-                    innerLockDevice.setHouseCatalog(type);
-                    innerLockDevice.setProviderCode(providerCode);
-                    //新增设备(内门锁)记录绑定房间
-                    smartLockDao.addSmartDevice(innerLockDevice);
-                    String lockDeviceId = innerLockDevice.getSmartDeviceId();
-                    innerLock.setSmartLockId(lockDeviceId);
-                    //新增门锁记录
-                    smartLockDao.addSmartLock(innerLock);
-                    for (SmartGatewayV2 smartGatewayV2 : publicGatewayList) {
-                        String uuid = smartGatewayV2.getUuid();
-                        if (uuid.equals(gatewayUuid)) {
-                            String gatewayDeviceId = smartGatewayV2.getSmartGatewayId();
-                            smartLockDao.addSmartDeviceBind(lockDeviceId, gatewayDeviceId);
-                            break;
-                        }
-                    }
-                    List<SmartLockPassword> smartLockPasswordList = innerLock.getSmartLockPasswordList();
-                    for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
-                        smartLockPassword.setSmartLockId(lockDeviceId);
-                        smartLockPassword.setProviderCode(providerCode);
-                        if(smartLockPassword.getPassword()!=null){
-                            smartLockDao.addSmartLockPassword(smartLockPassword);
-                        }
-                    }
                 }
             }
         }
 
 
-        //3.3 房间关联
+        //3.3 门锁房间关联
         SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
         //查询该关联关系原先是否存在
         SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);

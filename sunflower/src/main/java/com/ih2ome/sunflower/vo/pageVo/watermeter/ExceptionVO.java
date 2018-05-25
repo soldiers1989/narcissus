@@ -13,4 +13,6 @@ public class ExceptionVO extends BaseEntity implements Serializable{
     private int daviceId;
     private Date createdAt;
     private String exceptionType;//异常类型
+    //状态
+    private String status;
 }

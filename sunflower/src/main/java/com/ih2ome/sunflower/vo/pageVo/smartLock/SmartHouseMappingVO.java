@@ -40,7 +40,8 @@ public class SmartHouseMappingVO {
     private String thirdRoomId;
     private String type;
     private String factoryType;
-    private  String uuid;
+    private String uuid;
+    private String gateWayuuid;
 
     public static SmartHouseMappingVO toH2ome(SmartHouseMappingVO smartHouseMappingVO) {
         SmartHouseMappingVO smartHouseMappingVO1 = new SmartHouseMappingVO();

@@ -27,5 +27,6 @@ public class SmartWatermeter {
   private long lastAmount;
   private Date meterUpdatedAt;
   private String manufactory;
+  private  String meter;
 
 }

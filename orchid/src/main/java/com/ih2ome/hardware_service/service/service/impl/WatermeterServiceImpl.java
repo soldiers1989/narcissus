@@ -360,7 +360,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public List<JZWatermeterDetailVO> findJzWatermetersByGatewayId(int smartGatewayId) {
+    public List<JZWaterMeterVO> findJzWatermetersByGatewayId(int smartGatewayId) {
         Log.info("集中式水表列表,网关smartGatewayId:{}",smartGatewayId);
         return watermeterDao.selectJzWatermetersByGatewayId(smartGatewayId);
     }

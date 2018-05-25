@@ -184,7 +184,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param smartGatewayId
      * @return
      */
-    List<JZWatermeterDetailVO> selectJzWatermetersByGatewayId(int smartGatewayId);
+    List<JZWaterMeterVO> selectJzWatermetersByGatewayId(int smartGatewayId);
 
     /**
      * 分散式网关list
@@ -228,4 +228,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @return
      */
     List<String> selectWatermeterIdByGatewayUuid(String uuid);
+
+
+    void saveWaterDevice(SmartWatermeter smartWatermeter);
 }

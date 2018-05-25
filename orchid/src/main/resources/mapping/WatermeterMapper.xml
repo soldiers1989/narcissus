@@ -40,13 +40,21 @@
 <!--增 -->
 
     <!--添加水表-->
-    <insert id="addSmartWatermeter" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter" useGeneratedKeys="true" keyProperty="smart_watermeter_id">
+    <insert id="addSmartWatermeter" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter" >
         insert into <include refid="smart_watermeter" />(created_at,created_by,updated_at,updated_by,deleted_at,deleted_by,apartment_id,floor_id,house_id,room_id,house_catalog,meter_type,
         uuid,onoff_status,price,meter_amount,last_amount,meter_updated_at,manufactory)
         values(#{createdAt},#{createdBy},#{updatedAt},#{updatedBy},#{deletedAt},#{deletedBy},#{apartmentId},#{floorId},#{houseId},#{roomId},#{houseCatalog},#{meterType},
         #{uuid},#{onoffStatus},#{price},#{meterAmount},#{lastAmount},#{meterUpdatedAt},#{manufactory})
     </insert>
-
+    <!--添加水表-->
+    <insert id="saveWaterDevice" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter" >
+        INSERT INTO `narcissus_test`.`smart_device_v2`
+        (`smart_device_ID`, `provider_code`, `threeID`, `smart_device_type`, `name`, `brand`, `connection_status_update_time`,
+        `connection_status`, `work_status`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`,
+         `house_catalog`, `apartment_ID`, `floor_ID`, `house_ID`, `room_ID`, `public_zone_ID`, `manage_status`)
+          VALUES (#{smartWatermeterId}, #{manufactory}, #{uuid}, #{meterType}, #{}, 'dding', now(), #{onoffStatus}, NULL,
+           now(), #{createdBy}, NULL, NULL, NULL, NULL, #{houseCatalog}, NULL, NULL, NULL, #{roomId}, NULL, '0');
+    </insert>
     <!--添加水表-->
     <insert id="addSmartGatewayBind" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind" >
         insert into <include refid="smart_gateway_bind" />(smart_gateway_id,smart_device_type,smart_id)
@@ -100,8 +108,16 @@
 
     <!-- 查询集中式网关by网关id -->
     <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterGatewayDetailVO">
-        SELECT g.smart_gateway_id,g.uuid,a.name AS house_name,g.room_id,g.updated_at,g.created_at,g.brand FROM <include refid="smart_gateway" />  g LEFT JOIN <include refid="apartment" /> AS a
-        ON g.apartment_id =a.id WHERE smart_gateway_id =  #{id};
+        SELECT sdv.connection_status,sgv.description ,sgv.smart_gateway_ID smartGatewayId,sdv.threeID uuid,a.area houseName,a.address,sgv.install_time createTime, sdv.connection_status_update_time updateTime,sdv.provider_code brand
+        FROM narcissus_test.smart_device_v2 sdv
+        LEFT JOIN narcissus_test.public_zone pz
+        ON pz.public_zone_ID=sdv.public_zone_ID
+        LEFT JOIN `volga_test`.apartment a
+        ON pz.parent_ID=a.id
+        LEFT JOIN narcissus_test.smart_gateway_v2 sgv
+        ON sgv.smart_gateway_ID=sdv.smart_device_ID
+        WHERE sdv.smart_device_ID=1058;
+
     </select>
 
     <!-- 查询分散式网关by网关id -->
@@ -127,19 +143,14 @@
     </select>
 
     <!--查询集中式水表listby网关id-->
-    <select id="selectJzWatermetersByGatewayId" parameterType="int" resultMap="jzWatermeterListResultMap">
-        SELECT gb.smart_gateway_id,w.uuid,w.smart_watermeter_id,r.name AS room_name,h.floor_num,h.name AS house_name,w.meter_type,w.created_at,w.last_amount,w.meter_amount,(w.price/100) AS price,w.onoff_status
-        FROM
-        <include refid="smart_watermeter" /> AS w
-        INNER JOIN
-        <include refid="smart_gateway_bind" /> AS gb
-        ON w.smart_watermeter_id = gb.smart_id AND gb.smart_gateway_id = #{id}
-        INNER JOIN
-        <include refid="apartment" /> AS h
-        ON w.apartment_id= h.id
-        INNER JOIN
-        <include refid="jzroom" /> AS r
-        ON  w.room_id= r.id AND h.id=r.apartment_id;
+    <select id="selectJzWatermetersByGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWaterMeterVO">
+        SELECT r.name,sdv.`name` waterType,sdv.threeID uuid,sdv.connection_status connectionStatus
+        FROM narcissus_test.smart_gateway_bind_v2 sgbv
+        LEFT JOIN narcissus_test.smart_device_v2 sdv
+        ON sgbv.smart_device_ID=sdv.smart_device_ID
+        LEFT JOIN `volga_test`.room r
+        ON r.id=sdv.room_ID
+        WHERE sgbv.smart_gateway_ID=#{smartGatewayId}
     </select>
 
     <!--查询集中式水表列表by楼层id-->
@@ -166,16 +177,17 @@
 
     <!--查询集中式公寓下的网关by公寓id-->
     <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterGatewayVO" >
-        SELECT g.smart_gateway_id,a.name AS house_name,g.uuid,g.onoff_status, COUNT(DISTINCT gb.smart_id) AS watermeter_num,SUM(CASE w.onoff_status WHEN 1 THEN 1 ELSE 0 END ) AS watermeter_on_line_num
-        FROM <include refid="smart_gateway"/> AS g
-        LEFT JOIN <include refid="smart_gateway_bind"/> AS gb
-        ON g.smart_gateway_id=gb.smart_gateway_id
-        LEFT JOIN <include refid="smart_watermeter"/> AS w
-        ON w.smart_watermeter_id=gb.smart_id
-        LEFT JOIN <include refid="apartment"/> AS a
-        ON g.apartment_id =a.id
-        WHERE g.apartment_id = #{id}
-        GROUP BY g.smart_gateway_id;
+        SELECT sdv.smart_device_ID smartGatewayId,sdv.threeID uuid,a.area houseName,sdv.connection_status onoffStatus,COUNT(sdv.smart_device_ID) watermeterNum,COUNT(sdv.connection_status=1) watermeterOnLineNum
+        FROM narcissus_test.smart_device_v2 sdv
+        LEFT JOIN narcissus_test.public_zone pz
+        on pz.public_zone_ID=sdv.public_zone_ID
+        LEFT JOIN `volga_test`.apartment a
+        ON a.id=pz.parent_ID
+        LEFT JOIN narcissus_test.smart_gateway_bind_v2 sgbv
+        ON sgbv.smart_gateway_ID=sdv.smart_device_ID
+        WHERE a.id= #{id}
+        AND sdv.smart_device_type=5
+        AND sdv.manage_status=0
     </select>
 
     <!--查询水表抄表记录by水表id-->
@@ -190,7 +202,12 @@
 
     <!--水表异常记录by水表id-->
     <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
-        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_watermeter"/> w WHERE e.uuid = w.uuid AND w.smart_watermeter_id = #{id}
+        SELECT smi.created_at createdAt,sdv.connection_status FROM narcissus_test.smart_device_v2 sdv
+            LEFT JOIN narcissus_test.smart_mistake_info smi
+            ON smi.uuid=sdv.threeID
+            WHERE sdv.smart_device_ID=#{watermeterId}
+            AND smi.smart_device_type=5
+
     </select>
 
     <!--网关异常记录by网关id-->
