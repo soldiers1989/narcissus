@@ -1,6 +1,9 @@
 package com.ih2ome.sunflower.entity.narcissus;
 
+
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 public class SmartGatewayV2 {

@@ -52,7 +52,7 @@
         (`smart_device_ID`, `provider_code`, `threeID`, `smart_device_type`, `name`, `brand`, `connection_status_update_time`,
         `connection_status`, `work_status`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`,
          `house_catalog`, `apartment_ID`, `floor_ID`, `house_ID`, `room_ID`, `public_zone_ID`, `manage_status`)
-          VALUES (#{smartWatermeterId}, #{manufactory}, #{uuid}, #{meterType}, #{}, 'dding', now(), #{onoffStatus}, NULL,
+          VALUES (#{smartWatermeterId}, #{manufactory}, #{uuid}, #{meterType}, 'shuidi', 'dding', now(), #{onoffStatus}, NULL,
            now(), #{createdBy}, NULL, NULL, NULL, NULL, #{houseCatalog}, NULL, NULL, NULL, #{roomId}, NULL, '0');
     </insert>
     <!--添加水表-->

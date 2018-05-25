@@ -57,7 +57,7 @@
     <!--新增设备记录-->
     <insert id="addSmartDevice" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2"
             useGeneratedKeys="true" keyProperty="smartDeviceId" keyColumn="smart_device_ID">
-        INSERT INTO narcissus.smart_device_v2 (
+        INSERT INTO narcissus_test.smart_device_v2 (
         brand,
         connection_status,
         connection_status_update_time,
