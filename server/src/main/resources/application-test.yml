@@ -60,6 +60,6 @@ yd:
   client_id: shuidiceshi
   client_secret: b3a19f6ba2e99046582a9cb5de334de6
   smart_lock:
-    permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op
+    permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op,water_mg,water_op
     call_back:
       url: http://rose.shuidiguanjia.com/api/yunDing/callBack/setOAuthCode
