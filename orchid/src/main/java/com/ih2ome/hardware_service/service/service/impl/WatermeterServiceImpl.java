@@ -54,15 +54,15 @@ public class WatermeterServiceImpl implements WatermeterService {
     }
 
     /**
-     * 通过水表id查询水表详情
-     * @param id
-     * @return
+     * 通过水表Id查询水表详情
+     * @param waterId 水表Id
+     * @return 水表详情
      */
     @Override
-    public WatermeterVO findWatermeterByid(String id) {
-        Log.info(" 通过水表id查询水表详情，水表id：{}",id);
-        SmartWatermeter smartWatermeter = watermeterDao.selectByPrimaryKey(id);
-        return null;
+    public WatermeterVO getWatermeterById(int waterId) {
+        Log.info(" 通过水表id查询水表详情，waterId：{}",waterId);
+        WatermeterVO smartWatermeter = watermeterDao.getWatermeterById(waterId);
+        return smartWatermeter;
     }
 
     /**

@@ -357,4 +357,28 @@
         ORDER BY start_time DESC LIMIT 1
     </select>
 
+    <select id="getWatermeterById" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterVO">
+        SELECT
+          w.smart_watermeter_id,
+          w.created_at,
+          w.created_by,
+          w.apartment_id,
+          w.floor_id,
+          w.house_id,
+          w.room_id,
+          w.house_catalog,
+          w.meter_type,
+          w.uuid,
+          w.onoff_status,
+          w.price,
+          w.meter_amount,
+          w.last_amount,
+          w.meter_updated_at,
+          w.manufactory
+        FROM
+          narcissus_test.smart_watermeter AS w
+        WHERE
+          w.smart_watermeter_id = #{waterId}
+    </select>
+
 </mapper>

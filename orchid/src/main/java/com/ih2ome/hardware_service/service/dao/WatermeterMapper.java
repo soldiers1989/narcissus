@@ -297,6 +297,13 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
     RoomDetailVO getRoomDetail(int roomId);
 
     /**
+     * 根据水表Id查水表
+     * @param waterId 水表Id
+     * @return 水表
+     */
+    WatermeterVO getWatermeterById(int waterId);
+
+    /**
      * 更新房间内冷热水单价
      * @param price     用水单价（分/吨）
      * @param roomId    房间Id

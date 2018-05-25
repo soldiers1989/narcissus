@@ -22,11 +22,11 @@ public interface WatermeterService {
     List<HMWatermeterListVO> findWatermetersByids(List<Integer> ids);
 
     /**
-     * 通过水表id查询水表详情
-     * @param id
-     * @return
+     * 通过水表Id查询水表详情
+     * @param waterId 水表Id
+     * @return 水表详情
      */
-    WatermeterVO findWatermeterByid(String id);
+    WatermeterVO getWatermeterById(int waterId);
 
     /**
      * 通过网关id查询网关详情

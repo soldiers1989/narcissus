@@ -19,8 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 水表Controller
@@ -398,5 +400,53 @@ public class WaterMeterController extends BaseController {
             responseJson.put("result", "success");
         }
         return structureSuccessResponseVO(responseJson, new Date().toString(), "");
+    }
+
+    /**
+     * 查询时间范围内读数明细
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value="/record/list",method = RequestMethod.POST,produces = {"application/json"})
+    public String getWaterRecordList(@RequestBody ApiRequestVO apiRequestVO){
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int watermeterId = dt.getIntValue("watermeterId");
+        String startTime= dt.getString("startTime");
+        String endTime= dt.getString("endTime");
+        List<SmartWatermeterRecord> smartWatermeterRecords= watermeterService.findWatermeterRecordByWatermeterIdAndTime(watermeterId,startTime,endTime);
+        WatermeterVO watermeter = watermeterService.getWatermeterById(watermeterId);
+
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Map<String,RecordVO> recordMap = new HashMap<>();
+        for(SmartWatermeterRecord item : smartWatermeterRecords) {
+            String date = sdf.format(item.getCreatedAt());
+            if (recordMap.containsKey(date)) {
+                if (item.getDeviceAmount() > recordMap.get(date).getLast()) {
+                    recordMap.get(date).setLast(item.getDeviceAmount());
+                }
+                if (item.getDeviceAmount() < recordMap.get(date).getInitial()) {
+                    recordMap.get(date).setInitial(item.getDeviceAmount());
+                }
+            } else {
+                RecordVO record = new RecordVO();
+                record.setDate(date);
+                record.setLast(item.getDeviceAmount());
+                record.setInitial(item.getDeviceAmount());
+                recordMap.put(date, record);
+            }
+        }
+        List<RecordVO> recordList = new ArrayList<>(recordMap.values());
+        recordList.sort(Comparator.comparing(RecordVO::getDate));
+        for (int i = 1;i<recordList.size();i++) {
+            recordList.get(i).setInitial(recordList.get(i - 1).getLast());
+        }
+        for(RecordVO record : recordList){
+            record.setUsed(record.getLast() - record.getInitial());
+            record.setAmount(record.getUsed() * watermeter.getPrice() / 100.0);
+        }
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("recordList",recordList);
+        String res = structureSuccessResponseVO(responseJson,new Date().toString(),"");
+        return res;
     }
 }
