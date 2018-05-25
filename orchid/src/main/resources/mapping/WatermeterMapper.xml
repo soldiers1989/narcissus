@@ -70,6 +70,14 @@
         UPDATE <include refid="smart_watermeter" /> SET price = #{price} WHERE smart_watermeter_id = #{watermeterId};
     </update>
 
+    <!--改房间水费单价-->
+    <update id="updateRoomPrice" >
+        UPDATE narcissus_test.smart_watermeter w
+        JOIN narcissus_test.smart_device_v2 d ON w.smart_watermeter_id = d.smart_device_ID
+        SET w.price = #{price}
+        WHERE d.room_ID = #{roomId} AND w.meter_type = #{meterType}
+    </update>
+
     <!--更新水表抄表读数-->
     <update id="updataWaterLastAmount"  >
         UPDATE <include refid="smart_watermeter" /> SET last_amount=#{amount},meter_updated_at= FROM_UNIXTIME(#{time}/1000) WHERE uuid = #{uuid};
@@ -289,5 +297,105 @@
         INNER JOIN <include refid="smart_watermeter" /> AS watermeter ON bind.smart_id=watermeter.smart_watermeter_id
         WHERE gateway.uuid=#{uuid}
   </select>
+
+    <!--根据userId和第三方厂商 查询已绑定设备（包括网关）的集中式房源-->
+    <select id="getApartmentListByUserId" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.HomeVO" >
+        SELECT DISTINCT a.id,a.name, 'apartment' AS `type`
+        FROM narcissus_test.smart_device_v2 d
+          JOIN `volga_test`.room r ON d.room_ID = r.id
+          JOIN `volga_test`.apartment a ON r.apartment_id = a.id
+        WHERE d.created_by = #{userId}
+          AND d.room_ID > 0
+          AND d.brand = #{brand}
+          AND d.house_catalog = 0
+          AND d.smart_device_type IN (2,5)
+        UNION
+        SELECT DISTINCT a.id,a.name, 'apartment' AS `type`
+        FROM narcissus_test.smart_device_v2 d
+          JOIN narcissus_test.public_zone p ON d.public_zone_ID = p.public_zone_ID
+          JOIN `volga_test`.apartment a ON a.id = p.parent_ID
+        WHERE d.created_by = #{userId}
+          AND d.public_zone_ID > 0
+          AND d.brand = #{brand}
+          AND p.data_type = 1
+          AND d.smart_device_type IN (2,5)
+    </select>
+
+    <!--查询带水表数量的楼层信息 by 公寓Id-->
+    <select id="getFloorWithWater" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.FloorVO">
+        SELECT a.id,a.`name`,f.id AS floorId,f.`name` AS floorName,COUNT(d.smart_device_ID) AS watermeterNum,SUM(w.onoff_status) AS watermeterOnLineNum
+        FROM `volga_test`.apartment AS a
+        LEFT JOIN `volga_test`.floor AS f ON f.apartment_id = a.id
+        LEFT JOIN `volga_test`.room AS r ON r.floor_id = f.id
+        LEFT JOIN narcissus_test.smart_device_v2 AS d ON d.room_ID = r.id AND d.smart_device_type = 2
+        LEFT JOIN narcissus_test.smart_watermeter AS w ON w.smart_watermeter_id = d.smart_device_ID
+        WHERE a.id = #{apartmentId}
+        GROUP BY f.id
+    </select>
+
+    <!--查询集中式房间水表列表 by 楼层Id-->
+    <select id="getRoomWithWater" parameterType="int" resultMap="roomWithWaterMap" >
+        SELECT r.id AS roomId,r.name AS roomName,d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,w.last_amount-w.meter_amount AS currentAmount,w.onoff_status
+        FROM narcissus_test.smart_device_v2 d
+        LEFT JOIN narcissus_test.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
+        JOIN volga_test.room r ON r.id = d.room_ID
+        JOIN volga_test.floor f ON f.id = r.floor_id
+        WHERE f.id = #{floorId} AND d.smart_device_type = 2
+    </select>
+
+    <!--集中式水表列表VO-->
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomSimpleVO" id="roomWithWaterMap" autoMapping="true">
+        <id column="roomId" property="roomId" />
+        <collection property="waterSimpleList" javaType="List"
+                    ofType="com.ih2ome.sunflower.vo.pageVo.watermeter.WaterSimpleVO" autoMapping="true">
+            <id column="waterId" property="waterId" />
+        </collection>
+    </resultMap>
+
+    <!--查询房间下水表详情-->
+    <select id="getWaterInRoom" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WaterDetailVO">
+        SELECT d.smart_device_ID AS waterId, d.threeID AS waterUuid,w.meter_type AS meterType, w.meter_updated_at AS updateAt,
+        w.last_amount - w.meter_amount AS currentAmount,w.price/100 AS price,w.onoff_status,gb.smart_gateway_ID,g.uuid AS gatewayUuId
+        FROM narcissus_test.smart_device_v2 d
+        JOIN narcissus_test.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
+        JOIN narcissus_test.smart_gateway_bind_v2 gb ON d.smart_device_ID = gb.smart_device_ID
+        LEFT JOIN narcissus_test.smart_gateway_v2 g ON gb.smart_gateway_ID = g.smart_gateway_ID
+        WHERE d.room_ID = #{roomId}
+    </select>
+
+    <select id="getRoomDetail" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomDetailVO" >
+        SELECT r.`name` AS roomName, a.area AS apartmentName,
+        rc.`status` AS contractStatus,
+        rc.customer_name,rc.customer_phone,rc.start_time
+        FROM volga_test.room r
+        JOIN volga_test.apartment a ON r.apartment_id = a.id
+        LEFT JOIN volga_test.room_contract rc ON rc.room_id = r.id AND rc.is_delete = 0
+        WHERE r.id = #{roomId}
+        ORDER BY start_time DESC LIMIT 1
+    </select>
+
+    <select id="getWatermeterById" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterVO">
+        SELECT
+          w.smart_watermeter_id,
+          w.created_at,
+          w.created_by,
+          w.apartment_id,
+          w.floor_id,
+          w.house_id,
+          w.room_id,
+          w.house_catalog,
+          w.meter_type,
+          w.uuid,
+          w.onoff_status,
+          w.price,
+          w.meter_amount,
+          w.last_amount,
+          w.meter_updated_at,
+          w.manufactory
+        FROM
+          narcissus_test.smart_watermeter AS w
+        WHERE
+          w.smart_watermeter_id = #{waterId}
+    </select>
 
 </mapper>

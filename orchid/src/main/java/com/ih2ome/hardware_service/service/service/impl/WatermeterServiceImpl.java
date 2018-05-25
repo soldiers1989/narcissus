@@ -12,6 +12,7 @@ import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -53,15 +54,15 @@ public class WatermeterServiceImpl implements WatermeterService {
     }
 
     /**
-     * 通过水表id查询水表详情
-     * @param id
-     * @return
+     * 通过水表Id查询水表详情
+     * @param waterId 水表Id
+     * @return 水表详情
      */
     @Override
-    public WatermeterVO findWatermeterByid(String id) {
-        Log.info(" 通过水表id查询水表详情，水表id：{}",id);
-        SmartWatermeter smartWatermeter = watermeterDao.selectByPrimaryKey(id);
-        return null;
+    public WatermeterVO getWatermeterById(int waterId) {
+        Log.info(" 通过水表id查询水表详情，waterId：{}",waterId);
+        WatermeterVO smartWatermeter = watermeterDao.getWatermeterById(waterId);
+        return smartWatermeter;
     }
 
     /**
@@ -419,5 +420,74 @@ public class WatermeterServiceImpl implements WatermeterService {
         watermeterDao.updataWatermeterMeterAmount(watermeterId,meterAmount);
     }
 
+    /**
+     * 根据userId和第三方
+     * 查询已绑定设备（包括网关）的集中式房源
+     * @param userId 用户Id
+     * @param brand 第三方标识符
+     * @return 房源列表
+     */
+    @Override
+    public List<HomeVO> getApartmentListByUserId(int userId, String brand) {
+        Log.info("查询已绑定设备（包括网关）的房源,userId：{}, brand:{}", userId, brand);
+        return watermeterDao.getApartmentListByUserId(userId, brand);
+    }
 
+    /**
+     * 集中式：根据公寓Id查询公寓内楼层水表数
+     * @param apartmentId 公寓Id
+     * @return 公寓水表数 + 各楼层水表数
+     */
+    @Override
+    public List<FloorVO> getFloorWithWater(int apartmentId){
+        Log.info("根据公寓Id查询公寓内楼层水表数,apartmentId：{}", apartmentId);
+        return watermeterDao.getFloorWithWater(apartmentId);
+    }
+
+    /**
+     * 集中式：根据楼层Id查询楼层下房间水表列表
+     * @param floorId 楼层Id
+     * @return 房间列表内嵌水表列表
+     */
+    @Override
+    public List<RoomSimpleVO> getRoomWithWater(int floorId){
+        Log.info("查询集中式楼层下房间水表列表,floorId：{}",floorId);
+        return watermeterDao.getRoomWithWater(floorId);
+    }
+
+    /**
+     * 集中式：根据房间Id查询水表详情
+     * @param roomId 房间Id
+     * @return 水表详情列表
+     */
+    @Override
+    public List<WaterDetailVO> getWaterInRoom(int roomId){
+        Log.info("查询集中式水表详情,roomId：{}",roomId);
+        return watermeterDao.getWaterInRoom(roomId);
+    }
+
+    /**
+     * 查询房间详情
+     * @param roomId 房间Id
+     * @return 房间信息
+     */
+    @Override
+    public RoomDetailVO getRoomDetail(int roomId){
+        Log.info("查询房间详情,roomId：{}",roomId);
+        return watermeterDao.getRoomDetail(roomId);
+    }
+
+    /**
+     * 更新房间内冷热水单价
+     * @param price 用水单价（分/吨）
+     * @param roomId 房间Id
+     * @param meterType 水表类型 1-冷 2-热
+     * @return 结果
+     */
+    @Override
+    public Boolean updateRoomPrice(int price, int roomId, int meterType) {
+        Log.info("修改房间水价,price:{},roomId:{},meterType:{}", price, roomId, meterType);
+        Integer flag = watermeterDao.updateRoomPrice(price, roomId, meterType);
+        return flag > 0;
+    }
 }

@@ -22,11 +22,11 @@ public interface WatermeterService {
     List<HMWatermeterListVO> findWatermetersByids(List<Integer> ids);
 
     /**
-     * 通过水表id查询水表详情
-     * @param id
-     * @return
+     * 通过水表Id查询水表详情
+     * @param waterId 水表Id
+     * @return 水表详情
      */
-    WatermeterVO findWatermeterByid(String id);
+    WatermeterVO getWatermeterById(int waterId);
 
     /**
      * 通过网关id查询网关详情
@@ -237,4 +237,50 @@ public interface WatermeterService {
      * @return
      */
     List<String> findWatermeterIdByGatewayUuid(String uuid);
+
+    /**
+     * 根据userId和第三方厂商
+     * 查询已绑定设备（包括网关）的集中式房源
+     * @param userId 用户Id
+     * @param provider 第三方厂商标识符
+     * @return 房源列表
+     */
+    List<HomeVO> getApartmentListByUserId(int userId, String provider);
+
+    /**
+     * 集中式：根据公寓Id查询公寓内楼层水表数
+     * @param apartmentId 公寓Id
+     * @return 公寓水表数 + 各楼层水表数
+     */
+    List<FloorVO> getFloorWithWater(int apartmentId);
+
+    /**
+     * 集中式：根据楼层Id查询楼层下房间水表列表
+     * @param floorId 楼层Id
+     * @return 房间列表内嵌水表列表
+     */
+    List<RoomSimpleVO> getRoomWithWater(int floorId);
+
+    /**
+     * 集中式：根据房间Id查询水表详情
+     * @param roomId 房间Id
+     * @return 水表详情列表
+     */
+    List<WaterDetailVO> getWaterInRoom(int roomId);
+
+    /**
+     * 查询房间详情
+     * @param roomId 房间Id
+     * @return 房间信息
+     */
+    RoomDetailVO getRoomDetail(int roomId);
+
+    /**
+     * 更新房间内冷热水单价
+     * @param price 用水单价（分/吨）
+     * @param roomId 房间Id
+     * @param meterType 水表类型 1-冷 2-热
+     * @return 结果
+     */
+    Boolean updateRoomPrice(int price, int roomId, int meterType);
 }
