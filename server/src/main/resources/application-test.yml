@@ -56,8 +56,8 @@ sso:
 #云丁信息
 yd:
   login:
-    url: http://dev-gate.dding.net:7080/public/oauth/index.html
-  client_id: shuidiceshi
+    url:  https://open.dding.net/public/oauth/index.html
+  client_id: shuidiguanjia
   client_secret: b3a19f6ba2e99046582a9cb5de334de6
   smart_lock:
     permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op,water_mg,water_op
