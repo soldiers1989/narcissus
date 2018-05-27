@@ -185,7 +185,7 @@
 
     <!--查询集中式公寓下的网关by公寓id-->
     <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterGatewayVO" >
-        SELECT sdv.smart_device_ID smartGatewayId,sdv.threeID uuid,a.area houseName,sdv.connection_status onoffStatus,COUNT(sdv.smart_device_ID) watermeterNum,COUNT(sdv.connection_status=1) watermeterOnLineNum
+        SELECT sdv.smart_device_ID smartGatewayId,sdv.threeID uuid,a.name houseName,sdv.connection_status onoffStatus,COUNT(sdv.smart_device_ID) watermeterNum,COUNT(sdv.connection_status=1) watermeterOnLineNum
         FROM narcissus_test.smart_device_v2 sdv
         LEFT JOIN narcissus_test.public_zone pz
         on pz.public_zone_ID=sdv.public_zone_ID
