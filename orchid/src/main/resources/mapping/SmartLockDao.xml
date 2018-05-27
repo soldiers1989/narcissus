@@ -589,8 +589,7 @@
         LEFT JOIN caspain_test.house cth ON ctr.house_id = cth.id
         LEFT JOIN narcissus_test.public_zone npz ON cth.id = npz.parent_ID
         WHERE
-        npz.data_type = 3
-        AND ctr.id = #{roomId}
+         ctr.id = #{roomId}
     </select>
 
     <!--根据房间ID查询公共区域ID(集中式)-->
