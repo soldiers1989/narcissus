@@ -1,9 +1,9 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
-import com.ih2ome.hardware_service.service.dao.WatermeterPaymentRecordMapper;
+import com.ih2ome.hardware_service.service.dao.WatermeterAccountMapper;
 import com.ih2ome.hardware_service.service.model.narcissus.SmartWatermeter;
 import com.ih2ome.hardware_service.service.model.narcissus.WatermeterPaymentRecord;
-import com.ih2ome.hardware_service.service.service.WatermeterPaymentRecordService;
+import com.ih2ome.hardware_service.service.service.WatermeterAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,16 @@ import java.util.List;
  * @create 2018/2/28
  */
 @Service
-public class WatermeterPaymentRecordServiceImpl implements WatermeterPaymentRecordService {
-    private static final Logger Log = LoggerFactory.getLogger(WatermeterPaymentRecordService.class);
+public class WatermeterAccountServiceImpl implements WatermeterAccountService {
+    private static final Logger Log = LoggerFactory.getLogger(WatermeterAccountService.class);
 
     @Autowired
-    private WatermeterPaymentRecordMapper watermeterPaymentRecordMapper;
+    private WatermeterAccountMapper watermeterAccountMapper;
+
+    @Override
+    public List<SmartWatermeter> getWaterByRoomId(Integer roomId, Integer type) {
+        return watermeterAccountMapper.selectWatermeterByRoomId(roomId, type);
+    }
 
     /**
      * 查询水费金额
@@ -32,7 +37,7 @@ public class WatermeterPaymentRecordServiceImpl implements WatermeterPaymentReco
     @Override
     public List<WatermeterPaymentRecord> findPaymentAmountByRoomId(Integer roomId, Integer type) {
         //查询水表读数，水表单价
-        List<SmartWatermeter> watermeterList= watermeterPaymentRecordMapper.selectWatermeterByRoomId(roomId,type);
+        List<SmartWatermeter> watermeterList= watermeterAccountMapper.selectWatermeterByRoomId(roomId,type);
 
         List<WatermeterPaymentRecord> watermeterPaymentRecordList = new ArrayList<>();
         if(!watermeterList.isEmpty() || watermeterList != null){
@@ -41,7 +46,7 @@ public class WatermeterPaymentRecordServiceImpl implements WatermeterPaymentReco
                 Long price = watermeter.getPrice();
                 int smartWatermeterId = watermeter.getSmartWatermeterId();
                 //查询上次缴费水表读数
-                Long paylastAmouny =watermeterPaymentRecordMapper.selectWatermeterLastAmountBySmartWatermeterId(smartWatermeterId);
+                Long paylastAmouny = watermeterAccountMapper.selectWatermeterLastAmountBySmartWatermeterId(smartWatermeterId);
                 if (paylastAmouny == null){
                     paylastAmouny=0L;
                 }
@@ -69,7 +74,7 @@ public class WatermeterPaymentRecordServiceImpl implements WatermeterPaymentReco
     @Override
     public Boolean createWatermeterPaymentRecord(WatermeterPaymentRecord watermeterPaymentRecord) {
 
-        Integer count = watermeterPaymentRecordMapper.insertWatermeterPaymentRecord(watermeterPaymentRecord);
+        Integer count = watermeterAccountMapper.insertWatermeterPaymentRecord(watermeterPaymentRecord);
         if(count == 1){
             return true;
         }

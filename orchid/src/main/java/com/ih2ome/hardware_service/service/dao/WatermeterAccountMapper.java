@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WatermeterPaymentRecordMapper extends MyMapper<WatermeterPaymentRecord> {
-
+public interface WatermeterAccountMapper extends MyMapper<WatermeterPaymentRecord> {
 
     List<SmartWatermeter> selectWatermeterByRoomId(@Param("roomId") Integer roomId, @Param("type") Integer type);
 

@@ -21,10 +21,10 @@ public class SmartWatermeter {
   private long houseCatalog;
   private double meterType;
   private String uuid;
-  private double onoffStatus;
-  private long price;
+  private long onoffStatus;
+  private int price;
   private long meterAmount;
-  private long lastAmount;
+  private int lastAmount;
   private Date meterUpdatedAt;
   private String manufactory;
   private  String meter;

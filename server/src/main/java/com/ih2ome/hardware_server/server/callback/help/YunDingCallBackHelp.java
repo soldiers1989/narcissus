@@ -106,60 +106,51 @@ public class YunDingCallBackHelp {
     public void watermeterAmountAsyncEvent(CallbackRequestVo apiRequestVO) {
         Object detailObj = apiRequestVO.getDetail();
         String s = JSONObject.toJSONString(detailObj);
-        JSONObject detail=JSONObject.parseObject(s);
+        JSONObject detail = JSONObject.parseObject(s);
         Integer amount = (Integer) detail.get("amount");
         Long time = apiRequestVO.getTime();
         //抄表成功
-        if(amount >= 0) {
+        if (amount >= 0) {
+            SmartWatermeter watermeter = watermeterService.getWatermeterByUuId(apiRequestVO.getUuid());
+            SmartDeviceV2 device = watermeterService.getSmartDeviceV2(watermeter.getSmartWatermeterId());
 
-            //更新或添加抄表记录
-            //获取最近一次抄表时间
-            Integer watermeterid = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
-//            Timestamp timestamp=watermeterService.findWatermeterMeterUpdatedAt(apiRequestVO.getUuid());
-            Timestamp timestamp=watermeterRecordService.findWatermeterMeterUpdatedAtByWatermeterId(watermeterid);
-            Timestamp nowTime = new Timestamp(time);
-
-            SmartWatermeterRecord smartWatermeterRecord=new SmartWatermeterRecord();
-            smartWatermeterRecord.setCreatedAt(nowTime);
+            SmartWatermeterRecord smartWatermeterRecord = new SmartWatermeterRecord();
             smartWatermeterRecord.setDeviceAmount(amount);
-            smartWatermeterRecord.setSmartWatermeterId(watermeterid);
-            //判断是否为同一天
-            if(isTheSameDate(timestamp,nowTime)){
-                //更新抄表记录
-                watermeterRecordService.updataWatermeterRecord(smartWatermeterRecord);
-            }else{
-                //添加抄表记录
-                watermeterRecordService.addWatermeterRecord(smartWatermeterRecord);
+            smartWatermeterRecord.setSmartWatermeterId(watermeter.getSmartWatermeterId());
+            //写入抄表记录
+            watermeterRecordService.addWatermeterRecord(smartWatermeterRecord);
+            //计算金额
+            if (amount > watermeter.getLastAmount()) {
+                watermeterService.changeBalance(Integer.parseInt(device.getRoomId()), Integer.parseInt(device.getHouseCatalog()), (amount - watermeter.getLastAmount()) * watermeter.getPrice(), "", "system_async", "");
             }
-
-            //存入数据库
+            if (amount < watermeter.getLastAmount()) {
+                Log.warn("第三方返回电表读数小于最近读数，请关注！ deviceId:{};返回读数:{};最近读数:{}", watermeter.getSmartWatermeterId(), amount, watermeter.getLastAmount());
+            }
+            //更新最近读数
             watermeterService.updataWaterLastAmount(apiRequestVO.getUuid(), amount, time);
-            //查询水表在线状态
-            Integer onOffStatus= watermeterService.findWatermeterOnOffStatusByUuid(apiRequestVO.getUuid());
+
             //水表状态离线
-            if (onOffStatus.equals(OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode())) {
-                //水表在线
+            if (watermeter.getOnoffStatus() == OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()) {
+                //水表上线
                 watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), OnOffStatusEnum.ON_OFF_STATUS_ENUM_ON_Line.getCode());
                 //添加异常上线记录
-                SmartMistakeInfo watermeterMistakeInfo =new SmartMistakeInfo();
+                SmartMistakeInfo watermeterMistakeInfo = new SmartMistakeInfo();
                 watermeterMistakeInfo.setCreatedAt(new Timestamp(apiRequestVO.getTime()));
                 watermeterMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER.getCode());
                 watermeterMistakeInfo.setExceptionType(String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_EXCEPTION_TYPE_ON_LINE.getCode()));
                 watermeterMistakeInfo.setUuid(apiRequestVO.getUuid());
-                //watermeterMistakeInfo.setSn(apiRequestVO.getUuid());
                 gatewayService.addSmartMistakeInfo(watermeterMistakeInfo);
             }
-        }else{
+        } else {
+            //水表离线
+            watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
             //水表离线,添加水表异常
-            SmartMistakeInfo watermeterMistakeInfo =new SmartMistakeInfo();
+            SmartMistakeInfo watermeterMistakeInfo = new SmartMistakeInfo();
             watermeterMistakeInfo.setCreatedAt(new Timestamp(apiRequestVO.getTime()));
             watermeterMistakeInfo.setSmartDeviceType(SmartDeviceTypeEnum.YUN_DING_WATERMETER.getCode());
             watermeterMistakeInfo.setExceptionType(String.valueOf(AlarmTypeEnum.YUN_DING_WATERMETER_EXCEPTION_TYPE_OFF_LINE.getCode()));
             watermeterMistakeInfo.setUuid(apiRequestVO.getUuid());
-            //watermeterMistakeInfo.setSn(apiRequestVO.getUuid());
             gatewayService.addSmartMistakeInfo(watermeterMistakeInfo);
-            //水表离线
-            watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(),OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
         }
     }
 
@@ -413,9 +404,9 @@ public class YunDingCallBackHelp {
             gatewayBindService.deleteGatewayBindByGatewayId(gatewayId);
         }else if(type.equals("8")){
             //查询水表id
-            Integer watemeterId = watermeterService.findWatermeterIdByUuid(apiRequestVO.getUuid());
+            SmartWatermeter watermeter = watermeterService.getWatermeterByUuId(apiRequestVO.getUuid());
             //解绑水表
-            gatewayBindService.deleteGatewayBindByWatermeterId(watemeterId);
+            gatewayBindService.deleteGatewayBindByWatermeterId(watermeter.getSmartWatermeterId());
         }
 
     }

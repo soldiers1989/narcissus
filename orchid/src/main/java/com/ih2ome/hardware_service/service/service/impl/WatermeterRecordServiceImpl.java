@@ -19,16 +19,6 @@ public class WatermeterRecordServiceImpl implements WatermeterRecordService {
     private static final Logger Log = LoggerFactory.getLogger(WatermeterRecordServiceImpl.class);
 
     /**
-     * 更新抄表记录
-     * @param smartWatermeterRecord
-     */
-    @Override
-    public void updataWatermeterRecord(SmartWatermeterRecord smartWatermeterRecord) {
-        Log.info("更新抄表记录，smartWatermeterRecord：{}",smartWatermeterRecord.toString());
-        watermeterRecordMapper.updataWatermeterRecord(smartWatermeterRecord);
-    }
-
-    /**
      * 添加抄表记录
      * @param smartWatermeterRecord
      */
@@ -36,10 +26,5 @@ public class WatermeterRecordServiceImpl implements WatermeterRecordService {
     public void addWatermeterRecord(SmartWatermeterRecord smartWatermeterRecord) {
         Log.info("添加抄表记录，smartWatermeterRecord：{}",smartWatermeterRecord.toString());
         watermeterRecordMapper.insertWatermeterRecord(smartWatermeterRecord);
-    }
-
-    @Override
-    public Timestamp findWatermeterMeterUpdatedAtByWatermeterId(Integer watermeterid) {
-        return watermeterRecordMapper.selectWatermeterMeterUpdatedAtByWatermeterId(watermeterid);
     }
 }

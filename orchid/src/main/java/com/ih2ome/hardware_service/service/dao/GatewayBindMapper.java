@@ -15,7 +15,7 @@ public interface GatewayBindMapper extends MyMapper<SmartGatewayBind> {
      * 删除网关绑定by水表id
      * @param watermeterId
      */
-    void deleteGatewayBindByWatermeterId(int watermeterId);
+    void deleteGatewayBindByWatermeterId(long watermeterId);
 
     /**
      * 删除网关绑定by网关id

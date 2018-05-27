@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.model.narcissus.WatermeterPaymentRecord;
-import com.ih2ome.hardware_service.service.service.WatermeterPaymentRecordService;
+import com.ih2ome.hardware_service.service.service.WatermeterAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class WatermeterPaymentRecordController extends BaseController {
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private WatermeterPaymentRecordService watermeterPaymentRecordService;
+    private WatermeterAccountService watermeterAccountService;
 
     /**
      * 获取水费金额
@@ -40,7 +40,7 @@ public class WatermeterPaymentRecordController extends BaseController {
         Integer roomId = dt.getIntValue("roomId");
         Integer type = dt.getIntValue("type");
 
-        List<WatermeterPaymentRecord> paymentRecordList = watermeterPaymentRecordService.findPaymentAmountByRoomId(roomId,type);
+        List<WatermeterPaymentRecord> paymentRecordList = watermeterAccountService.findPaymentAmountByRoomId(roomId,type);
 
         return JSONObject.toJSONString(paymentRecordList);
     }
@@ -72,7 +72,7 @@ public class WatermeterPaymentRecordController extends BaseController {
             watermeterPaymentRecord.setMeterUpdateAt(meterUpdateAt);
             watermeterPaymentRecord.setMeterType(meterType);
 
-            Boolean res= watermeterPaymentRecordService.createWatermeterPaymentRecord(watermeterPaymentRecord);
+            Boolean res= watermeterAccountService.createWatermeterPaymentRecord(watermeterPaymentRecord);
             if (!res){
                 return "缴费记录创建失败";
             }

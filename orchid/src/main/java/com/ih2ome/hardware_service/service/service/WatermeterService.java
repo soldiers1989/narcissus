@@ -1,11 +1,13 @@
 package com.ih2ome.hardware_service.service.service;
 
+import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
 import com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -159,7 +161,7 @@ public interface WatermeterService {
      * @param uuid
      * @return
      */
-    Integer findWatermeterIdByUuid(String uuid);
+    SmartWatermeter getWatermeterByUuId(String uuid);
 
     /**
      * 查询水表读数by水表id
@@ -288,4 +290,12 @@ public interface WatermeterService {
      * @return 结果
      */
     Boolean updateRoomPrice(int price, int roomId, int meterType);
+
+    RoomAccountVO getRoomAmount(int roomId, int meterType);
+
+    int changeBalance(int roomId,int houseCatalog,int amount,String payChannel,String action, String actionId);
+
+    int makeWaterZero(int roomId, int houseCatalog);
+
+    SmartDeviceV2 getSmartDeviceV2(long deviceId);
 }
