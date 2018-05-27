@@ -116,7 +116,7 @@
 
     <!-- 查询集中式网关by网关id -->
     <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterGatewayDetailVO">
-        SELECT sdv.connection_status connectionStatus,sgv.description ,sgv.smart_gateway_ID smartGatewayId,sdv.threeID uuid,a.area houseName,a.address,sgv.install_time createTime, sdv.connection_status_update_time updateTime,sdv.provider_code brand
+        SELECT sdv.connection_status connectionStatus,sgv.description ,sgv.smart_gateway_ID smartGatewayId,sdv.threeID uuid,a.name houseName,a.address,sgv.install_time createTime, sdv.connection_status_update_time updateTime,sdv.provider_code brand
         FROM narcissus_test.smart_device_v2 sdv
         LEFT JOIN narcissus_test.public_zone pz
         ON pz.public_zone_ID=sdv.public_zone_ID
@@ -210,7 +210,7 @@
 
     <!--水表异常记录by水表id-->
     <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
-        SELECT smi.created_at createdAt,sdv.connection_status FROM narcissus_test.smart_device_v2 sdv
+        SELECT smi.created_at createdAt,sdv.connection_status status FROM narcissus_test.smart_device_v2 sdv
             LEFT JOIN narcissus_test.smart_mistake_info smi
             ON smi.uuid=sdv.threeID
             WHERE sdv.smart_device_ID=#{watermeterId}
