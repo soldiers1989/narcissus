@@ -331,9 +331,10 @@
 
     <!--查询集中式房间水表列表 by 楼层Id-->
     <select id="getRoomWithWater" parameterType="int" resultMap="roomWithWaterMap" >
-        SELECT r.id AS roomId,r.name AS roomName,d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,w.last_amount-w.meter_amount AS currentAmount,w.onoff_status
+        SELECT r.id AS roomId,r.name AS roomName,a.balance/100 AS balance,d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,w.last_amount-w.meter_amount AS currentAmount,w.onoff_status
         FROM `narcissus_test`.smart_device_v2 d
         LEFT JOIN `narcissus_test`.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
+        LEFT JOIN `narcissus_test`.smart_watermeter_account a ON d.room_id = a.room_id AND d.house_catalog = a.house_catalog
         JOIN `volga_test`.room r ON r.id = d.room_ID
         JOIN `volga_test`.floor f ON f.id = r.floor_id
         WHERE f.id = #{floorId} AND d.smart_device_type = 2
@@ -362,10 +363,11 @@
     <select id="getRoomDetail" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomDetailVO" >
         SELECT r.`name` AS roomName, a.area AS apartmentName,
         rc.`status` AS contractStatus,
-        rc.customer_name,rc.customer_phone,rc.start_time
+        rc.customer_name,rc.customer_phone,rc.start_time,a.balance/100 AS balance
         FROM `volga_test`.room r
         JOIN `volga_test`.apartment a ON r.apartment_id = a.id
         LEFT JOIN `volga_test`.room_contract rc ON rc.room_id = r.id AND rc.is_delete = 0
+        LEFT JOIN `narcissus_test`.smart_watermeter_account a ON r.id = a.room_id AND a.house_catalog = 0
         WHERE r.id = #{roomId}
         ORDER BY start_time DESC LIMIT 1
     </select>

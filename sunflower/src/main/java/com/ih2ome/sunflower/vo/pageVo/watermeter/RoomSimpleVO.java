@@ -13,5 +13,6 @@ import java.util.List;
 public class RoomSimpleVO {
     private int roomId;
     private String roomName;
+    private double balance;
     List<WaterSimpleVO> waterSimpleList;
 }
