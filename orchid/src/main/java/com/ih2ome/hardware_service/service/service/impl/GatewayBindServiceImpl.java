@@ -23,7 +23,7 @@ public class GatewayBindServiceImpl implements GatewayBindService {
      * @param watermeterId
      */
     @Override
-    public void deleteGatewayBindByWatermeterId(int watermeterId) {
+    public void deleteGatewayBindByWatermeterId(long watermeterId) {
         Log.info("删除网关绑定by水表id，水表watermeterId：{}",watermeterId);
         //修改状态后删除关联关系
         gatewayBindMapper.updateWatermeterStatus(String.valueOf(watermeterId));

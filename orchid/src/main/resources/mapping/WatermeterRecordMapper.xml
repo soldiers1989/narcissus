@@ -1,40 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ih2ome.hardware_service.service.dao.WatermeterRecordMapper">
-    <!-- 数据库表名 -->
-    <sql id="smart_watermeter">`narcissus_test`.smart_watermeter</sql>
-    <sql id="smart_gateway_bind">`narcissus_test`.smart_gateway_bind</sql>
-    <sql id="smart_gateway">`narcissus_test`.smart_gateway</sql>
-    <sql id="smart_watermeter_record">`narcissus_test`.smart_watermeter_record</sql>
-    <sql id="smart_exception">`narcissus_test`.smart_mistake_info</sql>
-    <sql id="house">`caspain_test`.house</sql>
-    <sql id="room">`caspain_test`.room</sql>
-    <sql id="apartment">`volga_test`.apartment</sql>
-    <sql id="floor">`volga_test`.floor</sql>
-    <sql id="jzroom">`volga_test`.room</sql>
-    <sql id="room_contract">`volga_test`.room_contract</sql>
-    <sql id="area">`volga_test`.area</sql>
-    <sql id="auth_user">`caspain_test`.auth_user</sql>
-
-<!-- 增  -->
     <!-- 添加抄表记录 -->
     <insert id="insertWatermeterRecord" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord">
-        insert into <include refid="smart_watermeter_record" />(created_at,device_amount,smart_watermeter_id)
-        values(#{createdAt},#{deviceAmount},#{smartWatermeterId})
+        insert into `narcissus_test`.smart_watermeter_record(device_amount,smart_watermeter_id)
+        values(#{deviceAmount},#{smartWatermeterId})
     </insert>
-
-
-<!-- 改 -->
-    <!-- 更新抄表记录 -->
-    <update id="updataWatermeterRecord" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord" >
-        UPDATE <include refid="smart_watermeter_record" /> SET device_amount=#{deviceAmount},created_at=#{createdAt}
-        WHERE smart_watermeter_id = #{smartWatermeterId} AND date_format(created_at,'%Y-%m-%d')= date_format(#{createdAt},'%Y-%m-%d')
-    </update>
-
-
-<!--查-->
-    <!-- 查询最后抄表时间bywatermeterId -->
-    <select id="selectWatermeterMeterUpdatedAtByWatermeterId" resultType="java.sql.Timestamp">
-        SELECT created_at FROM <include refid="smart_watermeter_record" /> WHERE smart_watermeter_id=#{watermeterId} ORDER BY created_at DESC limit 1
-    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.service;
 
+import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
 import com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
@@ -160,7 +161,7 @@ public interface WatermeterService {
      * @param uuid
      * @return
      */
-    Integer findWatermeterIdByUuid(String uuid);
+    SmartWatermeter getWatermeterByUuId(String uuid);
 
     /**
      * 查询水表读数by水表id
@@ -295,4 +296,6 @@ public interface WatermeterService {
     int changeBalance(int roomId,int houseCatalog,int amount,String payChannel,String action, String actionId);
 
     int makeWaterZero(int roomId, int houseCatalog);
+
+    SmartDeviceV2 getSmartDeviceV2(long deviceId);
 }

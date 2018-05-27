@@ -315,10 +315,9 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public Integer findWatermeterIdByUuid(String uuid) {
-        Log.info("查询水表id,水表uuid：{}"+uuid);
-        Integer watermeterId=watermeterDao.findWatermetersByUuId(uuid);
-        return watermeterId;
+    public SmartWatermeter getWatermeterByUuId(String uuid) {
+        Log.info("查询水表,水表uuid：{}"+uuid);
+        return watermeterDao.getWatermeterByUuId(uuid);
     }
 
     /**
@@ -509,6 +508,11 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public int makeWaterZero(int roomId, int houseCatalog){
         return watermeterDao.makeWaterZero(roomId,houseCatalog);
+    }
+
+    @Override
+    public SmartDeviceV2 getSmartDeviceV2(long deviceId){
+        return watermeterDao.getSmartDeviceV2(deviceId);
     }
 
     @Override
