@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.utils.HttpClientUtil;
+import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.AddHomeVo;
@@ -336,11 +338,15 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String getWaterGatewayInfo(String uuid) throws WatermeterException {
+    public String getWaterGatewayInfo(String uuid,String userId) throws WatermeterException {
         Log.info("获取水表网关信息,uuid:{}",uuid);
 
         Map<String,Object> map= new HashMap();
-        map.put("access_token",YunDingWatermeterUtil.getToken());
+        try {
+            map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
+        } catch (SmartLockException e) {
+            e.printStackTrace();
+        }
         map.put("uuid",uuid);
 
         String uri = BASE_URL + "/get_water_gateway_info";
@@ -372,11 +378,11 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String getWatermeterInfo(String uuid, String manufactory) throws WatermeterException {
+    public String getWatermeterInfo(String uuid, String manufactory,String userId) throws WatermeterException {
         Log.info("获取水表信息,uuid:{},manufactory:{}",uuid,manufactory);
 
         Map<String,Object> map= new HashMap();
-        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("access_token","fcedd39b28affea896a65728a8be81593ebe95e8");
         map.put("uuid",uuid);
         map.put("manufactory",manufactory);
 

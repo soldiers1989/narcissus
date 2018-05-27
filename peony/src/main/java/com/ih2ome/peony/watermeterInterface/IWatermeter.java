@@ -82,7 +82,7 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String getWaterGatewayInfo(String uuid) throws WatermeterException;
+    String getWaterGatewayInfo(String uuid ,String userId) throws WatermeterException;
 
     /**
      * 获取水表信息
@@ -90,7 +90,7 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String getWatermeterInfo(String uuid, String manufactory) throws WatermeterException;
+    String getWatermeterInfo(String uuid, String manufactory,String userId) throws WatermeterException;
 
     /**
      * 获取抄表历史

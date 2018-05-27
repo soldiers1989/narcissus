@@ -720,7 +720,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             if(publicZoneId==roomId){
                 saveGatWay(iWatermeter,Uuid,userId,type,publicZoneId,providerCode);
             }else {
-                String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode);
+                String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode,userId);
                 JSONObject resJson = JSONObject.parseObject(watermeterInfo);
                 String info =  resJson.getString("info");
                 JSONObject jsonObject = JSONObject.parseObject(info);
@@ -829,7 +829,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         Date day=new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            res = iWatermeter.getWaterGatewayInfo(Uuid);
+            res = iWatermeter.getWaterGatewayInfo(Uuid,userId);
         } catch (WatermeterException e) {
             e.printStackTrace();
         }
