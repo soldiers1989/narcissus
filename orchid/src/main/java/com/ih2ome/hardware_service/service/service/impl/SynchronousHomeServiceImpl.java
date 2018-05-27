@@ -360,7 +360,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 smartLockDao.saveWaterMeter(smartWatermeter);
                 String smartGatWayid=smartLockDao.querySmartGatWayid(publicZoneId);
                 if(smartGatWayid==null){
-                    saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
+                    smartGatWayid= saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
                 }
                 smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
             }
@@ -424,7 +424,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
 
 
-    public void saveGatWay(IWatermeter iWatermeter,String Uuid,String userId,String type,String publicZoneId,String providerCode){
+    public String  saveGatWay(IWatermeter iWatermeter,String Uuid,String userId,String type,String publicZoneId,String providerCode){
         String res= null;
         Date day=new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -462,12 +462,14 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         smartDevice.setSmartDeviceType("5");
         smartDevice.setThreeId(Uuid);
         smartLockDao.addSmartDevice(smartDevice);
+        String smartGatWayid=smartDevice.getSmartDeviceId();
         smartGatewayV2.setSmartGatewayId(smartDevice.getSmartDeviceId());
         smartGatewayV2.setUuid(Uuid);
         smartGatewayV2.setInstallTime(createTime);
         smartGatewayV2.setBrand("dding");
         smartGatewayV2.setModel(description);
         smartLockDao.saveGatWay(smartGatewayV2);
+        return smartGatWayid;
     }
 
     //处理云丁的房源数据，将房源下房间中没有设备的房间移除
