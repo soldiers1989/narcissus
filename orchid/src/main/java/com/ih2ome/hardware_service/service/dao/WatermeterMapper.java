@@ -2,9 +2,7 @@ package com.ih2ome.hardware_service.service.dao;
 
 
 import com.ih2ome.common.base.MyMapper;
-import com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind;
-import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
-import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
+import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -306,6 +304,8 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      */
     WatermeterVO getWatermeterById(int waterId);
 
+    RoomAccountVO getRoomAmount(@Param("roomId") int roomId, @Param("type") int type);
+
     /**
      * 更新房间内冷热水单价
      * @param price     用水单价（分/吨）
@@ -314,4 +314,11 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @return 结果
      */
     int updateRoomPrice(@Param("price") int price, @Param("roomId") int roomId, @Param("meterType") int meterType);
+
+    SmartWatermeterAccount getSmartWatermeterAccount(@Param("roomId") int roomId, @Param("houseCatalog") int houseCatalog);
+    int addSmartWatermeterAccount(SmartWatermeterAccount smartWatermeterAccount);
+    int updateSmartWatermeterAccount(SmartWatermeterAccount smartWatermeterAccount);
+    List<SmartWatermeterAccountLog> getSmartWatermeterAccountLog(@Param("roomId") int roomId, @Param("houseCatalog") int houseCatalog);
+    int addSmartWatermeterAccountLog(SmartWatermeterAccountLog smartWatermeterAccountLog);
+    int makeWaterZero(@Param("roomId") int roomId,@Param("houseCatalog") int houseCatalog);
 }

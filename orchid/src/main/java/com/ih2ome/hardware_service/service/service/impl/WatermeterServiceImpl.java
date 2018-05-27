@@ -3,9 +3,7 @@ package com.ih2ome.hardware_service.service.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ih2ome.hardware_service.service.dao.WatermeterMapper;
-import com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind;
-import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
-import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
+import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
@@ -489,5 +487,41 @@ public class WatermeterServiceImpl implements WatermeterService {
         Log.info("修改房间水价,price:{},roomId:{},meterType:{}", price, roomId, meterType);
         Integer flag = watermeterDao.updateRoomPrice(price, roomId, meterType);
         return flag > 0;
+    }
+
+    @Override
+    public RoomAccountVO getRoomAmount(int roomId, int meterType) {
+        Log.info("查询房间水费,roomId:{},meterType:{}", roomId, meterType);
+        return watermeterDao.getRoomAmount(roomId, meterType);
+    }
+
+    @Override
+    public int makeWaterZero(int roomId, int houseCatalog){
+        return watermeterDao.makeWaterZero(roomId,houseCatalog);
+    }
+
+    @Override
+    public int changeBalance(int roomId,int houseCatalog,int amount,String payChannel,String action, String actionId) {
+        SmartWatermeterAccount account = watermeterDao.getSmartWatermeterAccount(roomId, houseCatalog);
+        SmartWatermeterAccountLog accountLog = new SmartWatermeterAccountLog();
+        if (account == null) {
+            account = new SmartWatermeterAccount();
+            account.setBalance(amount);
+            account.setHouseCatalog(houseCatalog);
+            account.setRoomId(roomId);
+            watermeterDao.addSmartWatermeterAccount(account);
+        } else {
+            accountLog.setBalanceBefore(account.getBalance());
+            account.setBalance(account.getBalance() + amount);
+            watermeterDao.updateSmartWatermeterAccount(account);
+        }
+        accountLog.setBalanceAfter(accountLog.getBalanceBefore() + amount);
+        accountLog.setAction(action);
+        accountLog.setActionId(actionId);
+        accountLog.setPayChannel(payChannel);
+        accountLog.setAmount(amount);
+        accountLog.setHouseCatalog(houseCatalog);
+        accountLog.setRoomId(roomId);
+        return watermeterDao.addSmartWatermeterAccountLog(accountLog);
     }
 }

@@ -52,7 +52,7 @@
         (`smart_device_ID`, `provider_code`, `threeID`, `smart_device_type`, `name`, `brand`, `connection_status_update_time`,
         `connection_status`, `work_status`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`,
          `house_catalog`, `apartment_ID`, `floor_ID`, `house_ID`, `room_ID`, `public_zone_ID`, `manage_status`)
-          VALUES (#{smartWatermeterId}, #{manufactory}, #{uuid}, #{meterType}, #{}, 'dding', now(), #{onoffStatus}, NULL,
+          VALUES (#{smartWatermeterId}, #{manufactory}, #{uuid}, #{meterType}, '水表', 'dding', now(), #{onoffStatus}, NULL,
            now(), #{createdBy}, NULL, NULL, NULL, NULL, #{houseCatalog}, NULL, NULL, NULL, #{roomId}, NULL, '0');
     </insert>
     <!--添加水表-->
@@ -397,5 +397,55 @@
         WHERE
           w.smart_watermeter_id = #{waterId}
     </select>
+
+    <select id="getRoomAmount" resultMap="roomAmountMap" >
+        SELECT SUM(last_amount - meter_amount) AS used, d.room_id, d.house_catalog, w.meter_type,
+        MAX(w.price) / 100 AS price,a.balance / 100 AS balance,w.updated_at, SUM(last_amount - meter_amount) * price / 100 AS amount
+        FROM narcissus_test.smart_watermeter w
+        JOIN narcissus_test.smart_device_v2 d ON w.smart_watermeter_id = d.smart_device_ID
+        JOIN narcissus_test.smart_watermeter_account a ON a.room_id = d.room_ID AND a.house_catalog = d.house_catalog
+        WHERE d.room_id = #{roomId} AND d.house_catalog = #{type}
+        GROUP BY d.room_id, d.house_catalog, w.meter_type
+    </select>
+
+    <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomAccountVO" id="roomAmountMap" autoMapping="true">
+        <id column="room_id" property="roomId" />
+        <collection property="waterAccountList" javaType="List"
+                    ofType="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomWaterAccountVO" autoMapping="true">
+            <id column="meter_type" property="meterType" />
+        </collection>
+    </resultMap>
+
+    <select id="getSmartWatermeterAccount" resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterAccount" >
+        SELECT * FROM narcissus_test.smart_watermeter_account
+        WHERE room_id = #{roomId} AND house_catalog = #{houseCatalog}
+    </select>
+
+    <insert id="addSmartWatermeterAccount" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterAccount" >
+        INSERT INTO narcissus_test.smart_watermeter_account(room_id,house_catalog,balance)
+        VALUES(#{roomId},#{houseCatalog},#{balance})
+    </insert>
+
+    <update id="updateSmartWatermeterAccount" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterAccount">
+        UPDATE narcissus_test.smart_watermeter_account SET balance = #{balance}
+        WHERE room_id = #{roomId} AND house_catalog = #{houseCatalog}
+    </update>
+
+    <select id="getSmartWatermeterAccountLog" resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterAccount" >
+        SELECT * FROM narcissus_test.smart_watermeter_account_log
+        WHERE room_id = #{roomId} AND house_catalog = #{houseCatalog}
+    </select>
+
+    <insert id="addSmartWatermeterAccountLog" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterAccountLog" >
+        INSERT INTO `narcissus_test`.`smart_watermeter_account_log` (`room_id`, `house_catalog`, `amount`, `balance_before`, `balance_after`,`action`, `action_id`, `pay_channel`)
+		VALUES (#{roomId}, #{houseCatalog}, #{amount}, #{balanceBefore}, #{balanceAfter}, #{action}, #{actionId}, #{payChannel});
+    </insert>
+
+    <update id="makeWaterZero">
+        UPDATE narcissus_test.smart_watermeter w
+        JOIN narcissus_test.smart_device_v2 d ON w.smart_watermeter_id = d.smart_device_ID
+        SET w.meter_amount = w.last_amount, w.updated_at = NOW()
+        WHERE d.room_ID = #{roomId} AND d.house_catalog = #{houseCatalog}
+    </update>
 
 </mapper>

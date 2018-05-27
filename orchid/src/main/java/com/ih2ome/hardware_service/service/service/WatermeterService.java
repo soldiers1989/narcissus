@@ -6,6 +6,7 @@ import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -283,4 +284,10 @@ public interface WatermeterService {
      * @return 结果
      */
     Boolean updateRoomPrice(int price, int roomId, int meterType);
+
+    RoomAccountVO getRoomAmount(int roomId, int meterType);
+
+    int changeBalance(int roomId,int houseCatalog,int amount,String payChannel,String action, String actionId);
+
+    int makeWaterZero(int roomId, int houseCatalog);
 }
