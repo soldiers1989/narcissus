@@ -60,7 +60,7 @@ yd:
   client_id: shuidiguanjia
   client_secret: b3a19f6ba2e99046582a9cb5de334de6
   smart_lock:
-    permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op
+    permission_group: apartment_mg,lock_mg,pwd_op,ble_op,gateway_mg,gateway_op,water_mg,water_op
     call_back:
       url: http://rose.ih2ome.cn/api/yunDing/callBack/setOAuthCode
 

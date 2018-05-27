@@ -841,6 +841,15 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String description=json.getString("description");
         String mtime=json.getString("mtime");
         String createTime=json.getString("ctime");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sdf1.parse(createTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        createTime=sdf2.format(date);
         SmartDeviceV2 smartDevice=new SmartDeviceV2();
         smartDevice.setBrand("dding");
         smartDevice.setConnectionStatus(off);

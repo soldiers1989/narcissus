@@ -128,6 +128,13 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
     List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
 
     /**
+     * 根据第三方id查询网关id
+     * @param homeid
+     * @return
+     */
+    String findGateWay(String homeid);
+
+    /**
      * 添加水表
      *
      * @param smartWatermeter

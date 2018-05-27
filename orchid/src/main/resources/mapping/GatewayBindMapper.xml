@@ -3,7 +3,7 @@
 <mapper namespace="com.ih2ome.hardware_service.service.dao.GatewayBindMapper">
     <!-- 数据库表名 -->
     <sql id="smart_watermeter">`narcissus_test`.smart_watermeter</sql>
-    <sql id="smart_gateway_bind">`narcissus_test`.smart_gateway_bind</sql>
+    <sql id="smart_gateway_bind">narcissus_test.smart_gateway_bind_v2</sql>
     <sql id="smart_gateway">`narcissus_test`.smart_gateway</sql>
     <sql id="smart_watermeter_record">`narcissus_test`.smart_watermeter_record</sql>
     <sql id="smart_exception">`narcissus_test`.smart_mistake_info</sql>
@@ -24,6 +24,15 @@
 
     <!--删除网关绑定by水表id-->
     <delete id="deleteGatewayBindByGatewayId" parameterType="int">
-        DELETE FROM <include refid="smart_gateway_bind"/> WHERE smart_gateway_id=#{gatewayId}
+        DELETE FROM narcissus_test.smart_gateway_bind_v2 WHERE smart_gateway_id=#{gatewayId}
     </delete>
+
+    <!-- 查询网关下所有水表id -->
+    <select id="findeGatewayWatermeterId" parameterType="String" resultType="String">
+        select sgbv.smart_device_ID from narcissus_test.smart_gateway_bind_v2 sgbv WHERE sgbv.smart_gateway_ID=#{gatewayId}
+    </select>
+    <!-- 删除关联水表 -->
+    <update id="updateWatermeterStatus" parameterType="String">
+        UPDATE narcissus_test.smart_device_v2  SET manage_status=1 WHERE smart_device_ID=#{id}
+    </update>
 </mapper>

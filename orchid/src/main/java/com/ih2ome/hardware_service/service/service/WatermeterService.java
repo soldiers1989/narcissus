@@ -125,6 +125,11 @@ public interface WatermeterService {
     List<JZWatermeterDetailVO> findWatermetersByFloorId(int floorId);
 
     /**
+     * 根据第三方homeid查询网关id
+     * @return
+     */
+    String findGateWay(String homeid);
+    /**
      * 添加水表smartWatermeter
      * @param smartWatermeter
      */

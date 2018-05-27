@@ -28,5 +28,5 @@ public class WatermeterGatewayDetailVO {
     //设备名称
     private String description;
     //通讯状态
-    private String connection_status;
+    private String connectionStatus;
 }

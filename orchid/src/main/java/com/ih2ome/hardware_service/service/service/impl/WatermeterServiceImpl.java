@@ -145,6 +145,17 @@ public class WatermeterServiceImpl implements WatermeterService {
     }
 
     /**
+     * 根据第三方id查询网关id
+     * @param homeid
+     * @return
+     */
+    @Override
+    public String findGateWay(String homeid) {
+       String gateWay = watermeterDao.findGateWay(homeid);
+        return gateWay;
+    }
+
+    /**
      * 改水价
      * @param price
      * @return

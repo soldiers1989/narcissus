@@ -57,7 +57,7 @@
     <!--新增设备记录-->
     <insert id="addSmartDevice" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2"
             useGeneratedKeys="true" keyProperty="smartDeviceId" keyColumn="smart_device_ID">
-        INSERT INTO narcissus.smart_device_v2 (
+        INSERT INTO narcissus_test.smart_device_v2 (
         brand,
         connection_status,
         connection_status_update_time,
@@ -589,8 +589,7 @@
         LEFT JOIN caspain_test.house cth ON ctr.house_id = cth.id
         LEFT JOIN narcissus_test.public_zone npz ON cth.id = npz.parent_ID
         WHERE
-        npz.data_type = 3
-        AND ctr.id = #{roomId}
+         ctr.id = #{roomId}
     </select>
 
     <!--根据房间ID查询公共区域ID(集中式)-->
@@ -1137,4 +1136,8 @@ AND sdv.smart_device_type=3;
         AND  sdv.smart_device_type = 5
     </select>
 
+
+    <select id="finfUserIds"  parameterType="string" resultType="string">
+        SELECT sdv.created_by FROM narcissus_test.smart_device_v2 sdv WHERE sdv.room_ID=#{userId}
+    </select>
 </mapper>

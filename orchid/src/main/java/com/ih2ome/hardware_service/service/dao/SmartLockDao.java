@@ -484,4 +484,6 @@ public interface SmartLockDao {
      */
     String querySmartGatWayid(@Param("publicZoneId") String publicZoneId );
 
+
+    String findUserIds(String userId);
 }
