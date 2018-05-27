@@ -33,12 +33,12 @@
 <!-- 改 -->
     <!-- 更新网关uuid -->
     <update id="updateGatewayUuid" parameterType="String" >
-        UPDATE <include refid="smart_gateway" /> SET uuid = #{uuid},brand=#{manufactory},updated_at=#{time} WHERE uuid = #{old_uuid};
+        UPDATE narcissus_test.smart_gateway_v2 SET uuid = #{uuid},brand=#{manufactory},updated_at=#{time} WHERE uuid = #{old_uuid};
     </update>
 
     <!-- 更新网关在线状态by-->
     <update id="updataGatewayOnoffStatusByUuid"  >
-        UPDATE <include refid="smart_gateway" /> SET onoff_status = #{code} WHERE uuid = #{uuid};
+        UPDATE narcissus_test.smart_device_v2 SET connection_status = #{code} WHERE threeID = #{uuid};
     </update>
 
     <!-- 更新网关 -->
@@ -52,6 +52,7 @@
 <!--查-->
     <!-- 查询网关idbyuuid -->
     <select id="selectGatewayIdByUuid" parameterType="String" resultType="java.lang.Integer">
-        SELECT smart_gateway.smart_gateway_id FROM <include refid="smart_gateway" />  smart_gateway WHERE smart_gateway.uuid = #{id};
+        SELECT smart_device_ID FROM narcissus_test.smart_device_v2 sdv WHERE sdv.manage_status=0 AND sdv.smart_device_type=5 and sdv.threeID= = #{id};
     </select>
+
 </mapper>

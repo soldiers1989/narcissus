@@ -85,7 +85,7 @@
 
     <!-- 更新水表在线状态byUUid-->
     <update id="updataWatermerterOnoffStatusByUuid" >
-        UPDATE <include refid="smart_watermeter" /> SET onoff_status = #{code} WHERE uuid = #{uuid};
+        UPDATE narcissus_test.smart_device_v2 SET connection_status = #{code} WHERE threeID = #{uuid};
     </update>
 
     <!-- 更新水表在线状态byUUid-->
@@ -116,7 +116,7 @@
 
     <!-- 查询集中式网关by网关id -->
     <select id="findGatewaybySmartGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterGatewayDetailVO">
-        SELECT sdv.connection_status,sgv.description ,sgv.smart_gateway_ID smartGatewayId,sdv.threeID uuid,a.area houseName,a.address,sgv.install_time createTime, sdv.connection_status_update_time updateTime,sdv.provider_code brand
+        SELECT sdv.connection_status connectionStatus,sgv.description ,sgv.smart_gateway_ID smartGatewayId,sdv.threeID uuid,a.area houseName,a.address,sgv.install_time createTime, sdv.connection_status_update_time updateTime,sdv.provider_code brand
         FROM narcissus_test.smart_device_v2 sdv
         LEFT JOIN narcissus_test.public_zone pz
         ON pz.public_zone_ID=sdv.public_zone_ID
@@ -124,7 +124,7 @@
         ON pz.parent_ID=a.id
         LEFT JOIN narcissus_test.smart_gateway_v2 sgv
         ON sgv.smart_gateway_ID=sdv.smart_device_ID
-        WHERE sdv.smart_device_ID=1058;
+        WHERE sdv.smart_device_ID=#{id};
 
     </select>
 
@@ -242,8 +242,7 @@
 
     <!-- 查询水表byuuid -->
     <select id="findWatermetersByUuId" parameterType="String" resultType="java.lang.Integer">
-        SELECT smart_watermeter_id
-        FROM <include refid="smart_watermeter"/> smart_watermeter WHERE smart_watermeter.uuid = #{uuid}
+        SELECT smart_device_ID FROM narcissus_test.smart_device_v2 sdv WHERE sdv.threeID=#{uuid}
     </select>
 
     <!-- 查询水表读数by水表id -->
@@ -292,10 +291,7 @@
 
     <!-- 查询水表idBygatewayuuid -->
     <select id="selectWatermeterIdByGatewayUuid" resultType="java.lang.String">
-        SELECT watermeter.uuid FROM <include refid="smart_gateway" /> AS gateway
-        INNER JOIN <include refid="smart_gateway_bind" /> AS bind ON gateway.smart_gateway_id=bind.smart_gateway_id
-        INNER JOIN <include refid="smart_watermeter" /> AS watermeter ON bind.smart_id=watermeter.smart_watermeter_id
-        WHERE gateway.uuid=#{uuid}
+        SELECT smart_device_ID FROM narcissus_test.smart_device_v2 sdv WHERE sdv.threeID=#{uuid} AND sdv.smart_device_type=2 AND sdv.manage_status=0
   </select>
 
     <!--根据userId和第三方厂商 查询已绑定设备（包括网关）的集中式房源-->
@@ -398,4 +394,7 @@
           w.smart_watermeter_id = #{waterId}
     </select>
 
+    <select id="findGateWay" parameterType="String" resultType="String">
+        SELECT h2omeID FROM narcissus_test.smart_house_mapping shm WHERE shm.house_catalog=0 and shm.`status`=1 and shm.threeID=#{homeid}
+    </select>
 </mapper>

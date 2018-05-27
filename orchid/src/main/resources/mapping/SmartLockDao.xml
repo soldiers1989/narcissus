@@ -1137,4 +1137,8 @@ AND sdv.smart_device_type=3;
         AND  sdv.smart_device_type = 5
     </select>
 
+
+    <select id="finfUserIds"  parameterType="string" resultType="string">
+        SELECT sdv.created_by FROM narcissus_test.smart_device_v2 sdv WHERE sdv.room_ID=#{userId}
+    </select>
 </mapper>
