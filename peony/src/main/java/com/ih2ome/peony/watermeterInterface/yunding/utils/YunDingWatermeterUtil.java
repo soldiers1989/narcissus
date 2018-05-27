@@ -6,7 +6,11 @@ import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.HttpClientUtil;
 import com.ih2ome.common.utils.MyConstUtils;
 import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.peony.watermeterInterface.yunding.YunDingWatermeter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -29,6 +33,8 @@ public class YunDingWatermeterUtil {
 //    private static final String BASE_URL = "http://dev-lockapi.dding.net:8090/openapi/v1";
 //    private static final String BASE_URL = "http://yundinghometest.dding.net:8088/openapi/v1";
     private static final String VERSION_VALUE = "0116010101";
+
+    private static final Logger Log = LoggerFactory.getLogger(YunDingWatermeterUtil.class);
 
     /**
      * 获取签名
@@ -101,18 +107,13 @@ public class YunDingWatermeterUtil {
      *
      * @return
      */
-    public static String getToken() throws WatermeterException {
-        String token = CacheUtils.getStr(TOKEN_KEY);
-        //String uid = CacheUtils.getStr(UID_KEY);
-        Map<String, Object> map = null;
-        if (StringUtils.isBlank(token)) {
-            map = getTokenByThrid();
-            token = (String) map.get(TOKEN_KEY);
-            Integer expires_time = (Integer) map.get(EXPRIES_TIME);
-            CacheUtils.set(TOKEN_KEY, token, ExpireTime.HALF_AN_HOUR);
-            // CacheUtils.set(UID_KEY,uid,0);
+    public static String getToken(String userId) throws WatermeterException {
+        String token = "";
+        try {
+            token = YunDingSmartLockUtil.getAccessToken(userId);
+        } catch (Exception ex) {
+            Log.error("get token error", ex);
         }
-        //CacheUtils.set(TOKEN_KEY, token, 1);
         return token;
     }
 

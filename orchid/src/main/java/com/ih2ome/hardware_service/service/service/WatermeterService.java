@@ -107,7 +107,7 @@ public interface WatermeterService {
      * @param watermeterId
      * @return
      */
-    String readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
+    String readWatermeterLastAmountByWatermeterId(int watermeterId, String userId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException;
 
 
     /**

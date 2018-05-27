@@ -67,19 +67,20 @@ public class YunDingWatermeterInfoScheduled {
      */
     @Scheduled(cron="0 0 2 * * ?")
     public void getWatermeterRecord() {
-        IWatermeter iWatermeter = getIWatermeter();
-        Log.info("====================水表抄表任务开始==================");
-        //获取uuids和manufactorys
-        List<UuidAndManufactoryVO> uuidAndManufactoryVOS= watermeterService.findWatermeterUuidAndManufactory();
-        for (UuidAndManufactoryVO uuidAndManufactoryVO:uuidAndManufactoryVOS
-             ) {
-            try {
-                iWatermeter.readWatermeter(uuidAndManufactoryVO.getUuid(),uuidAndManufactoryVO.getManufactory());
-            } catch (WatermeterException e) {
-                Log.error("水表抄表任务失败",e);
-            }
-        }
-        Log.info("====================水表抄表任务结束==================");
+//        //TODO 水表自动抄表暂时搁置
+//        IWatermeter iWatermeter = getIWatermeter();
+//        Log.info("====================水表抄表任务开始==================");
+//        //获取uuids和manufactorys
+//        List<UuidAndManufactoryVO> uuidAndManufactoryVOS= watermeterService.findWatermeterUuidAndManufactory();
+//        for (UuidAndManufactoryVO uuidAndManufactoryVO:uuidAndManufactoryVOS
+//             ) {
+//            try {
+//                iWatermeter.readWatermeter(uuidAndManufactoryVO.getUuid(),uuidAndManufactoryVO.getManufactory());
+//            } catch (WatermeterException e) {
+//                Log.error("水表抄表任务失败",e);
+//            }
+//        }
+//        Log.info("====================水表抄表任务结束==================");
     }
 
     /**

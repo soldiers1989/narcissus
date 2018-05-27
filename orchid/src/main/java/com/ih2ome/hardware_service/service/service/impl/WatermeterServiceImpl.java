@@ -240,13 +240,13 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @return
      */
     @Override
-    public String readWatermeterLastAmountByWatermeterId(int watermeterId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
+    public String readWatermeterLastAmountByWatermeterId(int watermeterId, String userId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, WatermeterException{
         Log.info("水表watermeterId：{}",watermeterId);
         //查询水表uuid，和供应商
         WatermeterRecordParamsVo params=watermeterDao.findWatermeterRecordParamsByWatermeterId(watermeterId);
         //查询水表实时抄表记录
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-        String reslut= iWatermeter.readWatermeter(params.getUuid(),params.getManufactory());
+        String reslut= iWatermeter.readWatermeter(params.getUuid(),params.getManufactory(), userId);
 
         return reslut;
     }

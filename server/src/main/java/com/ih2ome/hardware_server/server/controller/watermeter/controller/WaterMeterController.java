@@ -112,8 +112,10 @@ public class WaterMeterController extends BaseController {
         //获取水表id
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int watermeterId = dt.getIntValue("watermeterId");
+        String userId = dt.getString("userId");
         try {
-            String code =watermeterService.readWatermeterLastAmountByWatermeterId(watermeterId);
+
+            String code =watermeterService.readWatermeterLastAmountByWatermeterId(watermeterId, userId);
             //请求成功
             JSONObject responseJson = new JSONObject();
 
