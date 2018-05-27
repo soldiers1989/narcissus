@@ -16,19 +16,19 @@ public interface IWatermeter {
      * 查询房子状态是否已同步
      * @param home_id
      */
-    String findHomeState(String home_id) throws WatermeterException;
+    String findHomeState(String home_id, String userId) throws WatermeterException;
 
     /**
      * 查询多个房子状态是否已同步
      * @param home_id
      */
-    String findHomeStates(String[] home_id) throws WatermeterException;
+    String findHomeStates(String[] home_id, String userId) throws WatermeterException;
 
     /**
      * 添加一个房源
      * @param home
      */
-    String addHome(AddHomeVo home) throws WatermeterException;
+    String addHome(AddHomeVo home, String userId) throws WatermeterException;
 
     /**
      * 水表抄表请求
@@ -36,7 +36,7 @@ public interface IWatermeter {
      * @param manufactory
      * @return
      */
-    String readWatermeter(String uuid, String manufactory) throws WatermeterException;
+    String readWatermeter(String uuid, String manufactory, String userId) throws WatermeterException;
 
     /**
      * 获取抄表状态
@@ -44,7 +44,7 @@ public interface IWatermeter {
      * @param manufactory
      * @return
      */
-    String readWatermeterStatus(String uuid, String manufactory) throws WatermeterException;
+    String readWatermeterStatus(String uuid, String manufactory, String userId) throws WatermeterException;
 
     /**
      * 给指定的公寓添加房间
@@ -53,7 +53,7 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String addRoom(String home_id, String room_id, String room_name, String rooom_description) throws WatermeterException;
+    String addRoom(String home_id, String room_id, String room_name, String rooom_description, String userId) throws WatermeterException;
 
     /**
      * 给指定的公寓添加房间
@@ -62,7 +62,7 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String addRooms(String home_id, List<AddRoomVO> rooms) throws WatermeterException;
+    String addRooms(String home_id, List<AddRoomVO> rooms, String userId) throws WatermeterException;
 
     /**
      * 获取设备历史异常记录
@@ -74,7 +74,7 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String deviceFetchExceptions(String uuid, int offset, int count, int start_time, int end_time) throws WatermeterException;
+    String deviceFetchExceptions(String uuid, int offset, int count, int start_time, int end_time, String userId) throws WatermeterException;
 
     /**
      * 获取水表网关信息
@@ -98,7 +98,7 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String getMeterRecord(String uuid, String manufactory, String room_id, int type, int count, int offset, int begin, int end) throws WatermeterException;
+    String getMeterRecord(String uuid, String manufactory, String room_id, int type, int count, int offset, int begin, int end, String userId) throws WatermeterException;
 
     /**
      * 云丁doGet请求
@@ -107,7 +107,7 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String yunDingDoGetUrl(String uri, Map<String, Object> map) throws WatermeterException;
+    String yunDingDoGetUrl(String uri, Map<String, Object> map, String userId) throws WatermeterException;
 
     /**
      * 云丁doGet请求
@@ -116,5 +116,5 @@ public interface IWatermeter {
      * @return
      * @throws WatermeterException
      */
-    String yunDingDoPostUrl(String uri, Map<String, Object> map) throws WatermeterException;
+    String yunDingDoPostUrl(String uri, Map<String, Object> map, String userId) throws WatermeterException;
 }

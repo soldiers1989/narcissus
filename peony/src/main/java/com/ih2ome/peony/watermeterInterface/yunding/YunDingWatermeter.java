@@ -44,10 +44,10 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String findHomeState(String home_id) throws WatermeterException {
+    public String findHomeState(String home_id, String userId) throws WatermeterException {
         Log.info("查询单个房屋的状态，房源home_id：{}",home_id);
         JSONObject json= new JSONObject();
-        json.put("access_token",YunDingWatermeterUtil.getToken());
+        json.put("access_token",YunDingWatermeterUtil.getToken(userId));
         json.put("home_id",home_id);
 
         String uri = BASE_URL+"/find_home_state";
@@ -76,11 +76,11 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String findHomeStates(String[] home_id) throws WatermeterException {
+    public String findHomeStates(String[] home_id, String userId) throws WatermeterException {
         Log.info("查询多个房屋的状态,房源home_id:{}",home_id);
 
         JSONObject json= new JSONObject();
-        json.put("access_token",YunDingWatermeterUtil.getToken());
+        json.put("access_token",YunDingWatermeterUtil.getToken(userId));
         json.put("home_id",home_id);
 
         String uri = BASE_URL+"/find_home_states";
@@ -113,9 +113,9 @@ public class YunDingWatermeter implements IWatermeter {
      * @param home
      */
     @Override
-    public String addHome(AddHomeVo home) throws WatermeterException {
+    public String addHome(AddHomeVo home, String userId) throws WatermeterException {
         Log.info("添加房源,房源信息home:{}",home);
-        home.setAccess_token(YunDingWatermeterUtil.getToken());
+        home.setAccess_token(YunDingWatermeterUtil.getToken(userId));
 
         String json = JSONObject.toJSONString(home);
 
@@ -146,10 +146,10 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String readWatermeter(String uuid, String manufactory) throws WatermeterException {
+    public String readWatermeter(String uuid, String manufactory, String userId) throws WatermeterException {
         Log.info("发送抄表命令,水表uuid:{},水表供应商manufactory:{}",uuid,manufactory);
         Map<String,Object> map= new HashMap();
-        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("access_token",YunDingWatermeterUtil.getToken(userId));
         map.put("uuid",uuid);
         map.put("manufactory",manufactory);
 
@@ -182,10 +182,15 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String readWatermeterStatus(String uuid, String manufactory) throws WatermeterException {
+    public String readWatermeterStatus(String uuid, String manufactory, String userId) throws WatermeterException {
         Log.info("获取抄表状态,水表uuid:{},水表供应商manufactory:{}",uuid,manufactory);
         Map<String,Object> map= new HashMap();
-        map.put("access_token",YunDingWatermeterUtil.getToken());
+        try {
+            map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
+        }
+        catch (Exception ex) {
+            Log.error("access_token error", ex);
+        }
         map.put("uuid",uuid);
         map.put("manufactory",manufactory);
 
@@ -220,11 +225,11 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String addRoom(String home_id, String room_id, String room_name, String rooom_description) throws WatermeterException {
+    public String addRoom(String home_id, String room_id, String room_name, String rooom_description, String userId) throws WatermeterException {
         Log.info("给指定公寓添加房间,home_id:{},room_id:{},room_name:{},rooom_description:{}",home_id,room_id,room_name,rooom_description);
 
         JSONObject json=new JSONObject();
-        json.put("access_token",YunDingWatermeterUtil.getToken());
+        json.put("access_token",YunDingWatermeterUtil.getToken(userId));
         json.put("home_id",home_id);
         json.put("room_id",room_id);
         json.put("room_name",room_name);
@@ -258,11 +263,11 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String addRooms(String home_id, List<AddRoomVO> rooms) throws WatermeterException {
+    public String addRooms(String home_id, List<AddRoomVO> rooms, String userId) throws WatermeterException {
         Log.info("给指定公寓添加多个房间,home_id:{},rooms:{}",home_id,rooms);
 
         JSONObject json =new JSONObject();
-        json.put("access_token",YunDingWatermeterUtil.getToken());
+        json.put("access_token",YunDingWatermeterUtil.getToken(userId));
         json.put("home_id",home_id);
         json.put("rooms", JSONArray.parseArray(JSON.toJSONString(rooms)));
 
@@ -299,11 +304,11 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String deviceFetchExceptions(String uuid, int offset, int count, int start_time, int end_time) throws WatermeterException {
+    public String deviceFetchExceptions(String uuid, int offset, int count, int start_time, int end_time, String userId) throws WatermeterException {
         Log.info("获取设备历史异常记录,uuid:{},offset:{},count:{},start_time:{},end_time:{}",uuid,offset,count,start_time,end_time);
 
         Map<String,Object> map= new HashMap();
-        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("access_token",YunDingWatermeterUtil.getToken(userId));
         map.put("uuid",uuid);
         map.put("offset",offset);
         map.put("count",count);
@@ -421,11 +426,11 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String getMeterRecord(String uuid, String manufactory, String room_id, int type, int count, int offset, int begin, int end) throws WatermeterException {
+    public String getMeterRecord(String uuid, String manufactory, String room_id, int type, int count, int offset, int begin, int end, String userId) throws WatermeterException {
         Log.info("获取抄表历史,uuid:{},manufactory:{},room_id:{},type:{},count:{},offset:{},begin:{},end:{}",uuid,manufactory,room_id,type,room_id,type,count,offset,begin,end);
 
         Map<String,Object> map= new HashMap();
-        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("access_token",YunDingWatermeterUtil.getToken(userId));
         map.put("uuid",uuid);
         map.put("manufactory",manufactory);
         map.put("room_id",room_id);
@@ -464,10 +469,10 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String yunDingDoGetUrl(String uri,Map<String,Object> map) throws WatermeterException{
+    public String yunDingDoGetUrl(String uri,Map<String,Object> map, String userId) throws WatermeterException{
         Log.info("云丁doGet请求：{}，参数map：{}",uri,map);
         String url = BASE_URL + uri;
-        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("access_token",YunDingWatermeterUtil.getToken(userId));
         String res = HttpClientUtil.doGet(url,map);
 
         if(res == null){
@@ -499,10 +504,10 @@ public class YunDingWatermeter implements IWatermeter {
      * @throws WatermeterException
      */
     @Override
-    public String yunDingDoPostUrl(String uri,Map<String,Object> map) throws WatermeterException{
+    public String yunDingDoPostUrl(String uri,Map<String,Object> map, String userId) throws WatermeterException{
         Log.info("云丁doPost请求：{}，参数map：{}",uri,map);
         String url = BASE_URL + uri;
-        map.put("access_token",YunDingWatermeterUtil.getToken());
+        map.put("access_token",YunDingWatermeterUtil.getToken(userId));
         JSONArray jsonArray=JSONArray.parseArray(JSON.toJSONString(map));
         String json = jsonArray.toString();
         String res = HttpClientUtil.doPost(url,json);
@@ -526,59 +531,6 @@ public class YunDingWatermeter implements IWatermeter {
             throw new WatermeterException("第三方请求失败"+msg);
         }
         return res;
-    }
-
-    public String getBaseDoPostUrl(String uri,Map<String,Object> map) throws WatermeterException{
-        String url = BASE_URL + uri;
-        String res = HttpClientUtil.doPost(url,map);
-
-        JSONObject resJson = null;
-        try {
-            resJson = JSONObject.parseObject(res);
-        }catch (Exception e){
-            Log.error("第三方json格式解析错误",e);
-            throw new WatermeterException("第三方json格式解析错误"+e.getMessage());
-        }
-
-        String code = resJson.get("ErrNo").toString();
-        if(!code.equals("0")){
-            String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败"+msg);
-            throw new WatermeterException("第三方请求失败"+msg);
-        }
-        return res;
-    }
-
-    private static RequestConfig requestConfig;
-    public static String doPost(String apiUrl, Object json) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        String httpStr = null;
-        HttpPost httpPost = new HttpPost(apiUrl);
-        CloseableHttpResponse response = null;
-
-        try {
-            httpPost.setConfig(requestConfig);
-            StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
-            //stringEntity.setContentEncoding("UTF-8");
-            stringEntity.setContentType("application/json");
-            httpPost.setEntity(stringEntity);
-            response = httpClient.execute(httpPost);
-            HttpEntity entity = response.getEntity();
-            httpStr = EntityUtils.toString(entity, "UTF-8");
-        } catch (IOException var16) {
-            var16.printStackTrace();
-        } finally {
-            if (response != null) {
-                try {
-                    EntityUtils.consume(response.getEntity());
-                } catch (IOException var15) {
-                    var15.printStackTrace();
-                }
-            }
-
-        }
-
-        return httpStr;
     }
 
 }

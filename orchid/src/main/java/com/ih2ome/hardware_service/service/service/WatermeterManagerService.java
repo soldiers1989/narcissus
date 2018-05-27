@@ -59,38 +59,6 @@ public interface WatermeterManagerService {
     List<ExceptionWebVO> findGatewayException(ExceptionWebVO exceptionVO);
 
     /**
-     * 房源同步状态
-     * @param synchronousHomeWebVo
-     * @return
-     */
-    List<SynchronousHomeWebVo> findHomeSynchronousStatus(SynchronousHomeWebVo synchronousHomeWebVo);
-
-    /**
-     * 房间同步状态
-     * @param homeId
-     * @param syncStatus
-     *@param type  @return
-     */
-    List<HmRoomSyncVO> findRoomSynchronousStatus(int homeId, int syncStatus, String type);
-
-    /**
-     * 同步房源
-     * @param homeAndRoomSyncVO
-     * @param type
-     * @return
-     */
-    HomeAndRoomSyncVO synchronousHomeAndRoom(HomeAndRoomSyncVO homeAndRoomSyncVO, String type) throws ClassNotFoundException, WatermeterException, InstantiationException, IllegalAccessException;
-
-    /**
-     * 查询room是否全同步
-     * @param homeId
-     * @param sync
-     * @param type
-     * @return
-     */
-    List<HmRoomSyncVO> selectHmRoomIsAllSynchronous(int homeId, int sync, String type);
-
-    /**
      * 查询水表抄表记录by时间段（无分页）
      * @param watermeterRecordManagerVO
      * @return

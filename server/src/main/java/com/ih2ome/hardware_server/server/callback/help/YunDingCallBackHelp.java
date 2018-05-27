@@ -230,7 +230,7 @@ public class YunDingCallBackHelp {
 //            }
 //
 //        }else
-            if(type.equals("8")){
+            /*if(type.equals("8")){
             //获取水表amount
             String amount = String.valueOf(detail.get("amount"));
             //查询水表信息
@@ -284,7 +284,7 @@ public class YunDingCallBackHelp {
                 smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
             }
 
-        }
+        }*/
     }
 
 
