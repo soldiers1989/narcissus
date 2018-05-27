@@ -366,6 +366,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     houseMapping.setH2omeId(publicZoneId);
                     houseMapping.setDataType("5");
                     houseMapping.setThreeId(thirdHomeId);
+
                     //查询该关联关系原先是否存在
                     SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
                     //该记录存在，修改该映射记录
@@ -376,20 +377,19 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     }
                 }
                 smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
+                //3.3 门锁房间关联
+                SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+                //查询该关联关系原先是否存在
+                SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
+                //该记录存在，修改该映射记录
+                if (houseMappingRecord != null) {
+                    smartLockDao.updateAssociation(houseMapping);
+                } else {
+                    smartLockDao.addAssociation(houseMapping);
+                }
             }
         } catch (WatermeterException e) {
             e.printStackTrace();
-        }
-
-        //3.3 门锁房间关联
-        SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
-        //查询该关联关系原先是否存在
-        SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
-        //该记录存在，修改该映射记录
-        if (houseMappingRecord != null) {
-            smartLockDao.updateAssociation(houseMapping);
-        } else {
-            smartLockDao.addAssociation(houseMapping);
         }
     }
 
