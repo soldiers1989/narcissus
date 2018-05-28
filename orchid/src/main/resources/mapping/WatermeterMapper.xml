@@ -200,7 +200,7 @@
 
 
     <select id="findCount" parameterType="String" resultType="String">
-        SELECT *
+        SELECT sgbv.smart_device_ID
         FROM narcissus.smart_device_v2 sdv
         LEFT JOIN narcissus.public_zone pz
         on pz.public_zone_ID=sdv.public_zone_ID
