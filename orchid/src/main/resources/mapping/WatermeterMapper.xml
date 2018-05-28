@@ -245,6 +245,10 @@
         SELECT * FROM <include refid="smart_watermeter"/> WHERE uuid=#{uuid} ORDER BY created_at DESC LIMIT 1
     </select>
 
+    <select id="getWatermeterByDeviceId" parameterType="int" resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter">
+        SELECT * FROM <include refid="smart_watermeter"/>
+        WHERE smart_watermeter_id=#{deviceId}
+    </select>
     <!-- 查询水表读数by水表id -->
     <select id="findWatermeterAmountByWatermeterId" parameterType="int" resultType="java.lang.Integer">
         SELECT (last_amount-meter_amount) AS amount
@@ -305,6 +309,7 @@
           AND d.brand = #{brand}
           AND d.house_catalog = 0
           AND d.smart_device_type IN (2,5)
+          AND d.manage_status = 0
         UNION
         SELECT DISTINCT a.id,a.name, 'apartment' AS `type`
         FROM narcissus_test.smart_device_v2 d
@@ -315,6 +320,7 @@
           AND d.brand = #{brand}
           AND p.data_type = 1
           AND d.smart_device_type IN (2,5)
+          AND d.manage_status = 0
     </select>
 
     <!--查询带水表数量的楼层信息 by 公寓Id-->
@@ -325,7 +331,7 @@
         LEFT JOIN `volga_test`.room AS r ON r.floor_id = f.id
         LEFT JOIN narcissus_test.smart_device_v2 AS d ON d.room_ID = r.id AND d.smart_device_type = 2
         LEFT JOIN narcissus_test.smart_watermeter AS w ON w.smart_watermeter_id = d.smart_device_ID
-        WHERE a.id = #{apartmentId}
+        WHERE a.id = #{apartmentId} AND d.manage_status = 0
         GROUP BY f.id
     </select>
 
@@ -337,7 +343,7 @@
         LEFT JOIN `narcissus_test`.smart_watermeter_account a ON d.room_id = a.room_id AND d.house_catalog = a.house_catalog
         JOIN `volga_test`.room r ON r.id = d.room_ID
         JOIN `volga_test`.floor f ON f.id = r.floor_id
-        WHERE f.id = #{floorId} AND d.smart_device_type = 2
+        WHERE f.id = #{floorId} AND d.smart_device_type = 2 AND d.manage_status = 0
     </select>
 
     <!--集中式水表列表VO-->
@@ -357,7 +363,7 @@
         JOIN narcissus_test.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
         JOIN narcissus_test.smart_gateway_bind_v2 gb ON d.smart_device_ID = gb.smart_device_ID
         LEFT JOIN narcissus_test.smart_gateway_v2 g ON gb.smart_gateway_ID = g.smart_gateway_ID
-        WHERE d.room_ID = #{roomId}
+        WHERE d.room_ID = #{roomId} AND d.manage_status = 0
     </select>
 
     <select id="getRoomDetail" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomDetailVO" >
@@ -403,7 +409,7 @@
         JOIN narcissus_test.smart_device_v2 d ON w.smart_watermeter_id = d.smart_device_ID
         LEFT JOIN narcissus_test.smart_watermeter_account a ON a.room_id = d.room_ID AND a.house_catalog = d.house_catalog
         WHERE d.room_id = #{roomId} AND d.house_catalog = #{type}
-        GROUP BY d.room_id, d.house_catalog, w.meter_type
+        GROUP BY d.room_id, d.house_catalog, w.meter_type AND d.manage_status = 0
     </select>
 
     <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomAccountVO" id="roomAmountMap" autoMapping="true">
@@ -452,5 +458,15 @@
     
     <select id="getSmartDeviceV2" parameterType="long" resultType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2">
         SELECT * FROM narcissus_test.smart_device_v2 WHERE smart_device_ID = #{deviceId} LIMIT 1
+    </select>
+
+    <select id="getSmartDeviceV2List" resultType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2">
+        SELECT * FROM narcissus_test.smart_device_v2 d
+        WHERE d.created_by = #{userId} AND d.smart_device_type = 2 AND d.brand = #{brand} AND d.manage_status = 0
+    </select>
+
+    <select id="getAllSmartDeviceV2List" resultType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2">
+        SELECT * FROM narcissus_test.smart_device_v2 d
+        WHERE d.manage_status = 0 AND d.smart_device_type = 2
     </select>
 </mapper>
