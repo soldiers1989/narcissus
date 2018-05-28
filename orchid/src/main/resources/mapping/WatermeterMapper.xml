@@ -210,17 +210,28 @@
 
     <!--水表异常记录by水表id-->
     <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
-        SELECT smi.created_at createdAt,sdv.connection_status status FROM narcissus_test.smart_device_v2 sdv
-            LEFT JOIN narcissus_test.smart_mistake_info smi
+        SELECT smi.created_at createdAt,sdv.connection_status status FROM narcissus.smart_device_v2 sdv
+            LEFT JOIN narcissus.smart_mistake_info smi
             ON smi.uuid=sdv.threeID
             WHERE sdv.smart_device_ID=#{watermeterId}
             AND smi.smart_device_type=5
 
     </select>
 
+    <select id="findWaterOnLine" parameterType="String" resultType="String">
+        SELECT COUNT(sdv.connection_status=1) FROM narcissus_test.smart_gateway_bind_v2 sgvb
+LEFT JOIN narcissus_test.smart_device_v2 sdv
+ON sgvb.smart_device_ID=sdv.smart_device_ID
+WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
+    </select>
+
     <!--网关异常记录by网关id-->
     <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
-        SELECT e.created_at,e.exception_type FROM <include refid="smart_exception"/> e,<include refid="smart_gateway"/> g WHERE e.uuid = g.uuid AND g.smart_gateway_id = #{id}
+        SELECT smi.created_at createdAt,sdv.connection_status status FROM narcissus_test.smart_device_v2 sdv
+        LEFT JOIN narcissus_test.smart_mistake_info smi
+        ON smi.uuid=sdv.threeID
+        WHERE sdv.smart_device_ID=#{gatewayId}
+        AND smi.smart_device_type=5
     </select>
 
     <!--查询水表抄表参数by水表id-->

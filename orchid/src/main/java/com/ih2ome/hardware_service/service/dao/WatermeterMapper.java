@@ -58,6 +58,8 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      */
     List<JZWatermeterGatewayVO> findGatewayByApartmentId(int apartmentId);
 
+    String findWaterOnLine(String gateWayId);
+
     /**
      * 通过用户id查询分散式水表列表
      *

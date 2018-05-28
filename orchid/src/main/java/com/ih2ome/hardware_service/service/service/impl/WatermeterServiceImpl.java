@@ -186,6 +186,10 @@ public class WatermeterServiceImpl implements WatermeterService {
     public List<JZWatermeterGatewayVO> findGatewaysByApartmentId(int apartmentId) {
         Log.info("查询水表网关,公寓apartmentId：{}"+apartmentId);
         List<JZWatermeterGatewayVO> jzWatermeterGatewayVOS = watermeterDao.findGatewayByApartmentId(apartmentId);
+        for(JZWatermeterGatewayVO water:jzWatermeterGatewayVOS){
+            String onLine=watermeterDao.findWaterOnLine(String.valueOf(water.getSmartGatewayId()));
+            water.setWatermeterOnLineNum(Integer.parseInt(onLine));
+        }
         return jzWatermeterGatewayVOS;
     }
 
