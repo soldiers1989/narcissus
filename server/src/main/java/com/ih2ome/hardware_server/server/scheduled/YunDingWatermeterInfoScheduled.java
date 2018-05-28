@@ -2,6 +2,9 @@ package com.ih2ome.hardware_server.server.scheduled;
 
 import com.ih2ome.hardware_service.service.service.WatermeterScheduledService;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
+import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
+import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
+import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterAccountLog;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.UuidAndManufactoryVO;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
@@ -15,6 +18,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,40 +70,29 @@ public class YunDingWatermeterInfoScheduled {
     /**
      * 定时获取水表抄表
      */
-    @Scheduled(cron="0 0 2 * * ?")
+    @Scheduled(cron="0 0/5 * * * ?")
     public void getWatermeterRecord() {
-//        //TODO 水表自动抄表暂时搁置
-//        IWatermeter iWatermeter = getIWatermeter();
-//        Log.info("====================水表抄表任务开始==================");
-//        //获取uuids和manufactorys
-//        List<UuidAndManufactoryVO> uuidAndManufactoryVOS= watermeterService.findWatermeterUuidAndManufactory();
-//        for (UuidAndManufactoryVO uuidAndManufactoryVO:uuidAndManufactoryVOS
-//             ) {
-//            try {
-//                iWatermeter.readWatermeter(uuidAndManufactoryVO.getUuid(),uuidAndManufactoryVO.getManufactory());
-//            } catch (WatermeterException e) {
-//                Log.error("水表抄表任务失败",e);
-//            }
-//        }
-//        Log.info("====================水表抄表任务结束==================");
-    }
-
-    /**
-     * 定时同步月初水表读数
-     */
-    @Scheduled(cron="0 0 4 1 * ?")
-    public void setMeterAmount() {
-        Log.info("====================水表月初读数同步开始==================");
-        //获取水表id
-        List<Integer> watermeterIds= watermeterService.findAllWatermeterIds();
-        for (Integer watermeterId:watermeterIds) {
-                //获取月初水表读数
-                Integer meterAmount = watermeterService.findMeterAmountByWatermeterId(watermeterId);
-                //更新月初水表读数
-                if (meterAmount != null) {
-                    watermeterService.updataWatermeterMeterAmount(watermeterId,meterAmount);
+        Log.info("====================水表抄表任务开始==================");
+        List<SmartDeviceV2> smartDeviceList = watermeterService.getAllSmartDeviceV2List();
+        Log.info("*** getWatermeterRecord *** 待抄表个数：{}", smartDeviceList.size());
+        Calendar beforeTime = Calendar.getInstance();
+        beforeTime.add(Calendar.HOUR, -3);
+        Date beforeDate = beforeTime.getTime();
+        try {
+            IWatermeter iWatermeter = getIWatermeter();
+            for (SmartDeviceV2 device : smartDeviceList) {
+                SmartWatermeter watermeter = watermeterService.getWatermeterByDeviceId(Integer.parseInt(device.getSmartDeviceId()));
+                if(watermeter != null && (watermeter.getMeterUpdatedAt() == null || watermeter.getMeterUpdatedAt().before(beforeDate))) {
+                    iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
+                    Log.info("*** getWatermeterRecord *** 抄表请求完成：{}", device.getSmartDeviceId());
                 }
+                else {
+                    Log.info("*** getWatermeterRecord *** 抄表请求跳过：{}", device.getSmartDeviceId());
+                }
+            }
+        } catch (Exception ex) {
+            Log.error("task read amount error!", ex);
         }
-        Log.info("====================水表月初读数同步结束==================");
+        Log.info("====================水表抄表任务结束==================");
     }
 }

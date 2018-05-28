@@ -9,9 +9,13 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SynchronousHomeService;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
 import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
+import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
+import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
+import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -302,11 +306,25 @@ public class WaterMeterController extends BaseController {
         int userId = dt.getIntValue("userId");
         String brand = dt.getString("brand") == null ? "dding" : dt.getString("brand");
         List<HomeVO> homeList = watermeterService.getApartmentListByUserId(userId, brand);
-        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(homeList));
         JSONObject responseJson = new JSONObject();
         responseJson.put("homeList", homeList);
-        String res = structureSuccessResponseVO(responseJson, new Date().toString(), "");
-        return res;
+
+        List<SmartDeviceV2> smartDeviceList = watermeterService.getSmartDeviceV2List(userId, brand);
+        try {
+            Calendar beforeTime = Calendar.getInstance();
+            beforeTime.add(Calendar.HOUR, -3);
+            Date beforeDate = beforeTime.getTime();
+            IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
+            for (SmartDeviceV2 device : smartDeviceList) {
+                SmartWatermeter watermeter = watermeterService.getWatermeterByDeviceId(Integer.parseInt(device.getSmartDeviceId()));
+                if(watermeter.getMeterUpdatedAt() == null || watermeter.getMeterUpdatedAt().before(beforeDate)) {
+                    iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
+                }
+            }
+        } catch (Exception ex) {
+            Log.error("auto read amount error!", ex);
+        }
+        return structureSuccessResponseVO(responseJson, new Date().toString(), "");
     }
 
     /**

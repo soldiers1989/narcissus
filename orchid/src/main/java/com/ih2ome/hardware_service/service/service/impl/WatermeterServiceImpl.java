@@ -320,6 +320,11 @@ public class WatermeterServiceImpl implements WatermeterService {
         return watermeterDao.getWatermeterByUuId(uuid);
     }
 
+    @Override
+    public SmartWatermeter getWatermeterByDeviceId(int deviceId) {
+        return watermeterDao.getWatermeterByDeviceId(deviceId);
+    }
+
     /**
      * 查询水表读数by水表id
      * @param watermeterId
@@ -513,6 +518,16 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public SmartDeviceV2 getSmartDeviceV2(long deviceId){
         return watermeterDao.getSmartDeviceV2(deviceId);
+    }
+
+    @Override
+    public List<SmartDeviceV2> getSmartDeviceV2List(int userId, String brand) {
+        return watermeterDao.getSmartDeviceV2List(userId, brand);
+    }
+
+    @Override
+    public List<SmartDeviceV2> getAllSmartDeviceV2List() {
+        return watermeterDao.getAllSmartDeviceV2List();
     }
 
     @Override

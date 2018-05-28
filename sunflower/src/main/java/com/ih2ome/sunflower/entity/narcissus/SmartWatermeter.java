@@ -12,7 +12,7 @@ public class SmartWatermeter {
   private long createdBy;
   private Date updatedAt;
   private long updatedBy;
-  private Date deletedAt;
+  //private Date deletedAt;
   private long deletedBy;
   private long apartmentId;
   private long floorId;

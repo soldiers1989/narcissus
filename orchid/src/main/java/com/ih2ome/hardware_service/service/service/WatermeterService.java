@@ -162,6 +162,7 @@ public interface WatermeterService {
      * @return
      */
     SmartWatermeter getWatermeterByUuId(String uuid);
+    SmartWatermeter getWatermeterByDeviceId(int deviceId);
 
     /**
      * 查询水表读数by水表id
@@ -249,10 +250,10 @@ public interface WatermeterService {
      * 根据userId和第三方厂商
      * 查询已绑定设备（包括网关）的集中式房源
      * @param userId 用户Id
-     * @param provider 第三方厂商标识符
+     * @param brand 第三方标识符
      * @return 房源列表
      */
-    List<HomeVO> getApartmentListByUserId(int userId, String provider);
+    List<HomeVO> getApartmentListByUserId(int userId, String brand);
 
     /**
      * 集中式：根据公寓Id查询公寓内楼层水表数
@@ -298,4 +299,7 @@ public interface WatermeterService {
     int makeWaterZero(int roomId, int houseCatalog);
 
     SmartDeviceV2 getSmartDeviceV2(long deviceId);
+
+    List<SmartDeviceV2> getSmartDeviceV2List(int userId, String brand);
+    List<SmartDeviceV2> getAllSmartDeviceV2List();
 }
