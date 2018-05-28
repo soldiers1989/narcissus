@@ -198,6 +198,22 @@
         AND sdv.manage_status=0
     </select>
 
+
+    <select id="findCount" parameterType="String" resultType="String">
+        SELECT *
+        FROM narcissus.smart_device_v2 sdv
+        LEFT JOIN narcissus.public_zone pz
+        on pz.public_zone_ID=sdv.public_zone_ID
+        LEFT JOIN narcissus.smart_gateway_bind_v2 sgbv
+        ON sgbv.smart_gateway_ID=sdv.smart_device_ID
+        WHERE sgbv.smart_gateway_ID=1151
+        AND sdv.smart_device_type=5
+        AND sdv.manage_status=0;
+SELECT * from narcissus.smart_device_v2 sdv
+LEFT JOIN narcissus.smart_gateway_bind_v2 sgbv
+ON sgbv.smart_device_ID=sdv.smart_device_ID
+WHERE sgbv.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
+    </select>
     <!--查询水表抄表记录by水表id-->
     <select id="findWatermeterRecordByWatermeterId" parameterType="int" resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord">
         SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} ORDER BY created_at DESC

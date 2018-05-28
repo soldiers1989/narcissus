@@ -60,6 +60,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
     String findWaterOnLine(String gateWayId);
 
+    String findCount(String gateWayId);
     /**
      * 通过用户id查询分散式水表列表
      *

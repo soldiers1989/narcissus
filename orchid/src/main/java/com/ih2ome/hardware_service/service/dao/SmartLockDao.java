@@ -119,6 +119,7 @@ public interface SmartLockDao {
      */
     void clearDevicesByRoomId(@Param("type") String type, @Param("roomId") String roomId, @Param("providerCode") String providerCode);
 
+
     /**
      * 通过publicZoneId清除该公共区域下的设备
      *

@@ -186,7 +186,9 @@ public class WatermeterServiceImpl implements WatermeterService {
         List<JZWatermeterGatewayVO> jzWatermeterGatewayVOS = watermeterDao.findGatewayByApartmentId(apartmentId);
         for(JZWatermeterGatewayVO water:jzWatermeterGatewayVOS){
             String onLine=watermeterDao.findWaterOnLine(String.valueOf(water.getSmartGatewayId()));
+            String count=watermeterDao.findCount(String.valueOf(water.getSmartGatewayId()));
             water.setWatermeterOnLineNum(Integer.parseInt(onLine));
+            water.setWatermeterNum(Integer.parseInt(count));
         }
         return jzWatermeterGatewayVOS;
     }
