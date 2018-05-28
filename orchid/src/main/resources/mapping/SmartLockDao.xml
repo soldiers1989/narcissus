@@ -235,6 +235,7 @@
         AND nshm.threeID=#{threeId}
     </update>
 
+
     <!--通过roomId删除该房间下的设备记录(修改字段)-->
     <update id="clearDevicesByRoomId">
         UPDATE narcissus.smart_device_v2
@@ -246,7 +247,7 @@
 
     <!--通过publicZoneId删除该公共区域下的设备记录(修改字段)-->
     <update id="clearDevicesByPublicZoneId">
-        UPDATE narcissus_test.smart_device_v2
+        UPDATE narcissus.smart_device_v2
         SET manage_status = 1
         WHERE
         public_zone_ID = #{publicZoneId}
@@ -546,8 +547,8 @@
         nshm.threeID AS threeId
         FROM
         narcissus_test.public_zone ntpz
-        LEFT JOIN caspain.house cth ON ntpz.parent_ID = cth.id
-        LEFT JOIN caspain.room ctr ON cth.id = ctr.house_id
+        LEFT JOIN caspain_test.house cth ON ntpz.parent_ID = cth.id
+        LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
         LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ctr.id
         WHERE
         ntpz.public_zone_ID = #{h2omeId}
