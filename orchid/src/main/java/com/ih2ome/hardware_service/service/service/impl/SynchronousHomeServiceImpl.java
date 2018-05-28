@@ -308,7 +308,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             throw new SmartLockException("参数异常");
         }
         String[]  strs=Uuids.split(",");
-        for(int i=2,len=strs.length;i<len;i++){
+        for(int i=1,len=strs.length;i<len;i++){
             if(strs[i].toString()!=null){
                 String Uuid=strs[i];
                 List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
