@@ -378,6 +378,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         }
                         smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
                     }
+                    }
                     SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
                     //查询该关联关系原先是否存在
                     SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
@@ -387,7 +388,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     } else {
                         smartLockDao.addAssociation(houseMapping);
                     }
-                    }
+
                 } catch (WatermeterException e) {
                     e.printStackTrace();
                 }
