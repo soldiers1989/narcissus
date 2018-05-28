@@ -284,113 +284,119 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
         String gateWayuuid=smartHouseMappingVO.getGateWayuuid();
 
-        String Uuid =smartHouseMappingVO.getUuid();
-        String publicZoneId = null;
+        String Uuids =smartHouseMappingVO.getUuid();
+        String[]  strs=Uuids.split(",");
+        for(int i=0,len=strs.length;i<len;i++){
+            if(strs[i].toString()!=null){
+                String Uuid=strs[i];
+                String publicZoneId = null;
 
-        //1.2 获取公区
-        //判断是否是公共区域
-        if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
-            publicZoneId = roomId;
-        }
-        //判断是否是房间
-        else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
-            //判断是分散式
-            if (HouseStyleEnum.DISPERSED.getCode().equals(type)) {
-                //查询该房间所属房源的公共区域
-                publicZoneId = smartLockDao.findDispersedPublicZoneByRoomId(roomId);
-                //判断是集中式
-            } else if (HouseStyleEnum.CONCENTRAT.getCode().equals(type)) {
-                //查询该房间所属房源的公共区域
-                publicZoneId = smartLockDao.findConcentratePublicZoneByRoomId(roomId);
-            } else {
-                throw new SmartLockException("参数异常");
-            }
-        } else {
-            throw new SmartLockException("参数异常");
-        }
-
-
-
-        List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
-        IWatermeter iWatermeter = getIWatermeter();
-        try {
-            Date day=new Date();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
-            if(publicZoneId==roomId){
-                saveGatWay(iWatermeter,Uuid,userId,type,publicZoneId,providerCode);
-            }else {
-                String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode,userId);
-                JSONObject resJson = JSONObject.parseObject(watermeterInfo);
-                String info =  resJson.getString("info");
-                JSONObject jsonObject = JSONObject.parseObject(info);
-                String meter_type = jsonObject.getString("meter_type");
-                String name=null;
-                if("1".equals(meter_type)){
-                    name="冷水表";
-                }else if("2".equals(meter_type)){
-                    name="热水表";
+                //1.2 获取公区
+                //判断是否是公共区域
+                if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
+                    publicZoneId = roomId;
                 }
-                String onoff = jsonObject.getString("onoff");
-                String manufactory=jsonObject.getString("manufactory");
-                smartDeviceV2.setBrand("dding");
-                smartDeviceV2.setConnectionStatus(onoff);
-                smartDeviceV2.setConnectionStatusUpdateTime(df.format(day));
-                smartDeviceV2.setCreatedBy(userId);
-                smartDeviceV2.setHouseCatalog(type);
-                smartDeviceV2.setName(name);
-                smartDeviceV2.setProviderCode(providerCode);
-                smartDeviceV2.setRoomId(roomId);
-                smartDeviceV2.setSmartDeviceType("2");
-                smartDeviceV2.setThreeId(Uuid);
-                //新增水表关联记录
-                smartLockDao.addSmartDevice(smartDeviceV2);
-                SmartWatermeter smartWatermeter=new SmartWatermeter();
-                smartWatermeter.setSmartWatermeterId(Long.parseLong(smartDeviceV2.getSmartDeviceId()));
-                smartWatermeter.setCreatedAt(new Date());
-                smartWatermeter.setCreatedBy(Long.parseLong(userId));
-                smartWatermeter.setUpdatedAt(new Date());
-                smartWatermeter.setUpdatedBy(Long.parseLong(userId));
-                smartWatermeter.setRoomId(Long.parseLong(roomId));
-                smartWatermeter.setHouseCatalog(Long.parseLong(type));
-                smartWatermeter.setMeter(meter_type);
-                smartWatermeter.setUuid(Uuid);
-                smartWatermeter.setOnoffStatus(Long.parseLong(onoff));
-                smartWatermeter.setManufactory(manufactory);
-                smartLockDao.saveWaterMeter(smartWatermeter);
-                String smartGatWayid=smartLockDao.querySmartGatWayid(publicZoneId);
-                if(smartGatWayid==null){
-                    smartGatWayid= saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
-                    //3.3 门锁房间关联
-                    SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
-                    houseMapping.setH2omeId(publicZoneId);
-                    houseMapping.setDataType("5");
-                    houseMapping.setThreeId(thirdHomeId);
-
-                    //查询该关联关系原先是否存在
-                    SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
-                    //该记录存在，修改该映射记录
-                    if (houseMappingRecord != null) {
-                        smartLockDao.updateAssociation(houseMapping);
+                //判断是否是房间
+                else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
+                    //判断是分散式
+                    if (HouseStyleEnum.DISPERSED.getCode().equals(type)) {
+                        //查询该房间所属房源的公共区域
+                        publicZoneId = smartLockDao.findDispersedPublicZoneByRoomId(roomId);
+                        //判断是集中式
+                    } else if (HouseStyleEnum.CONCENTRAT.getCode().equals(type)) {
+                        //查询该房间所属房源的公共区域
+                        publicZoneId = smartLockDao.findConcentratePublicZoneByRoomId(roomId);
                     } else {
-                        smartLockDao.addAssociation(houseMapping);
+                        throw new SmartLockException("参数异常");
                     }
-                }
-                smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
-                //3.3 门锁房间关联
-                SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
-                //查询该关联关系原先是否存在
-                SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
-                //该记录存在，修改该映射记录
-                if (houseMappingRecord != null) {
-                    smartLockDao.updateAssociation(houseMapping);
                 } else {
-                    smartLockDao.addAssociation(houseMapping);
+                    throw new SmartLockException("参数异常");
+                }
+
+
+
+                List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
+                IWatermeter iWatermeter = getIWatermeter();
+                try {
+                    Date day=new Date();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
+                    if(publicZoneId==roomId){
+                        saveGatWay(iWatermeter,Uuid,userId,type,publicZoneId,providerCode);
+                    }else {
+                        String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode,userId);
+                        JSONObject resJson = JSONObject.parseObject(watermeterInfo);
+                        String info =  resJson.getString("info");
+                        JSONObject jsonObject = JSONObject.parseObject(info);
+                        String meter_type = jsonObject.getString("meter_type");
+                        String name=null;
+                        if("1".equals(meter_type)){
+                            name="冷水表";
+                        }else if("2".equals(meter_type)){
+                            name="热水表";
+                        }
+                        String onoff = jsonObject.getString("onoff");
+                        String manufactory=jsonObject.getString("manufactory");
+                        smartDeviceV2.setBrand("dding");
+                        smartDeviceV2.setConnectionStatus(onoff);
+                        smartDeviceV2.setConnectionStatusUpdateTime(df.format(day));
+                        smartDeviceV2.setCreatedBy(userId);
+                        smartDeviceV2.setHouseCatalog(type);
+                        smartDeviceV2.setName(name);
+                        smartDeviceV2.setProviderCode(providerCode);
+                        smartDeviceV2.setRoomId(roomId);
+                        smartDeviceV2.setSmartDeviceType("2");
+                        smartDeviceV2.setThreeId(Uuid);
+                        //新增水表关联记录
+                        smartLockDao.addSmartDevice(smartDeviceV2);
+                        SmartWatermeter smartWatermeter=new SmartWatermeter();
+                        smartWatermeter.setSmartWatermeterId(Long.parseLong(smartDeviceV2.getSmartDeviceId()));
+                        smartWatermeter.setCreatedAt(new Date());
+                        smartWatermeter.setCreatedBy(Long.parseLong(userId));
+                        smartWatermeter.setUpdatedAt(new Date());
+                        smartWatermeter.setUpdatedBy(Long.parseLong(userId));
+                        smartWatermeter.setRoomId(Long.parseLong(roomId));
+                        smartWatermeter.setHouseCatalog(Long.parseLong(type));
+                        smartWatermeter.setMeter(meter_type);
+                        smartWatermeter.setUuid(Uuid);
+                        smartWatermeter.setOnoffStatus(Long.parseLong(onoff));
+                        smartWatermeter.setManufactory(manufactory);
+                        smartLockDao.saveWaterMeter(smartWatermeter);
+                        String smartGatWayid=smartLockDao.querySmartGatWayid(publicZoneId);
+                        if(smartGatWayid==null){
+                            smartGatWayid= saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
+                            //3.3 门锁房间关联
+                            SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+                            houseMapping.setH2omeId(publicZoneId);
+                            houseMapping.setDataType("5");
+                            houseMapping.setThreeId(thirdHomeId);
+
+                            //查询该关联关系原先是否存在
+                            SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
+                            //该记录存在，修改该映射记录
+                            if (houseMappingRecord != null) {
+                                smartLockDao.updateAssociation(houseMapping);
+                            } else {
+                                smartLockDao.addAssociation(houseMapping);
+                            }
+                        }
+                        smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
+                        SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+                        //查询该关联关系原先是否存在
+                        SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
+                        //该记录存在，修改该映射记录
+                        if (houseMappingRecord != null) {
+                            smartLockDao.updateAssociation(houseMapping);
+                        } else {
+                            smartLockDao.addAssociation(houseMapping);
+                        }
+                    }
+                } catch (WatermeterException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (WatermeterException e) {
-            e.printStackTrace();
         }
+
     }
 
     /**
@@ -431,6 +437,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             smartLockDao.cancelAssociation(houseMapping);
             smartLockDao.clearDevicesByRoomId(houseMapping.getHouseCatalog(),
                     houseMapping.getH2omeId(), houseMapping.getProviderCode());
+
         }
 
     }

@@ -49,6 +49,7 @@ public class YunDingHomeInfoVO {
         homeVO.setUserId(yunDingHomeInfoVO.getUserId());
         homeVO.setHomeType(yunDingHomeInfoVO.getHomeType());
         List<RoomVO> rooms = new ArrayList<RoomVO>();
+        String uuid=null;
         for (YunDingRoomInfoVO yunDingRoomInfoVO : yunDingHomeInfoVO.getRooms()) {
             RoomVO roomVO = new RoomVO();
             roomVO.setThirdHomeId(homeVO.getHomeId());
@@ -62,7 +63,8 @@ public class YunDingHomeInfoVO {
             }
             for(YunDingDeviceInfoVO yunDingDeviceInfoVO:yunDingHomeInfoVO.getDevices()){
                 if(yunDingDeviceInfoVO.getRoomId().equals(yunDingRoomInfoVO.getRoomId())){
-                    roomVO.setUuid(yunDingDeviceInfoVO.getUuid());
+                    uuid=uuid+","+yunDingDeviceInfoVO.getUuid();
+                    roomVO.setUuid(uuid);
                     roomVO.setManufactory(yunDingDeviceInfoVO.getManufactory());
                 }
             }
