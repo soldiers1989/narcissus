@@ -555,6 +555,8 @@ public class WatermeterServiceImpl implements WatermeterService {
 
     @Override
     public int changeBalance(int roomId,int houseCatalog,int amount,String payChannel,String action, String actionId) {
+        Log.info("changeBalance，roomId:{};houseCatalog:{};amount:{};payChannel:{},action:{},actionId:{}"
+                , roomId, houseCatalog, amount, payChannel, action, actionId);
         SmartWatermeterAccount account = watermeterDao.getSmartWatermeterAccount(roomId, houseCatalog);
         SmartWatermeterAccountLog accountLog = new SmartWatermeterAccountLog();
         if (account == null) {
