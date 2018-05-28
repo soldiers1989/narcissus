@@ -308,22 +308,25 @@ public class WaterMeterController extends BaseController {
         List<HomeVO> homeList = watermeterService.getApartmentListByUserId(userId, brand);
         JSONObject responseJson = new JSONObject();
         responseJson.put("homeList", homeList);
-
-        List<SmartDeviceV2> smartDeviceList = watermeterService.getSmartDeviceV2List(userId, brand);
-        try {
-            Calendar beforeTime = Calendar.getInstance();
-            beforeTime.add(Calendar.HOUR, -3);
-            Date beforeDate = beforeTime.getTime();
-            IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-            for (SmartDeviceV2 device : smartDeviceList) {
-                SmartWatermeter watermeter = watermeterService.getWatermeterByDeviceId(Integer.parseInt(device.getSmartDeviceId()));
-                if(watermeter.getMeterUpdatedAt() == null || watermeter.getMeterUpdatedAt().before(beforeDate)) {
-                    iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
+        Thread t = new Thread(() -> {
+            List<SmartDeviceV2> smartDeviceList = watermeterService.getSmartDeviceV2List(userId, brand);
+            try {
+                Calendar beforeTime = Calendar.getInstance();
+                beforeTime.add(Calendar.HOUR, -3);
+                Date beforeDate = beforeTime.getTime();
+                IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
+                for (SmartDeviceV2 device : smartDeviceList) {
+                    SmartWatermeter watermeter = watermeterService.getWatermeterByDeviceId(Integer.parseInt(device.getSmartDeviceId()));
+                    if(watermeter.getMeterUpdatedAt() == null || watermeter.getMeterUpdatedAt().before(beforeDate)) {
+                        iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
+                    }
                 }
+            } catch (Exception ex) {
+                Log.error("auto read amount error!", ex);
             }
-        } catch (Exception ex) {
-            Log.error("auto read amount error!", ex);
-        }
+        });
+        t.start();
+
         return structureSuccessResponseVO(responseJson, new Date().toString(), "");
     }
 

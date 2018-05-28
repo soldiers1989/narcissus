@@ -268,11 +268,11 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * 根据userId和第三方厂商
      * 查询已绑定设备（包括网关）的房源
      *
-     * @param userId 用户Id
+     * @param userIds 用户Ids
      * @param brand  第三方标识符
      * @return 房源列表
      */
-    List<HomeVO> getApartmentListByUserId(@Param("userId") int userId, @Param("brand") String brand);
+    List<HomeVO> getApartmentListByUserId(@Param("userIds") String userIds, @Param("brand") String brand);
 
     /**
      * 集中式：根据公寓Id查询公寓内楼层水表数

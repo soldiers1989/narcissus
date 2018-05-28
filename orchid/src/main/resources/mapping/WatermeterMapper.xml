@@ -304,7 +304,7 @@
         FROM narcissus_test.smart_device_v2 d
           JOIN `volga_test`.room r ON d.room_ID = r.id
           JOIN `volga_test`.apartment a ON r.apartment_id = a.id
-        WHERE d.created_by = #{userId}
+        WHERE d.created_by IN (#{userIds})
           AND d.room_ID > 0
           AND d.brand = #{brand}
           AND d.house_catalog = 0
@@ -315,7 +315,7 @@
         FROM narcissus_test.smart_device_v2 d
           JOIN narcissus_test.public_zone p ON d.public_zone_ID = p.public_zone_ID
           JOIN `volga_test`.apartment a ON a.id = p.parent_ID
-        WHERE d.created_by = #{userId}
+        WHERE d.created_by IN (#{userIds})
           AND d.public_zone_ID > 0
           AND d.brand = #{brand}
           AND p.data_type = 1
