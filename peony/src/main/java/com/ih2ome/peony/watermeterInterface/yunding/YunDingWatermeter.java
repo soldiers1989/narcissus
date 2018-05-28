@@ -347,11 +347,11 @@ public class YunDingWatermeter implements IWatermeter {
         Log.info("获取水表网关信息,uuid:{}",uuid);
 
         Map<String,Object> map= new HashMap();
-        try {
-            map.put("access_token", YunDingSmartLockUtil.getAccessToken(userId));
-        } catch (SmartLockException e) {
-            e.printStackTrace();
-        }
+//        try {
+            map.put("access_token", "384f05d02bee79657d74b9b7a1d07907f8069b2d");
+//        } catch (SmartLockException e) {
+//            e.printStackTrace();
+//        }
         map.put("uuid",uuid);
 
         String uri = BASE_URL + "/get_water_gateway_info";

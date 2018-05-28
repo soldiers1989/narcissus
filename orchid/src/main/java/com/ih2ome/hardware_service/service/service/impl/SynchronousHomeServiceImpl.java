@@ -318,6 +318,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     if(publicZoneId==roomId){
                         saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
                     }else {
+                        if(i+1<len){
                         String Uuid=strs[i+1];
                         String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode,userId);
                         JSONObject resJson = JSONObject.parseObject(watermeterInfo);
@@ -386,11 +387,11 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     } else {
                         smartLockDao.addAssociation(houseMapping);
                     }
-
+                    }
                 } catch (WatermeterException e) {
                     e.printStackTrace();
                 }
-            if(HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType) || i+1==strs.length){
+            if(HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType) ){
                break;
             }
         }
