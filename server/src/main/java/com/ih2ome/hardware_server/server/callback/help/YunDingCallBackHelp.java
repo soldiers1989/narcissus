@@ -129,7 +129,9 @@ public class YunDingCallBackHelp {
             }
             //更新最近读数
             watermeterService.updataWaterLastAmount(apiRequestVO.getUuid(), amount, time);
-
+            if(watermeter.getMeterAmount() == null){
+                watermeterService.updataWatermeterMeterAmount(watermeter.getSmartWatermeterId(),amount);
+            }
             //水表状态离线
             if (watermeter.getOnoffStatus() == OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()) {
                 //水表上线

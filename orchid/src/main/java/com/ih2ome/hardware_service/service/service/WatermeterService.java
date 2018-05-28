@@ -230,7 +230,7 @@ public interface WatermeterService {
      * @param watermeterId
      * @param meterAmount
      */
-    void updataWatermeterMeterAmount(Integer watermeterId, Integer meterAmount);
+    void updataWatermeterMeterAmount(long watermeterId, Integer meterAmount);
 
     /**
      * 查询分散式网关详情

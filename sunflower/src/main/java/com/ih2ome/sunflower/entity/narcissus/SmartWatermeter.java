@@ -23,7 +23,7 @@ public class SmartWatermeter {
   private String uuid;
   private long onoffStatus;
   private int price;
-  private long meterAmount;
+  private Long meterAmount;
   private int lastAmount;
   private Date meterUpdatedAt;
   private String manufactory;

@@ -436,7 +436,7 @@ public class WatermeterServiceImpl implements WatermeterService {
      * @param meterAmount
      */
     @Override
-    public void updataWatermeterMeterAmount(Integer watermeterId, Integer meterAmount) {
+    public void updataWatermeterMeterAmount(long watermeterId, Integer meterAmount) {
         Log.info("更新水表月初读数，水表watermeterId：{},水表读数meterAmount：{}",watermeterId,meterAmount);
         watermeterDao.updataWatermeterMeterAmount(watermeterId,meterAmount);
     }
