@@ -309,30 +309,29 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         }
         String[]  strs=Uuids.split(",");
         for(int i=1,len=strs.length;i<len;i++){
-            if(i+1<=len) {
-                String Uuid = strs[i+1];
                 List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
                 IWatermeter iWatermeter = getIWatermeter();
                 try {
-                    Date day = new Date();
+                    Date day=new Date();
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    SmartDeviceV2 smartDeviceV2 = new SmartDeviceV2();
-                    if (publicZoneId == roomId) {
-                        saveGatWay(iWatermeter, gateWayuuid, userId, type, publicZoneId, providerCode);
-                    } else {
-                        String watermeterInfo = iWatermeter.getWatermeterInfo(Uuid, providerCode, userId);
+                    SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
+                    if(publicZoneId==roomId){
+                        saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
+                    }else {
+                        String Uuid=strs[i+1];
+                        String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode,userId);
                         JSONObject resJson = JSONObject.parseObject(watermeterInfo);
-                        String info = resJson.getString("info");
+                        String info =  resJson.getString("info");
                         JSONObject jsonObject = JSONObject.parseObject(info);
                         String meter_type = jsonObject.getString("meter_type");
-                        String name = null;
-                        if ("1".equals(meter_type)) {
-                            name = "冷水表";
-                        } else if ("2".equals(meter_type)) {
-                            name = "热水表";
+                        String name=null;
+                        if("1".equals(meter_type)){
+                            name="冷水表";
+                        }else if("2".equals(meter_type)){
+                            name="热水表";
                         }
                         String onoff = jsonObject.getString("onoff");
-                        String manufactory = jsonObject.getString("manufactory");
+                        String manufactory=jsonObject.getString("manufactory");
                         smartDeviceV2.setBrand("dding");
                         smartDeviceV2.setConnectionStatus(onoff);
                         smartDeviceV2.setConnectionStatusUpdateTime(df.format(day));
@@ -345,7 +344,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         smartDeviceV2.setThreeId(Uuid);
                         //新增水表关联记录
                         smartLockDao.addSmartDevice(smartDeviceV2);
-                        SmartWatermeter smartWatermeter = new SmartWatermeter();
+                        SmartWatermeter smartWatermeter=new SmartWatermeter();
                         smartWatermeter.setSmartWatermeterId(Long.parseLong(smartDeviceV2.getSmartDeviceId()));
                         smartWatermeter.setCreatedAt(new Date());
                         smartWatermeter.setCreatedBy(Long.parseLong(userId));
@@ -358,9 +357,9 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         smartWatermeter.setOnoffStatus(Long.parseLong(onoff));
                         smartWatermeter.setManufactory(manufactory);
                         smartLockDao.saveWaterMeter(smartWatermeter);
-                        String smartGatWayid = smartLockDao.querySmartGatWayid(publicZoneId);
-                        if (smartGatWayid == null) {
-                            smartGatWayid = saveGatWay(iWatermeter, gateWayuuid, userId, type, publicZoneId, providerCode);
+                        String smartGatWayid=smartLockDao.querySmartGatWayid(publicZoneId);
+                        if(smartGatWayid==null){
+                            smartGatWayid= saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
                             //3.3 门锁房间关联
                             SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
                             houseMapping.setH2omeId(publicZoneId);
@@ -391,8 +390,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 } catch (WatermeterException e) {
                     e.printStackTrace();
                 }
-            }
-            if(HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)){
+            if(HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType) || i+1==strs.length){
                break;
             }
         }
