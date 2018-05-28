@@ -238,12 +238,12 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
     Integer selectMeterAmountByWatermeterId(Integer watermeterId);
 
     /**
-     * 更新水表月初读数
+     * 更新水表初始读数
      *
      * @param watermeterId
      * @param meterAmount
      */
-    void updataWatermeterMeterAmount(@Param("watermeterId") Integer watermeterId, @Param("meterAmount") Integer meterAmount);
+    void updataWatermeterMeterAmount(@Param("watermeterId") long watermeterId, @Param("meterAmount") Integer meterAmount);
 
     /**
      * 查询分散式网关详情
