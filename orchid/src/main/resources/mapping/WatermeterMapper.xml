@@ -209,10 +209,6 @@
         WHERE sgbv.smart_gateway_ID=1151
         AND sdv.smart_device_type=5
         AND sdv.manage_status=0;
-SELECT * from narcissus.smart_device_v2 sdv
-LEFT JOIN narcissus.smart_gateway_bind_v2 sgbv
-ON sgbv.smart_device_ID=sdv.smart_device_ID
-WHERE sgbv.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
     </select>
 
 
