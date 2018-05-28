@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 水表service
@@ -567,5 +569,41 @@ public class WatermeterServiceImpl implements WatermeterService {
         accountLog.setHouseCatalog(houseCatalog);
         accountLog.setRoomId(roomId);
         return watermeterDao.addSmartWatermeterAccountLog(accountLog);
+    }
+
+    @Override
+    public List<RecordVO> getRecordList(int watermeterId, String startTime, String endTime) {
+        List<SmartWatermeterRecord> smartWatermeterRecords = findWatermeterRecordByWatermeterIdAndTime(watermeterId,startTime,endTime);
+        WatermeterVO watermeter = getWatermeterById(watermeterId);
+
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Map<String,RecordVO> recordMap = new HashMap<>();
+        for(SmartWatermeterRecord item : smartWatermeterRecords) {
+            String date = sdf.format(item.getCreatedAt());
+            if (recordMap.containsKey(date)) {
+                if (item.getDeviceAmount() > recordMap.get(date).getLast()) {
+                    recordMap.get(date).setLast(item.getDeviceAmount());
+                }
+                if (item.getDeviceAmount() < recordMap.get(date).getInitial()) {
+                    recordMap.get(date).setInitial(item.getDeviceAmount());
+                }
+            } else {
+                RecordVO record = new RecordVO();
+                record.setDate(date);
+                record.setLast(item.getDeviceAmount());
+                record.setInitial(item.getDeviceAmount());
+                recordMap.put(date, record);
+            }
+        }
+        List<RecordVO> recordList = new ArrayList<>(recordMap.values());
+        recordList.sort(Comparator.comparing(RecordVO::getDate));
+        for (int i = 1;i<recordList.size();i++) {
+            recordList.get(i).setInitial(recordList.get(i - 1).getLast());
+        }
+        for(RecordVO record : recordList){
+            record.setUsed(record.getLast() - record.getInitial());
+            record.setAmount(record.getUsed() * watermeter.getPrice() / 100.0);
+        }
+        return recordList;
     }
 }
