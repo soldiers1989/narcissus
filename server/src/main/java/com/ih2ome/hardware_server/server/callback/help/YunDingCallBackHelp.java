@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_server.server.callback.help;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.*;
@@ -105,6 +106,7 @@ public class YunDingCallBackHelp {
      * @param apiRequestVO
      */
     public void watermeterAmountAsyncEvent(CallbackRequestVo apiRequestVO) {
+        Log.info("抄表读数同步，消息:{}", JSON.toJSONString(apiRequestVO));
         Object detailObj = apiRequestVO.getDetail();
         String s = JSONObject.toJSONString(detailObj);
         JSONObject detail = JSONObject.parseObject(s);
