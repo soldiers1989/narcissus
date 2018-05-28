@@ -302,4 +302,5 @@ public interface WatermeterService {
 
     List<SmartDeviceV2> getSmartDeviceV2List(int userId, String brand);
     List<SmartDeviceV2> getAllSmartDeviceV2List();
+    List<RecordVO> getRecordList(int watermeterId, String startTime, String endTime);
 }
