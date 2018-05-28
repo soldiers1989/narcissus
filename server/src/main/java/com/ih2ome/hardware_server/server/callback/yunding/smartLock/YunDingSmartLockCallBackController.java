@@ -6,11 +6,14 @@ import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.hardware_server.server.callback.help.YunDingCallBackHelp;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.hardware_service.service.service.SmartLockWarningService;
+import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.sunflower.vo.pageVo.enums.AlarmTypeEnum;
+import com.ih2ome.sunflower.vo.pageVo.enums.OnOffStatusEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -49,6 +52,9 @@ public class YunDingSmartLockCallBackController extends BaseController{
 
     @Autowired
     SmartLockGatewayService smartLockGatewayService;
+
+    @Autowired
+    private YunDingCallBackHelp yunDingCallBackHelp;
 
     final static String TOKEN_YUNDING_USER_CODE = "yunding_user_code_token";
 
@@ -151,6 +157,10 @@ public class YunDingSmartLockCallBackController extends BaseController{
             case "deviceUninstall":
                 Log.info("设备解绑");
                 deviceUninstall(apiRequestVO);
+                break;
+            case "watermeterAmountAsync" :
+                //抄表读数同步
+                yunDingCallBackHelp.watermeterAmountAsyncEvent(apiRequestVO);
                 break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
