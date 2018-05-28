@@ -10,6 +10,7 @@ import com.ih2ome.sunflower.vo.pageVo.enums.AlarmTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseCatalogEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.OnOffStatusEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
 import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 import org.slf4j.Logger;
@@ -168,11 +169,13 @@ public class YunDingCallBackHelp {
         String s = JSONObject.toJSONString(detailObj);
         JSONObject detail=JSONObject.parseObject(s);
         String home_id =apiRequestVO.getHome_id();
-
-
+        String  factoryType=apiRequestVO.getManufactory();
+        String gateway_uuid=apiRequestVO.getGateway_uuid();
+        String room_id=apiRequestVO.getRoom_id();
+        String meter_type=apiRequestVO.getMeter_type();
         //获取事件类型
         String type = String.valueOf(detail.get("type"));
-
+        String time=String.valueOf(detail.get("time"));
         //网关安装
 //        if(type.equals("7")){
 //            //添加网关
@@ -230,41 +233,33 @@ public class YunDingCallBackHelp {
 //            }
 //
 //        }else
-            /*if(type.equals("8")){
+            if(type.equals("8")){
             //获取水表amount
             String amount = String.valueOf(detail.get("amount"));
-            //查询水表信息
-            String watermeterInfo = iWatermeter.getWatermeterInfo(uuid, apiRequestVO.getManufactory());
 
-            JSONObject resJson = JSONObject.parseObject(watermeterInfo);
-            String info =  resJson.getString("info");
-            JSONObject jsonObject = JSONObject.parseObject(info);
-            String meter_type = jsonObject.getString("meter_type");
-            String Uuid=jsonObject.getString("uuid");
+
             String name=null;
             if("1".equals(meter_type)){
                 name="冷水表";
             }else if("2".equals(meter_type)){
                 name="热水表";
             }
-            String onoff = jsonObject.getString("onoff");
-            String manufactory=jsonObject.getString("manufactory");
             SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
             smartDeviceV2.setBrand("dding");
-            smartDeviceV2.setConnectionStatus(onoff);
+            smartDeviceV2.setConnectionStatus("1");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             smartDeviceV2.setConnectionStatusUpdateTime(df.format(new Date()));
             String h2omeID=watermeterService.findGateWay(home_id);
-            String userId=smartLockDao.findUserIds(h2omeID);
-            smartDeviceV2.setCreatedBy(userId);
-            smartDeviceV2.setHouseCatalog(type);
-            smartDeviceV2.setName(name);
-            smartDeviceV2.setProviderCode(manufactory);
-            smartDeviceV2.setRoomId(h2omeID);
-            smartDeviceV2.setSmartDeviceType("2");
-            smartDeviceV2.setThreeId(Uuid);
-            String publicZoneId= smartLockDao.findConcentratePublicZoneByRoomId(h2omeID);
             if(h2omeID!=null){
+                String userId=smartLockDao.findUserIds(h2omeID);
+                smartDeviceV2.setCreatedBy(userId);
+                smartDeviceV2.setHouseCatalog(type);
+                smartDeviceV2.setName(name);
+                smartDeviceV2.setProviderCode(factoryType);
+                smartDeviceV2.setRoomId(h2omeID);
+                smartDeviceV2.setSmartDeviceType("2");
+                smartDeviceV2.setThreeId(uuid);
+                String publicZoneId= smartLockDao.findConcentratePublicZoneByRoomId(h2omeID);
                 //新增水表关联记录
                 smartLockDao.addSmartDevice(smartDeviceV2);
                 SmartWatermeter smartWatermeter=new SmartWatermeter();
@@ -276,15 +271,28 @@ public class YunDingCallBackHelp {
                 smartWatermeter.setRoomId(Long.parseLong(h2omeID));
                 smartWatermeter.setHouseCatalog(Long.parseLong(type));
                 smartWatermeter.setMeter(meter_type);
-                smartWatermeter.setUuid(Uuid);
-                smartWatermeter.setOnoffStatus(Long.parseLong(onoff));
-                smartWatermeter.setManufactory(manufactory);
+                smartWatermeter.setUuid(uuid);
+                smartWatermeter.setOnoffStatus(Long.parseLong("1"));
+                smartWatermeter.setManufactory(factoryType);
                 smartLockDao.saveWaterMeter(smartWatermeter);
                 String smartGatWayid=smartLockDao.querySmartGatWayid(publicZoneId);
                 smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
+                SmartHouseMappingVO houseMapping = new SmartHouseMappingVO();
+                houseMapping.setDataType("4");
+                houseMapping.setProviderCode(factoryType);
+                houseMapping.setH2omeId(h2omeID);
+                houseMapping.setHouseCatalog("0");
+                //查询该关联关系原先是否存在
+                SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
+                //该记录存在，修改该映射记录
+                if (houseMappingRecord != null) {
+                    smartLockDao.updateAssociation(houseMapping);
+                } else {
+                    smartLockDao.addAssociation(houseMapping);
+                }
             }
 
-        }*/
+        }
     }
 
 
