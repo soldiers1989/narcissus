@@ -2,6 +2,8 @@ package com.ih2ome.hardware_service.service.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ih2ome.common.utils.StringUtils;
+import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.dao.WatermeterMapper;
 import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
@@ -29,6 +31,8 @@ public class WatermeterServiceImpl implements WatermeterService {
 
     @Resource
     private WatermeterMapper watermeterDao;
+    @Resource
+    private SmartLockDao smartLockDao;
 
     //通过用户create_by_id查询用户房源id
     @Override
@@ -443,7 +447,11 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public List<HomeVO> getApartmentListByUserId(int userId, String brand) {
         Log.info("查询已绑定设备（包括网关）的房源,userId：{}, brand:{}", userId, brand);
-        return watermeterDao.getApartmentListByUserId(userId, brand);
+
+        List<String> userIdList = smartLockDao.findUserId(String.valueOf(userId));
+        userIdList.add(String.valueOf(userId));
+        String userIds = StringUtils.join(userIdList.toArray(), ",");
+        return watermeterDao.getApartmentListByUserId(userIds, brand);
     }
 
     /**
