@@ -285,33 +285,32 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String gateWayuuid=gateWayuuids[1];
 
         String Uuids =smartHouseMappingVO.getUuid();
-
+        String publicZoneId = null;
+        //1.2 获取公区
+        //判断是否是公共区域
+        if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
+            publicZoneId = roomId;
+        }
+        //判断是否是房间
+        else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
+            //判断是分散式
+            if (HouseStyleEnum.DISPERSED.getCode().equals(type)) {
+                //查询该房间所属房源的公共区域
+                publicZoneId = smartLockDao.findDispersedPublicZoneByRoomId(roomId);
+                //判断是集中式
+            } else if (HouseStyleEnum.CONCENTRAT.getCode().equals(type)) {
+                //查询该房间所属房源的公共区域
+                publicZoneId = smartLockDao.findConcentratePublicZoneByRoomId(roomId);
+            } else {
+                throw new SmartLockException("参数异常");
+            }
+        } else {
+            throw new SmartLockException("参数异常");
+        }
         String[]  strs=Uuids.split(",");
         for(int i=2,len=strs.length;i<len;i++){
             if(strs[i].toString()!=null){
                 String Uuid=strs[i];
-                String publicZoneId = null;
-                //1.2 获取公区
-                //判断是否是公共区域
-                if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
-                    publicZoneId = roomId;
-                }
-                //判断是否是房间
-                else if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
-                    //判断是分散式
-                    if (HouseStyleEnum.DISPERSED.getCode().equals(type)) {
-                        //查询该房间所属房源的公共区域
-                        publicZoneId = smartLockDao.findDispersedPublicZoneByRoomId(roomId);
-                        //判断是集中式
-                    } else if (HouseStyleEnum.CONCENTRAT.getCode().equals(type)) {
-                        //查询该房间所属房源的公共区域
-                        publicZoneId = smartLockDao.findConcentratePublicZoneByRoomId(roomId);
-                    } else {
-                        throw new SmartLockException("参数异常");
-                    }
-                } else {
-                    throw new SmartLockException("参数异常");
-                }
                 List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
                 IWatermeter iWatermeter = getIWatermeter();
                 try {
@@ -319,7 +318,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
                     if(publicZoneId==roomId){
-                        saveGatWay(iWatermeter,Uuid,userId,type,publicZoneId,providerCode);
+                        saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
                     }else {
                         String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode,userId);
                         JSONObject resJson = JSONObject.parseObject(watermeterInfo);
@@ -388,9 +387,13 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     } else {
                         smartLockDao.addAssociation(houseMapping);
                     }
+
                 } catch (WatermeterException e) {
                     e.printStackTrace();
                 }
+            }
+            if(HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)){
+               break;
             }
         }
 
