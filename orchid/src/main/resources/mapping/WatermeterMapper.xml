@@ -158,7 +158,7 @@
         ON sgbv.smart_device_ID=sdv.smart_device_ID
         LEFT JOIN `volga_test`.room r
         ON r.id=sdv.room_ID
-        WHERE sgbv.smart_gateway_ID=#{smartGatewayId}
+        WHERE sgbv.smart_gateway_ID=#{smartGatewayId} and sdv.manage_status=0
     </select>
 
     <!--查询集中式水表列表by楼层id-->
