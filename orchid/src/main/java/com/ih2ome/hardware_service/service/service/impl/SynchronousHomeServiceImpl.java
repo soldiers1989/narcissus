@@ -281,16 +281,16 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String roomId = smartHouseMappingVO.getRoomId();
         //获得厂商
         String providerCode = smartHouseMappingVO.getFactoryType();
-
-        String gateWayuuid=smartHouseMappingVO.getGateWayuuid();
+        String[]  gateWayuuids=smartHouseMappingVO.getGateWayuuid().split(",");
+        String gateWayuuid=gateWayuuids[1];
 
         String Uuids =smartHouseMappingVO.getUuid();
+
         String[]  strs=Uuids.split(",");
         for(int i=1,len=strs.length;i<len;i++){
             if(strs[i].toString()!=null){
                 String Uuid=strs[i];
                 String publicZoneId = null;
-
                 //1.2 获取公区
                 //判断是否是公共区域
                 if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
@@ -312,9 +312,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 } else {
                     throw new SmartLockException("参数异常");
                 }
-
-
-
                 List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
                 IWatermeter iWatermeter = getIWatermeter();
                 try {
@@ -381,15 +378,15 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                             }
                         }
                         smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
-                        SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
-                        //查询该关联关系原先是否存在
-                        SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
-                        //该记录存在，修改该映射记录
-                        if (houseMappingRecord != null) {
-                            smartLockDao.updateAssociation(houseMapping);
-                        } else {
-                            smartLockDao.addAssociation(houseMapping);
-                        }
+                    }
+                    SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+                    //查询该关联关系原先是否存在
+                    SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
+                    //该记录存在，修改该映射记录
+                    if (houseMappingRecord != null) {
+                        smartLockDao.updateAssociation(houseMapping);
+                    } else {
+                        smartLockDao.addAssociation(houseMapping);
                     }
                 } catch (WatermeterException e) {
                     e.printStackTrace();
