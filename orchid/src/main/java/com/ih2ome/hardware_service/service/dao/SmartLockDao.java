@@ -463,7 +463,7 @@ public interface SmartLockDao {
      */
     String querySmartGatWayCount(String userId);
 
-    List<String> findUserId(String userId);
+    String findUserId(String userId);
 
     /**
      * 新增门锁网关记录

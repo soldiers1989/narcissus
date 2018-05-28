@@ -387,7 +387,11 @@ public class YunDingWatermeter implements IWatermeter {
         Log.info("获取水表信息,uuid:{},manufactory:{}",uuid,manufactory);
 
         Map<String,Object> map= new HashMap();
-        map.put("access_token","fcedd39b28affea896a65728a8be81593ebe95e8");
+        try {
+            map.put("access_token",YunDingSmartLockUtil.getAccessToken(userId));
+        } catch (SmartLockException e) {
+            e.printStackTrace();
+        }
         map.put("uuid",uuid);
         map.put("manufactory",manufactory);
 

@@ -43,7 +43,7 @@
     <!--新增房间关联记录-->
     <insert id="addAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO narcissus_test.smart_house_mapping (
+        INSERT INTO narcissus.smart_house_mapping (
         house_catalog,
         data_type,
         h2omeID,
@@ -57,7 +57,7 @@
     <!--新增设备记录-->
     <insert id="addSmartDevice" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2"
             useGeneratedKeys="true" keyProperty="smartDeviceId" keyColumn="smart_device_ID">
-        INSERT INTO narcissus_test.smart_device_v2 (
+        INSERT INTO narcissus.smart_device_v2 (
         brand,
         connection_status,
         connection_status_update_time,
@@ -94,7 +94,7 @@
     <!--新增水表网关记录-->
     <insert id="saveGatWay" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2"
             useGeneratedKeys="true" keyProperty="smartGatewayId" keyColumn="smart_gateway_ID">
-        INSERT INTO narcissus_test.smart_gateway_v2 (
+        INSERT INTO narcissus.smart_gateway_v2 (
         smart_gateway_ID,
         uuid,
         install_time,
@@ -124,7 +124,7 @@
     <!-- 新增水表记录 -->
     <insert id="saveWaterMeter" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter"
             useGeneratedKeys="true" keyProperty="smartWatermeterId" keyColumn="smart_watermeter_id">
-    INSERT INTO narcissus_test.smart_watermeter(
+    INSERT INTO narcissus.smart_watermeter(
     smart_watermeter_id,
     created_at,
     created_by,
@@ -141,7 +141,7 @@
 
     <!--新增网关和设备绑定记录-->
     <insert id="addSmartDeviceBind">
-        INSERT INTO narcissus_test.smart_gateway_bind_v2 (
+        INSERT INTO narcissus.smart_gateway_bind_v2 (
         smart_device_ID,
         smart_gateway_ID
         )VALUES(#{lockDeviceId},#{gatewayDeviceId})
@@ -214,7 +214,7 @@
     <!--update-->
     <!--修改房间关联记录-->
     <update id="updateAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
-        UPDATE narcissus_test.smart_house_mapping nshm
+        UPDATE narcissus.smart_house_mapping nshm
         SET nshm.`status` = '1',nshm.threeID=#{threeId}
         WHERE
         nshm.provider_code = #{providerCode}
@@ -225,7 +225,7 @@
 
     <!--房间(公共区域)取消关联(分散式,集中式)-->
     <update id="cancelAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
-        UPDATE narcissus_test.smart_house_mapping nshm
+        UPDATE narcissus.smart_house_mapping nshm
         SET nshm.`status` = '2'
         WHERE
         nshm.provider_code = #{providerCode}
@@ -237,7 +237,7 @@
 
     <!--通过roomId删除该房间下的设备记录(修改字段)-->
     <update id="clearDevicesByRoomId">
-        UPDATE narcissus_test.smart_device_v2
+        UPDATE narcissus.smart_device_v2
         SET manage_status = 1
         WHERE
         room_ID= #{roomId}
@@ -526,7 +526,7 @@
         threeID as threeId,
         `status`
         FROM
-        narcissus_test.smart_house_mapping nshm
+        narcissus.smart_house_mapping nshm
         WHERE
         nshm.h2omeID = #{h2omeId}
         AND nshm.data_type = #{dataType}
@@ -568,10 +568,10 @@
         nshm.provider_code as providerCode,
         nshm.threeID as threeId
         FROM
-        narcissus_test.public_zone ntpz
-        LEFT JOIN `volga_test`.apartment vta ON ntpz.parent_ID = vta.id
-        LEFT JOIN `volga_test`.room vtr ON vta.id = vtr.apartment_id
-        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = vtr.id
+        narcissus.public_zone ntpz
+        LEFT JOIN `volga-pro`.apartment vta ON ntpz.parent_ID = vta.id
+        LEFT JOIN `volga-pro`.room vtr ON vta.id = vtr.apartment_id
+        LEFT JOIN narcissus.smart_house_mapping nshm ON nshm.h2omeID = vtr.id
         WHERE
         ntpz.public_zone_ID = #{h2omeId}
         AND ntpz.data_type = 1
@@ -585,9 +585,9 @@
         SELECT
         npz.public_zone_ID
         FROM
-        caspain_test.room ctr
-        LEFT JOIN caspain_test.house cth ON ctr.house_id = cth.id
-        LEFT JOIN narcissus_test.public_zone npz ON cth.id = npz.parent_ID
+        caspain_pro.room ctr
+        LEFT JOIN caspain_pro.house cth ON ctr.house_id = cth.id
+        LEFT JOIN narcissus.public_zone npz ON cth.id = npz.parent_ID
         WHERE
          ctr.id = #{roomId}
     </select>
@@ -597,9 +597,9 @@
         SELECT
         npz.public_zone_ID
         FROM
-        `volga_test`.room vtr
-        LEFT JOIN `volga_test`.apartment vta ON vtr.apartment_id = vta.id
-        LEFT JOIN narcissus_test.public_zone npz ON vta.id=npz.parent_ID
+        `volga-pro`.room vtr
+        LEFT JOIN `volga-pro`.apartment vta ON vtr.apartment_id = vta.id
+        LEFT JOIN narcissus.public_zone npz ON vta.id=npz.parent_ID
         WHERE npz.data_type=1 AND vtr.id=#{roomId}
     </select>
 
@@ -841,9 +841,9 @@
         ntsdv2g.threeID AS gatewayThirdId,
         ntsgbv2.smart_device_ID AS innerLockId
         FROM
-            narcissus_test.smart_device_v2 ntsdv2g
-        LEFT JOIN narcissus_test.smart_gateway_bind_v2 ntsgbv2 ON ntsdv2g.smart_device_ID = ntsgbv2.smart_gateway_ID
-        LEFT JOIN narcissus_test.smart_device_v2 ntsdv2l ON ntsdv2l.smart_device_ID = ntsgbv2.smart_device_ID
+            narcissus.smart_device_v2 ntsdv2g
+        LEFT JOIN narcissus.smart_gateway_bind_v2 ntsgbv2 ON ntsdv2g.smart_device_ID = ntsgbv2.smart_gateway_ID
+        LEFT JOIN narcissus.smart_device_v2 ntsdv2l ON ntsdv2l.smart_device_ID = ntsgbv2.smart_device_ID
         WHERE
             ntsdv2g.public_zone_ID = #{publicZoneId}
         AND ntsdv2g.provider_code = #{providerCode}
@@ -1130,14 +1130,14 @@ AND sdv.smart_device_type=3;
     </select>
     <!-- 查询 -->
     <select id="querySmartGatWayid"  parameterType="string" resultType="string">
-        SELECT smart_device_ID FROM narcissus_test.smart_device_v2 sdv
+        SELECT smart_device_ID FROM narcissus.smart_device_v2 sdv
         WHERE sdv.manage_status = 0
         AND sdv.public_zone_ID= #{publicZoneId}
         AND  sdv.smart_device_type = 5
     </select>
 
 
-    <select id="finfUserIds"  parameterType="string" resultType="string">
+    <select id="findUserIds"  parameterType="string" resultType="string">
         SELECT sdv.created_by FROM narcissus_test.smart_device_v2 sdv WHERE sdv.room_ID=#{userId}
     </select>
 </mapper>

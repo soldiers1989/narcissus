@@ -15,6 +15,7 @@ public class CallbackRequestVo {
     private String room_id;//房间标识，内门锁才有
     private JSONObject detail;//通知的详细信息
     private String sign;//签名
+    private String meter_type;
 
     @Override
     public String toString() {
