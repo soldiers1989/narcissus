@@ -260,8 +260,8 @@ public class YunDingSmartLockUtil {
      * @throws SmartLockException
      */
     public static String getAccessToken(String userId) throws SmartLockException {
-        return "fcedd39b28affea896a65728a8be81593ebe95e8";
-        /*
+//        return "fcedd39b28affea896a65728a8be81593ebe95e8";
+
         String accessToken = CacheUtils.getStr(ACCESS_TOKEN_KEY + "_" + userId);
         if (StringUtils.isNotBlank(accessToken)) {
             return accessToken;
@@ -269,7 +269,7 @@ public class YunDingSmartLockUtil {
         }
         accessToken = getAccessTokenFromThrid(userId);
         return accessToken;
-        */
+
     }
 
 
