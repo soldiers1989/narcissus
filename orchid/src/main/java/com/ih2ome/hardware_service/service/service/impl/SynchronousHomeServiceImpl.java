@@ -287,7 +287,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String Uuids =smartHouseMappingVO.getUuid();
 
         String[]  strs=Uuids.split(",");
-        for(int i=1,len=strs.length;i<len;i++){
+        for(int i=2,len=strs.length;i<len;i++){
             if(strs[i].toString()!=null){
                 String Uuid=strs[i];
                 String publicZoneId = null;
