@@ -270,7 +270,10 @@ WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
 
     <!-- 查询水表byuuid -->
     <select id="getWatermeterByUuId" parameterType="String" resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter">
-        SELECT * FROM <include refid="smart_watermeter"/> WHERE uuid=#{uuid} ORDER BY created_at DESC LIMIT 1
+        SELECT w.* FROM narcissus_test.smart_watermeter w
+        JOIN narcissus_test.smart_device_v2 d ON w.smart_watermeter_id = d.smart_device_ID
+        WHERE w.uuid=#{uuid} AND d.manage_status = 0
+        ORDER BY w.created_at DESC LIMIT 1
     </select>
 
     <select id="getWatermeterByDeviceId" parameterType="int" resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter">
