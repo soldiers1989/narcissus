@@ -38,7 +38,7 @@
 
     <!-- 更新网关在线状态by-->
     <update id="updataGatewayOnoffStatusByUuid"  >
-        UPDATE narcissus_test.smart_device_v2 SET connection_status = #{code} WHERE threeID = #{uuid};
+        UPDATE narcissus_test.smart_device_v2 SET connection_status = #{code} WHERE threeID = #{uuid} and manage_status=0;
     </update>
 
     <!-- 更新网关 -->
