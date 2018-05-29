@@ -231,7 +231,7 @@
             LEFT JOIN narcissus.smart_mistake_info smi
             ON smi.uuid=sdv.threeID
             WHERE sdv.smart_device_ID=#{watermeterId}
-            AND smi.smart_device_type=5
+            AND smi.smart_device_type=5 GROUP BY smi.created_at DESC
 
     </select>
 
@@ -248,7 +248,7 @@ WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
         LEFT JOIN narcissus.smart_mistake_info smi
         ON smi.uuid=sdv.threeID
         WHERE sdv.smart_device_ID=#{gatewayId}
-        AND smi.smart_device_type=5
+        AND smi.smart_device_type=5 GROUP BY smi.created_at DESC
     </select>
 
     <!--查询水表抄表参数by水表id-->
