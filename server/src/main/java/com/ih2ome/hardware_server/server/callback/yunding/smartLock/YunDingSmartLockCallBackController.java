@@ -171,7 +171,7 @@ public class YunDingSmartLockCallBackController extends BaseController{
                 //抄表读数同步
                 yunDingCallBackHelp.watermeterAmountAsyncEvent(apiRequestVO);
                 break;
-            case "waterGateWayOfflineAlarm" :
+            case "waterGatewayOfflineAlarm" :
                 Log.info("水表网关离线");
                 yunDingCallBackHelp.waterGatewayOnOfflineAlarm(apiRequestVO, OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
                 break;
