@@ -244,8 +244,8 @@ WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
 
     <!--网关异常记录by网关id-->
     <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
-        SELECT smi.created_at createdAt,sdv.connection_status status FROM narcissus_test.smart_device_v2 sdv
-        LEFT JOIN narcissus_test.smart_mistake_info smi
+        SELECT smi.created_at createdAt,smi.exception_type exceptionType FROM narcissus.smart_device_v2 sdv
+        LEFT JOIN narcissus.smart_mistake_info smi
         ON smi.uuid=sdv.threeID
         WHERE sdv.smart_device_ID=#{gatewayId}
         AND smi.smart_device_type=5
