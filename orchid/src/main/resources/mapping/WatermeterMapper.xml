@@ -326,7 +326,11 @@ WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
 
     <!-- 查询水表idBygatewayuuid -->
     <select id="selectWatermeterIdByGatewayUuid" resultType="java.lang.String">
-        SELECT smart_device_ID FROM narcissus_test.smart_device_v2 sdv WHERE sdv.threeID=#{uuid} AND sdv.smart_device_type=2 AND sdv.manage_status=0
+        SELECT sgbv.smart_device_ID FROM narcissus.smart_device_v2 sdv
+LEFT JOIN narcissus.smart_gateway_bind_v2 sgbv
+ON sgbv.smart_gateway_ID=sdv.smart_device_ID
+WHERE sdv.manage_status=0 AND sdv.smart_device_type=5
+AND sdv.threeID=#{uuid}
   </select>
 
     <!--根据userId和第三方厂商 查询已绑定设备（包括网关）的集中式房源-->

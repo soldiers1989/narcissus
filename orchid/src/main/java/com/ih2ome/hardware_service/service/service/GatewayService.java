@@ -38,7 +38,7 @@ public interface GatewayService {
      * @param uuid
      * @param code
      */
-    void updataGatewayOnoffStatus(String uuid, Integer code);
+    void updataGatewayOnoffStatus(String uuid, Integer code,Long time);
 
     /**
      * 更新网关

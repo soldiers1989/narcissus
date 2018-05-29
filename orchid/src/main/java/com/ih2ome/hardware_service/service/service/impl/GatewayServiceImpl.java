@@ -68,9 +68,9 @@ public class GatewayServiceImpl implements GatewayService {
      * @param code
      */
     @Override
-    public void updataGatewayOnoffStatus(String uuid, Integer code) {
+    public void updataGatewayOnoffStatus(String uuid, Integer code,Long time) {
         Log.info("更新网关在线离线状态，网关uuid：{},状态码code：",uuid,code);
-        gatewayMapper.updataGatewayOnoffStatusByUuid(uuid,code);
+        gatewayMapper.updataGatewayOnoffStatusByUuid(uuid,code,time);
     }
 
     /**
