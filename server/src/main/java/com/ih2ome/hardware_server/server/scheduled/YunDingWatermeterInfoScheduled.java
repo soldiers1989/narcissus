@@ -71,31 +71,15 @@ public class YunDingWatermeterInfoScheduled {
     /**
      * 定时获取水表抄表
      */
-    @Scheduled(cron="0 0/5 * * * ?")
+    @Scheduled(cron="0 0/10 * * * ?")
     public void getWatermeterRecord() {
         Log.info("====================getWatermeterRecord start==================");
         List<SmartDeviceV2> smartDeviceList = watermeterService.getAllSmartDeviceV2List();
         Log.info("*** getWatermeterRecord *** 待抄表个数：{}", smartDeviceList.size());
-        Calendar beforeTime = Calendar.getInstance();
-        beforeTime.setTime(new Date());
-        beforeTime.add(Calendar.HOUR, -3);
-        Date beforeDate = beforeTime.getTime();
         try {
             IWatermeter iWatermeter = getIWatermeter();
             for (SmartDeviceV2 device : smartDeviceList) {
-                SmartWatermeter watermeter = watermeterService.getWatermeterByDeviceId(Integer.parseInt(device.getSmartDeviceId()));
-                Log.info("*** getWatermeterRecord *** watermeter != null：{}", watermeter != null);
-                Log.info("*** getWatermeterRecord *** watermeter：{}", JSON.toJSONString(watermeter));
-                Log.info("*** getWatermeterRecord *** watermeter.getMeterUpdatedAt() == null：{}", watermeter.getMeterUpdatedAt() == null);
-                Log.info("*** getWatermeterRecord *** watermeter.getMeterUpdatedAt().before(beforeDate)：{}", watermeter.getMeterUpdatedAt().before(beforeDate));
-                Log.info("*** getWatermeterRecord *** beforeDate：{}", JSON.toJSONString(beforeDate));
-                if(watermeter != null && (watermeter.getMeterUpdatedAt() == null || watermeter.getMeterUpdatedAt().before(beforeDate))) {
-                    iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
-                    Log.info("*** getWatermeterRecord *** 抄表请求完成：{}", device.getSmartDeviceId());
-                }
-                else {
-                    Log.info("*** getWatermeterRecord *** 抄表请求跳过：{}", device.getSmartDeviceId());
-                }
+                iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
             }
         } catch (Exception ex) {
             Log.error("task read amount error!", ex);
