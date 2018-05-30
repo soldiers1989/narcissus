@@ -85,7 +85,7 @@
 
     <!-- 更新水表在线状态byUUid-->
     <update id="updataWatermerterOnoffStatusByUuid" >
-        UPDATE narcissus_test.smart_device_v2 SET connection_status = #{code} WHERE threeID = #{uuid};
+        UPDATE narcissus.smart_device_v2 SET connection_status = #{code} WHERE smart_device_ID = #{uuid};
     </update>
 
     <!-- 更新水表在线状态byUUid-->
@@ -186,12 +186,12 @@
     <!--查询集中式公寓下的网关by公寓id-->
     <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterGatewayVO" >
         SELECT sdv.smart_device_ID smartGatewayId,sdv.threeID uuid,a.name houseName,sdv.connection_status onoffStatus,COUNT(sdv.smart_device_ID) watermeterNum,COUNT(sdv.connection_status=1) watermeterOnLineNum
-        FROM narcissus_test.smart_device_v2 sdv
-        LEFT JOIN narcissus_test.public_zone pz
+        FROM narcissus.smart_device_v2 sdv
+        LEFT JOIN narcissus.public_zone pz
         on pz.public_zone_ID=sdv.public_zone_ID
-        LEFT JOIN `volga_test`.apartment a
+        LEFT JOIN `volga-pro`.apartment a
         ON a.id=pz.parent_ID
-        LEFT JOIN narcissus_test.smart_gateway_bind_v2 sgbv
+        LEFT JOIN narcissus.smart_gateway_bind_v2 sgbv
         ON sgbv.smart_gateway_ID=sdv.smart_device_ID
         WHERE a.id= #{id}
         AND sdv.smart_device_type=5
@@ -236,10 +236,10 @@
     </select>
 
     <select id="findWaterOnLine" parameterType="String" resultType="String">
-        SELECT COUNT(sdv.connection_status=1) FROM narcissus_test.smart_gateway_bind_v2 sgvb
-LEFT JOIN narcissus_test.smart_device_v2 sdv
+        SELECT COUNT(sdv.smart_device_ID) FROM narcissus.smart_gateway_bind_v2 sgvb
+LEFT JOIN narcissus.smart_device_v2 sdv
 ON sgvb.smart_device_ID=sdv.smart_device_ID
-WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
+WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0 AND sdv.connection_status=1
     </select>
 
     <!--网关异常记录by网关id-->

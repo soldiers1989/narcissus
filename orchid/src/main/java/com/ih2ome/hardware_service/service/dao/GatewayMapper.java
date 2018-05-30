@@ -42,7 +42,7 @@ public interface GatewayMapper extends MyMapper<SmartGateway> {
      * @param uuid
      * @param code
      */
-    void updataGatewayOnoffStatusByUuid(@Param("uuid") String uuid, @Param("code") Integer code, @Param("time") Long time);
+    void updataGatewayOnoffStatusByUuid(@Param("uuid") String uuid, @Param("code") Integer code, @Param("time") String time);
 
     /**
      * 更新网关
