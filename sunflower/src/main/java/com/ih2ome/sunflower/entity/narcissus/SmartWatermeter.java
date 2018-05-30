@@ -24,7 +24,7 @@ public class SmartWatermeter {
   private long onoffStatus;
   private int price;
   private Long meterAmount;
-  private int lastAmount;
+  private Integer lastAmount;
   private Date meterUpdatedAt;
   private String manufactory;
   private  String meter;

@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_server.server.scheduled;
 
+import com.alibaba.fastjson.JSON;
 import com.ih2ome.hardware_service.service.service.WatermeterScheduledService;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
 import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
@@ -70,29 +71,20 @@ public class YunDingWatermeterInfoScheduled {
     /**
      * 定时获取水表抄表
      */
-    @Scheduled(cron="0 0/5 * * * ?")
+    @Scheduled(cron="0 0 * * * ?")
     public void getWatermeterRecord() {
-        Log.info("====================水表抄表任务开始==================");
+        Log.info("====================getWatermeterRecord start==================");
         List<SmartDeviceV2> smartDeviceList = watermeterService.getAllSmartDeviceV2List();
         Log.info("*** getWatermeterRecord *** 待抄表个数：{}", smartDeviceList.size());
-        Calendar beforeTime = Calendar.getInstance();
-        beforeTime.add(Calendar.HOUR, -3);
-        Date beforeDate = beforeTime.getTime();
         try {
             IWatermeter iWatermeter = getIWatermeter();
             for (SmartDeviceV2 device : smartDeviceList) {
-                SmartWatermeter watermeter = watermeterService.getWatermeterByDeviceId(Integer.parseInt(device.getSmartDeviceId()));
-                if(watermeter != null && (watermeter.getMeterUpdatedAt() == null || watermeter.getMeterUpdatedAt().before(beforeDate))) {
-                    iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
-                    Log.info("*** getWatermeterRecord *** 抄表请求完成：{}", device.getSmartDeviceId());
-                }
-                else {
-                    Log.info("*** getWatermeterRecord *** 抄表请求跳过：{}", device.getSmartDeviceId());
-                }
+                iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
+                Log.info("*** getWatermeterRecord *** 抄表请求完成：{}", device.getSmartDeviceId());
             }
         } catch (Exception ex) {
             Log.error("task read amount error!", ex);
         }
-        Log.info("====================水表抄表任务结束==================");
+        Log.info("====================getWatermeterRecord end==================");
     }
 }

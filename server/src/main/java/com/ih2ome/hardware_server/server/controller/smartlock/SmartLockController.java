@@ -316,29 +316,14 @@ public class SmartLockController extends BaseController {
         String userId = resData.getString("userId");
         try {
             smartLockService.frozenLockPassword(userId, password_id);
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ParseException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
-            return result;
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
         } catch (SmartLockException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), e.getMessage());
-            return result;
-        } catch (InstantiationException e) {
-            Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
-            return result;
-        } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
-            return result;
-        } catch (ParseException e) {
-            Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "冻结失败");
-            return result;
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), e.getMessage());
         }
-        String result = structureSuccessResponseVO(new JSONObject(), new Date().toString(), "冻结成功");
-        return result;
+        return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "冻结成功");
     }
 
 
@@ -355,29 +340,46 @@ public class SmartLockController extends BaseController {
         String userId = resData.getString("userId");
         try {
             smartLockService.unFrozenLockPassword(userId, password_id);
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ParseException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
-            return result;
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
         } catch (SmartLockException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), e.getMessage());
-            return result;
-        } catch (InstantiationException e) {
-            Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
-            return result;
-        } catch (IllegalAccessException e) {
-            Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
-            return result;
-        } catch (ParseException e) {
-            Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "解冻失败");
-            return result;
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), e.getMessage());
         }
-        String result = structureSuccessResponseVO(new JSONObject(), new Date().toString(), "解冻成功");
-        return result;
+        return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "解冻成功");
+    }
+
+    /**
+     * 打开自动催收功能
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/automatic/collection/open", method = RequestMethod.POST, produces = {"application/json"})
+    public String openAutoCollection(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        int passwordId = resData.getIntValue("password_id");
+        int result = smartLockService.updateAutoCollection(passwordId, 1);
+        if (result == 1) {
+            return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "打开成功");
+        }
+        return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "打开失败");
+    }
+
+    /**
+     * 关闭自动催收功能
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/automatic/collection/close", method = RequestMethod.POST, produces = {"application/json"})
+    public String closeAutoCollection(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        int passwordId = resData.getIntValue("password_id");
+        int result = smartLockService.updateAutoCollection(passwordId, 0);
+        if (result == 1) {
+            return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "关闭成功");
+        }
+        return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "关闭失败");
     }
 
     /**

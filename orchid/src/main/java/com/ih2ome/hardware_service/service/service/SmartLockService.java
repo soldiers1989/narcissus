@@ -5,6 +5,7 @@ import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.PasswordRoomVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
@@ -87,6 +88,14 @@ public interface SmartLockService {
     void unFrozenLockPassword(String userId, String passwordId) throws ClassNotFoundException, SmartLockException, InstantiationException, IllegalAccessException, ParseException;
 
     /**
+     * 更新门锁自动催收功能
+     * @param passwordId
+     * @param autoCollection
+     * @return
+     */
+    int updateAutoCollection(int passwordId, int autoCollection);
+
+    /**
      * 根据门锁Id查询门锁详情
      *
      * @param lockId
@@ -160,4 +169,12 @@ public interface SmartLockService {
      * @param uuid
      */
     void installSmartLock(String homeId, String roomId, String uuid);
+
+    /**
+     * 获取密码+房间信息
+     * @return
+     */
+    List<PasswordRoomVO> getPasswordRoomList();
+
+    boolean judgeRoomOverdue(PasswordRoomVO passwordRoom, String smsBaseUrl);
 }

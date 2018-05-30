@@ -22,5 +22,5 @@ public class SmartLockPassword {
   private String description;
   private String isDefault;
   private String extra;
-
+  private String autoCollection;
 }

@@ -1,16 +1,32 @@
 package com.ih2ome.hardware_server.server.scheduled;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.utils.CacheUtils;
+import com.ih2ome.hardware_service.service.service.SmartLockService;
+import com.ih2ome.peony.ammeterInterface.IAmmeter;
+import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
+import com.ih2ome.sunflower.entity.caspain.RoomContract;
+import com.ih2ome.sunflower.entity.narcissus.SmartLock;
+import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
+import com.ih2ome.sunflower.entity.volga.Apartment;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.PasswordRoomVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,6 +41,13 @@ import java.util.Set;
 public class YunDingSmartLockScheduled {
 
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private SmartLockService smartLockService;
+
+    @Value("${sms.baseUrl}")
+    private String smsBaseUrl;
+
     /**
      *设置线程池，多线程跑批
      * @return
@@ -53,5 +76,28 @@ public class YunDingSmartLockScheduled {
         }
         Log.info("**************结束批量刷新token***************");
     }
+
+//    /**
+//     * 定时任务：逾期冻结密码
+//     */
+//    //@Scheduled(cron = "0 0 9 * * ?")
+//    @Scheduled(cron = "0 0/5 * * * ?")
+//    public void exceedPowerOff() {
+//        Log.info("=================逾期冻结密码任务开始======================");
+//        List<PasswordRoomVO> passwordRoomList = smartLockService.getPasswordRoomList();
+//        for (PasswordRoomVO item : passwordRoomList) {
+//            boolean hasOverdue = smartLockService.judgeRoomOverdue(item, smsBaseUrl);
+//
+//            if (hasOverdue) {
+//                try {
+//                    smartLockService.frozenLockPassword(item.getCreatedBy(), item.getSmartLockPasswordId());
+//
+//                } catch (Exception ex) {
+//                    Log.error(String.format("定时任务：逾期冻结密码报错,PasswordId:%s",item.getSmartLockPasswordId()), ex);
+//                }
+//            }
+//        }
+//        Log.info("=================逾期断电任务结束=========================");
+//    }
 
 }

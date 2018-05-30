@@ -627,7 +627,8 @@
         IFNULL(password,'无') as password,
         IFNULL(valid_time_start,'') AS validTimeStart,
         IFNULL(valid_time_end,'') AS validTimeEnd,
-        IFNULL(description,'') as description
+        IFNULL(description,'') as description,
+        auto_collection
         FROM
         narcissus_test.smart_lock_password
         WHERE
@@ -1140,5 +1141,62 @@ AND sdv.smart_device_type=3;
 
     <select id="findUserIds"  parameterType="string" resultType="string">
         SELECT sdv.created_by FROM narcissus_test.smart_device_v2 sdv WHERE sdv.room_ID=#{userId}
+    </select>
+
+    <update id="updateAutoCollection" >
+        UPDATE narcissus_test.smart_lock_password SET auto_collection = #{autoCollection}
+        WHERE smart_lock_password_ID = #{passwordId}
+    </update>
+
+    <select id="getPasswordRoomList" >
+        SELECT p.smart_lock_password_ID, d.created_by, d.room_ID, d.house_catalog,p.auto_collection
+        FROM narcissus_test.smart_lock_password p
+        JOIN narcissus_test.smart_lock l ON p.smart_lock_ID = l.smart_lock_ID
+        JOIN narcissus_test.smart_device_v2 d ON p.smart_lock_ID = d.smart_device_ID
+        WHERE d.smart_device_type = 3
+        AND p.provider_code = 'YD'
+        AND p.name = '租客密码'
+        AND d.manage_status = 0
+        AND NOW() BETWEEN p.valid_time_start AND p.valid_time_end
+        AND p.auto_collection = 1
+        AND d.room_ID > 0
+    </select>
+
+    <select id="getCaspainRoomContract" resultType="com.ih2ome.sunflower.entity.caspain.RoomContract" >
+        SELECT * FROM caspain_test.room_contract c
+        WHERE c.`status` = 'active' AND c.signed IN (0,2) AND c.is_delete = 0
+        AND c.room_id = #{roomId}
+    </select>
+
+    <select id="getCaspainRoomRentorder" resultType="com.ih2ome.sunflower.entity.caspain.RoomRentorder" >
+        SELECT * FROM caspain_test.room_rentorder r
+        WHERE r.is_delete = 0 AND r.pay_status = 0 AND r.contract_id = #{contractId}
+        ORDER BY r.created_at DESC LIMIT 1
+    </select>
+
+    <select id="getCaspainRoomCompany" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomCompanyVO" >
+        SELECT r.`name` AS room_name, p.company_brand FROM caspain_test.room r
+        JOIN caspain_test.house h ON r.house_id = h.id
+        JOIN caspain_test.user_profile p ON h.created_by_id = p.user_id
+        WHERE r.id = #{roomId}
+    </select>
+
+    <select id="getVolgaRoomContract" resultType="com.ih2ome.sunflower.entity.caspain.RoomContract" >
+        SELECT * FROM `volga_test`.room_contract c
+        WHERE c.`status` = 'active' AND c.signed IN (0,2) AND c.is_delete = 0
+        AND c.room_id = #{roomId}
+    </select>
+
+    <select id="getVolgaRoomRentorder" resultType="com.ih2ome.sunflower.entity.caspain.RoomRentorder" >
+        SELECT * FROM `volga_test`.room_rentorder r
+        WHERE r.is_delete = 0 AND r.pay_status = 0 AND r.contract_id = #{contractId}
+        ORDER BY r.created_at DESC LIMIT 1
+    </select>
+
+    <select id="getVolgaRoomCompany" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomCompanyVO" >
+        SELECT r.`name` AS room_name, p.company_brand FROM `volga_test`.room r
+        JOIN `volga_test`.house h ON r.house_id = h.id
+        JOIN `volga_test`.user_profile p ON h.created_by_id = p.user_id
+        WHERE r.id = #{roomId}
     </select>
 </mapper>
