@@ -1148,7 +1148,7 @@ AND sdv.smart_device_type=3;
         WHERE smart_lock_password_ID = #{passwordId}
     </update>
 
-    <select id="getPasswordRoomList" >
+    <select id="getPasswordRoomList" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.PasswordRoomVO">
         SELECT p.smart_lock_password_ID, d.created_by, d.room_ID, d.house_catalog,p.auto_collection
         FROM narcissus_test.smart_lock_password p
         JOIN narcissus_test.smart_lock l ON p.smart_lock_ID = l.smart_lock_ID
