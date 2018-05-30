@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_server.server.scheduled;
 
+import com.alibaba.fastjson.JSON;
 import com.ih2ome.hardware_service.service.service.WatermeterScheduledService;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
 import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
@@ -72,7 +73,7 @@ public class YunDingWatermeterInfoScheduled {
      */
     @Scheduled(cron="0 0/5 * * * ?")
     public void getWatermeterRecord() {
-        Log.info("====================水表抄表任务开始==================");
+        Log.info("====================getWatermeterRecord start==================");
         List<SmartDeviceV2> smartDeviceList = watermeterService.getAllSmartDeviceV2List();
         Log.info("*** getWatermeterRecord *** 待抄表个数：{}", smartDeviceList.size());
         Calendar beforeTime = Calendar.getInstance();
@@ -83,6 +84,11 @@ public class YunDingWatermeterInfoScheduled {
             IWatermeter iWatermeter = getIWatermeter();
             for (SmartDeviceV2 device : smartDeviceList) {
                 SmartWatermeter watermeter = watermeterService.getWatermeterByDeviceId(Integer.parseInt(device.getSmartDeviceId()));
+                Log.info("*** getWatermeterRecord *** watermeter != null：{}", watermeter != null);
+                Log.info("*** getWatermeterRecord *** watermeter：{}", JSON.toJSONString(watermeter));
+                Log.info("*** getWatermeterRecord *** watermeter.getMeterUpdatedAt() == null：{}", watermeter.getMeterUpdatedAt() == null);
+                Log.info("*** getWatermeterRecord *** watermeter.getMeterUpdatedAt().before(beforeDate)：{}", watermeter.getMeterUpdatedAt().before(beforeDate));
+                Log.info("*** getWatermeterRecord *** beforeDate：{}", JSON.toJSONString(beforeDate));
                 if(watermeter != null && (watermeter.getMeterUpdatedAt() == null || watermeter.getMeterUpdatedAt().before(beforeDate))) {
                     iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
                     Log.info("*** getWatermeterRecord *** 抄表请求完成：{}", device.getSmartDeviceId());
@@ -94,6 +100,6 @@ public class YunDingWatermeterInfoScheduled {
         } catch (Exception ex) {
             Log.error("task read amount error!", ex);
         }
-        Log.info("====================水表抄表任务结束==================");
+        Log.info("====================getWatermeterRecord end==================");
     }
 }
