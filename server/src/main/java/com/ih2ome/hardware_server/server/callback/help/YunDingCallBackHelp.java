@@ -130,7 +130,7 @@ public class YunDingCallBackHelp {
             if (watermeter.getLastAmount() != null && amount > watermeter.getLastAmount()) {
                 watermeterService.changeBalance(Integer.parseInt(device.getRoomId()), Integer.parseInt(device.getHouseCatalog()), (amount - watermeter.getLastAmount()) * watermeter.getPrice() * -1, "", "system_async", "");
             }
-            if (amount < watermeter.getLastAmount()) {
+            if (watermeter.getLastAmount() != null && amount < watermeter.getLastAmount()) {
                 Log.warn("第三方返回电表读数小于最近读数，请关注！ deviceId:{};返回读数:{};最近读数:{}", watermeter.getSmartWatermeterId(), amount, watermeter.getLastAmount());
             }
             //更新最近读数

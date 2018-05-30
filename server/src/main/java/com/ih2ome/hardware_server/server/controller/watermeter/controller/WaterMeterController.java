@@ -128,8 +128,12 @@ public class WaterMeterController extends BaseController {
             JSONObject responseJson = new JSONObject();
 
             responseJson.put("result", code);
-            String res = structureSuccessResponseVO(responseJson, new Date().toString(), "");
-            return res;
+            if(code.equals("success")) {
+                return structureSuccessResponseVO(responseJson, new Date().toString(), "");
+            }
+            else {
+                return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), code);
+            }
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(), e);
             String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "请求失败" + e.getMessage());
@@ -312,6 +316,22 @@ public class WaterMeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
+    @RequestMapping(value = "/jz/number", method = RequestMethod.POST, produces = {"application/json"})
+    public String getWaterNumber(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int userId = dt.getIntValue("userId");
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("waterMeterNumber", watermeterService.getDeviceNumber(userId, 2));
+        responseJson.put("gateWayNumber", watermeterService.getDeviceNumber(userId, 5));
+        return structureSuccessResponseVO(responseJson, new Date().toString(), "");
+    }
+
+    /**
+     * 根据用户Id查询有水表（或水表网关）的集中式房源列表
+     *
+     * @param apiRequestVO
+     * @return
+     */
     @RequestMapping(value = "/apartment/list", method = RequestMethod.POST, produces = {"application/json"})
     public String getApartmentList(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
@@ -453,7 +473,7 @@ public class WaterMeterController extends BaseController {
         int watermeterId = dt.getIntValue("watermeterId");
         String startTime = dt.getString("startTime");
         String endTime = dt.getString("endTime");
-        List<RecordVO> recordList = watermeterService.getRecordList(watermeterId, startTime, endTime);
+        List<RecordVO> recordList = watermeterService.getRecordList(watermeterId, startTime, endTime + " 23:59:59.000");
         JSONObject responseJson = new JSONObject();
         responseJson.put("recordList", recordList);
         return structureSuccessResponseVO(responseJson, new Date().toString(), "");
@@ -474,7 +494,7 @@ public class WaterMeterController extends BaseController {
 
             Date startTime = dt.getDate("startTime");
             Date endTime = dt.getDate("endTime");
-            List<RecordVO> recordList = watermeterService.getRecordList(watermeterId, dt.getString("startTime"), dt.getString("endTime"));
+            List<RecordVO> recordList = watermeterService.getRecordList(watermeterId, dt.getString("startTime"), dt.getString("endTime") + " 23:59:59.999");
             List<ChartVO> chartList = new ArrayList<>();
             if (recordList != null && recordList.size() > 0) {
                 DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -530,7 +550,8 @@ public class WaterMeterController extends BaseController {
             responseJson.put("recordChart", chartList);
             return structureSuccessResponseVO(responseJson, new Date().toString(), "");
         } catch (Exception ex) {
-            return "";
+            Log.error("getWaterRecordChart error");
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "请求失败" + ex.getMessage());
         }
     }
 }

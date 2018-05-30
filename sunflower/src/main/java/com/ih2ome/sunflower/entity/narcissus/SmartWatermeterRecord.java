@@ -6,7 +6,7 @@ import lombok.Data;
 public class SmartWatermeterRecord {
 
   private long smartWatermeterId;
-  private java.sql.Timestamp createdAt;
+  private String createdAt;
   private long deviceAmount;
 
 }
