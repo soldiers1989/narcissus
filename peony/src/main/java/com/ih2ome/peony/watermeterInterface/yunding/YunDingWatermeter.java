@@ -168,7 +168,7 @@ public class YunDingWatermeter implements IWatermeter {
         String code = resJson.get("ErrNo").toString();
         if(!code.equals("0")){
             String msg = resJson.get("ErrMsg").toString();
-            Log.error("第三方请求失败",msg);
+            Log.error("第三方请求失败:{}",msg);
             return "第三方请求失败"+msg;
         }
         return "success";
