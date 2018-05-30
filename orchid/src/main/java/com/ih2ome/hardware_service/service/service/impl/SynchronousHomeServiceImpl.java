@@ -318,8 +318,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     if(publicZoneId==roomId){
                         saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
                     }else {
-                        if(i+1<len){
-                        String Uuid=strs[i+1];
+                        String Uuid=strs[i];
                         String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode,userId);
                         JSONObject resJson = JSONObject.parseObject(watermeterInfo);
                         String info =  resJson.getString("info");
@@ -377,7 +376,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                             }
                         }
                         smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
-                    }
+
                     }
                     SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
                     //查询该关联关系原先是否存在
