@@ -83,7 +83,7 @@ public class YunDingCallBackHelp {
         smartMistakeInfo.setSn(apiRequestVO.getUuid());
         gatewayService.addSmartMistakeInfo(smartMistakeInfo);
         //更改网关在线状态
-        gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),onOffStatus);
+        gatewayService.updataGatewayOnoffStatus(apiRequestVO.getUuid(),onOffStatus,apiRequestVO.getTime());
 
         //添加水表异常
         //查询水表id

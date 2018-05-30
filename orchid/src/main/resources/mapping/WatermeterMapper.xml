@@ -206,7 +206,7 @@
         on pz.public_zone_ID=sdv.public_zone_ID
         LEFT JOIN narcissus.smart_gateway_bind_v2 sgbv
         ON sgbv.smart_gateway_ID=sdv.smart_device_ID
-        WHERE sgbv.smart_gateway_ID=1151
+        WHERE sgbv.smart_gateway_ID=#{gateWayId}
         AND sdv.smart_device_type=5
         AND sdv.manage_status=0;
     </select>
@@ -227,11 +227,11 @@
 
     <!--水表异常记录by水表id-->
     <select id="findWatermeterExceptionByWaterId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
-        SELECT smi.created_at createdAt,sdv.connection_status status FROM narcissus.smart_device_v2 sdv
+        SELECT smi.created_at createdAt,smi.exception_type exceptionType FROM narcissus.smart_device_v2 sdv
             LEFT JOIN narcissus.smart_mistake_info smi
             ON smi.uuid=sdv.threeID
             WHERE sdv.smart_device_ID=#{watermeterId}
-            AND smi.smart_device_type=5
+            AND smi.smart_device_type=5 GROUP BY smi.created_at DESC
 
     </select>
 
@@ -244,11 +244,11 @@ WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
 
     <!--网关异常记录by网关id-->
     <select id="findWatermeterGatewayExceptionByGatewayId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.ExceptionVO">
-        SELECT smi.created_at createdAt,sdv.connection_status status FROM narcissus_test.smart_device_v2 sdv
-        LEFT JOIN narcissus_test.smart_mistake_info smi
+        SELECT smi.created_at createdAt,smi.exception_type exceptionType FROM narcissus.smart_device_v2 sdv
+        LEFT JOIN narcissus.smart_mistake_info smi
         ON smi.uuid=sdv.threeID
         WHERE sdv.smart_device_ID=#{gatewayId}
-        AND smi.smart_device_type=5
+        AND smi.smart_device_type=5 GROUP BY smi.created_at DESC
     </select>
 
     <!--查询水表抄表参数by水表id-->
@@ -326,7 +326,11 @@ WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0
 
     <!-- 查询水表idBygatewayuuid -->
     <select id="selectWatermeterIdByGatewayUuid" resultType="java.lang.String">
-        SELECT smart_device_ID FROM narcissus_test.smart_device_v2 sdv WHERE sdv.threeID=#{uuid} AND sdv.smart_device_type=2 AND sdv.manage_status=0
+        SELECT sgbv.smart_device_ID FROM narcissus.smart_device_v2 sdv
+LEFT JOIN narcissus.smart_gateway_bind_v2 sgbv
+ON sgbv.smart_gateway_ID=sdv.smart_device_ID
+WHERE sdv.manage_status=0 AND sdv.smart_device_type=5
+AND sdv.threeID=#{uuid}
   </select>
 
     <!--根据userId和第三方厂商 查询已绑定设备（包括网关）的集中式房源-->

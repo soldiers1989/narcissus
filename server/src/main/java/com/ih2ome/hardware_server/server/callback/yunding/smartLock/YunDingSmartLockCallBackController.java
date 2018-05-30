@@ -7,11 +7,10 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_server.server.callback.help.YunDingCallBackHelp;
-import com.ih2ome.hardware_service.service.service.SmartLockGatewayService;
-import com.ih2ome.hardware_service.service.service.SmartLockService;
-import com.ih2ome.hardware_service.service.service.SmartLockWarningService;
+import com.ih2ome.hardware_service.service.service.*;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
+import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
 import com.ih2ome.sunflower.vo.pageVo.enums.AlarmTypeEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.OnOffStatusEnum;
 import com.ih2ome.sunflower.vo.pageVo.enums.SmartDeviceTypeEnum;
@@ -49,6 +48,16 @@ public class YunDingSmartLockCallBackController extends BaseController{
 
     @Autowired
     SmartLockWarningService smartLockWarningService;
+
+    @Autowired
+    private GatewayService gatewayService;
+
+    @Autowired
+    private WatermeterService watermeterService;
+
+    @Autowired
+    private GatewayBindService gatewayBindService;
+
 
     @Autowired
     SmartLockGatewayService smartLockGatewayService;
@@ -161,6 +170,26 @@ public class YunDingSmartLockCallBackController extends BaseController{
             case "watermeterAmountAsync" :
                 //抄表读数同步
                 yunDingCallBackHelp.watermeterAmountAsyncEvent(apiRequestVO);
+                break;
+            case "waterGatewayOfflineAlarm" :
+                Log.info("水表网关离线");
+                yunDingCallBackHelp.waterGatewayOnOfflineAlarm(apiRequestVO, OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode());
+                break;
+            case "waterGatewayOnlineAlarm" :
+                Log.info("水表网关在线");
+                yunDingCallBackHelp.waterGatewayOnOfflineAlarm(apiRequestVO,OnOffStatusEnum.ON_OFF_STATUS_ENUM_ON_Line.getCode());
+            case "deviceReplace" :
+                Log.info("更换水表网关");
+                yunDingCallBackHelp.deviceUninstall(apiRequestVO);
+                break;
+            case  "deviceInstall" :
+                Log.info("绑定水表");
+                try {
+                    yunDingCallBackHelp.deviceInstallEvent(apiRequestVO);
+                } catch (WatermeterException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+                }
                 break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("parameter error");
@@ -311,6 +340,16 @@ public class YunDingSmartLockCallBackController extends BaseController{
             smartLockGatewayService.uninstallSmartLockGateway(detail.getString("uuid"));
         }else if(detail.getString("type").equals("4")){
             smartLockService.uninstallSmartLock(detail.getString("uuid"));
+        }else  if(detail.getString("type").equals("7")) {
+            //查询网关id
+            int gatewayId = gatewayService.findGatewayIdByUuid(apiRequestVO.getUuid());
+            //网关绑定中删除watermeterId
+            gatewayBindService.deleteGatewayBindByGatewayId(gatewayId);
+        }else if(detail.getString("type").equals("8")){
+            //查询水表id
+            SmartWatermeter watermeter = watermeterService.getWatermeterByUuId(apiRequestVO.getUuid());
+            //解绑水表
+            gatewayBindService.deleteGatewayBindByWatermeterId(watermeter.getSmartWatermeterId());
         }
     }
 
