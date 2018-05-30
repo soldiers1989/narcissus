@@ -49,8 +49,9 @@ public class YunDingHomeInfoVO {
         homeVO.setUserId(yunDingHomeInfoVO.getUserId());
         homeVO.setHomeType(yunDingHomeInfoVO.getHomeType());
         List<RoomVO> rooms = new ArrayList<RoomVO>();
-        String uuid=null;
+
         for (YunDingRoomInfoVO yunDingRoomInfoVO : yunDingHomeInfoVO.getRooms()) {
+            String uuid=null;
             RoomVO roomVO = new RoomVO();
             roomVO.setThirdHomeId(homeVO.getHomeId());
             roomVO.setThirdRoomId(yunDingRoomInfoVO.getRoomId());
