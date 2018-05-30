@@ -336,4 +336,5 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
     SmartDeviceV2 getSmartDeviceV2(long deviceId);
     List<SmartDeviceV2> getSmartDeviceV2List(@Param("userId") int userId, @Param("brand") String brand);
     List<SmartDeviceV2> getAllSmartDeviceV2List();
+    int getDeviceNumber(@Param("userId") int userId, @Param("deviceType") int deviceType);
 }

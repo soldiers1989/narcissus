@@ -615,4 +615,9 @@ public class WatermeterServiceImpl implements WatermeterService {
         }
         return recordList;
     }
+
+    @Override
+    public int getDeviceNumber(int userId, int deviceType) {
+        return watermeterDao.getDeviceNumber(userId, deviceType);
+    }
 }

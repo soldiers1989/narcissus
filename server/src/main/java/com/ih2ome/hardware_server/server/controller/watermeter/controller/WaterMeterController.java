@@ -312,6 +312,22 @@ public class WaterMeterController extends BaseController {
      * @param apiRequestVO
      * @return
      */
+    @RequestMapping(value = "/jz/number", method = RequestMethod.POST, produces = {"application/json"})
+    public String getWaterNumber(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int userId = dt.getIntValue("userId");
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("waterMeterNumber", watermeterService.getDeviceNumber(userId, 2));
+        responseJson.put("gateWayNumber", watermeterService.getDeviceNumber(userId, 5));
+        return structureSuccessResponseVO(responseJson, new Date().toString(), "");
+    }
+
+    /**
+     * 根据用户Id查询有水表（或水表网关）的集中式房源列表
+     *
+     * @param apiRequestVO
+     * @return
+     */
     @RequestMapping(value = "/apartment/list", method = RequestMethod.POST, produces = {"application/json"})
     public String getApartmentList(@RequestBody ApiRequestVO apiRequestVO) {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
