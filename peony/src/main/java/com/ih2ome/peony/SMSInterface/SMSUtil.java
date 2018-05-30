@@ -7,14 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <br>
- *
  * @author Lucius
  * create by 2018/1/3
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public class SMSUtil {
-
     public static boolean sendTemplateText(String baseUrl,String templateCode
             , String phoneNumber, JSONObject data, Integer interval ){
         JSONObject req = new JSONObject();

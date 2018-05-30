@@ -69,5 +69,6 @@ public class LockPasswordVo extends BaseEntity implements Serializable {
     private String provideCode;
     //1永久密码 2.时间有效密码
     private String pwdType;
-
+    //是否开启自动催收
+    private String autoCollection;
 }

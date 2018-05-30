@@ -3,25 +3,28 @@ package com.ih2ome.hardware_service.service.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
+import com.ih2ome.peony.SMSInterface.SMSUtil;
 import com.ih2ome.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.peony.smartlockInterface.factory.SmartLockOperateFactory;
 import com.ih2ome.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.sunflower.entity.caspain.*;
 import com.ih2ome.sunflower.entity.narcissus.*;
+import com.ih2ome.sunflower.entity.narcissus.SmartLock;
+import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
+import com.ih2ome.sunflower.entity.volga.Apartment;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.RoomVO;
 import com.ih2ome.sunflower.vo.pageVo.enums.*;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGateWayHadBindInnerLockVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.*;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.SmartLockFirmEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.enums.YunDingHomeTypeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingDeviceInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingHomeInfoVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.yunding.YunDingRoomInfoVO;
+import com.ih2ome.sunflower.vo.thirdVo.sms.enums.SMSCodeEnum;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
 import javafx.scene.input.DataFormat;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +62,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public Map<String, List<HomeVO>> searchHome(String userId, String type, String factoryType) throws ClassNotFoundException, IllegalAccessException, InstantiationException, SmartLockException {
-        Log.info("==========查询房源信息userId:{}",userId);
+        Log.info("==========查询房源信息userId:{}", userId);
         //查询第三方房源信息
         SmartLockFirmEnum smartLockFirmEnum = SmartLockFirmEnum.getByCode(factoryType);
         if (smartLockFirmEnum == null) {
@@ -88,26 +91,26 @@ public class SmartLockServiceImpl implements SmartLockService {
         //判断是分散式(0是集中式，1是分散式)
         if (type.equals(HouseStyleEnum.DISPERSED.getCode())) {
             //查询子账号信息
-            String employerId=smartLockDao.queryEmployer(userId);
-            if(employerId==null){
-                list=smartLockDao.findDispersedHomesAndPublicZone(userId);
+            String employerId = smartLockDao.queryEmployer(userId);
+            if (employerId == null) {
+                list = smartLockDao.findDispersedHomesAndPublicZone(userId);
                 //查询没有公共区域的分散式房源id并给它添加公共区域
-                if(list.size()!=0){
-                    for(String roomId:list){
+                if (list.size() != 0) {
+                    for (String roomId : list) {
                         smartLockDao.dispersiveAddition(roomId);
                     }
                 }
                 localHomeList = smartLockDao.findDispersedHomes(userId);
-            }else{
-                list=smartLockDao.queryDispersedHomesAndPublicZone(employerId);
-                if(list.size()!=0){
-                    for(String roomId:list){
+            } else {
+                list = smartLockDao.queryDispersedHomesAndPublicZone(employerId);
+                if (list.size() != 0) {
+                    for (String roomId : list) {
                         smartLockDao.dispersiveAddition(roomId);
                     }
                 }
                 //查询子账号可控房源
-                List<String> housesIdList=smartLockDao.queryEmployerHouses(employerId);
-                for(String housesId : housesIdList){
+                List<String> housesIdList = smartLockDao.queryEmployerHouses(employerId);
+                for (String housesId : housesIdList) {
                     localHomeList.addAll(smartLockDao.findDispersedSubaccountHomes(housesId));
                 }
             }
@@ -121,26 +124,26 @@ public class SmartLockServiceImpl implements SmartLockService {
             //判断是集中式
         } else if (type.equals(HouseStyleEnum.CONCENTRAT.getCode())) {
             //查询子账号信息
-            String employerapatmentsid=smartLockDao.findEmployer(userId);
-            if(employerapatmentsid==null){
+            String employerapatmentsid = smartLockDao.findEmployer(userId);
+            if (employerapatmentsid == null) {
                 //查询没有公共区域的集中式房源id并给它添加公共区域
-                list=smartLockDao.centralizedFindDispersedHomes(userId);
-                if(list.size()!=0){
-                    for(String roomId:list){
+                list = smartLockDao.centralizedFindDispersedHomes(userId);
+                if (list.size() != 0) {
+                    for (String roomId : list) {
                         smartLockDao.centralizedAddition(roomId);
                     }
                 }
                 localHomeList = smartLockDao.findConcentrateHomes(userId);
-            }else{
-                list=smartLockDao.centralizedqueryDispersedHomes(employerapatmentsid);
-                if(list.size()!=0){
-                    for(String roomId:list){
+            } else {
+                list = smartLockDao.centralizedqueryDispersedHomes(employerapatmentsid);
+                if (list.size() != 0) {
+                    for (String roomId : list) {
                         smartLockDao.centralizedAddition(roomId);
                     }
                 }
                 //子账号，根据子账号查询apatment
-                List<String> apatmentIdList=smartLockDao.findEmployerApatments(employerapatmentsid);
-                for(String apatmentId : apatmentIdList){
+                List<String> apatmentIdList = smartLockDao.findEmployerApatments(employerapatmentsid);
+                for (String apatmentId : apatmentIdList) {
                     localHomeList.addAll(smartLockDao.findCentralizedHomes(apatmentId));
                 }
             }
@@ -162,7 +165,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                     for (HomeVO thirdHomeVO : thirdHomeList) {
                         List<RoomVO> thirdRooms = thirdHomeVO.getRooms();
                         //遍历判断第三方房源是否关联并添加关联信息
-                        for(RoomVO thirdRoom:thirdRooms ){
+                        for (RoomVO thirdRoom : thirdRooms) {
                             if (thirdRoomId.equals(thirdRoom.getThirdRoomId())) {
                                 thirdRoom.setRoomId(localRoom.getRoomId());
                                 thirdRoom.setRoomName(localRoom.getRoomName());
@@ -203,7 +206,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 boolean flag = true;
                 YunDingRoomInfoVO roomInfo = roomIterator.next();
                 for (YunDingDeviceInfoVO deviceInfo : devices) {
-                    if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null&&(deviceInfo.getType().equals("gateway")||deviceInfo.getType().equals("lock"))) {
+                    if (roomInfo.getRoomId().equals(deviceInfo.getRoomId()) && deviceInfo.getUuid() != null && (deviceInfo.getType().equals("gateway") || deviceInfo.getType().equals("lock"))) {
 //                        Log.info("========roomInfo:{}", roomInfo);
 //                        Log.info("========deviceInfo:{}", deviceInfo);
                         flag = false;
@@ -281,7 +284,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         //获得厂商
         String providerCode = smartHouseMappingVO.getFactoryType();
 
-        String Uuid =smartHouseMappingVO.getUuid();
+        String Uuid = smartHouseMappingVO.getUuid();
         String publicZoneId = null;
 
         //1.2 获取公区
@@ -402,7 +405,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
                 smartLockPassword.setSmartLockId(lockDeviceId);
                 smartLockPassword.setProviderCode(providerCode);
-                if(smartLockPassword.getPassword()!=null){
+                if (smartLockPassword.getPassword() != null) {
                     smartLockDao.addSmartLockPassword(smartLockPassword);
                 }
             }
@@ -438,7 +441,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                 for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
                     smartLockPassword.setSmartLockId(lockDeviceId);
                     smartLockPassword.setProviderCode(providerCode);
-                    if(smartLockPassword.getPassword()!=null){
+                    if (smartLockPassword.getPassword() != null) {
                         smartLockDao.addSmartLockPassword(smartLockPassword);
                     }
                 }
@@ -682,6 +685,11 @@ public class SmartLockServiceImpl implements SmartLockService {
         smartLockDao.addSmartLockOperationLog(smartLockLog);
     }
 
+    @Override
+    public int updateAutoCollection(int passwordId, int autoCollection) {
+        return smartLockDao.updateAutoCollection(passwordId, autoCollection);
+    }
+
     /**
      * 根据门锁id查询门锁详情
      *
@@ -825,6 +833,7 @@ public class SmartLockServiceImpl implements SmartLockService {
 
     /**
      * 查询操作记录
+     *
      * @param list
      * @return
      */
@@ -835,17 +844,122 @@ public class SmartLockServiceImpl implements SmartLockService {
             String yearMonthDay = info.getYearMonthDay();
             if (map.containsKey(yearMonthDay)) {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = map.get(yearMonthDay);
-                String describe=info.getUserName()+info.getOperatorType().substring(0,2)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
+                String describe = info.getUserName() + info.getOperatorType().substring(0, 2) + "了" + info.getPasswordName() + "(" + info.getPassname() + ")";
                 info.setDescribe(describe);
                 smartMistakeInfos.add(info);
             } else {
                 ArrayList<SmartMistakeInfo> smartMistakeInfos = new ArrayList<SmartMistakeInfo>();
-                String describe=info.getUserName()+info.getOperatorType().substring(0,2)+"了"+info.getPasswordName()+"("+info.getPassname()+")";
+                String describe = info.getUserName() + info.getOperatorType().substring(0, 2) + "了" + info.getPasswordName() + "(" + info.getPassname() + ")";
                 info.setDescribe(describe);
                 smartMistakeInfos.add(info);
                 map.put(yearMonthDay, smartMistakeInfos);
             }
         }
         return map;
+    }
+
+
+    /**
+     * 获取密码+房间信息
+     *
+     * @return
+     */
+    @Override
+    public List<PasswordRoomVO> getPasswordRoomList() {
+        return smartLockDao.getPasswordRoomList();
+    }
+
+    //判断两个日期是否相差几天
+    public boolean compareDate(Date time1, Date time2, Integer day) {
+        long time = 1000 * 3600 * 24;//一天的时间(秒)
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parse1 = null;
+        Date parse2 = null;
+        try {
+            parse1 = dateFormat.parse(dateFormat.format(time1));
+            parse2 = dateFormat.parse(dateFormat.format(time2));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.error("日期类转换异常");
+        }
+        long l = parse1.getTime() - parse2.getTime();
+        if (day != null) {
+            return (0 <= l && l <= day * time);
+        } else {
+            return l < 0;
+        }
+    }
+
+    //当前日期的下一天
+    public String nextDay(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date time = calendar.getTime();
+        String stringDate = dateFormat.format(time);
+        return stringDate;
+    }
+
+    /**
+     * 判断房间是否逾期并发短信
+     *
+     * @param passwordRoom
+     * @param smsBaseUrl
+     * @return
+     */
+    @Override
+    public boolean judgeRoomOverdue(PasswordRoomVO passwordRoom, String smsBaseUrl) {
+        if (passwordRoom.getHouseCatalog().equals("1")) {
+            RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
+            if (roomContract == null) {
+                return false;
+            } else {
+                RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId());
+                Date nowDate = new Date();
+                if (roomRentorder == null) {
+                    return false;
+                } else {
+                    //判断当前时间和最晚交租时间的时间差是否在2天之内
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    if (compareDate(roomRentorder.getDeadlinePayTime(), nowDate, 2)) {
+                        RoomCompanyVO roomCompany = smartLockDao.getCaspainRoomCompany(roomContract.getRoomId());
+                        JSONObject data = new JSONObject();
+                        data.put("brand", roomCompany.getCompanyBrand());
+                        data.put("realName", roomCompany.getRoomName());
+                        data.put("date", dateFormat.format(roomRentorder.getDeadlinePayTime()));
+                        boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
+                        Log.info("短信发送结果=================={}", b);
+                    }
+                }
+                return compareDate(roomRentorder.getDeadlinePayTime(), nowDate, null);
+            }
+        } else if (passwordRoom.getHouseCatalog().equals("0")) {
+            com.ih2ome.sunflower.entity.volga.RoomContract roomContract = smartLockDao.getVolgaRoomContract(passwordRoom.getRoomId());
+            if (roomContract == null) {
+                return false;
+            } else {
+                com.ih2ome.sunflower.entity.volga.RoomRentorder roomRentorder = smartLockDao.getVolgaRoomRentorder(roomContract.getId());
+                Date nowDate = new Date();
+                if (roomRentorder == null) {
+                    return false;
+                } else {
+                    //判断当前时间和最晚交租时间的时间差是否在3天之内
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date deadlinePayTime = roomRentorder.getDeadlinePayTime();
+                    if (compareDate(deadlinePayTime, nowDate, 2)) {
+                        RoomCompanyVO roomCompany = smartLockDao.getVolgaRoomCompany(roomContract.getRoomId());
+                        JSONObject data = new JSONObject();
+                        data.put("brand", roomCompany.getCompanyBrand());
+                        data.put("realName", roomCompany.getRoomName());
+                        data.put("date", dateFormat.format(roomRentorder.getDeadlinePayTime()));
+                        boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
+                        Log.info("短信发送结果=================={}", b);
+                    }
+                }
+                return compareDate(roomRentorder.getDeadlinePayTime(), nowDate, null);
+            }
+        }
+        return false;
     }
 }

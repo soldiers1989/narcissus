@@ -3,10 +3,7 @@ package com.ih2ome.hardware_service.service.dao;
 import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.SaasSmartLock;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.LockInfoVo;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
-import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockGateWayHadBindInnerLockVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.*;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -487,4 +484,15 @@ public interface SmartLockDao {
 
 
     String findUserIds(String userId);
+
+    int updateAutoCollection(@Param("passwordId") int passwordId, @Param("autoCollection") int autoCollection);
+
+    List<PasswordRoomVO> getPasswordRoomList();
+
+    com.ih2ome.sunflower.entity.caspain.RoomContract getCaspainRoomContract(String roomId);
+    com.ih2ome.sunflower.entity.caspain.RoomRentorder getCaspainRoomRentorder(long contractId);
+    RoomCompanyVO getCaspainRoomCompany(long roomId);
+    com.ih2ome.sunflower.entity.volga.RoomContract getVolgaRoomContract(String roomId);
+    com.ih2ome.sunflower.entity.volga.RoomRentorder getVolgaRoomRentorder(long contractId);
+    RoomCompanyVO getVolgaRoomCompany(long roomId);
 }

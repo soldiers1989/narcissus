@@ -76,6 +76,7 @@ public class YunDingWatermeterInfoScheduled {
         List<SmartDeviceV2> smartDeviceList = watermeterService.getAllSmartDeviceV2List();
         Log.info("*** getWatermeterRecord *** 待抄表个数：{}", smartDeviceList.size());
         Calendar beforeTime = Calendar.getInstance();
+        beforeTime.setTime(new Date());
         beforeTime.add(Calendar.HOUR, -3);
         Date beforeDate = beforeTime.getTime();
         try {
