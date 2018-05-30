@@ -124,7 +124,7 @@ public class YunDingCallBackHelp {
             watermeterRecordService.addWatermeterRecord(smartWatermeterRecord);
             Log.info("amountAsync，deviceId:{};返回读数:{};最近读数:{};单价:{}", watermeter.getSmartWatermeterId(), amount, watermeter.getLastAmount(), watermeter.getPrice());
             //计算金额
-            if (amount > watermeter.getLastAmount()) {
+            if (watermeter.getLastAmount() != null && amount > watermeter.getLastAmount()) {
                 watermeterService.changeBalance(Integer.parseInt(device.getRoomId()), Integer.parseInt(device.getHouseCatalog()), (amount - watermeter.getLastAmount()) * watermeter.getPrice() * -1, "", "system_async", "");
             }
             if (amount < watermeter.getLastAmount()) {

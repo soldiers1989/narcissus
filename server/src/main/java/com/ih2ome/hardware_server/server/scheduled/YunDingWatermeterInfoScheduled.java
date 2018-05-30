@@ -71,7 +71,7 @@ public class YunDingWatermeterInfoScheduled {
     /**
      * 定时获取水表抄表
      */
-    @Scheduled(cron="0 0/10 * * * ?")
+    @Scheduled(cron="0 0 * * * ?")
     public void getWatermeterRecord() {
         Log.info("====================getWatermeterRecord start==================");
         List<SmartDeviceV2> smartDeviceList = watermeterService.getAllSmartDeviceV2List();
@@ -80,6 +80,7 @@ public class YunDingWatermeterInfoScheduled {
             IWatermeter iWatermeter = getIWatermeter();
             for (SmartDeviceV2 device : smartDeviceList) {
                 iWatermeter.readWatermeter(device.getThreeId(), device.getProviderCode(), device.getCreatedBy());
+                Log.info("*** getWatermeterRecord *** 抄表请求完成：{}", device.getSmartDeviceId());
             }
         } catch (Exception ex) {
             Log.error("task read amount error!", ex);
