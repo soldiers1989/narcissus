@@ -13,6 +13,7 @@ import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
 import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
 import io.swagger.annotations.Api;
+import javassist.bytecode.stackmap.BasicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -265,9 +266,9 @@ public class WatermeterServiceImpl implements WatermeterService {
         WatermeterRecordParamsVo params=watermeterDao.findWatermeterRecordParamsByWatermeterId(watermeterId);
         //查询水表实时抄表记录
         IWatermeter iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-        String reslut= iWatermeter.readWatermeter(params.getUuid(),params.getManufactory(), userId);
+        String result= iWatermeter.readWatermeter(params.getUuid(),params.getManufactory(), userId);
 
-        return reslut;
+        return result;
     }
 
 
@@ -582,38 +583,45 @@ public class WatermeterServiceImpl implements WatermeterService {
 
     @Override
     public List<RecordVO> getRecordList(int watermeterId, String startTime, String endTime) {
-        List<SmartWatermeterRecord> smartWatermeterRecords = findWatermeterRecordByWatermeterIdAndTime(watermeterId,startTime,endTime);
-        WatermeterVO watermeter = getWatermeterById(watermeterId);
+        try {
 
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Map<String,RecordVO> recordMap = new HashMap<>();
-        for(SmartWatermeterRecord item : smartWatermeterRecords) {
-            String date = sdf.format(item.getCreatedAt());
-            if (recordMap.containsKey(date)) {
-                if (item.getDeviceAmount() > recordMap.get(date).getLast()) {
-                    recordMap.get(date).setLast(item.getDeviceAmount());
+            List<SmartWatermeterRecord> smartWatermeterRecords = findWatermeterRecordByWatermeterIdAndTime(watermeterId, startTime, endTime);
+            WatermeterVO watermeter = getWatermeterById(watermeterId);
+
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Map<String, RecordVO> recordMap = new HashMap<>();
+            for (SmartWatermeterRecord item : smartWatermeterRecords) {
+                String date = sdf.format(sdf.parse(item.getCreatedAt()));
+                if (recordMap.containsKey(date)) {
+                    if (item.getDeviceAmount() > recordMap.get(date).getLast()) {
+                        recordMap.get(date).setLast(item.getDeviceAmount());
+                    }
+                    if (item.getDeviceAmount() < recordMap.get(date).getInitial()) {
+                        recordMap.get(date).setInitial(item.getDeviceAmount());
+                    }
+                } else {
+                    RecordVO record = new RecordVO();
+                    record.setDate(date);
+                    record.setLast(item.getDeviceAmount());
+                    record.setInitial(item.getDeviceAmount());
+                    recordMap.put(date, record);
                 }
-                if (item.getDeviceAmount() < recordMap.get(date).getInitial()) {
-                    recordMap.get(date).setInitial(item.getDeviceAmount());
-                }
-            } else {
-                RecordVO record = new RecordVO();
-                record.setDate(date);
-                record.setLast(item.getDeviceAmount());
-                record.setInitial(item.getDeviceAmount());
-                recordMap.put(date, record);
             }
+            List<RecordVO> recordList = new ArrayList<>(recordMap.values());
+            recordList.sort(Comparator.comparing(RecordVO::getDate));
+            for (int i = 1; i < recordList.size(); i++) {
+                recordList.get(i).setInitial(recordList.get(i - 1).getLast());
+            }
+            for (RecordVO record : recordList) {
+                record.setUsed(record.getLast() - record.getInitial());
+                record.setAmount(record.getUsed() * watermeter.getPrice() / 100.0);
+            }
+            return recordList;
         }
-        List<RecordVO> recordList = new ArrayList<>(recordMap.values());
-        recordList.sort(Comparator.comparing(RecordVO::getDate));
-        for (int i = 1;i<recordList.size();i++) {
-            recordList.get(i).setInitial(recordList.get(i - 1).getLast());
+        catch (Exception ex){
+            Log.error("getRecordList error", ex);
+            return new ArrayList<>();
         }
-        for(RecordVO record : recordList){
-            record.setUsed(record.getLast() - record.getInitial());
-            record.setAmount(record.getUsed() * watermeter.getPrice() / 100.0);
-        }
-        return recordList;
     }
 
     @Override

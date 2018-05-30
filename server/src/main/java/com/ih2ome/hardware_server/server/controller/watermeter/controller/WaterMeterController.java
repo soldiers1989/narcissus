@@ -128,8 +128,12 @@ public class WaterMeterController extends BaseController {
             JSONObject responseJson = new JSONObject();
 
             responseJson.put("result", code);
-            String res = structureSuccessResponseVO(responseJson, new Date().toString(), "");
-            return res;
+            if(code.equals("success")) {
+                return structureSuccessResponseVO(responseJson, new Date().toString(), "");
+            }
+            else {
+                return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), code);
+            }
         } catch (ClassNotFoundException e) {
             Log.error(e.getMessage(), e);
             String res = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "请求失败" + e.getMessage());
