@@ -85,7 +85,7 @@
 
     <!-- 更新水表在线状态byUUid-->
     <update id="updataWatermerterOnoffStatusByUuid" >
-        UPDATE narcissus_test.smart_device_v2 SET connection_status = #{code} WHERE threeID = #{uuid};
+        UPDATE narcissus.smart_device_v2 SET connection_status = #{code} WHERE smart_device_ID = #{uuid};
     </update>
 
     <!-- 更新水表在线状态byUUid-->
