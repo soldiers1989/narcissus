@@ -1160,6 +1160,7 @@ AND sdv.smart_device_type=3;
         AND NOW() BETWEEN p.valid_time_start AND p.valid_time_end
         AND p.auto_collection = 1
         AND d.room_ID > 0
+        AND p.`status` = 2
     </select>
 
     <select id="getCaspainRoomContract" resultType="com.ih2ome.sunflower.entity.caspain.RoomContract" >
@@ -1171,7 +1172,7 @@ AND sdv.smart_device_type=3;
     <select id="getCaspainRoomRentorder" resultType="com.ih2ome.sunflower.entity.caspain.RoomRentorder" >
         SELECT * FROM caspain_test.room_rentorder r
         WHERE r.is_delete = 0 AND r.pay_status = 0 AND r.contract_id = #{contractId}
-        ORDER BY r.created_at DESC LIMIT 1
+        ORDER BY r.created_at LIMIT 1
     </select>
 
     <select id="getCaspainRoomCompany" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomCompanyVO" >
@@ -1190,7 +1191,7 @@ AND sdv.smart_device_type=3;
     <select id="getVolgaRoomRentorder" resultType="com.ih2ome.sunflower.entity.caspain.RoomRentorder" >
         SELECT * FROM `volga_test`.room_rentorder r
         WHERE r.is_delete = 0 AND r.pay_status = 0 AND r.contract_id = #{contractId}
-        ORDER BY r.created_at DESC LIMIT 1
+        ORDER BY r.created_at LIMIT 1
     </select>
 
     <select id="getVolgaRoomCompany" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomCompanyVO" >
