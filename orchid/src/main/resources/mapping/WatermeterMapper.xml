@@ -360,7 +360,8 @@ AND sdv.threeID=#{uuid}
 
     <!--查询带水表数量的楼层信息 by 公寓Id-->
     <select id="getFloorWithWater" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.FloorVO">
-        SELECT a.id,a.`name`,f.id AS floorId,f.`name` AS floorName,COUNT(d.smart_device_ID) AS watermeterNum,SUM(w.onoff_status) AS watermeterOnLineNum
+        SELECT a.id,a.`name`,f.id AS floorId,f.`name` AS floorName,COUNT(d.smart_device_ID) AS watermeterNum,
+        SUM( CASE d.connection_status WHEN 1 THEN 1 ELSE 0 END) AS watermeterOnLineNum
         FROM `volga_test`.apartment AS a
         LEFT JOIN `volga_test`.floor AS f ON f.apartment_id = a.id
         LEFT JOIN `volga_test`.room AS r ON r.floor_id = f.id
@@ -372,7 +373,7 @@ AND sdv.threeID=#{uuid}
 
     <!--查询集中式房间水表列表 by 楼层Id-->
     <select id="getRoomWithWater" parameterType="int" resultMap="roomWithWaterMap" >
-        SELECT r.id AS roomId,r.name AS roomName,a.balance/100 AS balance,d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,w.last_amount-w.meter_amount AS currentAmount,w.onoff_status
+        SELECT r.id AS roomId,r.name AS roomName,a.balance/100 AS balance,d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,w.last_amount-w.meter_amount AS currentAmount,d.connection_status AS onoff_status
         FROM `narcissus_test`.smart_device_v2 d
         LEFT JOIN `narcissus_test`.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
         LEFT JOIN `narcissus_test`.smart_watermeter_account a ON d.room_id = a.room_id AND d.house_catalog = a.house_catalog
