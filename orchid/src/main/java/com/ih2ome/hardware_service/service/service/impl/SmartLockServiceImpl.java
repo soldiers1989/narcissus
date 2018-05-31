@@ -931,7 +931,7 @@ public class SmartLockServiceImpl implements SmartLockService {
                         data.put("brand", roomCompany.getCompanyBrand());
                         data.put("realName", roomContract.getCustomerName());
                         data.put("date", dateFormat.format(roomRentorder.getDeadlinePayTime()));
-                        if(CacheUtils.getStr(cacheKey + roomContract.getCustomerPhone()).equals("1")){
+                        if(CacheUtils.getStr(cacheKey + roomContract.getCustomerPhone()) != null){
                             Log.info("短信发送结果==================跳过");
                         }
                         else {
@@ -962,8 +962,14 @@ public class SmartLockServiceImpl implements SmartLockService {
                         data.put("brand", roomCompany.getCompanyBrand());
                         data.put("realName", roomContract.getCustomerName());
                         data.put("date", dateFormat.format(roomRentorder.getDeadlinePayTime()));
-                        boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
-                        Log.info("短信发送结果=================={}", b);
+                        if(CacheUtils.getStr(cacheKey + roomContract.getCustomerPhone()) != null){
+                            Log.info("短信发送结果==================跳过");
+                        }
+                        else {
+                            CacheUtils.set(cacheKey + roomContract.getCustomerPhone(),"1", ExpireTime.ONE_MIN);
+                            boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
+                            Log.info("短信发送结果=================={}", b);
+                        }
                     }
                 }
                 return compareDate(roomRentorder.getDeadlinePayTime(), nowDate, null);
