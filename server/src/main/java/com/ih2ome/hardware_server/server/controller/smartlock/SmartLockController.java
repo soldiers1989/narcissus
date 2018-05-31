@@ -326,6 +326,24 @@ public class SmartLockController extends BaseController {
         return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "冻结成功");
     }
 
+    /**
+     * 充值后若无欠费则解冻门锁密码
+     *
+     * @param apiRequestVO
+     * @return
+     */
+    @RequestMapping(value = "/password/recharge/unfrozen", method = RequestMethod.POST, produces = {"application/json"})
+    public String rechargeUnfrozen(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+        String roomId = resData.getString("roomId");
+        boolean isPayOff = true;
+        // TODO 判断房间账单是否清账
+        if (isPayOff) {
+            //TODO 解冻门锁密码
+            //TODO 发送已解冻短信
+        }
+        return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "调用成功");
+    }
 
     /**
      * 解冻门锁密码
