@@ -1,6 +1,8 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.api.enums.ExpireTime;
+import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.SMSInterface.SMSUtil;
@@ -910,6 +912,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public boolean judgeRoomOverdue(PasswordRoomVO passwordRoom, String smsBaseUrl) {
+        String cacheKey = "judgeRoomOverdue_SMSCode";
         if (passwordRoom.getHouseCatalog().equals("1")) {
             RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
             if (roomContract == null) {
@@ -928,8 +931,14 @@ public class SmartLockServiceImpl implements SmartLockService {
                         data.put("brand", roomCompany.getCompanyBrand());
                         data.put("realName", roomContract.getCustomerName());
                         data.put("date", dateFormat.format(roomRentorder.getDeadlinePayTime()));
-                        boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
-                        Log.info("短信发送结果=================={}", b);
+                        if(CacheUtils.getStr(cacheKey + roomContract.getCustomerPhone()).equals("1")){
+                            Log.info("短信发送结果==================跳过");
+                        }
+                        else {
+                            CacheUtils.set(cacheKey + roomContract.getCustomerPhone(),"1", ExpireTime.ONE_MIN);
+                            boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
+                            Log.info("短信发送结果=================={}", b);
+                        }
                     }
                 }
                 return compareDate(roomRentorder.getDeadlinePayTime(), nowDate, null);

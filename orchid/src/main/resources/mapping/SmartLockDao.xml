@@ -1195,9 +1195,10 @@ AND sdv.smart_device_type=3;
     </select>
 
     <select id="getVolgaRoomCompany" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomCompanyVO" >
-        SELECT r.`name` AS room_name, p.company_brand FROM `volga_test`.room r
-        JOIN `volga_test`.house h ON r.house_id = h.id
-        JOIN `volga_test`.user_profile p ON h.created_by_id = p.user_id
+        SELECT r.`name` AS room_name, p.company_brand
+        FROM `volga_test`.room r
+        JOIN `volga_test`.apartment a ON r.apartment_id = a.id
+        JOIN `caspain_test`.user_profile p ON a.created_by = p.user_id
         WHERE r.id = #{roomId}
     </select>
 </mapper>
