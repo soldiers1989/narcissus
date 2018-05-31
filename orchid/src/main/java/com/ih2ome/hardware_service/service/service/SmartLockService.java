@@ -175,7 +175,7 @@ public interface SmartLockService {
      * @return
      */
     List<PasswordRoomVO> getPasswordRoomList();
-    List<PasswordRoomVO> getFrozenPassword(int roomId);
+    List<PasswordRoomVO> getFrozenPassword(int roomId, int houseCatalog);
 
     boolean judgeRoomOverdue(PasswordRoomVO passwordRoom, String smsBaseUrl);
     void sendFrozenMessage(PasswordRoomVO passwordRoom, String smsBaseUrl, boolean isFrozen);

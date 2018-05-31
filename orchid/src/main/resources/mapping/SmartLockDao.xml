@@ -1177,6 +1177,7 @@ AND sdv.smart_device_type=3;
         AND d.room_ID > 0
         AND p.`status` = 5
         AND d.room_ID = #{roomId}
+        AND d.house_catalog = #{houseCatalog}
     </select>
 
     <select id="getCaspainRoomContract" resultType="com.ih2ome.sunflower.entity.caspain.RoomContract" >

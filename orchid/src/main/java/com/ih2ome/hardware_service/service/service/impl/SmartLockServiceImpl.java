@@ -872,8 +872,8 @@ public class SmartLockServiceImpl implements SmartLockService {
     }
 
     @Override
-    public List<PasswordRoomVO> getFrozenPassword(int roomId){
-        return smartLockDao.getFrozenPassword(roomId);
+    public List<PasswordRoomVO> getFrozenPassword(int roomId, int houseCatalog){
+        return smartLockDao.getFrozenPassword(roomId, houseCatalog);
     }
 
     //判断两个日期是否相差几天

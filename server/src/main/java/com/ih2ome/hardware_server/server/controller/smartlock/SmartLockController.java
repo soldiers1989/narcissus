@@ -341,7 +341,8 @@ public class SmartLockController extends BaseController {
         try {
             JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
             int roomId = resData.getIntValue("roomId");
-            List<PasswordRoomVO> passwordList = smartLockService.getFrozenPassword(roomId);
+            int houseCatalog = resData.getIntValue("houseCatalog");
+            List<PasswordRoomVO> passwordList = smartLockService.getFrozenPassword(roomId, houseCatalog);
             for (PasswordRoomVO item : passwordList) {
                 boolean isPayOff = smartLockService.judgeRoomPayOff(item, smsBaseUrl);
                 if (isPayOff) {
