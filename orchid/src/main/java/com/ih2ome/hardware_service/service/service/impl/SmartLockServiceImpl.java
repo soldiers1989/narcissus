@@ -980,26 +980,33 @@ public class SmartLockServiceImpl implements SmartLockService {
 
     @Override
     public void sendFrozenMessage(PasswordRoomVO passwordRoom, String smsBaseUrl) {
+        String cacheKey = "sendFrozenMessage_SMSCode";
+        String customerName = "";
+        String customerPhone = "";
+        String brand = "";
         if (passwordRoom.getHouseCatalog().equals("1")) {
             RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
-            if (roomContract != null) {
-                RoomCompanyVO roomCompany = smartLockDao.getCaspainRoomCompany(roomContract.getRoomId());
-                JSONObject data = new JSONObject();
-                data.put("brand", roomCompany.getCompanyBrand());
-                data.put("realName", roomContract.getCustomerName());
-                boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.HAVE_FROZEN.getName(), roomContract.getCustomerPhone(), data, 0);
-                Log.info("短信发送结果=================={}", b);
-            }
+            customerName = roomContract.getCustomerName();
+            customerPhone = roomContract.getCustomerPhone();
+            RoomCompanyVO roomCompany = smartLockDao.getCaspainRoomCompany(roomContract.getRoomId());
+            brand = roomCompany.getCompanyBrand();
         } else if (passwordRoom.getHouseCatalog().equals("0")) {
             com.ih2ome.sunflower.entity.volga.RoomContract roomContract = smartLockDao.getVolgaRoomContract(passwordRoom.getRoomId());
-            if (roomContract != null) {
-                RoomCompanyVO roomCompany = smartLockDao.getVolgaRoomCompany(roomContract.getRoomId());
-                JSONObject data = new JSONObject();
-                data.put("brand", roomCompany.getCompanyBrand());
-                data.put("realName", roomContract.getCustomerName());
-                boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.HAVE_FROZEN.getName(), roomContract.getCustomerPhone(), data, 0);
-                Log.info("短信发送结果=================={}", b);
-            }
+            customerName = roomContract.getCustomerName();
+            customerPhone = roomContract.getCustomerPhone();
+            RoomCompanyVO roomCompany = smartLockDao.getVolgaRoomCompany(roomContract.getRoomId());
+            brand = roomCompany.getCompanyBrand();
+        }
+
+        JSONObject data = new JSONObject();
+        data.put("brand", brand);
+        data.put("realName", customerName);
+        if (CacheUtils.getStr(cacheKey + customerPhone) != null) {
+            Log.info("短信发送结果==================跳过");
+        } else {
+            CacheUtils.set(cacheKey + customerPhone, "1", ExpireTime.ONE_MIN);
+            boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.HAVE_FROZEN.getName(), customerPhone, data, 0);
+            Log.info("短信发送结果=================={}", b);
         }
     }
 }
