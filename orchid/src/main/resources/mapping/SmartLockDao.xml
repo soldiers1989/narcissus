@@ -1163,6 +1163,22 @@ AND sdv.smart_device_type=3;
         AND p.`status` = 2
     </select>
 
+    <select id="getFrozenPassword" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.PasswordRoomVO">
+        SELECT p.smart_lock_password_ID, d.created_by, d.room_ID, d.house_catalog,p.auto_collection
+        FROM narcissus_test.smart_lock_password p
+        JOIN narcissus_test.smart_lock l ON p.smart_lock_ID = l.smart_lock_ID
+        JOIN narcissus_test.smart_device_v2 d ON p.smart_lock_ID = d.smart_device_ID
+        WHERE d.smart_device_type = 3
+        AND p.provider_code = 'YD'
+        AND p.name = '租客密码'
+        AND d.manage_status = 0
+        AND NOW() BETWEEN p.valid_time_start AND p.valid_time_end
+        AND p.auto_collection = 1
+        AND d.room_ID > 0
+        AND p.`status` = 5
+        AND d.room_ID = #{roomId}
+    </select>
+
     <select id="getCaspainRoomContract" resultType="com.ih2ome.sunflower.entity.caspain.RoomContract" >
         SELECT * FROM caspain_test.room_contract c
         WHERE c.`status` = 'active' AND c.signed IN (0,2) AND c.is_delete = 0

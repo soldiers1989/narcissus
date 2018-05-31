@@ -95,7 +95,7 @@ public class YunDingSmartLockScheduled {
                 try {
                     smartLockService.frozenLockPassword(item.getCreatedBy(), item.getSmartLockPasswordId());
                     Log.info("overduePasswordFrozen frozenLockPassword done");
-                    smartLockService.sendFrozenMessage(item, smsBaseUrl);
+                    smartLockService.sendFrozenMessage(item, smsBaseUrl, true);
                     Log.info("overduePasswordFrozen sendFrozenMessage done");
                 } catch (Exception ex) {
                     Log.error(String.format("定时任务：逾期冻结密码报错,PasswordId:%s",item.getSmartLockPasswordId()), ex);

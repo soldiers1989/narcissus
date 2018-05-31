@@ -59,11 +59,11 @@ public class AccountController  extends BaseController {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         Integer roomId = dt.getIntValue("roomId");
         Integer type = dt.getIntValue("type");
-        Integer amount = dt.getIntValue("amount");
+        double amount = dt.getDoubleValue("amount");
         String mobile = dt.getString("mobile");
 
         //改变账户余额
-        watermeterService.changeBalance(roomId, type, amount * 100, "online_wechat", "real_recharge", mobile);
+        watermeterService.changeBalance(roomId, type, (int)(amount * 100), "online_wechat", "real_recharge", mobile);
         //当前用水量归零
         watermeterService.makeWaterZero(roomId, type);
 

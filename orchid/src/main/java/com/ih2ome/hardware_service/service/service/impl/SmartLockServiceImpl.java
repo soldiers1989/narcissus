@@ -871,6 +871,11 @@ public class SmartLockServiceImpl implements SmartLockService {
         return smartLockDao.getPasswordRoomList();
     }
 
+    @Override
+    public List<PasswordRoomVO> getFrozenPassword(int roomId){
+        return smartLockDao.getFrozenPassword(roomId);
+    }
+
     //判断两个日期是否相差几天
     public boolean compareDate(Date time1, Date time2, Integer day) {
         long time = 1000 * 3600 * 24;//一天的时间(秒)
@@ -901,6 +906,36 @@ public class SmartLockServiceImpl implements SmartLockService {
         Date time = calendar.getTime();
         String stringDate = dateFormat.format(time);
         return stringDate;
+    }
+
+    /**
+     * 判断房间账单是否已还清
+     */
+    @Override
+    public boolean judgeRoomPayOff(PasswordRoomVO passwordRoom, String smsBaseUrl) {
+        Date nowDate = new Date();
+        if (passwordRoom.getHouseCatalog().equals("1")) {
+            RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
+            if (roomContract == null) {
+                return false;
+            }
+            RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId());
+            if (roomRentorder == null) {
+                return false;
+            }
+            return compareDate(nowDate, roomRentorder.getDeadlinePayTime(), null);
+        } else if (passwordRoom.getHouseCatalog().equals("0")) {
+            com.ih2ome.sunflower.entity.volga.RoomContract roomContract = smartLockDao.getVolgaRoomContract(passwordRoom.getRoomId());
+            if (roomContract == null) {
+                return false;
+            }
+            com.ih2ome.sunflower.entity.volga.RoomRentorder roomRentorder = smartLockDao.getVolgaRoomRentorder(roomContract.getId());
+            if (roomRentorder == null) {
+                return false;
+            }
+            return compareDate(nowDate, roomRentorder.getDeadlinePayTime(), null);
+        }
+        return false;
     }
 
     /**
@@ -979,7 +1014,7 @@ public class SmartLockServiceImpl implements SmartLockService {
     }
 
     @Override
-    public void sendFrozenMessage(PasswordRoomVO passwordRoom, String smsBaseUrl) {
+    public void sendFrozenMessage(PasswordRoomVO passwordRoom, String smsBaseUrl, boolean isFrozen) {
         String cacheKey = "sendFrozenMessage_SMSCode";
         String customerName = "";
         String customerPhone = "";
@@ -1005,7 +1040,8 @@ public class SmartLockServiceImpl implements SmartLockService {
             Log.info("短信发送结果==================跳过");
         } else {
             CacheUtils.set(cacheKey + customerPhone, "1", ExpireTime.ONE_MIN);
-            boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.HAVE_FROZEN.getName(), customerPhone, data, 0);
+            SMSCodeEnum smsCodeEnum = isFrozen ? SMSCodeEnum.HAVE_FROZEN : SMSCodeEnum.HAVE_UNFROZEN;
+            boolean b = SMSUtil.sendTemplateText(smsBaseUrl, smsCodeEnum.getName(), customerPhone, data, 0);
             Log.info("短信发送结果=================={}", b);
         }
     }

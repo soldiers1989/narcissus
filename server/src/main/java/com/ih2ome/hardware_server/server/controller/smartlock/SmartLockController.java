@@ -10,12 +10,14 @@ import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.sunflower.entity.narcissus.SmartLockPassword;
 import com.ih2ome.sunflower.entity.narcissus.SmartMistakeInfo;
 import com.ih2ome.sunflower.model.backup.HomeVO;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.PasswordRoomVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.convert.RedisData;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,8 @@ public class SmartLockController extends BaseController {
     private final Logger Log = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private SmartLockService smartLockService;
+    @Value("${sms.baseUrl}")
+    private String smsBaseUrl;
 
     /**
      * 关联房源查询房屋信息
@@ -334,13 +338,23 @@ public class SmartLockController extends BaseController {
      */
     @RequestMapping(value = "/password/recharge/unfrozen", method = RequestMethod.POST, produces = {"application/json"})
     public String rechargeUnfrozen(@RequestBody ApiRequestVO apiRequestVO) {
-        JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
-        String roomId = resData.getString("roomId");
-        boolean isPayOff = true;
-        // TODO 判断房间账单是否清账
-        if (isPayOff) {
-            //TODO 解冻门锁密码
-            //TODO 发送已解冻短信
+        try {
+            JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
+            int roomId = resData.getIntValue("roomId");
+            List<PasswordRoomVO> passwordList = smartLockService.getFrozenPassword(roomId);
+            for (PasswordRoomVO item : passwordList) {
+                boolean isPayOff = smartLockService.judgeRoomPayOff(item, smsBaseUrl);
+                if (isPayOff) {
+                    smartLockService.unFrozenLockPassword(item.getCreatedBy(), item.getSmartLockPasswordId());
+                    smartLockService.sendFrozenMessage(item, smsBaseUrl, false);
+                    return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "调用成功，解冻成功");
+                } else {
+                    return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "调用成功，账单未还清，不予解冻");
+                }
+            }
+        } catch (Exception ex) {
+            Log.error("rechargeUnfrozen error", ex);
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "调用失败：" + ex.getMessage());
         }
         return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "调用成功");
     }
