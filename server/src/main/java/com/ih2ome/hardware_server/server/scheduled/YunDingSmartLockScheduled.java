@@ -81,8 +81,8 @@ public class YunDingSmartLockScheduled {
     /**
      * 定时任务：逾期冻结密码
      */
-    @Scheduled(cron = "0 0 9 * * ?")
-    //@Scheduled(cron = "0 0/10 * * * ?")
+    //@Scheduled(cron = "0 0 9 * * ?")
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void overduePasswordFrozen() {
         Log.info("=================逾期冻结密码任务开始======================");
         List<PasswordRoomVO> passwordRoomList = smartLockService.getPasswordRoomList();
