@@ -922,6 +922,11 @@ public class SmartLockServiceImpl implements SmartLockService {
             if (roomContract == null) {
                 return false;
             }
+            Log.info("rechargeUnfrozen sleep 1000 ms");
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ex) {
+            }
             RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId());
             Log.info("rechargeUnfrozen roomRentorder = {}", JSON.toJSONString(roomRentorder));
             if (roomRentorder == null) {
