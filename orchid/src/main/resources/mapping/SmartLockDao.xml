@@ -1189,6 +1189,7 @@ AND sdv.smart_device_type=3;
     <select id="getCaspainRoomRentorder" resultType="com.ih2ome.sunflower.entity.caspain.RoomRentorder" >
         SELECT * FROM caspain_test.room_rentorder r
         WHERE r.is_delete = 0 AND r.pay_status = 0 AND r.contract_id = #{contractId}
+        AND r.id != #{roomRentOrderId}
         ORDER BY r.created_at LIMIT 1
     </select>
 
@@ -1208,6 +1209,7 @@ AND sdv.smart_device_type=3;
     <select id="getVolgaRoomRentorder" resultType="com.ih2ome.sunflower.entity.caspain.RoomRentorder" >
         SELECT * FROM `volga_test`.room_rentorder r
         WHERE r.is_delete = 0 AND r.pay_status = 0 AND r.contract_id = #{contractId}
+        AND r.id != #{roomRentOrderId}
         ORDER BY r.created_at LIMIT 1
     </select>
 

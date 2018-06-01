@@ -491,9 +491,9 @@ public interface SmartLockDao {
     List<PasswordRoomVO> getFrozenPassword(@Param("roomId") int roomId,@Param("houseCatalog") int houseCatalog);
 
     com.ih2ome.sunflower.entity.caspain.RoomContract getCaspainRoomContract(String roomId);
-    com.ih2ome.sunflower.entity.caspain.RoomRentorder getCaspainRoomRentorder(long contractId);
+    com.ih2ome.sunflower.entity.caspain.RoomRentorder getCaspainRoomRentorder(@Param("contractId") long contractId, @Param("roomRentOrderId") int roomRentOrderId);
     RoomCompanyVO getCaspainRoomCompany(long roomId);
     com.ih2ome.sunflower.entity.volga.RoomContract getVolgaRoomContract(String roomId);
-    com.ih2ome.sunflower.entity.volga.RoomRentorder getVolgaRoomRentorder(long contractId);
+    com.ih2ome.sunflower.entity.volga.RoomRentorder getVolgaRoomRentorder(@Param("contractId") long contractId, @Param("roomRentOrderId") int roomRentOrderId);
     RoomCompanyVO getVolgaRoomCompany(long roomId);
 }

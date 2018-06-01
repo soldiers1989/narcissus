@@ -179,5 +179,5 @@ public interface SmartLockService {
 
     boolean judgeRoomOverdue(PasswordRoomVO passwordRoom, String smsBaseUrl);
     void sendFrozenMessage(PasswordRoomVO passwordRoom, String smsBaseUrl, boolean isFrozen);
-    boolean judgeRoomPayOff(PasswordRoomVO passwordRoom, String smsBaseUrl);
+    boolean judgeRoomPayOff(PasswordRoomVO passwordRoom, int roomRentOrderId);
 }
