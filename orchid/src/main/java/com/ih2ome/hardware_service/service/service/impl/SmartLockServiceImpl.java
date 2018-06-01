@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.utils.CacheUtils;
@@ -917,23 +918,31 @@ public class SmartLockServiceImpl implements SmartLockService {
         Date nowDate = new Date();
         if (passwordRoom.getHouseCatalog().equals("1")) {
             RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
+            Log.info("rechargeUnfrozen roomContract = {}", JSON.toJSONString(roomContract));
             if (roomContract == null) {
                 return false;
             }
             RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId());
+            Log.info("rechargeUnfrozen roomRentorder = {}", JSON.toJSONString(roomRentorder));
             if (roomRentorder == null) {
-                return false;
+                return true;
             }
+            Log.info("rechargeUnfrozen nowDate = {}", nowDate);
+            Log.info("rechargeUnfrozen deadlinePayTime = {}", roomRentorder.getDeadlinePayTime());
             return compareDate(nowDate, roomRentorder.getDeadlinePayTime(), null);
         } else if (passwordRoom.getHouseCatalog().equals("0")) {
             com.ih2ome.sunflower.entity.volga.RoomContract roomContract = smartLockDao.getVolgaRoomContract(passwordRoom.getRoomId());
+            Log.info("rechargeUnfrozen roomContract = {}", JSON.toJSONString(roomContract));
             if (roomContract == null) {
                 return false;
             }
             com.ih2ome.sunflower.entity.volga.RoomRentorder roomRentorder = smartLockDao.getVolgaRoomRentorder(roomContract.getId());
+            Log.info("rechargeUnfrozen roomRentorder = {}", JSON.toJSONString(roomRentorder));
             if (roomRentorder == null) {
-                return false;
+                return true;
             }
+            Log.info("rechargeUnfrozen nowDate = {}", nowDate);
+            Log.info("rechargeUnfrozen deadlinePayTime = {}", roomRentorder.getDeadlinePayTime());
             return compareDate(nowDate, roomRentorder.getDeadlinePayTime(), null);
         }
         return false;
