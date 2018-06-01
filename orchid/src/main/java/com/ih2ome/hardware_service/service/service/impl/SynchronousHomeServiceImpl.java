@@ -380,8 +380,9 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                                     smartLockDao.addAssociation(houseMapping);
                                 }
                             }
+                            gateWayid=smartLockDao.querySmartGatWayid(gateUuid);
                         }
-                        smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), gateUuid);
+                        smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), gateWayid);
 
                     }
                     SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
