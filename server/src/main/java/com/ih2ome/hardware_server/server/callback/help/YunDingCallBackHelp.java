@@ -241,7 +241,7 @@ public class YunDingCallBackHelp {
 //            }
 //
 //        }else
-            if(type.equals("8")){
+           /* if(type.equals("8")){
             //获取水表amount
             String amount = String.valueOf(detail.get("amount"));
 
@@ -283,7 +283,7 @@ public class YunDingCallBackHelp {
                 smartWatermeter.setOnoffStatus(Long.parseLong("1"));
                 smartWatermeter.setManufactory(factoryType);
                 smartLockDao.saveWaterMeter(smartWatermeter);
-                String smartGatWayid=smartLockDao.querySmartGatWayid(publicZoneId);
+                List<String> smartGatWayid=smartLockDao.querySmartGatWayid(publicZoneId);
                 smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
                 SmartHouseMappingVO houseMapping = new SmartHouseMappingVO();
                 houseMapping.setDataType("4");
@@ -300,7 +300,7 @@ public class YunDingCallBackHelp {
                 }
             }
 
-        }
+        }*/
     }
 
 

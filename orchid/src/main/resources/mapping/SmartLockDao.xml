@@ -1134,8 +1134,8 @@ AND sdv.smart_device_type=3;
     <select id="querySmartGatWayid"  parameterType="string" resultType="string">
         SELECT smart_device_ID FROM narcissus.smart_device_v2 sdv
         WHERE sdv.manage_status = 0
-        AND sdv.public_zone_ID= #{publicZoneId}
-        AND  sdv.smart_device_type = 5
+        AND sdv.threeID= #{gateWayUuid}
+        AND  sdv.smart_device_type = 5 AND  sdv.manage_status=0
     </select>
 
 

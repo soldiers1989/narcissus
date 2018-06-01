@@ -477,10 +477,10 @@ public interface SmartLockDao {
 
     /**
      * 根据公共区查device_ID
-     * @param publicZoneId
+     * @param gateWayUuid
      * @return
      */
-    String querySmartGatWayid(@Param("publicZoneId") String publicZoneId );
+    String querySmartGatWayid( String gateWayUuid );
 
 
     String findUserIds(String userId);

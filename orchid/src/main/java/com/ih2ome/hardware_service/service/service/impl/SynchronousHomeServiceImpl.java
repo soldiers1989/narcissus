@@ -282,7 +282,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         //获得厂商
         String providerCode = smartHouseMappingVO.getFactoryType();
         String[]  gateWayuuids=smartHouseMappingVO.getGateWayuuid().split(",");
-        String gateWayuuid=gateWayuuids[1];
+//        String gateWayuuid=gateWayuuids[1];
 
         String Uuids =smartHouseMappingVO.getUuid();
         String publicZoneId = null;
@@ -316,7 +316,9 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
                     if(publicZoneId==roomId){
-                        saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
+                        for(int j=1;j<gateWayuuids.length;j++){
+                            saveGatWay(iWatermeter,gateWayuuids[j],userId,type,publicZoneId,providerCode);
+                        }
                     }else {
                         String Uuid=strs[i];
                         String watermeterInfo=iWatermeter.getWatermeterInfo(Uuid,providerCode,userId);
@@ -324,6 +326,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         String info =  resJson.getString("info");
                         JSONObject jsonObject = JSONObject.parseObject(info);
                         String meter_type = jsonObject.getString("meter_type");
+                        String gateUuid=jsonObject.getString("parent");
                         String name=null;
                         if("1".equals(meter_type)){
                             name="冷水表";
@@ -357,22 +360,25 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         smartWatermeter.setOnoffStatus(Long.parseLong(onoff));
                         smartWatermeter.setManufactory(manufactory);
                         smartLockDao.saveWaterMeter(smartWatermeter);
-                        String smartGatWayid=smartLockDao.querySmartGatWayid(publicZoneId);
-                        if(smartGatWayid==null){
-                            smartGatWayid= saveGatWay(iWatermeter,gateWayuuid,userId,type,publicZoneId,providerCode);
-                            //3.3 门锁房间关联
-                            SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
-                            houseMapping.setH2omeId(publicZoneId);
-                            houseMapping.setDataType("5");
-                            houseMapping.setThreeId(thirdHomeId);
+                        String gateWayid=smartLockDao.querySmartGatWayid(gateUuid);
+                        String smartGatWayid=null;
+                        if(gateWayid==null){
+                            for(int n=1;n<gateWayuuids.length;n++){
+                                smartGatWayid= saveGatWay(iWatermeter,gateWayuuids[n],userId,type,publicZoneId,providerCode);
+                                //3.3 门锁房间关联
+                                SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
+                                houseMapping.setH2omeId(publicZoneId);
+                                houseMapping.setDataType("5");
+                                houseMapping.setThreeId(thirdHomeId);
 
-                            //查询该关联关系原先是否存在
-                            SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
-                            //该记录存在，修改该映射记录
-                            if (houseMappingRecord != null) {
-                                smartLockDao.updateAssociation(houseMapping);
-                            } else {
-                                smartLockDao.addAssociation(houseMapping);
+                                //查询该关联关系原先是否存在
+                                SmartHouseMappingVO houseMappingRecord = smartLockDao.findHouseMappingRecord(houseMapping);
+                                //该记录存在，修改该映射记录
+                                if (houseMappingRecord != null) {
+                                    smartLockDao.updateAssociation(houseMapping);
+                                } else {
+                                    smartLockDao.addAssociation(houseMapping);
+                                }
                             }
                         }
                         smartLockDao.addSmartDeviceBind(smartDeviceV2.getSmartDeviceId(), smartGatWayid);
