@@ -872,7 +872,8 @@ public class SmartLockServiceImpl implements SmartLockService {
     }
 
     @Override
-    public List<PasswordRoomVO> getFrozenPassword(int roomId, int houseCatalog){
+    public List<PasswordRoomVO> getFrozenPassword(int roomId, int houseCatalog) {
+        Log.info("getFrozenPassword roomId:{},houseCatalog:{}", roomId, houseCatalog);
         return smartLockDao.getFrozenPassword(roomId, houseCatalog);
     }
 
