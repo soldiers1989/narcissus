@@ -444,8 +444,8 @@ AND sdv.threeID=#{uuid}
         FROM narcissus_test.smart_watermeter w
         JOIN narcissus_test.smart_device_v2 d ON w.smart_watermeter_id = d.smart_device_ID
         LEFT JOIN narcissus_test.smart_watermeter_account a ON a.room_id = d.room_ID AND a.house_catalog = d.house_catalog
-        WHERE d.room_id = #{roomId} AND d.house_catalog = #{type}
-        GROUP BY d.room_id, d.house_catalog, w.meter_type AND d.manage_status = 0
+        WHERE d.room_id = #{roomId} AND d.house_catalog = #{type} AND d.manage_status = 0
+        GROUP BY d.room_id, d.house_catalog, w.meter_type
     </select>
 
     <resultMap type="com.ih2ome.sunflower.vo.pageVo.watermeter.RoomAccountVO" id="roomAmountMap" autoMapping="true">

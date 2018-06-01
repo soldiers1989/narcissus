@@ -1148,7 +1148,7 @@ AND sdv.smart_device_type=3;
         WHERE smart_lock_password_ID = #{passwordId}
     </update>
 
-    <select id="getPasswordRoomList" >
+    <select id="getPasswordRoomList" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.PasswordRoomVO">
         SELECT p.smart_lock_password_ID, d.created_by, d.room_ID, d.house_catalog,p.auto_collection
         FROM narcissus_test.smart_lock_password p
         JOIN narcissus_test.smart_lock l ON p.smart_lock_ID = l.smart_lock_ID
@@ -1160,6 +1160,24 @@ AND sdv.smart_device_type=3;
         AND NOW() BETWEEN p.valid_time_start AND p.valid_time_end
         AND p.auto_collection = 1
         AND d.room_ID > 0
+        AND p.`status` = 2
+    </select>
+
+    <select id="getFrozenPassword" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.PasswordRoomVO">
+        SELECT p.smart_lock_password_ID, d.created_by, d.room_ID, d.house_catalog,p.auto_collection
+        FROM narcissus_test.smart_lock_password p
+        JOIN narcissus_test.smart_lock l ON p.smart_lock_ID = l.smart_lock_ID
+        JOIN narcissus_test.smart_device_v2 d ON p.smart_lock_ID = d.smart_device_ID
+        WHERE d.smart_device_type = 3
+        AND p.provider_code = 'YD'
+        AND p.name = '租客密码'
+        AND d.manage_status = 0
+        AND NOW() BETWEEN p.valid_time_start AND p.valid_time_end
+        AND p.auto_collection = 1
+        AND d.room_ID > 0
+        AND p.`status` = 5
+        AND d.room_ID = #{roomId}
+        AND d.house_catalog = #{houseCatalog}
     </select>
 
     <select id="getCaspainRoomContract" resultType="com.ih2ome.sunflower.entity.caspain.RoomContract" >
@@ -1171,7 +1189,7 @@ AND sdv.smart_device_type=3;
     <select id="getCaspainRoomRentorder" resultType="com.ih2ome.sunflower.entity.caspain.RoomRentorder" >
         SELECT * FROM caspain_test.room_rentorder r
         WHERE r.is_delete = 0 AND r.pay_status = 0 AND r.contract_id = #{contractId}
-        ORDER BY r.created_at DESC LIMIT 1
+        ORDER BY r.created_at LIMIT 1
     </select>
 
     <select id="getCaspainRoomCompany" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomCompanyVO" >
@@ -1190,13 +1208,14 @@ AND sdv.smart_device_type=3;
     <select id="getVolgaRoomRentorder" resultType="com.ih2ome.sunflower.entity.caspain.RoomRentorder" >
         SELECT * FROM `volga_test`.room_rentorder r
         WHERE r.is_delete = 0 AND r.pay_status = 0 AND r.contract_id = #{contractId}
-        ORDER BY r.created_at DESC LIMIT 1
+        ORDER BY r.created_at LIMIT 1
     </select>
 
     <select id="getVolgaRoomCompany" resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.RoomCompanyVO" >
-        SELECT r.`name` AS room_name, p.company_brand FROM `volga_test`.room r
-        JOIN `volga_test`.house h ON r.house_id = h.id
-        JOIN `volga_test`.user_profile p ON h.created_by_id = p.user_id
+        SELECT r.`name` AS room_name, p.company_brand
+        FROM `volga_test`.room r
+        JOIN `volga_test`.apartment a ON r.apartment_id = a.id
+        JOIN `caspain_test`.user_profile p ON a.created_by = p.user_id
         WHERE r.id = #{roomId}
     </select>
 </mapper>

@@ -1,6 +1,8 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.api.enums.ExpireTime;
+import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SmartLockService;
 import com.ih2ome.peony.SMSInterface.SMSUtil;
@@ -869,6 +871,11 @@ public class SmartLockServiceImpl implements SmartLockService {
         return smartLockDao.getPasswordRoomList();
     }
 
+    @Override
+    public List<PasswordRoomVO> getFrozenPassword(int roomId, int houseCatalog){
+        return smartLockDao.getFrozenPassword(roomId, houseCatalog);
+    }
+
     //判断两个日期是否相差几天
     public boolean compareDate(Date time1, Date time2, Integer day) {
         long time = 1000 * 3600 * 24;//一天的时间(秒)
@@ -902,6 +909,36 @@ public class SmartLockServiceImpl implements SmartLockService {
     }
 
     /**
+     * 判断房间账单是否已还清
+     */
+    @Override
+    public boolean judgeRoomPayOff(PasswordRoomVO passwordRoom, String smsBaseUrl) {
+        Date nowDate = new Date();
+        if (passwordRoom.getHouseCatalog().equals("1")) {
+            RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
+            if (roomContract == null) {
+                return false;
+            }
+            RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId());
+            if (roomRentorder == null) {
+                return false;
+            }
+            return compareDate(nowDate, roomRentorder.getDeadlinePayTime(), null);
+        } else if (passwordRoom.getHouseCatalog().equals("0")) {
+            com.ih2ome.sunflower.entity.volga.RoomContract roomContract = smartLockDao.getVolgaRoomContract(passwordRoom.getRoomId());
+            if (roomContract == null) {
+                return false;
+            }
+            com.ih2ome.sunflower.entity.volga.RoomRentorder roomRentorder = smartLockDao.getVolgaRoomRentorder(roomContract.getId());
+            if (roomRentorder == null) {
+                return false;
+            }
+            return compareDate(nowDate, roomRentorder.getDeadlinePayTime(), null);
+        }
+        return false;
+    }
+
+    /**
      * 判断房间是否逾期并发短信
      *
      * @param passwordRoom
@@ -910,6 +947,7 @@ public class SmartLockServiceImpl implements SmartLockService {
      */
     @Override
     public boolean judgeRoomOverdue(PasswordRoomVO passwordRoom, String smsBaseUrl) {
+        String cacheKey = "judgeRoomOverdue_SMSCode";
         if (passwordRoom.getHouseCatalog().equals("1")) {
             RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
             if (roomContract == null) {
@@ -926,10 +964,16 @@ public class SmartLockServiceImpl implements SmartLockService {
                         RoomCompanyVO roomCompany = smartLockDao.getCaspainRoomCompany(roomContract.getRoomId());
                         JSONObject data = new JSONObject();
                         data.put("brand", roomCompany.getCompanyBrand());
-                        data.put("realName", roomCompany.getRoomName());
+                        data.put("realName", roomContract.getCustomerName());
                         data.put("date", dateFormat.format(roomRentorder.getDeadlinePayTime()));
-                        boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
-                        Log.info("短信发送结果=================={}", b);
+                        if(CacheUtils.getStr(cacheKey + roomContract.getCustomerPhone()) != null){
+                            Log.info("短信发送结果==================跳过");
+                        }
+                        else {
+                            CacheUtils.set(cacheKey + roomContract.getCustomerPhone(),"1", ExpireTime.ONE_MIN);
+                            boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
+                            Log.info("短信发送结果=================={}", b);
+                        }
                     }
                 }
                 return compareDate(roomRentorder.getDeadlinePayTime(), nowDate, null);
@@ -951,15 +995,54 @@ public class SmartLockServiceImpl implements SmartLockService {
                         RoomCompanyVO roomCompany = smartLockDao.getVolgaRoomCompany(roomContract.getRoomId());
                         JSONObject data = new JSONObject();
                         data.put("brand", roomCompany.getCompanyBrand());
-                        data.put("realName", roomCompany.getRoomName());
+                        data.put("realName", roomContract.getCustomerName());
                         data.put("date", dateFormat.format(roomRentorder.getDeadlinePayTime()));
-                        boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
-                        Log.info("短信发送结果=================={}", b);
+                        if(CacheUtils.getStr(cacheKey + roomContract.getCustomerPhone()) != null){
+                            Log.info("短信发送结果==================跳过");
+                        }
+                        else {
+                            CacheUtils.set(cacheKey + roomContract.getCustomerPhone(),"1", ExpireTime.ONE_MIN);
+                            boolean b = SMSUtil.sendTemplateText(smsBaseUrl, SMSCodeEnum.WILL_FREEZE.getName(), roomContract.getCustomerPhone(), data, 0);
+                            Log.info("短信发送结果=================={}", b);
+                        }
                     }
                 }
                 return compareDate(roomRentorder.getDeadlinePayTime(), nowDate, null);
             }
         }
         return false;
+    }
+
+    @Override
+    public void sendFrozenMessage(PasswordRoomVO passwordRoom, String smsBaseUrl, boolean isFrozen) {
+        String cacheKey = "sendFrozenMessage_SMSCode";
+        String customerName = "";
+        String customerPhone = "";
+        String brand = "";
+        if (passwordRoom.getHouseCatalog().equals("1")) {
+            RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
+            customerName = roomContract.getCustomerName();
+            customerPhone = roomContract.getCustomerPhone();
+            RoomCompanyVO roomCompany = smartLockDao.getCaspainRoomCompany(roomContract.getRoomId());
+            brand = roomCompany.getCompanyBrand();
+        } else if (passwordRoom.getHouseCatalog().equals("0")) {
+            com.ih2ome.sunflower.entity.volga.RoomContract roomContract = smartLockDao.getVolgaRoomContract(passwordRoom.getRoomId());
+            customerName = roomContract.getCustomerName();
+            customerPhone = roomContract.getCustomerPhone();
+            RoomCompanyVO roomCompany = smartLockDao.getVolgaRoomCompany(roomContract.getRoomId());
+            brand = roomCompany.getCompanyBrand();
+        }
+
+        JSONObject data = new JSONObject();
+        data.put("brand", brand);
+        data.put("realName", customerName);
+        if (CacheUtils.getStr(cacheKey + customerPhone) != null) {
+            Log.info("短信发送结果==================跳过");
+        } else {
+            CacheUtils.set(cacheKey + customerPhone, "1", ExpireTime.ONE_MIN);
+            SMSCodeEnum smsCodeEnum = isFrozen ? SMSCodeEnum.HAVE_FROZEN : SMSCodeEnum.HAVE_UNFROZEN;
+            boolean b = SMSUtil.sendTemplateText(smsBaseUrl, smsCodeEnum.getName(), customerPhone, data, 0);
+            Log.info("短信发送结果=================={}", b);
+        }
     }
 }

@@ -488,6 +488,7 @@ public interface SmartLockDao {
     int updateAutoCollection(@Param("passwordId") int passwordId, @Param("autoCollection") int autoCollection);
 
     List<PasswordRoomVO> getPasswordRoomList();
+    List<PasswordRoomVO> getFrozenPassword(@Param("roomId") int roomId,@Param("houseCatalog") int houseCatalog);
 
     com.ih2ome.sunflower.entity.caspain.RoomContract getCaspainRoomContract(String roomId);
     com.ih2ome.sunflower.entity.caspain.RoomRentorder getCaspainRoomRentorder(long contractId);
