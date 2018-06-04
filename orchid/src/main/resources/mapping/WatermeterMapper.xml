@@ -185,17 +185,24 @@
 
     <!--查询集中式公寓下的网关by公寓id-->
     <select id="findGatewayByApartmentId" parameterType="int" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.JZWatermeterGatewayVO" >
-        SELECT sdv.smart_device_ID smartGatewayId,sdv.threeID uuid,a.name houseName,sdv.connection_status onoffStatus
-        FROM narcissus.smart_device_v2 sdv
-        LEFT JOIN narcissus.public_zone pz
-        on pz.public_zone_ID=sdv.public_zone_ID
-        LEFT JOIN `volga-pro`.apartment a
-        ON a.id=pz.parent_ID
-        LEFT JOIN narcissus.smart_gateway_bind_v2 sgbv
-        ON sgbv.smart_gateway_ID=sdv.smart_device_ID
-        WHERE a.id= #{id}
-        AND sdv.smart_device_type=5
-        AND sdv.manage_status=0
+        SELECT
+            nsgv2.smart_gateway_ID smartGatewayId,
+            va.name houseName,
+						nsdv2.threeID uuid,
+            nsdv2.connection_status onoffStatus
+
+        FROM
+            narcissus.smart_device_v2 nsdv2,
+            narcissus.smart_gateway_v2 nsgv2,
+            narcissus.public_zone npz,
+            `volga-pro`.apartment va
+        WHERE
+            nsgv2.smart_gateway_ID = nsdv2.smart_device_ID
+        AND nsdv2.public_zone_ID = npz.public_zone_ID
+        AND va.id = npz.parent_ID
+        AND npz.data_type = '1'
+        and nsdv2.manage_status='0'
+        AND va.id = #{id}
     </select>
 
 
