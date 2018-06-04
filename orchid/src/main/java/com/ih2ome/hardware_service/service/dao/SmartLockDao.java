@@ -485,6 +485,8 @@ public interface SmartLockDao {
 
     String findUserIds(String userId);
 
+    String findid(String uuid);
+
     int updateAutoCollection(@Param("passwordId") int passwordId, @Param("autoCollection") int autoCollection);
 
     List<PasswordRoomVO> getPasswordRoomList();
