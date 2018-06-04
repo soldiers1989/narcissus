@@ -333,9 +333,9 @@
         nshm.threeID AS thirdRoomId,
         '5' AS dataType
         FROM
-        caspain_test.house cth
-        LEFT JOIN narcissus_test.public_zone ntpz ON cth.id = ntpz.parent_ID
-        LEFT JOIN narcissus_test.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
+        caspain_pro.house cth
+        LEFT JOIN narcissus.public_zone ntpz ON cth.id = ntpz.parent_ID
+        LEFT JOIN narcissus.smart_house_mapping nshm ON nshm.h2omeID = ntpz.public_zone_ID
         AND nshm.data_type = 5
         AND nshm.house_catalog = 1 AND  nshm.status= 1
         WHERE
@@ -356,9 +356,9 @@
         nshm.threeID AS thirdRoomId,
         '4' AS dataType
         FROM
-        caspain_test.house cth
-        LEFT JOIN caspain_test.room ctr ON cth.id = ctr.house_id
-        LEFT JOIN narcissus_test.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
+        caspain_pro.house cth
+        LEFT JOIN caspain_pro.room ctr ON cth.id = ctr.house_id
+        LEFT JOIN narcissus.smart_house_mapping nshm ON ctr.id = nshm.h2omeID
         AND nshm.data_type = 4
         AND nshm.house_catalog = 1 AND nshm.status= 1
         WHERE
@@ -858,47 +858,39 @@
 
     <!-- 添加公共区域 -->
     <insert id="dispersiveAddition" parameterType="String">
-        INSERT INTO narcissus_test.public_zone VALUES(null,3,'公共区域',#{roomId});
+        INSERT INTO narcissus.public_zone VALUES(null,3,'公共区域',#{houseId});
     </insert>
 
     <!--查询没有公共区域的分散式房源id -->
     <select id="findDispersedHomesAndPublicZone" resultType="String">
          SELECT
-        	r.id AS id
-        FROM
-        	caspain_test.room r
-        WHERE
-        	r.house_id IN (
-        		SELECT
-        			id
-        		FROM
-        			caspain_test.house h
-        		WHERE
-							h.created_by_id=#{userId}
-        	)
-        AND id NOT IN (
-        	SELECT
-        		p.parent_ID AS id
-        	FROM
-        		narcissus_test.public_zone p
-        	WHERE
-        		p.data_type = 3
-        	AND p.parent_ID IN (
-        		SELECT
-        			r.id
-        		FROM
-        			caspain_test.room r
-        		WHERE
-        			r.house_id IN (
-        				SELECT
-        					id
-        				FROM
-        					caspain_test.house h
-        				WHERE
-        					h.created_by_id=#{userId}
-        			)
-        	)
-        )ORDER BY r.id ASC
+			id
+		FROM
+			caspain_pro.house h
+		WHERE
+			h.created_by_id = #{userId}
+
+AND id NOT IN (
+	SELECT
+		p.parent_ID AS id
+	FROM
+		narcissus.public_zone p
+	WHERE
+		p.data_type = 3
+	AND p.parent_ID IN (
+				SELECT
+					h.id
+				FROM
+					caspain_pro.house h
+				WHERE
+					h.created_by_id =#{userId}
+			)
+	)
+
+ORDER BY
+	h.id ASC;
+
+
     </select>
 
 
@@ -1020,7 +1012,7 @@ ORDER BY
     </insert>
     <!-- 根据userId查询分散式子账号信息 -->
     <select id="queryEmployer" parameterType="string" resultType="string">
-       SELECT id FROM caspain_test.employer e WHERE e.is_delete=0 and e.user_id=#{userId};
+       SELECT id FROM caspain_pro.employer e WHERE e.is_delete=0 and e.user_id=#{userId};
     </select>
     <!-- 查询分散式可控房源 -->
     <select id="queryEmployerHouses" parameterType="String" resultType="string">
