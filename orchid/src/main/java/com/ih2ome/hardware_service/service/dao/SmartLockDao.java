@@ -352,9 +352,9 @@ public interface SmartLockDao {
 
     /**
      * 根据分散式房源id添加公共区域
-     * @param roomId
+     * @param houseId
      */
-    void dispersiveAddition(String roomId);
+    void dispersiveAddition(String houseId);
 
     /**
      *  根据用户id查询该用户下的分散式房源信息中没有公共区域的房源id

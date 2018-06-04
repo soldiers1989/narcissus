@@ -99,8 +99,8 @@ public class SmartLockServiceImpl implements SmartLockService {
                 list = smartLockDao.findDispersedHomesAndPublicZone(userId);
                 //查询没有公共区域的分散式房源id并给它添加公共区域
                 if (list.size() != 0) {
-                    for (String roomId : list) {
-                        smartLockDao.dispersiveAddition(roomId);
+                    for (String houseId : list) {
+                        smartLockDao.dispersiveAddition(houseId);
                     }
                 }
                 localHomeList = smartLockDao.findDispersedHomes(userId);
