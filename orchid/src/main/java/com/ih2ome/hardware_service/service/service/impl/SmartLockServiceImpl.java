@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_service.service.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.utils.CacheUtils;
@@ -873,7 +874,7 @@ public class SmartLockServiceImpl implements SmartLockService {
 
     @Override
     public List<PasswordRoomVO> getFrozenPassword(int roomId, int houseCatalog) {
-        Log.info("getFrozenPassword roomId:{},houseCatalog:{}", roomId, houseCatalog);
+        Log.info("rechargeUnfrozen - getFrozenPassword roomId:{},houseCatalog:{}", roomId, houseCatalog);
         return smartLockDao.getFrozenPassword(roomId, houseCatalog);
     }
 
@@ -913,27 +914,36 @@ public class SmartLockServiceImpl implements SmartLockService {
      * 判断房间账单是否已还清
      */
     @Override
-    public boolean judgeRoomPayOff(PasswordRoomVO passwordRoom, String smsBaseUrl) {
+    public boolean judgeRoomPayOff(PasswordRoomVO passwordRoom, int roomRentOrderId) {
         Date nowDate = new Date();
         if (passwordRoom.getHouseCatalog().equals("1")) {
             RoomContract roomContract = smartLockDao.getCaspainRoomContract(passwordRoom.getRoomId());
+            Log.info("rechargeUnfrozen roomContract = {}", JSON.toJSONString(roomContract));
             if (roomContract == null) {
                 return false;
             }
-            RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId());
+            Log.info("rechargeUnfrozen roomRentOrderId = {}", roomRentOrderId);
+            RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId(), roomRentOrderId);
+            Log.info("rechargeUnfrozen roomRentorder = {}", JSON.toJSONString(roomRentorder));
             if (roomRentorder == null) {
-                return false;
+                return true;
             }
+            Log.info("rechargeUnfrozen nowDate = {}", nowDate);
+            Log.info("rechargeUnfrozen deadlinePayTime = {}", roomRentorder.getDeadlinePayTime());
             return compareDate(nowDate, roomRentorder.getDeadlinePayTime(), null);
         } else if (passwordRoom.getHouseCatalog().equals("0")) {
             com.ih2ome.sunflower.entity.volga.RoomContract roomContract = smartLockDao.getVolgaRoomContract(passwordRoom.getRoomId());
+            Log.info("rechargeUnfrozen roomContract = {}", JSON.toJSONString(roomContract));
             if (roomContract == null) {
                 return false;
             }
-            com.ih2ome.sunflower.entity.volga.RoomRentorder roomRentorder = smartLockDao.getVolgaRoomRentorder(roomContract.getId());
+            com.ih2ome.sunflower.entity.volga.RoomRentorder roomRentorder = smartLockDao.getVolgaRoomRentorder(roomContract.getId(), roomRentOrderId);
+            Log.info("rechargeUnfrozen roomRentorder = {}", JSON.toJSONString(roomRentorder));
             if (roomRentorder == null) {
-                return false;
+                return true;
             }
+            Log.info("rechargeUnfrozen nowDate = {}", nowDate);
+            Log.info("rechargeUnfrozen deadlinePayTime = {}", roomRentorder.getDeadlinePayTime());
             return compareDate(nowDate, roomRentorder.getDeadlinePayTime(), null);
         }
         return false;
@@ -954,7 +964,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             if (roomContract == null) {
                 return false;
             } else {
-                RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId());
+                RoomRentorder roomRentorder = smartLockDao.getCaspainRoomRentorder(roomContract.getId(),0);
                 Date nowDate = new Date();
                 if (roomRentorder == null) {
                     return false;
@@ -984,7 +994,7 @@ public class SmartLockServiceImpl implements SmartLockService {
             if (roomContract == null) {
                 return false;
             } else {
-                com.ih2ome.sunflower.entity.volga.RoomRentorder roomRentorder = smartLockDao.getVolgaRoomRentorder(roomContract.getId());
+                com.ih2ome.sunflower.entity.volga.RoomRentorder roomRentorder = smartLockDao.getVolgaRoomRentorder(roomContract.getId(),0);
                 Date nowDate = new Date();
                 if (roomRentorder == null) {
                     return false;

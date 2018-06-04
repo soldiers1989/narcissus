@@ -1,5 +1,6 @@
 package com.ih2ome.hardware_server.server.controller.smartlock;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
@@ -342,15 +343,20 @@ public class SmartLockController extends BaseController {
             JSONObject resData = apiRequestVO.getDataRequestBodyVO().getDt();
             int roomId = resData.getIntValue("roomId");
             int houseCatalog = resData.getIntValue("houseCatalog");
+            int roomRentOrderId = resData.getIntValue("roomRentOrderId");
             List<PasswordRoomVO> passwordList = smartLockService.getFrozenPassword(roomId, houseCatalog);
+            Log.info("rechargeUnfrozen - passwordList = {}", passwordList.size());
             for (PasswordRoomVO item : passwordList) {
-                boolean isPayOff = smartLockService.judgeRoomPayOff(item, smsBaseUrl);
+                Log.info("rechargeUnfrozen - item = {}", JSON.toJSONString(item));
+                boolean isPayOff = smartLockService.judgeRoomPayOff(item, roomRentOrderId);
+                Log.info("rechargeUnfrozen - isPayOff = {}", isPayOff);
                 if (isPayOff) {
                     smartLockService.unFrozenLockPassword(item.getCreatedBy(), item.getSmartLockPasswordId());
+                    Log.info("rechargeUnfrozen - 已解冻");
                     smartLockService.sendFrozenMessage(item, smsBaseUrl, false);
-                    return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "调用成功，解冻成功");
+                    Log.info("rechargeUnfrozen - 已发短信");
                 } else {
-                    return structureSuccessResponseVO(new JSONObject(), new Date().toString(), "调用成功，账单未还清，不予解冻");
+                    Log.info("rechargeUnfrozen - 账单未还清，不予解冻");
                 }
             }
         } catch (Exception ex) {
