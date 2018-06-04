@@ -851,7 +851,6 @@
         AND ntsdv2g.provider_code = #{providerCode}
         AND ntsdv2g.house_catalog = #{type}
         AND ntsdv2g.smart_device_type = 4
-        AND ntsdv2g.manage_status=0
         AND ntsdv2l.room_ID IS NOT NULL;
     </select>
 
