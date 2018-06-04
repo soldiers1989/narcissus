@@ -1130,6 +1130,16 @@ AND sdv.smart_device_type=3;
     <select id="findUserId" parameterType="string" resultType="string">
         SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_test.user_profile up WHERE up.user_id=#{userId})
     </select>
+
+    <!-- 查询任意userId查询老板+员工的userId列表 -->
+    <select id="findFamilyUserIdList" parameterType="string" resultType="string">
+        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_test.user_profile up WHERE up.user_id=#{userId})
+        UNION
+        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT boss_id FROM caspain_test.employer e WHERE e.user_id=#{userId})
+        UNION
+        SELECT #{userId} AS user_id
+    </select>
+
     <!-- 查询 -->
     <select id="querySmartGatWayid"  parameterType="string" resultType="string">
         SELECT smart_device_ID FROM narcissus.smart_device_v2 sdv

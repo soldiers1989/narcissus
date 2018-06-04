@@ -7,7 +7,7 @@ import com.ih2ome.hardware_service.service.service.GatewayBindService;
 import com.ih2ome.hardware_service.service.service.GatewayService;
 import com.ih2ome.sunflower.vo.thirdVo.yunDingCallBack.CallbackRequestVo;
 
-import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.hardware_service.service.peony.watermeterInterface.exception.WatermeterException;
 
 import com.ih2ome.sunflower.vo.pageVo.enums.OnOffStatusEnum;
 

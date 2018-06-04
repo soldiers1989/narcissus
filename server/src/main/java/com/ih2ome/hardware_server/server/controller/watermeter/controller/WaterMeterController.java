@@ -4,20 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.api.enums.ApiErrorCodeEnum;
+import com.ih2ome.common.api.enums.ExpireTime;
 import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
+import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.hardware_service.service.service.SynchronousHomeService;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
-import com.ih2ome.peony.ammeterInterface.exception.AmmeterException;
-import com.ih2ome.peony.watermeterInterface.IWatermeter;
-import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
+import com.ih2ome.hardware_service.service.peony.watermeterInterface.IWatermeter;
+import com.ih2ome.hardware_service.service.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
 import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
 import io.swagger.annotations.Api;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 水表Controller
@@ -553,5 +552,20 @@ public class WaterMeterController extends BaseController {
             Log.error("getWaterRecordChart error");
             return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "请求失败" + ex.getMessage());
         }
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String testMethod() {
+        CacheUtils.set("test_key_1","2", ExpireTime.FIVE_MIN);
+        CacheUtils.set("test_key_1","3", ExpireTime.FIVE_MIN);
+        CacheUtils.set("test_key_1","4", ExpireTime.FIVE_MIN);
+        return CacheUtils.getStr("test_key_1");
+//        Set<String> tokens = CacheUtils.keys("refresh_token_key*");
+//        StringBuilder sb = new StringBuilder();
+//        for (String token:tokens) {
+//            Log.info(token);
+//            sb.append(token).append("\r\n");
+//        }
+//        return sb.toString();
     }
 }
