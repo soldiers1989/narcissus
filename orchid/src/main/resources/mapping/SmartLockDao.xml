@@ -1028,7 +1028,7 @@ ORDER BY
     </select>
     <!-- 根据userId查询集中式子账号信息 -->
     <select id="findEmployer" parameterType="string" resultType="string">
-        SELECT employer_id FROM `volga_test`.employer_apatments ea WHERE  ea.user_id=#{userId};
+        SELECT id FROM `volga_test`.employer_apatments ea WHERE  ea.user_id=#{userId};
     </select>
     <!-- 查询集中试可控房源 -->
     <select id="findEmployerApatments" parameterType="string" resultType="string">
@@ -1217,5 +1217,9 @@ AND sdv.smart_device_type=3;
         JOIN `volga_test`.apartment a ON r.apartment_id = a.id
         JOIN `caspain_test`.user_profile p ON a.created_by = p.user_id
         WHERE r.id = #{roomId}
+    </select>
+
+    <select id="findid" parameterType="String" resultType="String">
+        SELECT sdv.smart_device_ID from narcissus.smart_device_v2 sdv WHERE sdv.threeID=#{uuid} AND sdv.manage_status=0
     </select>
 </mapper>

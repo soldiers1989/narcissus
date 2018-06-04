@@ -317,6 +317,10 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
                     if(publicZoneId==roomId){
                         for(int j=1;j<gateWayuuids.length;j++){
+                            String id=smartLockDao.findid(gateWayuuids[j]);
+                            if(id!=null){
+                                break;
+                            }
                             saveGatWay(iWatermeter,gateWayuuids[j],userId,type,publicZoneId,providerCode);
                         }
                     }else {
