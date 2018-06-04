@@ -277,7 +277,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @param brand  第三方标识符
      * @return 房源列表
      */
-    List<HomeVO> getApartmentListByUserId(@Param("userIds") String userIds, @Param("brand") String brand);
+    List<HomeVO> getApartmentListByUserId(@Param("userIds") List<String> userIds, @Param("brand") String brand);
 
     /**
      * 集中式：根据公寓Id查询公寓内楼层水表数

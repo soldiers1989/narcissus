@@ -463,11 +463,11 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public List<HomeVO> getApartmentListByUserId(int userId, String brand) {
         Log.info("查询已绑定设备（包括网关）的房源,userId：{}, brand:{}", userId, brand);
-
         List<String> userIdList = smartLockDao.findUserId(String.valueOf(userId));
         userIdList.add(String.valueOf(userId));
-        String userIds = StringUtils.join(userIdList.toArray(), ",");
-        return watermeterDao.getApartmentListByUserId(userIds, brand);
+        userIdList.add("1");
+        userIdList.add("2");
+        return watermeterDao.getApartmentListByUserId(userIdList, brand);
     }
 
     /**
