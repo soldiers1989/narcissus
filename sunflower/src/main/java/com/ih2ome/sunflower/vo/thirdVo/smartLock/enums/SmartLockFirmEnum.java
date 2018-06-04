@@ -6,8 +6,8 @@ package com.ih2ome.sunflower.vo.thirdVo.smartLock.enums;
  * @email sky.li@ixiaoshuidi.com
  **/
 public enum SmartLockFirmEnum {
-    GUO_JIA("GJ","com.ih2ome.peony.smartlockInterface.guojia.GuoJiaSmartLock"),
-    YUN_DING("YD","com.ih2ome.peony.smartlockInterface.yunding.YunDingSmartLock");
+    GUO_JIA("GJ","com.ih2ome.hardware_service.service.peony.smartlockInterface.guojia.GuoJiaSmartLock"),
+    YUN_DING("YD","com.ih2ome.hardware_service.service.peony.smartlockInterface.yunding.YunDingSmartLock");
     private String clazz;
     private String code;
 

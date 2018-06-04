@@ -6,14 +6,17 @@ import com.ih2ome.common.api.vo.request.ApiRequestVO;
 import com.ih2ome.common.base.BaseController;
 import com.ih2ome.common.utils.CacheUtils;
 import com.ih2ome.common.utils.StringUtils;
-import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
-import com.ih2ome.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
+import com.ih2ome.hardware_service.service.dao.SmartLockDao;
+import com.ih2ome.hardware_service.service.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.hardware_service.service.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <br>
@@ -36,6 +39,8 @@ public class ConstInfoController extends BaseController{
     String yunDingPermissionGroup;
     @Value("${yd.smart_lock.call_back.url}")
     String yunDingCallBackUrl;
+    @Autowired
+    private SmartLockDao smartLockDao;
 
     @RequestMapping(value="/setAmmeterAlarmRules",method = RequestMethod.POST,produces = {"application/json"})
     public String getYunDingLoginPage(@RequestBody ApiRequestVO apiRequestVO){

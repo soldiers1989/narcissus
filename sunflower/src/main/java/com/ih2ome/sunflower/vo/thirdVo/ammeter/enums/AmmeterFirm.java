@@ -8,7 +8,7 @@ package com.ih2ome.sunflower.vo.thirdVo.ammeter.enums;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public enum AmmeterFirm {
-    POWER_BEE("com.ih2ome.peony.ammeterInterface.powerBee.PowerBeeAmmeter");
+    POWER_BEE("com.ih2ome.hardware_service.service.peony.ammeterInterface.powerBee.PowerBeeAmmeter");
     private String clazz;
 
     AmmeterFirm(String clazz) {

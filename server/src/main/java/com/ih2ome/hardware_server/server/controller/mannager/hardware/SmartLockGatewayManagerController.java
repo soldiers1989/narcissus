@@ -8,7 +8,7 @@ import com.ih2ome.common.base.BaseController;
 import com.ih2ome.hardware_service.service.service.SmartLockGatewayManagerService;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.LockListVo;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartDoorLockGatewayVO;
-import com.ih2ome.peony.smartlockInterface.exception.SmartLockException;
+import com.ih2ome.hardware_service.service.peony.smartlockInterface.exception.SmartLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -463,6 +463,8 @@ public interface SmartLockDao {
 
     List<String> findUserId(String userId);
 
+    List<String> findFamilyUserIdList(String userId);
+
     /**
      * 新增门锁网关记录
      * @param smartGatewayV2

@@ -1,15 +1,10 @@
 package com.ih2ome.hardware_server.server.scheduled;
 
-import com.alibaba.fastjson.JSON;
 import com.ih2ome.hardware_service.service.service.WatermeterScheduledService;
 import com.ih2ome.hardware_service.service.service.WatermeterService;
 import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
-import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
-import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterAccountLog;
-import com.ih2ome.sunflower.vo.pageVo.watermeter.UuidAndManufactoryVO;
-import com.ih2ome.peony.watermeterInterface.IWatermeter;
+import com.ih2ome.hardware_service.service.peony.watermeterInterface.IWatermeter;
 import com.ih2ome.sunflower.vo.thirdVo.watermeter.enums.WATERMETER_FIRM;
-import com.ih2ome.peony.watermeterInterface.exception.WatermeterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +14,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,11 +52,7 @@ public class YunDingWatermeterInfoScheduled {
         IWatermeter iWatermeter = null;
         try {
             iWatermeter = (IWatermeter) Class.forName(WATERMETER_FIRM.YUN_DING.getClazz()).newInstance();
-        } catch (InstantiationException e) {
-            Log.error("获取水表类失败",e);
-        } catch (IllegalAccessException e) {
-            Log.error("获取水表类失败",e);
-        } catch (ClassNotFoundException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             Log.error("获取水表类失败",e);
         }
         return iWatermeter;

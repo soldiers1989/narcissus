@@ -8,7 +8,7 @@ package com.ih2ome.sunflower.vo.thirdVo.watermeter.enums;
  * @Emial Lucius.li@ixiaoshuidi.com
  */
 public enum WATERMETER_FIRM {
-    YUN_DING("com.ih2ome.peony.watermeterInterface.yunding.YunDingWatermeter");
+    YUN_DING("com.ih2ome.hardware_service.service.peony.watermeterInterface.yunding.YunDingWatermeter");
     private String clazz;
 
     WATERMETER_FIRM(String clazz) {
