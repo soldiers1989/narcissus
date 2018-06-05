@@ -328,9 +328,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         String meter_type = jsonObject.getString("meter_type");
                         String gateUuid=jsonObject.getString("parent");
                         String id=smartLockDao.findid(gateUuid);
-                        if(id!=null){
-                            throw new SmartLockException();
-                        }
+
                         String name=null;
                         if("1".equals(meter_type)){
                             name="冷水表";
