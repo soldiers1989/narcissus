@@ -77,7 +77,7 @@ public interface SynchronousHomeService {
      * @throws InstantiationException
      * @throws ParseException
      */
-    void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException;
+    String confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException;
 
     /**
      * 取消关联

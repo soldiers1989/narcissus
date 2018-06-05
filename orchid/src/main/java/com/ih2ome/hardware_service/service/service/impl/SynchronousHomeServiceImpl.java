@@ -259,7 +259,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException {
+    public String confirmAssociation(SmartHouseMappingVO smartHouseMappingVO) throws SmartLockException, ClassNotFoundException, IllegalAccessException, InstantiationException, ParseException {
         ///// 1.1 获取数据
         //集中式或者分散式类型
         String type = smartHouseMappingVO.getType();
@@ -303,6 +303,10 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         }
         String[]  strs=Uuids.split(",");
         for(int i=1,len=strs.length;i<len;i++){
+            String id=smartLockDao.findid(strs[i]);
+            if(id!=null){
+                throw new SmartLockException();
+            }
                 List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
                 IWatermeter iWatermeter = getIWatermeter();
                 try {
@@ -311,9 +315,9 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
                     if(publicZoneId==roomId){
                         for(int j=1;j<gateWayuuids.length;j++){
-                            String id=smartLockDao.findid(gateWayuuids[j]);
+                            id=smartLockDao.findid(gateWayuuids[j]);
                             if(id!=null){
-                                break;
+                                throw new SmartLockException();
                             }
                             saveGatWay(iWatermeter,gateWayuuids[j],userId,type,publicZoneId,providerCode);
                         }
@@ -325,6 +329,10 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         JSONObject jsonObject = JSONObject.parseObject(info);
                         String meter_type = jsonObject.getString("meter_type");
                         String gateUuid=jsonObject.getString("parent");
+                        id=smartLockDao.findid(gateUuid);
+                        if(id!=null){
+                            throw new SmartLockException();
+                        }
                         String name=null;
                         if("1".equals(meter_type)){
                             name="冷水表";
@@ -362,7 +370,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         String smartGatWayid=null;
                         if(gateWayid==null){
                             for(int n=1;n<gateWayuuids.length;n++){
-                                smartGatWayid= saveGatWay(iWatermeter,gateWayuuids[n],userId,type,publicZoneId,providerCode);
+                                 saveGatWay(iWatermeter,gateWayuuids[n],userId,type,publicZoneId,providerCode);
                                 //3.3 门锁房间关联
                                 SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
                                 houseMapping.setH2omeId(publicZoneId);
@@ -400,7 +408,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                break;
             }
         }
-
+        return "关联成功";
     }
 
     /**

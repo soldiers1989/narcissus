@@ -79,11 +79,12 @@ public class SynchronousHomeController  extends BaseController {
     public String confirmAssociation(@RequestBody ApiRequestVO apiRequestVO){
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         SmartHouseMappingVO smartHouseMappingVO = JSONObject.parseObject(dt.toString(), SmartHouseMappingVO.class);
+        String msg;
         try {
-            synchronousHomeService.confirmAssociation(smartHouseMappingVO);
+            msg=synchronousHomeService.confirmAssociation(smartHouseMappingVO);
         } catch (SmartLockException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "关联失败");
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "此设备已被关联在其他公寓");
             return result;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(), e);
@@ -102,7 +103,7 @@ public class SynchronousHomeController  extends BaseController {
             String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "关联失败");
             return result;
         }
-        String result = structureSuccessResponseVO(null, new Date().toString(), "关联成功");
+        String result = structureSuccessResponseVO(null, new Date().toString(), msg);
         return result;
     }
 

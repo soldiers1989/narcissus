@@ -364,6 +364,7 @@
         WHERE
         cth.created_by_id=#{userId}
         AND cth.is_delete=0
+        AND ctr.is_delete=0
         ORDER BY thirdRoomId DESC LIMIT 99999999999
         )) AS allrecord
 
