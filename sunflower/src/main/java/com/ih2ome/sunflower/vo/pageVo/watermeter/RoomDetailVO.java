@@ -15,7 +15,7 @@ public class RoomDetailVO {
     public String roomName;
     public String apartmentName;
     public String contractStatus;
-    public double coldPrice;
-    public double hotPrice;
+    public Double coldPrice;
+    public Double hotPrice;
     public double balance;
 }
