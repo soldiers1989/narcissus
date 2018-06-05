@@ -305,7 +305,7 @@ public class SmartLockServiceImpl implements SmartLockService {
         } else {
             throw new SmartLockException("参数异常");
         }
-
+        List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks =new ArrayList<SmartLockGateWayHadBindInnerLockVO>();
         //2 清除该房间下的所有设备信息和该房间所在房源的公共区域的设备信息
         //2.1 清除该非公共区域下的设备信息(外门锁,网关设备)
         if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
@@ -324,11 +324,11 @@ public class SmartLockServiceImpl implements SmartLockService {
             } else {
                 smartLockDao.addAssociation(houseMapping);
             }
+            gatewayBindInnerLocks=smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
             //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
             smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
         }
 
-        List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
 
 //        JSONObject resJson = JSONObject.parseObject(watermeterInfo);
 //

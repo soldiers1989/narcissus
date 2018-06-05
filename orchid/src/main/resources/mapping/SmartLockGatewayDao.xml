@@ -227,7 +227,7 @@
 	AND nsgbv2.smart_device_ID = nsdv2.smart_device_ID
 	AND nsgbv2.smart_gateway_ID = #{gatewayId}
 	AND nsdv2.manage_status = '0'
-
+    AND nsdv2.house_catalog=0
 )
 UNION
 	(
