@@ -465,6 +465,10 @@ public interface SmartLockDao {
 
     List<String> findFamilyUserIdList(String userId);
 
+    int queryEmployerCount(int userId);
+
+    List<Integer> queryEmployerApartment(int userId);
+
     /**
      * 新增门锁网关记录
      * @param smartGatewayV2

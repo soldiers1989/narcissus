@@ -303,4 +303,6 @@ public interface WatermeterService {
     List<SmartDeviceV2> getAllSmartDeviceV2List();
     List<RecordVO> getRecordList(int watermeterId, String startTime, String endTime);
     int getDeviceNumber(int userId, int deviceType);
+    boolean isEmployer(int userId);
+    List<Integer> queryEmployerApartment(int userId);
 }

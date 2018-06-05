@@ -334,7 +334,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
     int addSmartWatermeterAccountLog(SmartWatermeterAccountLog smartWatermeterAccountLog);
     int makeWaterZero(@Param("roomId") int roomId,@Param("houseCatalog") int houseCatalog);
     SmartDeviceV2 getSmartDeviceV2(long deviceId);
-    List<SmartDeviceV2> getSmartDeviceV2List(@Param("userId") int userId, @Param("brand") String brand);
+    List<SmartDeviceV2> getSmartDeviceV2List(@Param("userIds") List<String> userIds, @Param("brand") String brand);
     List<SmartDeviceV2> getAllSmartDeviceV2List();
     int getDeviceNumber(@Param("userId") int userId, @Param("deviceType") int deviceType);
 }
