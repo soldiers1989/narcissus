@@ -305,7 +305,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         for(int i=1,len=strs.length;i<len;i++){
             String id=smartLockDao.findid(strs[i]);
             if(id!=null){
-                return "网关已关联， 请取消关联后操作";
+                throw new SmartLockException();
             }
                 List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
                 IWatermeter iWatermeter = getIWatermeter();
