@@ -317,7 +317,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         for(int j=1;j<gateWayuuids.length;j++){
                             id=smartLockDao.findid(gateWayuuids[j]);
                             if(id!=null){
-                                return "网关已关联，请取消关联后操作";
+                                throw new SmartLockException();
                             }
                             saveGatWay(iWatermeter,gateWayuuids[j],userId,type,publicZoneId,providerCode);
                         }
@@ -329,6 +329,10 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         JSONObject jsonObject = JSONObject.parseObject(info);
                         String meter_type = jsonObject.getString("meter_type");
                         String gateUuid=jsonObject.getString("parent");
+                        id=smartLockDao.findid(gateUuid);
+                        if(id!=null){
+                            throw new SmartLockException();
+                        }
                         String name=null;
                         if("1".equals(meter_type)){
                             name="冷水表";
