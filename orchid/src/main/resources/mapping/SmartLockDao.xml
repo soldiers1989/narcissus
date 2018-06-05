@@ -1135,6 +1135,17 @@ AND sdv.smart_device_type=3;
         SELECT #{userId} AS user_id
     </select>
 
+    <select id="queryEmployerCount" parameterType="int" resultType="int">
+        SELECT COUNT(0) FROM caspain_test.employer e WHERE e.user_id = #{userId} AND is_delete = 0
+    </select>
+
+    <select id="queryEmployerApartment" parameterType="int" resultType="java.lang.Integer">
+        SELECT eaa.apartment_id FROM caspain_test.employer e
+        JOIN `volga_test`.employer_apatments ea ON e.id = ea.employer_id
+        JOIN `volga_test`.employer_apatments_apartments eaa ON ea.id = eaa.employerapatments_id
+        WHERE e.user_id = #{userId} AND e.is_delete = 0
+    </select>
+
     <!-- 查询 -->
     <select id="querySmartGatWayid"  parameterType="string" resultType="string">
         SELECT smart_device_ID FROM narcissus.smart_device_v2 sdv

@@ -336,7 +336,20 @@ public class WaterMeterController extends BaseController {
         JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
         int userId = dt.getIntValue("userId");
         String brand = dt.getString("brand") == null ? "dding" : dt.getString("brand");
+
+        // 获取用户整个主+子账号下所有有水表的公寓
         List<HomeVO> homeList = watermeterService.getApartmentListByUserId(userId, brand);
+
+        // 如果用户是子账号则剔除无权限查看的公寓
+        if(watermeterService.isEmployer(userId)) {
+            List<Integer> apartmentIdList = watermeterService.queryEmployerApartment(userId);
+            for (HomeVO home : homeList) {
+                if (!apartmentIdList.contains(home.getId())) {
+                    homeList.remove(home);
+                }
+            }
+        }
+
         JSONObject responseJson = new JSONObject();
         responseJson.put("homeList", homeList);
         Thread t = new Thread(() -> {

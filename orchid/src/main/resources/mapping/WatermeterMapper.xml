@@ -511,7 +511,11 @@ AND sdv.threeID=#{uuid}
 
     <select id="getSmartDeviceV2List" resultType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2">
         SELECT * FROM narcissus_test.smart_device_v2 d
-        WHERE d.created_by = #{userId} AND d.smart_device_type = 2 AND d.brand = #{brand} AND d.manage_status = 0
+        WHERE d.created_by IN
+        <foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND d.smart_device_type = 2 AND d.brand = #{brand} AND d.manage_status = 0
     </select>
 
     <select id="getAllSmartDeviceV2List" resultType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2">

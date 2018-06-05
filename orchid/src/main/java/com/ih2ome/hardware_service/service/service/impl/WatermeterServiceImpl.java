@@ -460,11 +460,20 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public List<HomeVO> getApartmentListByUserId(int userId, String brand) {
         Log.info("查询已绑定设备（包括网关）的房源,userId：{}, brand:{}", userId, brand);
-        List<String> userIdList = smartLockDao.findUserId(String.valueOf(userId));
-        userIdList.add(String.valueOf(userId));
-        userIdList.add("1");
-        userIdList.add("2");
+        List<String> userIdList = smartLockDao.findFamilyUserIdList(String.valueOf(userId));
         return watermeterDao.getApartmentListByUserId(userIdList, brand);
+    }
+
+    @Override
+    public boolean isEmployer(int userId) {
+        Log.info("查询是否为员工,userId：{}", userId);
+        return smartLockDao.queryEmployerCount(userId) > 0;
+    }
+
+    @Override
+    public List<Integer> queryEmployerApartment(int userId) {
+        Log.info("查询员工被分配的公寓,userId：{}", userId);
+        return smartLockDao.queryEmployerApartment(userId);
     }
 
     /**
@@ -543,7 +552,8 @@ public class WatermeterServiceImpl implements WatermeterService {
 
     @Override
     public List<SmartDeviceV2> getSmartDeviceV2List(int userId, String brand) {
-        return watermeterDao.getSmartDeviceV2List(userId, brand);
+        List<String> userIdList = smartLockDao.findFamilyUserIdList(String.valueOf(userId));
+        return watermeterDao.getSmartDeviceV2List(userIdList, brand);
     }
 
     @Override
