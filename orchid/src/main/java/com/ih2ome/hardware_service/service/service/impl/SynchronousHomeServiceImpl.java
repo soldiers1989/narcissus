@@ -280,6 +280,11 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
 
         String Uuids =smartHouseMappingVO.getUuid();
         String publicZoneId = null;
+
+        String id=smartLockDao.findHouseMapping(thirdHomeId);
+        if(id!=null){
+            throw new SmartLockException();
+        }
         //1.2 获取公区
         //判断是否是公共区域
         if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
@@ -303,10 +308,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         }
         String[]  strs=Uuids.split(",");
         for(int i=1,len=strs.length;i<len;i++){
-            String id=smartLockDao.findid(strs[i]);
-            if(id!=null){
-                throw new SmartLockException();
-            }
                 List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
                 IWatermeter iWatermeter = getIWatermeter();
                 try {
@@ -315,10 +316,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
                     if(publicZoneId==roomId){
                         for(int j=1;j<gateWayuuids.length;j++){
-                            id=smartLockDao.findid(gateWayuuids[j]);
-                            if(id!=null){
-                                throw new SmartLockException();
-                            }
                             saveGatWay(iWatermeter,gateWayuuids[j],userId,type,publicZoneId,providerCode);
                         }
                     }else {
