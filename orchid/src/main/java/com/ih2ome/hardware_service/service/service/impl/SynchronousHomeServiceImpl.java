@@ -282,7 +282,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         String publicZoneId = null;
 
         String id=smartLockDao.findHouseMapping(thirdHomeId);
-        if(id!=null){
+        if(id!=roomId){
             throw new SmartLockException();
         }
         //1.2 获取公区
