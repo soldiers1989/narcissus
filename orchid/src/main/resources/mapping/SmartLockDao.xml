@@ -1240,4 +1240,8 @@ AND sdv.smart_device_type=3;
     <select id="findid" parameterType="String" resultType="String">
         SELECT sdv.smart_device_ID from narcissus.smart_device_v2 sdv WHERE sdv.threeID=#{uuid} AND sdv.manage_status=0
     </select>
+
+    <select id="findHouseMapping" parameterType="String" resultType="String">
+        SELECT shm.h2omeID FROM narcissus.smart_house_mapping shm WHERE shm.threeID=#{thirdHomeId} AND shm.`status`=1
+    </select>
 </mapper>
