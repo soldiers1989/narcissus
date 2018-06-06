@@ -242,7 +242,7 @@
         SET manage_status = 1
         WHERE
         room_ID= #{roomId}
-        AND house_catalog = #{type} AND provider_code=#{providerCode}
+        AND house_catalog = #{type}
     </update>
 
     <!--通过publicZoneId删除该公共区域下的设备记录(修改字段)-->
