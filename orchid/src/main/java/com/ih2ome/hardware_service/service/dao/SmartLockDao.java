@@ -493,7 +493,7 @@ public interface SmartLockDao {
 
     String findid(String uuid);
 
-    String findHouseMapping(String thirdHomeId);
+    List<String> findHouseMapping(String thirdHomeId);
 
     int updateAutoCollection(@Param("passwordId") int passwordId, @Param("autoCollection") int autoCollection);
 

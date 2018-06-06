@@ -117,7 +117,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             String result = iSmartLock.searchHomeInfo(params);
             List<YunDingHomeInfoVO> yunDingHomes = JSONObject.parseArray(result, YunDingHomeInfoVO.class);
             //处理云丁的房源数据，将房源下房间中没有设备的房间移除
-            removeNoDevicesRoom(yunDingHomes);
+            removeNoDevicesRoom(yunDingHomes,userId);
 
             for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
                 HomeVO homeVO = YunDingHomeInfoVO.toH2ome(yunDingHomeInfoVO);
@@ -634,7 +634,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
     }
 
     //处理云丁的房源数据，将房源下房间中没有设备的房间移除
-    private void removeNoDevicesRoom(List<YunDingHomeInfoVO> yunDingHomes) {
+    private void removeNoDevicesRoom(List<YunDingHomeInfoVO> yunDingHomes,String userId) {
         for (YunDingHomeInfoVO yunDingHomeInfoVO : yunDingHomes) {
             List<YunDingRoomInfoVO> rooms = yunDingHomeInfoVO.getRooms();
             List<YunDingDeviceInfoVO> devices = yunDingHomeInfoVO.getDevices();
@@ -642,6 +642,10 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             while (roomIterator.hasNext()) {
                 boolean flag = true;
                 YunDingRoomInfoVO roomInfo = roomIterator.next();
+                List<String> list=smartLockDao.findFamilyUserIdList(userId);
+                List<String> list1=smartLockDao.findHouseMapping(roomInfo.getHomeId());
+
+
                 for (YunDingDeviceInfoVO deviceInfo : devices) {
                     if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null) {
 //                        Log.info("========roomInfo:{}", roomInfo);
@@ -650,10 +654,10 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         flag = false;
 //                        break;
                     }
-                    String id=smartLockDao.findHouseMapping(deviceInfo.getRoomId());
-                    if(id!=null){
-                        flag = true;
-                        break;
+                    if(list1.size()>0){
+                        if(!list.contains(list1.get(0))){
+                            flag = true;
+                        }
                     }
                 }
                 if (flag) {
