@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.utils.DateUtils;
 import com.ih2ome.common.utils.HttpClientUtil;
+import com.ih2ome.common.utils.StringUtils;
 import com.ih2ome.hardware_service.service.peony.smartlockInterface.ISmartLock;
 import com.ih2ome.hardware_service.service.peony.smartlockInterface.exception.SmartLockException;
 import com.ih2ome.hardware_service.service.peony.smartlockInterface.yunding.util.YunDingSmartLockUtil;
@@ -107,7 +108,9 @@ public class YunDingSmartLock implements ISmartLock {
         pwdJson.put("password", lockPassword.getPassword());
         pwdJson.put("phonenumber", lockPassword.getMobile());
         pwdJson.put("permission_begin", DateUtils.stringToLong(lockPassword.getEnableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
-        pwdJson.put("permission_end", DateUtils.stringToLong(lockPassword.getDisableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        if(StringUtils.isNotBlank(lockPassword.getDisableTime())) {
+            pwdJson.put("permission_end", DateUtils.stringToLong(lockPassword.getDisableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        }
         String result = HttpClientUtil.doPost(url, pwdJson);
         JSONObject resJson = null;
         try {
