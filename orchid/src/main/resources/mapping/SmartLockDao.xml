@@ -251,7 +251,7 @@
         SET manage_status = 1
         WHERE
         public_zone_ID = #{publicZoneId}
-        AND house_catalog =#{type}  AND provider_code=#{providerCode}
+        AND house_catalog =#{type}
     </update>
 
     <!--修改门锁密码-->

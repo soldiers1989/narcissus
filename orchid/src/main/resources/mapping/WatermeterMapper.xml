@@ -215,7 +215,8 @@
         ON sgbv.smart_gateway_ID=sdv.smart_device_ID
         WHERE sgbv.smart_gateway_ID=#{gateWayId}
         AND sdv.smart_device_type=5
-        AND sdv.manage_status=0;
+        AND sdv.manage_status=0
+        AND nsdv2.smart_device_type=5;
     </select>
 
 

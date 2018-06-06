@@ -303,10 +303,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
         } else {
             throw new SmartLockException("参数异常");
         }
-
-
-        if(providerCode.equals(SmartLockFirmEnum.YUN_DING)){
-            SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode(providerCode);
+            SmartLockFirmEnum lockFirmEnum = SmartLockFirmEnum.getByCode("YD");
             ISmartLock iSmartLock = SmartLockOperateFactory.createSmartLock(lockFirmEnum.getCode());
             Map<String, Object> houseDeviceInfoMap = iSmartLock.searchHouseDeviceInfo(userId, thirdHomeId);
             //获得云丁该房屋下的网关信息
@@ -318,7 +315,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             //2.1 清除该非公共区域下的设备信息(外门锁,网关设备)
             if (HouseMappingDataTypeEnum.ROOM.getCode().equals(dataType)) {
                 //清除 该房间下的设备信息(内门锁)
-                smartLockDao.clearDevicesByRoomId(type, roomId, providerCode);
+                smartLockDao.clearDevicesByRoomId(type, roomId, "YD");
                 //公共区域之间建立映射。
                 SmartHouseMappingVO houseMapping = SmartHouseMappingVO.toH2ome(smartHouseMappingVO);
                 houseMapping.setH2omeId(publicZoneId);
@@ -332,9 +329,9 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 } else {
                     smartLockDao.addAssociation(houseMapping);
                 }
-                gatewayBindInnerLocks=smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
+                gatewayBindInnerLocks=smartLockDao.findGatewayBindInnerLock(type, publicZoneId, "YD");
                 //2.2 清除该公共区域下的设备信息(外门锁,网关设备)
-                smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, providerCode);
+                smartLockDao.clearDevicesByPublicZoneId(type, publicZoneId, "YD");
             }
             //3.2 房间下的设备关联
             //3.2.1 将网关信息插入数据库
@@ -343,7 +340,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 gatewayDevice.setPublicZoneId(publicZoneId);
                 gatewayDevice.setCreatedBy(userId);
                 gatewayDevice.setHouseCatalog(type);
-                gatewayDevice.setProviderCode(providerCode);
+                gatewayDevice.setProviderCode(smartGatewayV2.getBrand());
 //           新增设备(网关)记录绑定公共区域
                 smartLockDao.addSmartDevice(gatewayDevice);
                 String gatewayDeviceId = gatewayDevice.getSmartDeviceId();
@@ -372,7 +369,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 publicLockDevice.setPublicZoneId(publicZoneId);
                 publicLockDevice.setCreatedBy(userId);
                 publicLockDevice.setHouseCatalog(type);
-                publicLockDevice.setProviderCode(providerCode);
+                publicLockDevice.setProviderCode(publicLock.getSmartDeviceV2().getBrand());
                 //新增设备(外门锁)记录绑定公共区域
                 smartLockDao.addSmartDevice(publicLockDevice);
                 String lockDeviceId = publicLockDevice.getSmartDeviceId();
@@ -390,7 +387,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 List<SmartLockPassword> smartLockPasswordList = publicLock.getSmartLockPasswordList();
                 for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
                     smartLockPassword.setSmartLockId(lockDeviceId);
-                    smartLockPassword.setProviderCode(providerCode);
+                    smartLockPassword.setProviderCode("YD");
                     if (smartLockPassword.getPassword() != null) {
                         smartLockDao.addSmartLockPassword(smartLockPassword);
                     }
@@ -408,7 +405,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     innerLockDevice.setRoomId(roomId);
                     innerLockDevice.setCreatedBy(userId);
                     innerLockDevice.setHouseCatalog(type);
-                    innerLockDevice.setProviderCode(providerCode);
+                    innerLockDevice.setProviderCode(innerLock.getSmartDeviceV2().getBrand());
                     //新增设备(内门锁)记录绑定房间
                     smartLockDao.addSmartDevice(innerLockDevice);
                     String lockDeviceId = innerLockDevice.getSmartDeviceId();
@@ -426,17 +423,16 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     List<SmartLockPassword> smartLockPasswordList = innerLock.getSmartLockPasswordList();
                     for (SmartLockPassword smartLockPassword : smartLockPasswordList) {
                         smartLockPassword.setSmartLockId(lockDeviceId);
-                        smartLockPassword.setProviderCode(providerCode);
+                        smartLockPassword.setProviderCode("YD");
                         if (smartLockPassword.getPassword() != null) {
                             smartLockDao.addSmartLockPassword(smartLockPassword);
                         }
                     }
                 }
             }
-        }else{
             String[]  strs=Uuids.split(",");
             for(int i=1,len=strs.length;i<len;i++){
-                List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
+//                List<SmartLockGateWayHadBindInnerLockVO> gatewayBindInnerLocks = smartLockDao.findGatewayBindInnerLock(type, publicZoneId, providerCode);
                 IWatermeter iWatermeter = getIWatermeter();
                 try {
                     Date day=new Date();
@@ -444,10 +440,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     SmartDeviceV2 smartDeviceV2=new SmartDeviceV2();
                     if(publicZoneId==roomId){
                         for(int j=1;j<gateWayuuids.length;j++){
-                            String id=smartLockDao.findid(gateWayuuids[j]);
-                            if(id!=null){
-                                throw new SmartLockException();
-                            }
                             saveGatWay(iWatermeter,gateWayuuids[j],userId,type,publicZoneId,providerCode);
                         }
                     }else {
@@ -458,8 +450,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         JSONObject jsonObject = JSONObject.parseObject(info);
                         String meter_type = jsonObject.getString("meter_type");
                         String gateUuid=jsonObject.getString("parent");
-                        String id=smartLockDao.findid(gateUuid);
-
                         String name=null;
                         if("1".equals(meter_type)){
                             name="冷水表";
@@ -535,8 +525,6 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     break;
                 }
             }
-        }
-
         return "关联成功";
     }
 
@@ -595,42 +583,45 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
             e.printStackTrace();
         }
         JSONObject resJsonObject = JSONObject.parseObject(res);
-        String resInfo =  resJsonObject.getString("info");
-        JSONObject json = JSONObject.parseObject(resInfo);
-        SmartGatewayV2 smartGatewayV2=new SmartGatewayV2();
-        String off=json.getString("onoff");
-        String description=json.getString("description");
-        String mtime=json.getString("mtime");
-        String createTime=json.getString("ctime");
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
-        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = null;
-        try {
-            date = sdf1.parse(createTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if(resJsonObject!=null){
+            String resInfo =  resJsonObject.getString("info");
+            JSONObject json = JSONObject.parseObject(resInfo);
+            SmartGatewayV2 smartGatewayV2=new SmartGatewayV2();
+            String off=json.getString("onoff");
+            String description=json.getString("description");
+            String mtime=json.getString("mtime");
+            String createTime=json.getString("ctime");
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = null;
+            try {
+                date = sdf1.parse(createTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            createTime=sdf2.format(date);
+            SmartDeviceV2 smartDevice=new SmartDeviceV2();
+            smartDevice.setBrand("dding");
+            smartDevice.setConnectionStatus(off);
+            smartDevice.setConnectionStatusUpdateTime(df.format(day));
+            smartDevice.setCreatedBy(userId);
+            smartDevice.setHouseCatalog(type);
+            smartDevice.setName(description);
+            smartDevice.setProviderCode(providerCode);
+            smartDevice.setPublicZoneId(publicZoneId);
+            smartDevice.setSmartDeviceType("5");
+            smartDevice.setThreeId(Uuid);
+            smartLockDao.addSmartDevice(smartDevice);
+            String smartGatWayid=smartDevice.getSmartDeviceId();
+            smartGatewayV2.setSmartGatewayId(smartDevice.getSmartDeviceId());
+            smartGatewayV2.setUuid(Uuid);
+            smartGatewayV2.setInstallTime(createTime);
+            smartGatewayV2.setBrand("dding");
+            smartGatewayV2.setModel(description);
+            smartLockDao.saveGatWay(smartGatewayV2);
         }
-        createTime=sdf2.format(date);
-        SmartDeviceV2 smartDevice=new SmartDeviceV2();
-        smartDevice.setBrand("dding");
-        smartDevice.setConnectionStatus(off);
-        smartDevice.setConnectionStatusUpdateTime(df.format(day));
-        smartDevice.setCreatedBy(userId);
-        smartDevice.setHouseCatalog(type);
-        smartDevice.setName(description);
-        smartDevice.setProviderCode(providerCode);
-        smartDevice.setPublicZoneId(publicZoneId);
-        smartDevice.setSmartDeviceType("5");
-        smartDevice.setThreeId(Uuid);
-        smartLockDao.addSmartDevice(smartDevice);
-        String smartGatWayid=smartDevice.getSmartDeviceId();
-        smartGatewayV2.setSmartGatewayId(smartDevice.getSmartDeviceId());
-        smartGatewayV2.setUuid(Uuid);
-        smartGatewayV2.setInstallTime(createTime);
-        smartGatewayV2.setBrand("dding");
-        smartGatewayV2.setModel(description);
-        smartLockDao.saveGatWay(smartGatewayV2);
-        return smartGatWayid;
+
+        return "";
     }
 
     //处理云丁的房源数据，将房源下房间中没有设备的房间移除
