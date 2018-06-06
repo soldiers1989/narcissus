@@ -340,7 +340,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 gatewayDevice.setPublicZoneId(publicZoneId);
                 gatewayDevice.setCreatedBy(userId);
                 gatewayDevice.setHouseCatalog(type);
-                gatewayDevice.setProviderCode(smartGatewayV2.getBrand());
+                gatewayDevice.setProviderCode("YD");
 //           新增设备(网关)记录绑定公共区域
                 smartLockDao.addSmartDevice(gatewayDevice);
                 String gatewayDeviceId = gatewayDevice.getSmartDeviceId();
@@ -369,7 +369,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                 publicLockDevice.setPublicZoneId(publicZoneId);
                 publicLockDevice.setCreatedBy(userId);
                 publicLockDevice.setHouseCatalog(type);
-                publicLockDevice.setProviderCode(publicLock.getSmartDeviceV2().getBrand());
+                publicLockDevice.setProviderCode("YD");
                 //新增设备(外门锁)记录绑定公共区域
                 smartLockDao.addSmartDevice(publicLockDevice);
                 String lockDeviceId = publicLockDevice.getSmartDeviceId();
@@ -405,7 +405,7 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     innerLockDevice.setRoomId(roomId);
                     innerLockDevice.setCreatedBy(userId);
                     innerLockDevice.setHouseCatalog(type);
-                    innerLockDevice.setProviderCode(innerLock.getSmartDeviceV2().getBrand());
+                    innerLockDevice.setProviderCode("YD");
                     //新增设备(内门锁)记录绑定房间
                     smartLockDao.addSmartDevice(innerLockDevice);
                     String lockDeviceId = innerLockDevice.getSmartDeviceId();
