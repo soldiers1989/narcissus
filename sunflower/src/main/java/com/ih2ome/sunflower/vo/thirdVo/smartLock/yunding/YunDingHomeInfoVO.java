@@ -56,7 +56,7 @@ public class YunDingHomeInfoVO {
             roomVO.setThirdHomeId(homeVO.getHomeId());
             roomVO.setThirdRoomId(yunDingRoomInfoVO.getRoomId());
             if ("default".equals(yunDingRoomInfoVO.getRoomName())) {
-                roomVO.setThirdRoomName("设备网关");
+                roomVO.setThirdRoomName("公共区域");
                 roomVO.setDataType(HouseMappingDataTypeEnum.PUBLICZONE.getCode());
             } else {
                 roomVO.setThirdRoomName(yunDingRoomInfoVO.getRoomName());

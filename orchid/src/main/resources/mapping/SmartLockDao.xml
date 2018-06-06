@@ -1242,6 +1242,10 @@ AND sdv.smart_device_type=3;
     </select>
 
     <select id="findHouseMapping" parameterType="String" resultType="String">
-        SELECT shm.h2omeID FROM narcissus.smart_house_mapping shm WHERE shm.threeID=#{thirdHomeId} AND shm.`status`=1
+        SELECT shm.h2omeID FROM narcissus.smart_house_mapping shm WHERE shm.threeID=#{thirdHomeId} AND shm.`status`=1 AND  shm.data_type=5;
+    </select>
+
+    <select id="findApartment" parameterType="String" resultType="String">
+SELECT parent_ID FROM narcissus.public_zone pz WHERE pz.data_type=1 AND pz.public_zone_ID=#{publicZoneId}
     </select>
 </mapper>

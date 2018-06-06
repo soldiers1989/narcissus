@@ -84,7 +84,7 @@ public class SynchronousHomeController  extends BaseController {
             msg=synchronousHomeService.confirmAssociation(smartHouseMappingVO);
         } catch (SmartLockException e) {
             Log.error(e.getMessage(), e);
-            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "此设备已被关联在其他公寓");
+            String result = structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "此设备已被关联在其他公寓，请选择其他公寓设备进行关联");
             return result;
         } catch (IllegalAccessException e) {
             Log.error(e.getMessage(), e);
