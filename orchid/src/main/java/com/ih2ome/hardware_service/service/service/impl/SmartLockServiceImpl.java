@@ -283,7 +283,6 @@ public class SmartLockServiceImpl implements SmartLockService {
 
         String Uuid = smartHouseMappingVO.getUuid();
         String publicZoneId = null;
-        String id=smartLockDao.findHouseMapping(thirdHomeId);
         //1.2 获取公区
         //判断是否是公共区域
         if (HouseMappingDataTypeEnum.PUBLICZONE.getCode().equals(dataType)) {
