@@ -107,7 +107,9 @@ public class YunDingSmartLock implements ISmartLock {
         pwdJson.put("password_id", lockPassword.getPwdNo());
         pwdJson.put("password", lockPassword.getPassword());
         pwdJson.put("phonenumber", lockPassword.getMobile());
-        pwdJson.put("permission_begin", DateUtils.stringToLong(lockPassword.getEnableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        if(StringUtils.isNotBlank(lockPassword.getEnableTime())) {
+            pwdJson.put("permission_begin", DateUtils.stringToLong(lockPassword.getEnableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
+        }
         if(StringUtils.isNotBlank(lockPassword.getDisableTime())) {
             pwdJson.put("permission_end", DateUtils.stringToLong(lockPassword.getDisableTime(), "yyyy-MM-dd HH:mm:ss") / 1000);
         }
