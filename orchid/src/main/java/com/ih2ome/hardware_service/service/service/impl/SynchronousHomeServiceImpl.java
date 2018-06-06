@@ -646,12 +646,13 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                     if (roomInfo.getRoomId().equals(deviceInfo.getRoomId())&&deviceInfo.getUuid()!=null) {
 //                        Log.info("========roomInfo:{}", roomInfo);
 //                        Log.info("========deviceInfo:{}", deviceInfo);
+
                         flag = false;
-                        break;
+//                        break;
                     }
                     String id=smartLockDao.findHouseMapping(deviceInfo.getRoomId());
                     if(id!=null){
-                        flag = false;
+                        flag = true;
                         break;
                     }
                 }
