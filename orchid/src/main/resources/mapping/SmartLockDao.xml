@@ -43,7 +43,7 @@
     <!--新增房间关联记录-->
     <insert id="addAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO narcissus_test.smart_house_mapping (
+        INSERT INTO narcissus.smart_house_mapping (
         house_catalog,
         data_type,
         h2omeID,
@@ -57,7 +57,7 @@
     <!--新增设备记录-->
     <insert id="addSmartDevice" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2"
             useGeneratedKeys="true" keyProperty="smartDeviceId" keyColumn="smart_device_ID">
-        INSERT INTO narcissus_test.smart_device_v2 (
+        INSERT INTO narcissus.smart_device_v2 (
         brand,
         connection_status,
         connection_status_update_time,
@@ -78,7 +78,7 @@
     <!--新增网关记录-->
     <insert id="addSmartGateway" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartGatewayV2"
             useGeneratedKeys="true" keyProperty="smartGatewayId" keyColumn="smart_gateway_ID">
-        INSERT INTO narcissus_test.smart_gateway_v2 (
+        INSERT INTO narcissus.smart_gateway_v2 (
         smart_gateway_ID,
         uuid,
         sn,
@@ -106,7 +106,7 @@
     <!--新增门锁记录-->
     <insert id="addSmartLock" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartLock"
             useGeneratedKeys="true" keyProperty="smartLockId" keyColumn="smart_lock_ID">
-        INSERT INTO narcissus_test.smart_lock (
+        INSERT INTO narcissus.smart_lock (
         smart_lock_ID,
         sn,
         mac,
@@ -214,7 +214,7 @@
     <!--update-->
     <!--修改房间关联记录-->
     <update id="updateAssociation" parameterType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartHouseMappingVO">
-        UPDATE narcissus_test.smart_house_mapping nshm
+        UPDATE narcissus.smart_house_mapping nshm
         SET nshm.`status` = '1',nshm.threeID=#{threeId}
         WHERE
         nshm.provider_code = #{providerCode}
@@ -238,20 +238,20 @@
 
     <!--通过roomId删除该房间下的设备记录(修改字段)-->
     <update id="clearDevicesByRoomId">
-        UPDATE narcissus_test.smart_device_v2
+        UPDATE narcissus.smart_device_v2
         SET manage_status = 1
         WHERE
         room_ID= #{roomId}
-        AND house_catalog = #{type} AND provider_code=#{providerCode}
+        AND house_catalog = #{type}
     </update>
 
     <!--通过publicZoneId删除该公共区域下的设备记录(修改字段)-->
     <update id="clearDevicesByPublicZoneId">
-        UPDATE narcissus_test.smart_device_v2
+        UPDATE narcissus.smart_device_v2
         SET manage_status = 1
         WHERE
         public_zone_ID = #{publicZoneId}
-        AND house_catalog =#{type}  AND provider_code=#{providerCode}
+        AND house_catalog =#{type}
     </update>
 
     <!--修改门锁密码-->
@@ -314,7 +314,7 @@
 
     <!--修改内门锁与网关的绑定关系-->
     <update id="updateInnerLockBindGateway">
-        UPDATE narcissus_test.smart_gateway_bind_v2 ntsgbv2
+        UPDATE narcissus.smart_gateway_bind_v2 ntsgbv2
           SET ntsgbv2.smart_gateway_ID=#{smartGatewayId}
         where ntsgbv2.smart_device_ID=#{innerLockId}
     </update>
@@ -528,7 +528,7 @@
         threeID as threeId,
         `status`
         FROM
-        narcissus_test.smart_house_mapping nshm
+        narcissus.smart_house_mapping nshm
         WHERE
         nshm.h2omeID = #{h2omeId}
         AND nshm.data_type = #{dataType}
@@ -844,9 +844,9 @@
         ntsdv2g.threeID AS gatewayThirdId,
         ntsgbv2.smart_device_ID AS innerLockId
         FROM
-            narcissus_test.smart_device_v2 ntsdv2g
-        LEFT JOIN narcissus_test.smart_gateway_bind_v2 ntsgbv2 ON ntsdv2g.smart_device_ID = ntsgbv2.smart_gateway_ID
-        LEFT JOIN narcissus_test.smart_device_v2 ntsdv2l ON ntsdv2l.smart_device_ID = ntsgbv2.smart_device_ID
+            narcissus.smart_device_v2 ntsdv2g
+        LEFT JOIN narcissus.smart_gateway_bind_v2 ntsgbv2 ON ntsdv2g.smart_device_ID = ntsgbv2.smart_gateway_ID
+        LEFT JOIN narcissus.smart_device_v2 ntsdv2l ON ntsdv2l.smart_device_ID = ntsgbv2.smart_device_ID
         WHERE
             ntsdv2g.public_zone_ID = #{publicZoneId}
         AND ntsdv2g.provider_code = #{providerCode}
@@ -1126,11 +1126,11 @@ AND sdv.smart_device_type=3;
 
     <!-- 查询任意userId查询老板+员工的userId列表 -->
     <select id="findFamilyUserIdList" parameterType="string" resultType="string">
-        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_test.user_profile up WHERE up.user_id=#{userId})
+        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_pro.user_profile up WHERE up.user_id=#{userId})
         UNION
-        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT boss_id FROM caspain_test.employer e WHERE e.user_id=#{userId})
+        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT boss_id FROM caspain_pro.employer e WHERE e.user_id=#{userId})
         UNION
-        SELECT user_id FROM caspain_test.user_profile p WHERE p.id in(SELECT boss_id FROM caspain_test.employer e WHERE e.user_id=#{userId})
+        SELECT user_id FROM caspain_test.user_profile p WHERE p.id in(SELECT boss_id FROM caspain_pro.employer e WHERE e.user_id=#{userId})
         UNION
         SELECT #{userId} AS user_id
     </select>
@@ -1148,7 +1148,7 @@ AND sdv.smart_device_type=3;
 
     <!-- 查询 -->
     <select id="querySmartGatWayid"  parameterType="string" resultType="string">
-        SELECT smart_device_ID FROM narcissus_test.smart_device_v2 sdv
+        SELECT smart_device_ID FROM narcissus.smart_device_v2 sdv
         WHERE sdv.manage_status = 0
         AND sdv.threeID= #{gateWayUuid}
         AND  sdv.smart_device_type = 5 AND  sdv.manage_status=0
@@ -1242,8 +1242,8 @@ AND sdv.smart_device_type=3;
     </select>
 
     <select id="findHouseMapping" parameterType="String" resultType="String">
-        SELECT sdv.created_by FROM narcissus_test.smart_house_mapping shm
-LEFT JOIN narcissus_test.smart_device_v2 sdv
+        SELECT sdv.created_by FROM narcissus.smart_house_mapping shm
+LEFT JOIN narcissus.smart_device_v2 sdv
 ON sdv.public_zone_ID=shm.h2omeID
  WHERE shm.threeID=#{thirdHomeId} AND shm.`status`=1 AND  shm.data_type=5 AND sdv.manage_status=0;
     </select>

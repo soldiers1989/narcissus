@@ -128,7 +128,7 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                     smartLockHadBindHouseVo.setOnlineCount(onlineCount);
                     smartLockHadBindHouseVo.setOfflineCount(offlineCount);
                     smartLockHadBindHouseVo.setLowerPowerCount(lowerPowerCount);
-                    if(smartLockHadBindHouseVo.getOutSmartLockVo().getLockName()!=null){
+                    if(smartLockHadBindHouseVo.getOutSmartLockVo().getLockName()==null){
                         FloorVo floorVo = new FloorVo();
                         List<RoomAndPublicZoneVo> roomAndPublicZoneVoList = new ArrayList<>();
                         RoomAndPublicZoneVo roomAndPublicZoneVo = new RoomAndPublicZoneVo();
