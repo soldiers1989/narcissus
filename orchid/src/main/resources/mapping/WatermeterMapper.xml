@@ -399,7 +399,9 @@ AND sdv.threeID=#{uuid}
 
     <!--查询集中式房间水表列表 by 楼层Id-->
     <select id="getRoomWithWater" parameterType="int" resultMap="roomWithWaterMap" >
-        SELECT r.id AS roomId,r.name AS roomName,a.balance/100 AS balance,d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,w.last_amount AS currentAmount,d.connection_status AS onoff_status
+        SELECT r.id AS roomId,r.name AS roomName,a.balance / 100 AS balance,
+        d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,
+        w.last_amount AS currentAmount, w.last_amount - w.meter_amount AS usedAmount,d.connection_status AS onoff_status
         FROM `narcissus_test`.smart_device_v2 d
         LEFT JOIN `narcissus_test`.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
         LEFT JOIN `narcissus_test`.smart_watermeter_account a ON d.room_id = a.room_id AND d.house_catalog = a.house_catalog

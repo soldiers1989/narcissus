@@ -1126,11 +1126,11 @@ AND sdv.smart_device_type=3;
 
     <!-- 查询任意userId查询老板+员工的userId列表 -->
     <select id="findFamilyUserIdList" parameterType="string" resultType="string">
-        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_pro.user_profile up WHERE up.user_id=#{userId})
+        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT id FROM caspain_test.user_profile up WHERE up.user_id=#{userId})
         UNION
-        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT boss_id FROM caspain_pro.employer e WHERE e.user_id=#{userId})
+        SELECT user_id FROM caspain_test.employer e WHERE e.boss_id in(SELECT boss_id FROM caspain_test.employer e WHERE e.user_id=#{userId})
         UNION
-        SELECT user_id FROM caspain_test.user_profile p WHERE p.id in(SELECT boss_id FROM caspain_pro.employer e WHERE e.user_id=#{userId})
+        SELECT user_id FROM caspain_test.user_profile p WHERE p.id in(SELECT boss_id FROM caspain_test.employer e WHERE e.user_id=#{userId})
         UNION
         SELECT #{userId} AS user_id
     </select>
