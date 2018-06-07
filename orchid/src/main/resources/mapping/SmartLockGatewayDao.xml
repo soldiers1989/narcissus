@@ -385,17 +385,17 @@ AND nsgbv2.smart_gateway_ID = #{gatewayId}
 	nslIndoor.sn lockName,
 	nslOutSmartLock.sn outLockName
 FROM
-	`volga_test`.apartment va,
-	caspain_test.auth_user cau,
-	narcissus_test.smart_device_v2 nsdv2,
-	narcissus_test.smart_gateway_v2 nsg,
-	narcissus_test.public_zone npz,
-	narcissus_test.smart_device_v2 nsdv2OutSmartLock,
-	narcissus_test.smart_lock nslOutSmartLock,
-	`volga_test`.floor vf,
-	`volga_test`.room vr,
-	narcissus_test.smart_lock nslIndoor,
-	narcissus_test.smart_device_v2 nsdv2Indoor
+	`volga-pro`.apartment va,
+	caspain_pro.auth_user cau,
+	narcissus.smart_device_v2 nsdv2,
+	narcissus.smart_gateway_v2 nsg,
+	narcissus.public_zone npz,
+	narcissus.smart_device_v2 nsdv2OutSmartLock,
+	narcissus.smart_lock nslOutSmartLock,
+	`volga-pro`.floor vf,
+	`volga-pro`.room vr,
+	narcissus.smart_lock nslIndoor,
+	narcissus.smart_device_v2 nsdv2Indoor
 WHERE
 	va.created_by = cau.id
 AND cau.id = #{userId}
@@ -415,44 +415,33 @@ AND nsdv2Indoor.manage_status = '0'
 
     <select id="getDoorLock" resultMap="HadBindHouseMap" >
         SELECT
-	va.id homeId,
-	va.`name` homeName,
-    0 outSmartLockId,
-	nsdv2OutSmartLock.connection_status outCommunicationStatus,
-	nslOutSmartLock.power outPowerRate,
-	nsdv2.smart_device_ID gatewayId,
-	0 floorId,
-	'公共区域' floorName,
-	nsdv2Indoor.smart_device_ID smartLockId,
-    '外门锁' roomNo,
-	nsdv2Indoor.connection_status communicationStatus,
-	nslIndoor.power powerRate,
-	nslIndoor.sn lockName,
-	NULL outLockName
+	a.id homeId,
+	a.`name` homeName,
+	nsdv.connection_status outCommunicationStatus,
+	sdv.connection_status ,
+	sl.power powerRate,
+	0 outSmartLockId,
+	sdv.smart_device_ID gatewayId,
+	nsdv.smart_device_ID smartLockId,
+	f.id floorId,
+	f.`name` floorName,
+  r.`name` roomNo,
+	sl.sn lockName
 FROM
-	`volga_test`.apartment va,
-	caspain_test.auth_user cau,
-	narcissus_test.smart_device_v2 nsdv2,
-	narcissus_test.smart_gateway_v2 nsg,
-	narcissus_test.public_zone npz,
-	narcissus_test.smart_device_v2 nsdv2OutSmartLock,
-	narcissus_test.smart_lock nslOutSmartLock,
-	narcissus_test.smart_lock nslIndoor,
-	narcissus_test.smart_device_v2 nsdv2Indoor
+	narcissus.smart_device_v2 sdv
+LEFT JOIN narcissus.public_zone pz ON pz.public_zone_ID = sdv.public_zone_ID
+LEFT JOIN `volga-pro`.apartment a ON a.id = pz.parent_ID
+LEFT JOIN caspain_pro.auth_user au ON au.id = sdv.created_by
+LEFT JOIN narcissus.smart_gateway_bind_v2 sgb ON sgb.smart_gateway_ID = sdv.smart_device_ID
+LEFT JOIN narcissus.smart_device_v2 nsdv ON nsdv.smart_device_ID = sgb.smart_device_ID
+LEFT JOIN narcissus.smart_lock sl ON sl.smart_lock_ID = nsdv.smart_device_ID
+LEFT JOIN `volga-pro`.room r ON r.id=nsdv.room_ID
+LEFT JOIN `volga-pro`.floor f ON f.id=r.floor_id
 WHERE
-	va.created_by = cau.id
-AND cau.id = #{userId}
-AND nsdv2.smart_device_ID = nsg.smart_gateway_ID
-AND nsdv2.public_zone_ID = npz.public_zone_ID
-AND npz.parent_ID = va.id
-AND nsdv2OutSmartLock.public_zone_ID = npz.public_zone_ID
-AND nslOutSmartLock.smart_lock_ID = nsdv2OutSmartLock.smart_device_ID
-AND nslIndoor.smart_lock_ID = nsdv2Indoor.smart_device_ID
-AND nsdv2Indoor.public_zone_ID=npz.public_zone_ID
-AND nsdv2.manage_status = '0'
-AND nsdv2OutSmartLock.manage_status = '0'
-AND nsdv2Indoor.manage_status = '0'
-;
+	sdv.created_by = 27791
+AND sdv.manage_status = 0
+AND sdv.smart_device_type = 4
+AND nsdv.manage_status = 0
 
     </select>
 
@@ -512,10 +501,10 @@ AND nsdv2Indoor.manage_status = '0'
 					SELECT
 						deviceCount.smart_device_ID deviceCountID
 					FROM
-						narcissus_test.smart_device_v2 deviceCount,
-						narcissus_test.smart_lock lockCount,
-						`volga_test`.room roomCount,
-						`volga_test`.floor floorCount
+						narcissus.smart_device_v2 deviceCount,
+						narcissus.smart_lock lockCount,
+						`volga-pro`.room roomCount,
+						`volga-pro`.floor floorCount
 					WHERE
 						deviceCount.smart_device_ID = lockCount.smart_lock_ID
 					AND deviceCount.room_ID = roomCount.id
@@ -528,9 +517,9 @@ AND nsdv2Indoor.manage_status = '0'
 						SELECT
 							deviceCount.smart_device_ID deviceCountID
 						FROM
-							narcissus_test.smart_device_v2 deviceCount,
-							narcissus_test.smart_lock lockCount,
-							narcissus_test.public_zone zoneCount
+							narcissus.smart_device_v2 deviceCount,
+							narcissus.smart_lock lockCount,
+							narcissus.public_zone zoneCount
 						WHERE
 							deviceCount.smart_device_ID = lockCount.smart_lock_ID
 						AND deviceCount.public_zone_ID = zoneCount.public_zone_ID
@@ -549,10 +538,10 @@ AND nsdv2Indoor.manage_status = '0'
 					SELECT
 						deviceCount.smart_device_ID deviceCountID
 					FROM
-						narcissus_test.smart_device_v2 deviceCount,
-						narcissus_test.smart_lock lockCount,
-						`volga_test`.room roomCount,
-						`volga_test`.floor floorCount
+						narcissus.smart_device_v2 deviceCount,
+						narcissus.smart_lock lockCount,
+						`volga-pro`.room roomCount,
+						`volga-pro`.floor floorCount
 					WHERE
 						deviceCount.smart_device_ID = lockCount.smart_lock_ID
 					AND deviceCount.room_ID = roomCount.id
@@ -566,9 +555,9 @@ AND nsdv2Indoor.manage_status = '0'
 						SELECT
 							deviceCount.smart_device_ID deviceCountID
 						FROM
-							narcissus_test.smart_device_v2 deviceCount,
-							narcissus_test.smart_lock lockCount,
-							narcissus_test.public_zone zoneCount
+							narcissus.smart_device_v2 deviceCount,
+							narcissus.smart_lock lockCount,
+							narcissus.public_zone zoneCount
 						WHERE
 							deviceCount.smart_device_ID = lockCount.smart_lock_ID
 						AND deviceCount.public_zone_ID = zoneCount.public_zone_ID
@@ -627,10 +616,10 @@ AND nsdv2Indoor.manage_status = '0'
         SELECT
         deviceCount.smart_device_ID deviceCountID
         FROM
-        narcissus_test.smart_device_v2 deviceCount,
-        narcissus_test.smart_lock lockCount,
-        `volga_test`.room roomCount,
-        `volga_test`.floor floorCount
+        narcissus.smart_device_v2 deviceCount,
+        narcissus.smart_lock lockCount,
+        `volga-pro`.room roomCount,
+        `volga-pro`.floor floorCount
         WHERE
         deviceCount.smart_device_ID = lockCount.smart_lock_ID
         AND deviceCount.room_ID = roomCount.id
@@ -645,9 +634,9 @@ AND nsdv2Indoor.manage_status = '0'
         SELECT
         deviceCount.smart_device_ID deviceCountID
         FROM
-        narcissus_test.smart_device_v2 deviceCount,
-        narcissus_test.smart_lock lockCount,
-        narcissus_test.public_zone zoneCount
+        narcissus.smart_device_v2 deviceCount,
+        narcissus.smart_lock lockCount,
+        narcissus.public_zone zoneCount
         WHERE
         deviceCount.smart_device_ID = lockCount.smart_lock_ID
         AND deviceCount.public_zone_ID = zoneCount.public_zone_ID
@@ -723,7 +712,7 @@ AND nsdv2Indoor.manage_status = '0'
 
     <!-- 根据userId查询集中式子账号信息 -->
     <select id="findEmployer" parameterType="string" resultType="string">
-        SELECT employer_id FROM `volga_test`.employer_apatments ea WHERE  ea.user_id=#{userId};
+        SELECT employer_id FROM `volga-pro`.employer_apatments ea WHERE  ea.user_id=#{userId};
     </select>
     <!-- 查询集中试可控房源 -->
     <select id="findEmployerApatments" parameterType="string" resultType="string">
