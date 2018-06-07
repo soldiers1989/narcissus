@@ -422,6 +422,7 @@ AND nsdv2Indoor.manage_status = '0'
 	sl.power powerRate,
 	0 outSmartLockId,
 	sdv.smart_device_ID gatewayId,
+	nsdv.connection_status communicationStatus,
 	nsdv.smart_device_ID smartLockId,
 	f.id floorId,
 	f.`name` floorName,
