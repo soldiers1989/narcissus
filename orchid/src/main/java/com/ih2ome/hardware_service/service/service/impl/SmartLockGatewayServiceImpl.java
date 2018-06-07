@@ -142,14 +142,19 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                         roomAndPublicZoneVoList.add(roomAndPublicZoneVo);
                         floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
 //                        smartLockHadBindHouseVo.getFloorVoList().add(floorVo);
-                        List <FloorVo> list=new ArrayList<>();
-                        list.add(floorVo);
-                        smartLockHadBindHouseVo.setFloorVoList(list);
-//                        floorVoList.add(0,floorVo);
-                        for (FloorVo floorModel:smartLockHadBindHouseVo.getFloorVoList()){
+                        List <FloorVo> floorVoList = smartLockHadBindHouseVo.getFloorVoList();
+                        floorVoList.add(0,floorVo);
+
+                        for (FloorVo floorModel:floorVoList){
+                            for(RoomAndPublicZoneVo roomAndPublicZoneVo1:floorModel.getRoomAndPublicZoneVoList()){
+                                if(roomAndPublicZoneVo1.getRoomNo()==null){
+                                    roomAndPublicZoneVo1.setRoomNo("外门锁");
+                                }
+                            }
                             if(floorModel.getFloorId()==000){
                                 floorModel.setLockCount(smartLockGatewayDao.getCountOfZoneLock(smartLockHadBindHouseVo.getHomeId()));
                                 floorModel.setOnlineCount(smartLockGatewayDao.getCountOfZoneOnlineLock(smartLockHadBindHouseVo.getHomeId()));
+                                floorModel.setFloorName("公共区域");
                             }else{
                                 floorModel.setLockCount(smartLockGatewayDao.getCountOfFloorLock(floorModel.getFloorId()));
                                 floorModel.setOnlineCount(smartLockGatewayDao.getCountOfOnlineFloorLock(floorModel.getFloorId()));
