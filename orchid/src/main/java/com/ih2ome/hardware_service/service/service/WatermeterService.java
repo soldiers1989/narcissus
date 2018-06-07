@@ -1,9 +1,6 @@
 package com.ih2ome.hardware_service.service.service;
 
-import com.ih2ome.sunflower.entity.narcissus.SmartDeviceV2;
-import com.ih2ome.sunflower.entity.narcissus.SmartGatewayBind;
-import com.ih2ome.sunflower.entity.narcissus.SmartWatermeter;
-import com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord;
+import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.hardware_service.service.peony.ammeterInterface.exception.AmmeterException;
 import com.ih2ome.hardware_service.service.peony.watermeterInterface.exception.WatermeterException;
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
@@ -305,4 +302,6 @@ public interface WatermeterService {
     int getDeviceNumber(int userId, int deviceType);
     boolean isEmployer(int userId);
     List<Integer> queryEmployerApartment(int userId);
+    List<SmartWatermeter> getWatermeterByRoomId(int roomId, int houseCatalog, int meterType);
+    int insertWaterRoomRecord(SmartWatermeterRoomRecord roomRecord);
 }

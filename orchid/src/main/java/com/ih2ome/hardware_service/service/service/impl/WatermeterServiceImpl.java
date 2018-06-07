@@ -333,8 +333,14 @@ public class WatermeterServiceImpl implements WatermeterService {
      */
     @Override
     public SmartWatermeter getWatermeterByUuId(String uuid) {
-        Log.info("查询水表,水表uuid：{}"+uuid);
+        Log.info("查询水表,水表uuid：{}", uuid);
         return watermeterDao.getWatermeterByUuId(uuid);
+    }
+
+    @Override
+    public List<SmartWatermeter> getWatermeterByRoomId(int roomId, int houseCatalog,int meterType) {
+        Log.info("查询房间下水表,roomId:{}, houseCatalog:{}, meterType:{}", roomId, houseCatalog,meterType);
+        return watermeterDao.getWatermeterByRoomId(roomId, houseCatalog,meterType);
     }
 
     @Override
@@ -634,5 +640,10 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public int getDeviceNumber(int userId, int deviceType) {
         return watermeterDao.getDeviceNumber(userId, deviceType);
+    }
+
+    @Override
+    public int insertWaterRoomRecord(SmartWatermeterRoomRecord roomRecord){
+        return watermeterDao.insertWaterRoomRecord(roomRecord);
     }
 }
