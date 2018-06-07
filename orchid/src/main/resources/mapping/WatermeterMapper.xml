@@ -288,6 +288,15 @@ WHERE sgvb.smart_gateway_ID=#{gateWayId} AND sdv.manage_status=0 AND sdv.connect
         SELECT * FROM <include refid="smart_watermeter"/>
         WHERE smart_watermeter_id=#{deviceId}
     </select>
+
+    <select id="getWatermeterByRoomId" resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeter">
+        SELECT w.* FROM narcissus_test.smart_watermeter w
+        JOIN narcissus_test.smart_device_v2 d ON w.smart_watermeter_id = d.smart_device_ID
+        WHERE d.room_ID = #{roomId}
+        AND d.house_catalog = #{houseCatalog}
+        AND w.meter_type = #{meterType}
+        AND d.manage_status = 0
+    </select>
     <!-- 查询水表读数by水表id -->
     <select id="findWatermeterAmountByWatermeterId" parameterType="int" resultType="java.lang.Integer">
         SELECT (last_amount-meter_amount) AS amount
@@ -493,6 +502,11 @@ AND sdv.threeID=#{uuid}
     <insert id="addSmartWatermeterAccountLog" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterAccountLog" >
         INSERT INTO `narcissus_test`.`smart_watermeter_account_log` (`room_id`, `house_catalog`, `amount`, `balance_before`, `balance_after`,`action`, `action_id`, `pay_channel`)
 		VALUES (#{roomId}, #{houseCatalog}, #{amount}, #{balanceBefore}, #{balanceAfter}, #{action}, #{actionId}, #{payChannel});
+    </insert>
+
+    <insert id="insertWaterRoomRecord" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRoomRecord">
+        INSERT INTO `narcissus_test`.`smart_watermeter_room_record` (`room_id`, `house_catalog`, `meter_type`, `device_amount`, `is_init`, `water_id`)
+        VALUES (#{roomId}, #{houseCatalog}, #{meterType}, #{deviceAmount}, #{isInit}, #{waterId})
     </insert>
 
     <update id="makeWaterZero">

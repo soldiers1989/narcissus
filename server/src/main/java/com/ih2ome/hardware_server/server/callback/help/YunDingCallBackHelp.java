@@ -118,11 +118,14 @@ public class YunDingCallBackHelp {
             SmartWatermeter watermeter = watermeterService.getWatermeterByUuId(apiRequestVO.getUuid());
             SmartDeviceV2 device = watermeterService.getSmartDeviceV2(watermeter.getSmartWatermeterId());
 
-            SmartWatermeterRecord smartWatermeterRecord = new SmartWatermeterRecord();
-            smartWatermeterRecord.setDeviceAmount(amount);
-            smartWatermeterRecord.setSmartWatermeterId(watermeter.getSmartWatermeterId());
+
             //写入抄表记录
-            watermeterRecordService.addWatermeterRecord(smartWatermeterRecord);
+            SmartWatermeterRecord record = new SmartWatermeterRecord();
+            record.setDeviceAmount(amount);
+            record.setSmartWatermeterId(watermeter.getSmartWatermeterId());
+            watermeterRecordService.addWatermeterRecord(record);
+
+
             Log.info("amountAsync，deviceId:{};返回读数:{};最近读数:{};单价:{}", watermeter.getSmartWatermeterId(), amount, watermeter.getLastAmount(), watermeter.getPrice());
             //计算金额
             if (watermeter.getLastAmount() != null && amount > watermeter.getLastAmount()) {
@@ -136,6 +139,24 @@ public class YunDingCallBackHelp {
             if(watermeter.getMeterAmount() == null){
                 watermeterService.updataWatermeterMeterAmount(watermeter.getSmartWatermeterId(),amount);
             }
+
+            //按房间冷/热水表统计房间此时用水量
+            List<SmartWatermeter> roomWatermeterList = watermeterService.getWatermeterByRoomId(Integer.parseInt(device.getRoomId()),Integer.parseInt(device.getHouseCatalog()), (int)watermeter.getMeterType());
+            int roomWaterAmount = 0;
+            for(SmartWatermeter item : roomWatermeterList) {
+                roomWaterAmount += item.getLastAmount() == null ? 0 : item.getLastAmount();
+            }
+
+            //写入房间水量明细表
+            SmartWatermeterRoomRecord roomRecord = new SmartWatermeterRoomRecord();
+            roomRecord.setIsInit(watermeter.getMeterAmount() == null);
+            roomRecord.setRoomId(Integer.parseInt(device.getRoomId()));
+            roomRecord.setHouseCatalog(Integer.parseInt(device.getHouseCatalog()));
+            roomRecord.setMeterType((int)watermeter.getMeterType());
+            roomRecord.setDeviceAmount(roomWaterAmount);
+            roomRecord.setWaterId(Integer.parseInt(device.getSmartDeviceId()));
+            watermeterService.insertWaterRoomRecord(roomRecord);
+
             //水表状态离线
             if (watermeter.getOnoffStatus() == OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()) {
                 //水表上线
