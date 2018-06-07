@@ -143,7 +143,7 @@ public class SmartLockGatewayServiceImpl implements SmartLockGatewayService{
                         floorVo.setRoomAndPublicZoneVoList(roomAndPublicZoneVoList);
 //                        smartLockHadBindHouseVo.getFloorVoList().add(floorVo);
                         List <FloorVo> floorVoList = smartLockHadBindHouseVo.getFloorVoList();
-                        floorVoList.add(0,floorVo);
+//                        floorVoList.add(0,floorVo);
 
                         for (FloorVo floorModel:floorVoList){
                             for(RoomAndPublicZoneVo roomAndPublicZoneVo1:floorModel.getRoomAndPublicZoneVoList()){
