@@ -6,11 +6,14 @@ import com.ih2ome.hardware_service.service.peony.watermeterInterface.exception.W
 import com.ih2ome.sunflower.vo.pageVo.watermeter.*;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 public interface WatermeterService {
     /**
      * 查询分散式水表列表
+     *
      * @param id
      * @return
      */
@@ -21,6 +24,7 @@ public interface WatermeterService {
 
     /**
      * 通过水表Id查询水表详情
+     *
      * @param waterId 水表Id
      * @return 水表详情
      */
@@ -28,6 +32,7 @@ public interface WatermeterService {
 
     /**
      * 通过网关id查询网关详情
+     *
      * @param smartGatewayId
      * @return
      */
@@ -35,6 +40,7 @@ public interface WatermeterService {
 
     /**
      * 通过网关id查询绑定的水表列表
+     *
      * @param smartGatewayId
      * @return
      */
@@ -45,15 +51,15 @@ public interface WatermeterService {
      *
      * @param smartWatermeterId
      * @param page
-     *@param count
+     * @param count
      * @return
      */
     PageResult<SmartWatermeterRecord> findWatermeterRecordByWatermeterId(int smartWatermeterId, int page, int count);
 
 
-
     /**
      * 更改水价
+     *
      * @param price
      * @return
      */
@@ -61,6 +67,7 @@ public interface WatermeterService {
 
     /**
      * 通过公寓id查询水表网关列表
+     *
      * @param apartmentId
      * @return
      */
@@ -68,6 +75,7 @@ public interface WatermeterService {
 
     /**
      * 通过Create_by_id查询分散式水表列表
+     *
      * @param id
      * @return
      */
@@ -75,6 +83,7 @@ public interface WatermeterService {
 
     /**
      * 筛选水表抄表记录
+     *
      * @param watermeterId
      * @param startTime
      * @param endTime
@@ -83,9 +92,9 @@ public interface WatermeterService {
     List<SmartWatermeterRecord> findWatermeterRecordByWatermeterIdAndTime(int watermeterId, String startTime, String endTime);
 
 
-
     /**
      * 查找水表异常记录
+     *
      * @param watermeterId
      * @return
      */
@@ -93,6 +102,7 @@ public interface WatermeterService {
 
     /**
      * 查找水表网关异常记录
+     *
      * @param gatewayId
      * @return
      */
@@ -100,6 +110,7 @@ public interface WatermeterService {
 
     /**
      * 查询实时抄表记录
+     *
      * @param watermeterId
      * @return
      */
@@ -108,6 +119,7 @@ public interface WatermeterService {
 
     /**
      * 更新水表抄表读数
+     *
      * @param uuid
      * @param amount
      * @param time
@@ -116,6 +128,7 @@ public interface WatermeterService {
 
     /**
      * 集中式通过楼层Id查询水表详情
+     *
      * @param floorId
      * @return
      */
@@ -123,23 +136,28 @@ public interface WatermeterService {
 
     /**
      * 根据第三方homeid查询网关id
+     *
      * @return
      */
     String findGateWay(String homeid);
+
     /**
      * 添加水表smartWatermeter
+     *
      * @param smartWatermeter
      */
     void createSmartWatermeter(SmartWatermeter smartWatermeter);
 
     /**
      * 添加网关绑定
+     *
      * @param smartGatewayBind
      */
     void addSmartGatewayBind(SmartGatewayBind smartGatewayBind);
 
     /**
      * 查询HouseCreatedByByHouseId
+     *
      * @param houseId
      * @return
      */
@@ -147,6 +165,7 @@ public interface WatermeterService {
 
     /**
      * 查询HouseCreatedByByapartmentId
+     *
      * @param apartmentId
      * @return
      */
@@ -154,14 +173,17 @@ public interface WatermeterService {
 
     /**
      * 查询水表idByuuid
+     *
      * @param uuid
      * @return
      */
     SmartWatermeter getWatermeterByUuId(String uuid);
+
     SmartWatermeter getWatermeterByDeviceId(int deviceId);
 
     /**
      * 查询水表读数by水表id
+     *
      * @param watermeterId
      * @return
      */
@@ -169,6 +191,7 @@ public interface WatermeterService {
 
     /**
      * 更新水表在线离线状态
+     *
      * @param uuid
      * @param code
      */
@@ -176,12 +199,14 @@ public interface WatermeterService {
 
     /**
      * 查询所有UuidAndManufactory
+     *
      * @return
      */
     List<UuidAndManufactoryVO> findWatermeterUuidAndManufactory();
 
     /**
      * 最近一次抄表时间
+     *
      * @param uuid
      * @return
      */
@@ -189,6 +214,7 @@ public interface WatermeterService {
 
     /**
      * 集中式水表listby网关id
+     *
      * @param smartGatewayId
      * @return
      */
@@ -196,6 +222,7 @@ public interface WatermeterService {
 
     /**
      * 分散式网关listbyUserId
+     *
      * @param userId
      * @return
      */
@@ -203,6 +230,7 @@ public interface WatermeterService {
 
     /**
      * 查询水表在线状态byuuid
+     *
      * @param uuid
      * @return
      */
@@ -210,12 +238,14 @@ public interface WatermeterService {
 
     /**
      * 查询所有水表id
+     *
      * @return
      */
     List<Integer> findAllWatermeterIds();
 
     /**
      * 查询水表月初抄表读数
+     *
      * @param watermeterId
      * @return
      */
@@ -223,6 +253,7 @@ public interface WatermeterService {
 
     /**
      * 更新水表月初读数
+     *
      * @param watermeterId
      * @param meterAmount
      */
@@ -230,6 +261,7 @@ public interface WatermeterService {
 
     /**
      * 查询分散式网关详情
+     *
      * @param smartGatewayId
      * @return
      */
@@ -237,6 +269,7 @@ public interface WatermeterService {
 
     /**
      * 查询水表idBygatewayId
+     *
      * @param uuid
      * @return
      */
@@ -245,14 +278,16 @@ public interface WatermeterService {
     /**
      * 根据userId和第三方厂商
      * 查询已绑定设备（包括网关）的集中式房源
+     *
      * @param userId 用户Id
-     * @param brand 第三方标识符
+     * @param brand  第三方标识符
      * @return 房源列表
      */
     List<HomeVO> getApartmentListByUserId(int userId, String brand);
 
     /**
      * 集中式：根据公寓Id查询公寓内楼层水表数
+     *
      * @param apartmentId 公寓Id
      * @return 公寓水表数 + 各楼层水表数
      */
@@ -260,6 +295,7 @@ public interface WatermeterService {
 
     /**
      * 集中式：根据楼层Id查询楼层下房间水表列表
+     *
      * @param floorId 楼层Id
      * @return 房间列表内嵌水表列表
      */
@@ -267,6 +303,7 @@ public interface WatermeterService {
 
     /**
      * 集中式：根据房间Id查询水表详情
+     *
      * @param roomId 房间Id
      * @return 水表详情列表
      */
@@ -274,6 +311,7 @@ public interface WatermeterService {
 
     /**
      * 查询房间详情
+     *
      * @param roomId 房间Id
      * @return 房间信息
      */
@@ -281,8 +319,9 @@ public interface WatermeterService {
 
     /**
      * 更新房间内冷热水单价
-     * @param price 用水单价（分/吨）
-     * @param roomId 房间Id
+     *
+     * @param price     用水单价（分/吨）
+     * @param roomId    房间Id
      * @param meterType 水表类型 1-冷 2-热
      * @return 结果
      */
@@ -290,18 +329,29 @@ public interface WatermeterService {
 
     RoomAccountVO getRoomAmount(int roomId, int meterType);
 
-    int changeBalance(int roomId,int houseCatalog,int amount,String payChannel,String action, String actionId);
+    int changeBalance(int roomId, int houseCatalog, int amount, String payChannel, String action, String actionId);
 
     int makeWaterZero(int roomId, int houseCatalog);
 
     SmartDeviceV2 getSmartDeviceV2(long deviceId);
 
     List<SmartDeviceV2> getSmartDeviceV2List(int userId, String brand);
+
     List<SmartDeviceV2> getAllSmartDeviceV2List();
+
     List<RecordVO> getRecordList(int watermeterId, String startTime, String endTime);
+
+    List<RecordVO> getRoomRecordList(int roomId, int houseCatalog, int meterType, String startTime, String endTime);
+
     int getDeviceNumber(int userId, int deviceType);
+
     boolean isEmployer(int userId);
+
     List<Integer> queryEmployerApartment(int userId);
+
     List<SmartWatermeter> getWatermeterByRoomId(int roomId, int houseCatalog, int meterType);
+
     int insertWaterRoomRecord(SmartWatermeterRoomRecord roomRecord);
+
+    void makeChartList(int chartNum, Date startTime, Date endTime, List<RecordVO> recordList, List<ChartVO> chartList) throws ParseException;
 }

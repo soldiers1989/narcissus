@@ -471,16 +471,16 @@ public class SynchronousHomeServiceImpl implements SynchronousHomeService{
                         //新增水表关联记录
                         smartLockDao.addSmartDevice(smartDeviceV2);
                         SmartWatermeter smartWatermeter=new SmartWatermeter();
-                        smartWatermeter.setSmartWatermeterId(Long.parseLong(smartDeviceV2.getSmartDeviceId()));
+                        smartWatermeter.setSmartWatermeterId(Integer.parseInt(smartDeviceV2.getSmartDeviceId()));
                         smartWatermeter.setCreatedAt(new Date());
                         smartWatermeter.setCreatedBy(Long.parseLong(userId));
                         smartWatermeter.setUpdatedAt(new Date());
                         smartWatermeter.setUpdatedBy(Long.parseLong(userId));
-                        smartWatermeter.setRoomId(Long.parseLong(roomId));
-                        smartWatermeter.setHouseCatalog(Long.parseLong(type));
+                        smartWatermeter.setRoomId(Integer.parseInt(roomId));
+                        smartWatermeter.setHouseCatalog(Integer.parseInt(type));
                         smartWatermeter.setMeter(meter_type);
                         smartWatermeter.setUuid(Uuid);
-                        smartWatermeter.setOnoffStatus(Long.parseLong(onoff));
+                        smartWatermeter.setOnoffStatus(Integer.parseInt(onoff));
                         smartWatermeter.setManufactory(manufactory);
                         smartLockDao.saveWaterMeter(smartWatermeter);
                         String gateWayid=smartLockDao.querySmartGatWayid(gateUuid);

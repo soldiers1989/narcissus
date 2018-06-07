@@ -118,13 +118,11 @@ public class YunDingCallBackHelp {
             SmartWatermeter watermeter = watermeterService.getWatermeterByUuId(apiRequestVO.getUuid());
             SmartDeviceV2 device = watermeterService.getSmartDeviceV2(watermeter.getSmartWatermeterId());
 
-
             //写入抄表记录
             SmartWatermeterRecord record = new SmartWatermeterRecord();
             record.setDeviceAmount(amount);
             record.setSmartWatermeterId(watermeter.getSmartWatermeterId());
             watermeterRecordService.addWatermeterRecord(record);
-
 
             Log.info("amountAsync，deviceId:{};返回读数:{};最近读数:{};单价:{}", watermeter.getSmartWatermeterId(), amount, watermeter.getLastAmount(), watermeter.getPrice());
             //计算金额
@@ -155,10 +153,15 @@ public class YunDingCallBackHelp {
             roomRecord.setMeterType((int)watermeter.getMeterType());
             roomRecord.setDeviceAmount(roomWaterAmount);
             roomRecord.setWaterId(Integer.parseInt(device.getSmartDeviceId()));
+            roomRecord.setPrice(watermeter.getPrice());
+            if(watermeter.getLastAmount() != null && amount > watermeter.getLastAmount()) {
+                roomRecord.setUsed(amount - watermeter.getLastAmount());
+                roomRecord.setMoney(roomRecord.getPrice() * roomRecord.getUsed());
+            }
             watermeterService.insertWaterRoomRecord(roomRecord);
 
             //水表状态离线
-            if (watermeter.getOnoffStatus() == OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode()) {
+            if (watermeter.getOnoffStatus().equals(OnOffStatusEnum.ON_OFF_STATUS_ENUM_OFF_Line.getCode())) {
                 //水表上线
                 watermeterService.updataWatermerterOnoffStatus(apiRequestVO.getUuid(), OnOffStatusEnum.ON_OFF_STATUS_ENUM_ON_Line.getCode());
                 //添加异常上线记录

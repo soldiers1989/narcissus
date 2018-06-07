@@ -13,8 +13,8 @@ import java.util.Date;
 public class ChartVO {
     private String start;
     private String end;
-    private Long initial;
-    private Long last;
-    private Long used;
+    private Integer initial;
+    private Integer last;
+    private Integer used;
     private Double amount;
 }

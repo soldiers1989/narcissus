@@ -63,6 +63,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
     List<String> findCount(String gateWayId);
 
     String findStatus(String id);
+
     /**
      * 通过用户id查询分散式水表列表
      *
@@ -134,6 +135,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
     /**
      * 根据第三方id查询网关id
+     *
      * @param homeid
      * @return
      */
@@ -176,8 +178,11 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * @return
      */
     SmartWatermeter getWatermeterByUuId(String uuid);
+
     SmartWatermeter getWatermeterByDeviceId(int deviceId);
-    List<SmartWatermeter> getWatermeterByRoomId(@Param("roomId") int roomId, @Param("houseCatalog")int houseCatalog,@Param("meterType") int meterType);
+
+    List<SmartWatermeter> getWatermeterByRoomId(@Param("roomId") int roomId, @Param("houseCatalog") int houseCatalog, @Param("meterType") int meterType);
+
     /**
      * 查询水表读数by水表id
      *
@@ -275,7 +280,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
      * 查询已绑定设备（包括网关）的房源
      *
      * @param userIds 用户Ids
-     * @param brand  第三方标识符
+     * @param brand   第三方标识符
      * @return 房源列表
      */
     List<HomeVO> getApartmentListByUserId(@Param("userIds") List<String> userIds, @Param("brand") String brand);
@@ -298,6 +303,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
     /**
      * 集中式：根据房间Id查询水表详情
+     *
      * @param roomId 房间Id
      * @return 水表详情列表
      */
@@ -305,6 +311,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
     /**
      * 查询房间详情
+     *
      * @param roomId 房间Id
      * @return 房间信息
      */
@@ -312,6 +319,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
     /**
      * 根据水表Id查水表
+     *
      * @param waterId 水表Id
      * @return 水表
      */
@@ -321,6 +329,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
 
     /**
      * 更新房间内冷热水单价
+     *
      * @param price     用水单价（分/吨）
      * @param roomId    房间Id
      * @param meterType 水表类型 1-冷 2-热
@@ -329,14 +338,30 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
     int updateRoomPrice(@Param("price") int price, @Param("roomId") int roomId, @Param("meterType") int meterType);
 
     SmartWatermeterAccount getSmartWatermeterAccount(@Param("roomId") int roomId, @Param("houseCatalog") int houseCatalog);
+
     int addSmartWatermeterAccount(SmartWatermeterAccount smartWatermeterAccount);
+
     int updateSmartWatermeterAccount(SmartWatermeterAccount smartWatermeterAccount);
+
     List<SmartWatermeterAccountLog> getSmartWatermeterAccountLog(@Param("roomId") int roomId, @Param("houseCatalog") int houseCatalog);
+
     int addSmartWatermeterAccountLog(SmartWatermeterAccountLog smartWatermeterAccountLog);
-    int makeWaterZero(@Param("roomId") int roomId,@Param("houseCatalog") int houseCatalog);
+
+    int makeWaterZero(@Param("roomId") int roomId, @Param("houseCatalog") int houseCatalog);
+
     SmartDeviceV2 getSmartDeviceV2(long deviceId);
+
     List<SmartDeviceV2> getSmartDeviceV2List(@Param("userIds") List<String> userIds, @Param("brand") String brand);
+
     List<SmartDeviceV2> getAllSmartDeviceV2List();
+
     int getDeviceNumber(@Param("userId") int userId, @Param("deviceType") int deviceType);
+
     int insertWaterRoomRecord(SmartWatermeterRoomRecord roomRecord);
+
+    List<SmartWatermeterRoomRecord> queryRoomRecordByRoom(@Param("roomId") int roomId
+            , @Param("houseCatalog") int houseCatalog
+            , @Param("meterType") int meterType
+            , @Param("startTime") String startTime
+            , @Param("endTime") String endTime);
 }
