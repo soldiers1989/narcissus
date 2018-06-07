@@ -423,9 +423,9 @@ AND nsdv2Indoor.manage_status = '0'
 	0 outSmartLockId,
 	sdv.smart_device_ID gatewayId,
 	nsdv.smart_device_ID smartLockId,
-	f.id floorId,
-	f.`name` floorName,
-  r.`name` roomNo,
+	0 floorId,
+	'公共区域' floorName,
+  '外门锁' roomNo,
 	sl.sn lockName
 FROM
 	narcissus.smart_device_v2 sdv
@@ -435,8 +435,6 @@ LEFT JOIN caspain_pro.auth_user au ON au.id = sdv.created_by
 LEFT JOIN narcissus.smart_gateway_bind_v2 sgb ON sgb.smart_gateway_ID = sdv.smart_device_ID
 LEFT JOIN narcissus.smart_device_v2 nsdv ON nsdv.smart_device_ID = sgb.smart_device_ID
 LEFT JOIN narcissus.smart_lock sl ON sl.smart_lock_ID = nsdv.smart_device_ID
-LEFT JOIN `volga-pro`.room r ON r.id=nsdv.room_ID
-LEFT JOIN `volga-pro`.floor f ON f.id=r.floor_id
 WHERE
 	sdv.created_by = 27791
 AND sdv.manage_status = 0
