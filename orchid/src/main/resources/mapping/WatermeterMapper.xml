@@ -558,4 +558,17 @@ AND sdv.threeID=#{uuid}
         AND created_at between #{startTime} and #{endTime}
         ORDER BY created_at DESC
     </select>
+
+    <select id="getUserExtraCount" resultType="java.lang.Integer" parameterType="int">
+        SELECT yunding_first FROM narcissus_test.user_extra
+        WHERE user_id = #{userId}
+    </select>
+    <insert id="insertUserExtra" parameterType="int">
+        INSERT INTO narcissus_test.user_extra(`user_id`, `yunding_first`)
+        VALUES (#{userId}, 1)
+    </insert>
+    <update id="updateUserExtra" parameterType="int">
+        UPDATE narcissus_test.user_extra
+        SET yunding_first = 1 WHERE user_id=#{userId}
+    </update>
 </mapper>

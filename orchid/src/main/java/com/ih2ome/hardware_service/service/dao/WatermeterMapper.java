@@ -364,4 +364,7 @@ public interface WatermeterMapper extends MyMapper<SmartWatermeter> {
             , @Param("meterType") int meterType
             , @Param("startTime") String startTime
             , @Param("endTime") String endTime);
+    Integer getUserExtraCount(int userId);
+    int insertUserExtra(int userId);
+    int updateUserExtra(int userId);
 }
