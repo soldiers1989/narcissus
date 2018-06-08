@@ -748,4 +748,19 @@ public class WatermeterServiceImpl implements WatermeterService {
             }
         }
     }
+
+    @Override
+    public void setYundingFirst(int userId) {
+        Integer yundingFirst = watermeterDao.getUserExtraCount(userId);
+        if (yundingFirst == null) {
+            watermeterDao.insertUserExtra(userId);
+        } else {
+            watermeterDao.updateUserExtra(userId);
+        }
+    }
+
+    @Override
+    public Integer getYundingFirst(int userId) {
+        return watermeterDao.getUserExtraCount(userId);
+    }
 }

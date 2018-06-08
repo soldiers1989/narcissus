@@ -354,4 +354,8 @@ public interface WatermeterService {
     int insertWaterRoomRecord(SmartWatermeterRoomRecord roomRecord);
 
     void makeChartList(int chartNum, Date startTime, Date endTime, List<RecordVO> recordList, List<ChartVO> chartList) throws ParseException;
+
+    void setYundingFirst(int userId);
+
+    Integer getYundingFirst(int userId);
 }

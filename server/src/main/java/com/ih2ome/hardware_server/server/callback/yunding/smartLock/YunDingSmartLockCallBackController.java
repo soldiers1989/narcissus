@@ -79,6 +79,12 @@ public class YunDingSmartLockCallBackController extends BaseController{
         String userId = request.getParameter("state");
         //第三方回调传userId
         if(StringUtils.isNotBlank(userId)){
+            try {
+                watermeterService.setYundingFirst(Integer.parseInt(userId));
+            }
+            catch (Exception ex) {
+                Log.error("写入UserExtra报错", ex);
+            }
             //用户授权code存redis，有效期4分30秒（文档中为5分钟，防止边界）
             CacheUtils.set(TOKEN_YUNDING_USER_CODE+"_"+userId,code, ExpireTime.FIVE_MIN.getTime()-30);
             CacheUtils.del(ACCESS_TOKEN_KEY+"_"+userId);
