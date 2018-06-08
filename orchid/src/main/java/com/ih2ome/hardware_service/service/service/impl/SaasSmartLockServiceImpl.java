@@ -3,10 +3,14 @@ package com.ih2ome.hardware_service.service.service.impl;
 import com.ih2ome.hardware_service.service.dao.SmartLockDao;
 import com.ih2ome.hardware_service.service.service.SaasSmartLockService;
 import com.ih2ome.sunflower.model.backup.SaasSmartLock;
+import com.ih2ome.sunflower.vo.pageVo.Ammeter;
 import com.ih2ome.sunflower.vo.pageVo.enums.HouseStyleEnum;
+import com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterDetailVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,7 +27,6 @@ public class SaasSmartLockServiceImpl implements SaasSmartLockService{
             smartLock=smartLockDao.findSmartLock(roomId);
         }else if(HouseStyleEnum.DISPERSED.getCode().equals(type)){
             smartLock=smartLockDao.findSmartLockCode(roomId);
-
         }
         return smartLock;
     }
@@ -66,5 +69,28 @@ public class SaasSmartLockServiceImpl implements SaasSmartLockService{
             }
         }
         return saasSmartLock;
+    }
+
+    @Override
+    public SmartLockDetailVO getInformation(String type, String roomId) {
+        SmartLockDetailVO smartLockDetailVOList=smartLockDao.findSmartLockInformation(roomId,type);
+        return smartLockDetailVOList;
+    }
+
+    @Override
+    public List<WatermeterDetailVO> getWatermeter(String type, String roomId) {
+        List<WatermeterDetailVO> watermeterDetailVO=smartLockDao.findWatermeter(roomId,type);
+        return watermeterDetailVO;
+    }
+
+    @Override
+    public Ammeter getAmmeter(String type, String roomId) {
+        Ammeter Ammeter=new Ammeter();
+        if(HouseStyleEnum.CONCENTRAT.getCode().equals(type)){
+            Ammeter=smartLockDao.findAmmeter(roomId);
+        }else if(HouseStyleEnum.DISPERSED.getCode().equals(type)){
+            Ammeter=smartLockDao.findDispersedAmmeters(roomId);
+        }
+        return Ammeter;
     }
 }

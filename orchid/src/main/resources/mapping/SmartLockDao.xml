@@ -1047,6 +1047,134 @@ WHERE
 		AND sdv.room_ID =#{roomId}
 );
     </select>
+    <select id="findSmartLockInformation"  resultType="com.ih2ome.sunflower.vo.pageVo.smartLock.SmartLockDetailVO">
+        SELECT
+	nsl.smart_lock_ID lockId,
+	nsl.sn lockCode,
+	nsl.power power,
+	nsl.onoff_time connectionStatus,
+	nsl.lqi lqi,
+	nsl.lqi_refreshtime lqiRefreshtime,
+	nsl.bind_time bindTime,
+	nsl.versions versionJson
+FROM
+	narcissus.smart_lock nsl
+WHERE
+	nsl.smart_lock_ID IN (
+		SELECT
+			smart_device_ID
+		FROM
+			narcissus.smart_device_v2 sdv
+		WHERE
+			sdv.manage_status = 0
+		AND sdv.provider_code = 'YD'
+		AND sdv.smart_device_type = 3
+		AND sdv.house_catalog=#{type}
+		AND sdv.room_ID =#{roomId}
+);
+    </select>
+
+    <select id="findAmmeter" parameterType="String" resultType="com.ih2ome.sunflower.vo.pageVo.Ammeter">
+SELECT
+		a.dev_id devId,
+	a.off_line_syn_code offLineSynCode,
+	a.electricity_price electricityPrice,
+	a.pay_mod payMod,
+	a.electricity_left_value electricityLeftValue,
+	a.c_id cId,
+	a.n_id nId,
+a.current_reading currentReading,
+a.today_share_num todayShareNum,
+a.month_share_num monthShareNum,
+a.electricity electricity,
+a.voltage voltage,
+a.hardware_online_status hardwareOnlineStatus,
+a.hardware_electricity_switch_status hardwareElectricitySwitchStatus,
+a.install_time installTime,
+a.`share` 'share',
+a.use_case useCase,
+a.supplier_product_id supplierProduct,
+a.hardware_id hardware,
+a.ammeter_type ammeterType,
+a.parent_ammeter_id parentAmmeter,
+a.exceed_power_off exceedPowerOff,
+a.share_ammeter_id shareAmmeterId,
+a.old_id oldId,
+a.is_share isShare
+FROM
+	`volga-pro`.room r
+LEFT JOIN narcissus.hardware h ON h.room_id = r.id
+LEFT JOIN narcissus.ammeter a ON a.id = h.id
+WHERE
+	a.is_delete = 0
+AND r.is_delete = 0
+AND h.house_structure_type = 'JIZHONG'
+AND r.id = #{roomId}
+    </select>
+
+    <select id="findDispersedAmmeters" parameterType="String" resultType="com.ih2ome.sunflower.vo.pageVo.Ammeter">
+        SELECT
+	  a.dev_id devId,
+	  a.off_line_syn_code offLineSynCode,
+	  a.electricity_price electricityPrice,
+	  a.pay_mod payMod,
+	  a.electricity_left_value electricityLeftValue,
+	  a.c_id cId,
+	  a.n_id nId,
+      a.current_reading currentReading,
+      a.today_share_num todayShareNum,
+      a.month_share_num monthShareNum,
+      a.electricity electricity,
+      a.voltage voltage,
+      a.hardware_online_status hardwareOnlineStatus,
+      a.hardware_electricity_switch_status hardwareElectricitySwitchStatus,
+      a.install_time installTime,
+      a.`share` 'share',
+      a.use_case useCase,
+      a.supplier_product_id supplierProduct,
+      a.hardware_id hardware,
+      a.ammeter_type ammeterType,
+      a.parent_ammeter_id parentAmmeter,
+      a.exceed_power_off exceedPowerOff,
+      a.share_ammeter_id shareAmmeterId,
+      a.old_id oldId,
+      a.is_share isShare
+FROM
+	`volga-pro`.room r
+LEFT JOIN narcissus.hardware h ON h.room_id = r.id
+LEFT JOIN narcissus.ammeter a ON a.id = h.id
+WHERE
+	a.is_delete = 0
+AND r.is_delete = 0
+AND h.house_structure_type = 'FENSAN'
+AND r.id = #{roomId}
+    </select>
+
+    <select id="findWatermeter" resultType="com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterDetailVO">
+        SELECT
+	sw.smart_watermeter_id smartWatermeterId,
+	sw.uuid uuid,
+	sw.meter_type meterType,
+	sw.created_at createdAt,
+	sw.last_amount lastAmount,
+	sw.meter_amount meterAmount,
+	sw.price price,
+	sw.onoff_status onoffStatus
+FROM
+	narcissus.smart_watermeter sw
+WHERE
+	sw.smart_watermeter_id IN (
+		SELECT
+			sdv.smart_device_ID
+		FROM
+			narcissus.smart_device_v2 sdv
+		WHERE
+			sdv.room_ID = #{roomId}
+		AND sdv.manage_status = 0
+		AND sdv.house_catalog =#{type}
+	)
+    </select>
+
     <!-- 分散式查看门锁编码 -->
     <select id="findSmartLockCode" parameterType="string" resultMap="saasSmartLockResultMap">
         SELECT

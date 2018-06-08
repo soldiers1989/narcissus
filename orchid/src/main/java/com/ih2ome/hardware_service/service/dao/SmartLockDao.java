@@ -3,7 +3,9 @@ package com.ih2ome.hardware_service.service.dao;
 import com.ih2ome.sunflower.entity.narcissus.*;
 import com.ih2ome.sunflower.model.backup.HomeVO;
 import com.ih2ome.sunflower.model.backup.SaasSmartLock;
+import com.ih2ome.sunflower.vo.pageVo.Ammeter;
 import com.ih2ome.sunflower.vo.pageVo.smartLock.*;
+import com.ih2ome.sunflower.vo.pageVo.watermeter.WatermeterDetailVO;
 import com.ih2ome.sunflower.vo.thirdVo.smartLock.LockPasswordVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -494,6 +496,23 @@ public interface SmartLockDao {
     String findid(String uuid);
 
     List<String> findHouseMapping(String thirdHomeId);
+
+    SmartLockDetailVO findSmartLockInformation(@Param("roomId") String roomId,@Param("type") String type);
+    List<WatermeterDetailVO> findWatermeter(@Param("roomId") String roomId,@Param("type") String type);
+
+    /**
+     * 集中式查电表
+     * @param roomId
+     * @return
+     */
+    Ammeter findAmmeter(String roomId);
+
+    /**
+     * 分散式查电表
+     * @param roomId
+     * @return
+     */
+    Ammeter findDispersedAmmeters(String roomId);
 
     int updateAutoCollection(@Param("passwordId") int passwordId, @Param("autoCollection") int autoCollection);
 
