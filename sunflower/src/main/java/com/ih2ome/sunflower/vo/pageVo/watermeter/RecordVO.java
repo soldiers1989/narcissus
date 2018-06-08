@@ -10,9 +10,8 @@ import lombok.Data;
 @Data
 public class RecordVO {
     private String date;
-    private Long initial;
-    private Long last;
-    private Long used;
+    private Integer initial;
+    private Integer last;
+    private Integer used;
     private Double amount;
-    private Long now;
 }

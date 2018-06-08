@@ -4,9 +4,7 @@ import lombok.Data;
 
 @Data
 public class SmartWatermeterRecord {
-
-  private long smartWatermeterId;
+  private Integer smartWatermeterId;
   private String createdAt;
-  private long deviceAmount;
-
+  private Integer deviceAmount;
 }

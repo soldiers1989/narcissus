@@ -24,6 +24,8 @@ public class WaterSimpleVO {
     //当月读数 当月累计量 = 最近抄表记录 - 月初抄表记录
     private int currentAmount;
 
+    private int usedAmount;
+
     //通讯状态 1 Online 2 Offline
     private int onoffStatus;
 }

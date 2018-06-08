@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -638,6 +639,48 @@ public class WatermeterServiceImpl implements WatermeterService {
     }
 
     @Override
+    public List<RecordVO> getRoomRecordList(int roomId, int houseCatalog, int meterType,String startTime, String endTime) {
+        try {
+            List<SmartWatermeterRoomRecord> roomRecordList = watermeterDao.queryRoomRecordByRoom(roomId, houseCatalog, meterType, startTime, endTime);
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Map<String, RecordVO> recordMap = new HashMap<>();
+            for (SmartWatermeterRoomRecord item : roomRecordList) {
+                String date = sdf.format(sdf.parse(item.getCreatedAt()));
+                if (recordMap.containsKey(date)) {
+                    if (item.getDeviceAmount() > recordMap.get(date).getLast()) {
+                        recordMap.get(date).setLast(item.getDeviceAmount());
+                    }
+                    if (item.getDeviceAmount() < recordMap.get(date).getInitial()) {
+                        recordMap.get(date).setInitial(item.getDeviceAmount());
+                    }
+                    recordMap.get(date).setUsed(recordMap.get(date).getUsed() + item.getUsed());
+                    recordMap.get(date).setAmount(recordMap.get(date).getAmount() + item.getMoney() / 100.0);
+                } else {
+                    RecordVO record = new RecordVO();
+                    record.setDate(date);
+                    record.setLast(item.getDeviceAmount());
+                    record.setInitial(item.getDeviceAmount());
+                    record.setUsed(item.getUsed());
+                    record.setAmount(item.getMoney() / 100.0);
+                    recordMap.put(date, record);
+                }
+            }
+            List<RecordVO> recordList = new ArrayList<>(recordMap.values());
+            recordList.sort(Comparator.comparing(RecordVO::getDate));
+            for (int i = 1; i < recordList.size(); i++) {
+                recordList.get(i).setInitial(recordList.get(i - 1).getLast());
+            }
+            for(RecordVO record : recordList){
+                record.setAmount(Math.round(record.getAmount() * 100) * 0.01d);
+            }
+            return recordList;
+        } catch (Exception ex) {
+            Log.error("getRecordList error", ex);
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
     public int getDeviceNumber(int userId, int deviceType) {
         return watermeterDao.getDeviceNumber(userId, deviceType);
     }
@@ -645,5 +688,64 @@ public class WatermeterServiceImpl implements WatermeterService {
     @Override
     public int insertWaterRoomRecord(SmartWatermeterRoomRecord roomRecord){
         return watermeterDao.insertWaterRoomRecord(roomRecord);
+    }
+
+    @Override
+    public void makeChartList(int chartNum, Date startTime, Date endTime, List<RecordVO> recordList, List<ChartVO> chartList) throws ParseException {
+        if (recordList != null && recordList.size() > 0) {
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar start = Calendar.getInstance();
+            start.setTime(startTime);
+            Calendar end = Calendar.getInstance();
+            end.setTime(endTime);
+            int diffDays = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 3600 * 24)) + 1;
+            double lengthDays = diffDays * 1.0 / chartNum;
+            Calendar marker = Calendar.getInstance();
+            marker.setTime(startTime);
+            double already = 0;
+            for (int i = 1; i <= chartNum; i++) {
+                ChartVO chart = new ChartVO();
+                chart.setStart(sdf.format(marker.getTime()));
+                marker.add(Calendar.DATE, (int) Math.floor(lengthDays * i - already - 1));
+                already += (int) Math.floor(lengthDays * i - already);
+                chart.setEnd(sdf.format(marker.getTime()));
+                chartList.add(chart);
+                marker.add(Calendar.DATE, 1);
+            }
+            chartList.get(chartNum - 1).setEnd(sdf.format(end.getTime()));
+            for (RecordVO record : recordList) {
+                for (ChartVO chart : chartList) {
+                    Date recordTime = sdf.parse(record.getDate());
+                    Date chartStart = sdf.parse(chart.getStart());
+                    Date chartEnd = sdf.parse(chart.getEnd());
+                    if(!recordTime.before(chartStart) && !recordTime.after(chartEnd)) {
+                        if(chart.getInitial() == null || chart.getInitial() > record.getInitial()){
+                            chart.setInitial(record.getInitial());
+                        }
+                        if(chart.getLast() == null || chart.getLast() < record.getLast() ) {
+                            chart.setLast(record.getLast());
+                        }
+                        if(chart.getAmount() == null) {
+                            chart.setAmount(record.getAmount());
+                        }
+                        else {
+                            chart.setAmount(chart.getAmount() + record.getAmount());
+                        }
+                        if(chart.getUsed() == null) {
+                            chart.setUsed(record.getUsed());
+                        }
+                        else {
+                            chart.setUsed(chart.getUsed() + record.getUsed());
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        for(ChartVO chart : chartList){
+            if(chart.getAmount() != null) {
+                chart.setAmount(Math.round(chart.getAmount() * 100) * 0.01d);
+            }
+        }
     }
 }

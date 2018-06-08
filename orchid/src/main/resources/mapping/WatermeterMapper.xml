@@ -230,7 +230,10 @@
 
     <!--查询筛选水表抄表记录by起止时间-->
     <select id="findWatermeterRecordByWatermeterIdAndTime"  resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRecord">
-       SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id FROM <include refid="smart_watermeter_record"/> wr WHERE smart_watermeter_id = #{id} AND created_at between ADDDATE(#{startTime},-1) and #{endTime} ORDER BY created_at DESC
+        SELECT wr.created_at,wr.device_amount,wr.smart_watermeter_id
+        FROM <include refid="smart_watermeter_record"/> wr
+        WHERE smart_watermeter_id = #{id}
+        AND created_at between ADDDATE(#{startTime},-1) and #{endTime} ORDER BY created_at DESC
     </select>
 
     <!--水表异常记录by水表id-->
@@ -396,7 +399,9 @@ AND sdv.threeID=#{uuid}
 
     <!--查询集中式房间水表列表 by 楼层Id-->
     <select id="getRoomWithWater" parameterType="int" resultMap="roomWithWaterMap" >
-        SELECT r.id AS roomId,r.name AS roomName,a.balance/100 AS balance,d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,w.last_amount AS currentAmount,d.connection_status AS onoff_status
+        SELECT r.id AS roomId,r.name AS roomName,a.balance / 100 AS balance,
+        d.smart_device_ID AS waterId,w.meter_type,w.meter_updated_at AS updateAt,
+        w.last_amount AS currentAmount, w.last_amount - w.meter_amount AS usedAmount,d.connection_status AS onoff_status
         FROM `narcissus_test`.smart_device_v2 d
         LEFT JOIN `narcissus_test`.smart_watermeter w ON d.smart_device_ID = w.smart_watermeter_id
         LEFT JOIN `narcissus_test`.smart_watermeter_account a ON d.room_id = a.room_id AND d.house_catalog = a.house_catalog
@@ -505,8 +510,8 @@ AND sdv.threeID=#{uuid}
     </insert>
 
     <insert id="insertWaterRoomRecord" parameterType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRoomRecord">
-        INSERT INTO `narcissus_test`.`smart_watermeter_room_record` (`room_id`, `house_catalog`, `meter_type`, `device_amount`, `is_init`, `water_id`)
-        VALUES (#{roomId}, #{houseCatalog}, #{meterType}, #{deviceAmount}, #{isInit}, #{waterId})
+        INSERT INTO `narcissus_test`.`smart_watermeter_room_record` (`room_id`, `house_catalog`, `meter_type`, `device_amount`, `is_init`, `water_id`, `price`, `money`, `used`)
+        VALUES (#{roomId}, #{houseCatalog}, #{meterType}, #{deviceAmount}, #{isInit}, #{waterId}, #{price}, #{money}, #{used})
     </insert>
 
     <update id="makeWaterZero">
@@ -542,5 +547,15 @@ AND sdv.threeID=#{uuid}
         SELECT COUNT(0) FROM narcissus_test.smart_device_v2 d
         WHERE d.created_by = #{userId} AND d.smart_device_type = #{deviceType}
         AND d.manage_status = 0
+    </select>
+
+    <select id="queryRoomRecordByRoom" resultType="com.ih2ome.sunflower.entity.narcissus.SmartWatermeterRoomRecord">
+        SELECT *
+        FROM narcissus_test.smart_watermeter_room_record
+        WHERE room_id = #{roomId}
+        AND house_catalog = #{houseCatalog}
+        AND meter_type = #{meterType}
+        AND created_at between #{startTime} and #{endTime}
+        ORDER BY created_at DESC
     </select>
 </mapper>

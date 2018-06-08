@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -45,9 +46,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 查询分散式水表列表 D1/D2
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/hm/list", method = RequestMethod.POST, produces = {"application/json"})
     public String distributedList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -64,9 +62,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 分散水表网关详情 D3
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/hm/watermeter_gateway/detail", method = RequestMethod.POST, produces = {"application/json"})
     public String watermeterGatewayDetail(@RequestBody ApiRequestVO apiRequestVO) {
@@ -89,9 +84,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 水表读数明细每月每天累计水量列表
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/smartwatermeterrecords/list", method = RequestMethod.POST, produces = {"application/json"})
     public String findTotalWaterList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -110,9 +102,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 水表读数抄表请求 D6-1/D7-1
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/readwatermeteramount", method = RequestMethod.POST, produces = {"application/json"})
     public String readWatermeterAmount(@RequestBody ApiRequestVO apiRequestVO) {
@@ -154,9 +143,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 水表读数明细当月累计水量 D6-1/D7-1
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/findwateramount", method = RequestMethod.POST, produces = {"application/json"})
     public String findTotalWater(@RequestBody ApiRequestVO apiRequestVO) {
@@ -174,9 +160,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 水表读数明细通过时间筛选查询 D8/D9
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/smartwatermeterrecords/filter/list", method = RequestMethod.POST, produces = {"application/json"})
     public String findTotalWaterFilterList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -196,9 +179,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 集中式水表网关列表 A1
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/jz/watermeter_gateway/list", method = RequestMethod.POST, produces = {"application/json"})
     public String watermeterGatewayList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -225,9 +205,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 分散式水表网关列表 D4
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/hm/watermeter_gateway/list", method = RequestMethod.POST, produces = {"application/json"})
     public String watermeterGatewayHmList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -243,12 +220,8 @@ public class WaterMeterController extends BaseController {
         return res;
     }
 
-
     /**
      * 集中式水表网关详情 A3
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/jz/watermeter_gateway/detail", method = RequestMethod.POST, produces = {"application/json"})
     public String watermeterGatewayJzDetail(@RequestBody ApiRequestVO apiRequestVO) {
@@ -269,12 +242,8 @@ public class WaterMeterController extends BaseController {
         return res;
     }
 
-
     /**
      * 智能水表异常记录 D4
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/exception/watermeter", method = RequestMethod.POST, produces = {"application/json"})
     public String watermeterException(@RequestBody ApiRequestVO apiRequestVO) {
@@ -291,9 +260,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 水表网关异常记录 A4
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/exception/watermeter_gateway", method = RequestMethod.POST, produces = {"application/json"})
     public String watermeterGatewayException(@RequestBody ApiRequestVO apiRequestVO) {
@@ -311,9 +277,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 根据用户Id查询有水表（或水表网关）的集中式房源列表
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/jz/number", method = RequestMethod.POST, produces = {"application/json"})
     public String getWaterNumber(@RequestBody ApiRequestVO apiRequestVO) {
@@ -327,9 +290,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 根据用户Id查询有水表（或水表网关）的集中式房源列表
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/apartment/list", method = RequestMethod.POST, produces = {"application/json"})
     public String getApartmentList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -376,9 +336,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 集中式：查询公寓下楼层水表数和总水表数
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/jz/floor/list", method = RequestMethod.POST, produces = {"application/json"})
     public String getFloorWithWater(@RequestBody ApiRequestVO apiRequestVO) {
@@ -406,9 +363,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 集中式：根据楼层Id查询楼层下房间水表列表
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/jz/room/list", method = RequestMethod.POST, produces = {"application/json"})
     public String getRoomWithWater(@RequestBody ApiRequestVO apiRequestVO) {
@@ -425,9 +379,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 集中式：根据房间Id查询房间详细信息
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/jz/room/detail", method = RequestMethod.POST, produces = {"application/json"})
     public String getRoomDetail(@RequestBody ApiRequestVO apiRequestVO) {
@@ -454,9 +405,6 @@ public class WaterMeterController extends BaseController {
 
     /**
      * 按房间修改冷热水费单价
-     *
-     * @param apiRequestVO
-     * @return
      */
     @RequestMapping(value = "/price/update/room", method = RequestMethod.POST, produces = {"application/json"})
     public String updateRoomPrice(@RequestBody ApiRequestVO apiRequestVO) {
@@ -474,10 +422,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 查询时间范围内读数明细
-     *
-     * @param apiRequestVO
-     * @return
+     * 按水表查询时间范围内读数明细
      */
     @RequestMapping(value = "/record/list", method = RequestMethod.POST, produces = {"application/json"})
     public String getWaterRecordList(@RequestBody ApiRequestVO apiRequestVO) {
@@ -492,10 +437,7 @@ public class WaterMeterController extends BaseController {
     }
 
     /**
-     * 查询时间范围内读数明细
-     *
-     * @param apiRequestVO
-     * @return
+     * 按水表查询时间范围内读数描点
      */
     @RequestMapping(value = "/record/chart", method = RequestMethod.POST, produces = {"application/json"})
     public String getWaterRecordChart(@RequestBody ApiRequestVO apiRequestVO) {
@@ -508,56 +450,7 @@ public class WaterMeterController extends BaseController {
             Date endTime = dt.getDate("endTime");
             List<RecordVO> recordList = watermeterService.getRecordList(watermeterId, dt.getString("startTime"), dt.getString("endTime") + " 23:59:59.999");
             List<ChartVO> chartList = new ArrayList<>();
-            if (recordList != null && recordList.size() > 0) {
-                DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar start = Calendar.getInstance();
-                start.setTime(startTime);
-                Calendar end = Calendar.getInstance();
-                end.setTime(endTime);
-                int diffDays = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 3600 * 24)) + 1;
-                double lengthDays = diffDays * 1.0 / chartNum;
-                Calendar marker = Calendar.getInstance();
-                marker.setTime(startTime);
-                double already = 0;
-                for (int i = 1; i <= chartNum; i++) {
-                    ChartVO chart = new ChartVO();
-                    chart.setStart(sdf.format(marker.getTime()));
-                    marker.add(Calendar.DATE, (int) Math.floor(lengthDays * i - already - 1));
-                    already += (int) Math.floor(lengthDays * i - already);
-                    chart.setEnd(sdf.format(marker.getTime()));
-                    chartList.add(chart);
-                    marker.add(Calendar.DATE, 1);
-                }
-                chartList.get(chartNum - 1).setEnd(sdf.format(end.getTime()));
-                for (RecordVO record : recordList) {
-                    for (ChartVO chart : chartList) {
-                        Date recordTime = sdf.parse(record.getDate());
-                        Date chartStart = sdf.parse(chart.getStart());
-                        Date chartEnd = sdf.parse(chart.getEnd());
-                        if(!recordTime.before(chartStart) && !recordTime.after(chartEnd)) {
-                            if(chart.getInitial() == null || chart.getInitial() > record.getInitial()){
-                                chart.setInitial(record.getInitial());
-                            }
-                            if(chart.getLast() == null || chart.getLast() < record.getLast() ) {
-                                chart.setLast(record.getLast());
-                            }
-                            if(chart.getAmount() == null) {
-                                chart.setAmount(record.getAmount());
-                            }
-                            else {
-                                chart.setAmount(chart.getAmount() + record.getAmount());
-                            }
-                            if(chart.getUsed() == null) {
-                                chart.setUsed(record.getUsed());
-                            }
-                            else {
-                                chart.setUsed(chart.getUsed() + record.getUsed());
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
+            watermeterService.makeChartList(chartNum, startTime, endTime, recordList, chartList);
             JSONObject responseJson = new JSONObject();
             responseJson.put("recordChart", chartList);
             return structureSuccessResponseVO(responseJson, new Date().toString(), "");
@@ -567,12 +460,63 @@ public class WaterMeterController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    /**
+     * 按房间查询时间范围内读数明细
+     */
+    @RequestMapping(value = "/room/record/list", method = RequestMethod.POST, produces = {"application/json"})
+    public String getRoomWaterRecordList(@RequestBody ApiRequestVO apiRequestVO) {
+        JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+        int roomId = dt.getIntValue("roomId");
+        int houseCatalog = dt.getIntValue("houseCatalog");
+        int meterType = dt.getIntValue("meterType");
+        String startTime = dt.getString("startTime");
+        String endTime = dt.getString("endTime");
+
+        List<RecordVO> recordList = watermeterService.getRoomRecordList(roomId, houseCatalog, meterType, startTime, endTime + " 23:59:59.000");
+        JSONObject responseJson = new JSONObject();
+        responseJson.put("recordList", recordList);
+        return structureSuccessResponseVO(responseJson, new Date().toString(), "");
+    }
+
+    /**
+     * 按房间查询时间范围内读数描点
+     */
+    @RequestMapping(value = "/room/record/chart", method = RequestMethod.POST, produces = {"application/json"})
+    public String getRoomWaterRecordChart(@RequestBody ApiRequestVO apiRequestVO) {
+        try {
+            JSONObject dt = apiRequestVO.getDataRequestBodyVO().getDt();
+            int chartNum = dt.getIntValue("chartNum") == 0 ? 7 : dt.getIntValue("chartNum");
+            int roomId = dt.getIntValue("roomId");
+            int houseCatalog = dt.getIntValue("houseCatalog");
+            int meterType = dt.getIntValue("meterType");
+            Date startTime = dt.getDate("startTime");
+            Date endTime = dt.getDate("endTime");
+
+            List<RecordVO> recordList = watermeterService.getRoomRecordList(roomId,houseCatalog,meterType, dt.getString("startTime"), dt.getString("endTime") + " 23:59:59.999");
+            List<ChartVO> chartList = new ArrayList<>();
+            watermeterService.makeChartList(chartNum, startTime, endTime, recordList, chartList);
+            JSONObject responseJson = new JSONObject();
+            responseJson.put("recordChart", chartList);
+            return structureSuccessResponseVO(responseJson, new Date().toString(), "");
+        } catch (Exception ex) {
+            Log.error("getWaterRecordChart error");
+            return structureErrorResponse(ApiErrorCodeEnum.Service_request_geshi, new Date().toString(), "请求失败" + ex.getMessage());
+        }
+    }
+
+    /**
+     * 健康检查
+     */
+    @RequestMapping(value = "/hs", method = RequestMethod.GET)
     public String testMethod() {
-        CacheUtils.set("test_key_1","2", ExpireTime.FIVE_MIN);
-        CacheUtils.set("test_key_1","3", ExpireTime.FIVE_MIN);
-        CacheUtils.set("test_key_1","4", ExpireTime.FIVE_MIN);
-        return CacheUtils.getStr("test_key_1");
+
+        return "OK";
+
+//        CacheUtils.set("test_key_1","2", ExpireTime.FIVE_MIN);
+//        CacheUtils.set("test_key_1","3", ExpireTime.FIVE_MIN);
+//        CacheUtils.set("test_key_1","4", ExpireTime.FIVE_MIN);
+//        return CacheUtils.getStr("test_key_1");
+
 //        Set<String> tokens = CacheUtils.keys("refresh_token_key*");
 //        StringBuilder sb = new StringBuilder();
 //        for (String token:tokens) {

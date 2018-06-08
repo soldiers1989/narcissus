@@ -7,21 +7,21 @@ import java.util.Date;
 @Data
 public class SmartWatermeter {
 
-  private long smartWatermeterId;
+  private Integer smartWatermeterId;
   private Date createdAt;
   private long createdBy;
   private Date updatedAt;
   private long updatedBy;
   //private Date deletedAt;
   private long deletedBy;
-  private long apartmentId;
-  private long floorId;
-  private long houseId;
-  private long roomId;
-  private long houseCatalog;
-  private double meterType;
+  private Integer apartmentId;
+  private Integer floorId;
+  private Integer houseId;
+  private Integer roomId;
+  private Integer houseCatalog;
+  private Integer meterType;
   private String uuid;
-  private long onoffStatus;
+  private Integer onoffStatus;
   private int price;
   private Long meterAmount;
   private Integer lastAmount;

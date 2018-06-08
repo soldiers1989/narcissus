@@ -17,4 +17,7 @@ public class SmartWatermeterRoomRecord {
     private Boolean isInit;
     private String createdAt;
     private Integer waterId;
+    private int price;
+    private int money;
+    private int used;
 }
