@@ -72,8 +72,8 @@ public class SaasSmartLockServiceImpl implements SaasSmartLockService{
     }
 
     @Override
-    public SmartLockDetailVO getInformation(String type, String roomId) {
-        SmartLockDetailVO smartLockDetailVOList=smartLockDao.findSmartLockInformation(roomId,type);
+    public List<SmartLockDetailVO> getInformation(String type, String roomId) {
+        List<SmartLockDetailVO> smartLockDetailVOList=smartLockDao.findSmartLockInformation(roomId,type);
         return smartLockDetailVOList;
     }
 
@@ -84,8 +84,8 @@ public class SaasSmartLockServiceImpl implements SaasSmartLockService{
     }
 
     @Override
-    public Ammeter getAmmeter(String type, String roomId) {
-        Ammeter Ammeter=new Ammeter();
+    public List<Ammeter> getAmmeter(String type, String roomId) {
+        List<Ammeter> Ammeter=new ArrayList<>();
         if(HouseStyleEnum.CONCENTRAT.getCode().equals(type)){
             Ammeter=smartLockDao.findAmmeter(roomId);
         }else if(HouseStyleEnum.DISPERSED.getCode().equals(type)){

@@ -66,9 +66,9 @@ public class SaasLockController {
     @GetMapping(value = "/search/information")
     public String getSmartInformation(@RequestParam  String type,
                                         @RequestParam  String roomId){
-        SmartLockDetailVO smartLockDetailVO=saasSmartLockService.getInformation(type,roomId);
+        List<SmartLockDetailVO> smartLockDetailVO=saasSmartLockService.getInformation(type,roomId);
         List<WatermeterDetailVO> watermeterDetailVO=saasSmartLockService.getWatermeter(type,roomId);
-        Ammeter Ammeter=saasSmartLockService.getAmmeter(type,roomId);
+        List<Ammeter> Ammeter=saasSmartLockService.getAmmeter(type,roomId);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("SmartLockDetailVO",smartLockDetailVO);
         jsonObject.put("watermeterDetailVO",watermeterDetailVO);

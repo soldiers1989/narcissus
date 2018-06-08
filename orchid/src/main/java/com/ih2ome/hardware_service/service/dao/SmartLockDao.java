@@ -497,7 +497,7 @@ public interface SmartLockDao {
 
     List<String> findHouseMapping(String thirdHomeId);
 
-    SmartLockDetailVO findSmartLockInformation(@Param("roomId") String roomId,@Param("type") String type);
+    List<SmartLockDetailVO> findSmartLockInformation(@Param("roomId") String roomId,@Param("type") String type);
     List<WatermeterDetailVO> findWatermeter(@Param("roomId") String roomId,@Param("type") String type);
 
     /**
@@ -505,14 +505,14 @@ public interface SmartLockDao {
      * @param roomId
      * @return
      */
-    Ammeter findAmmeter(String roomId);
+    List<Ammeter> findAmmeter(String roomId);
 
     /**
      * 分散式查电表
      * @param roomId
      * @return
      */
-    Ammeter findDispersedAmmeters(String roomId);
+    List<Ammeter> findDispersedAmmeters(String roomId);
 
     int updateAutoCollection(@Param("passwordId") int passwordId, @Param("autoCollection") int autoCollection);
 

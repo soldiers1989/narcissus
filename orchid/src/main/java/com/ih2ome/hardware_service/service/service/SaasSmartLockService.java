@@ -19,9 +19,9 @@ public interface SaasSmartLockService {
 
     SaasSmartLock getSmartLockCount(String userId,String type);
 
-    SmartLockDetailVO getInformation(String type, String roomId);
+    List<SmartLockDetailVO> getInformation(String type, String roomId);
 
     List<WatermeterDetailVO> getWatermeter(String type, String roomId);
 
-    Ammeter getAmmeter(String type, String roomId);
+    List<Ammeter> getAmmeter(String type, String roomId);
 }
